@@ -56,7 +56,11 @@ export function getAgentResourceStatus({
   }
 
   const view = reader.snapshot({ codexHome: home, revision });
-  const quotaResources = normalizeCodexQuotaSnapshot(view.quotaSnapshot, { now });
+  // Normalize against the same observation clock as the live reader. This keeps provider reset
+  // semantics consistent with injected/test clocks and with the read that produced the snapshot.
+  const observedAt = view.observedAt ? Date.parse(view.observedAt) : NaN;
+  const normalizationNow = Number.isFinite(observedAt) ? observedAt : now;
+  const quotaResources = normalizeCodexQuotaSnapshot(view.quotaSnapshot, { now: normalizationNow });
   // A failed read returns the LKG marked stale, so view.stale is the LKG truth; a successful read
   // with nothing trustworthy (fresh home, no quota, no token) is genuinely unavailable.
   const unavailable = view.unavailable === true || (!quotaResources.length && !view.token);

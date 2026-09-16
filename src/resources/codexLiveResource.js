@@ -83,6 +83,7 @@ export function createCodexLiveResourceReader({ now = () => new Date().toISOStri
         quotaLkg: null,         // { timestamp(Date), rateLimits } newest trusted snapshot
         lastRevision: null,
         lastFreshAt: null,
+        lastObservedAt: null,
         lastForeground: null,   // active rollout { path, mtime } whose token is shown
         lastStale: false,
       };
@@ -214,12 +215,15 @@ export function createCodexLiveResourceReader({ now = () => new Date().toISOStri
   function currentView(state) {
     const quotaSnapshot = state.quotaLkg;
     const foreground = state.lastForeground;
-    return { quotaSnapshot, token: buildTokenRecord(state, foreground), freshAt: state.lastFreshAt, stale: state.lastStale };
+    return { quotaSnapshot, token: buildTokenRecord(state, foreground), freshAt: state.lastFreshAt, observedAt: state.lastObservedAt, stale: state.lastStale };
   }
 
   function read({ codexHome, revision }) {
     const home = path.resolve(String(codexHome));
     const state = ensure(home);
+    // Keep the clock used for this read with the view. The resource service uses it when
+    // applying resetAt semantics; this is also what makes injected clocks deterministic.
+    state.lastObservedAt = now();
     // Cache only a known-fresh view. A stale flag means the LAST read failed: the same revision
     // must be re-verified (full read) rather than served from cache, so recovery restores fresh
     // automatically without waiting for a revision change.
