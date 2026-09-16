@@ -1,18 +1,24 @@
-const path = require('node:path');
-
 function escapeRegExp(value) {
   return value.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
 }
 
-// Electron Packager applies `ignore` to every source path, including nested
-// dependency assets.  Scope generated-tree exclusions to this repository so,
-// for example, node_modules/**/data/*.json remains available at runtime.
+// Electron Packager runs every `ignore` regex against a path relative to the
+// app root, always prefixed with `/` and normalized to forward slashes on every
+// platform (see @electron/packager `dist/copy-filter.js`: `name =
+// fullPath.split(path.resolve(opts.dir))[1]`, then `normalizePath` on Windows).
+// It supplies e.g. `/test/api.test.js`, never `D:\\Code\\margin\\test\\api.test.js`.
+// Anchoring on `^/` therefore excludes only repository-root trees: `/data/...`
+// is dropped while `/node_modules/**/data/...` dependency assets are preserved.
+function rootRelative(name) {
+  return name.split(/[\\/]+/).filter(Boolean).join('/');
+}
+
 function projectTree(name) {
-  return new RegExp(`^${escapeRegExp(path.join(__dirname, name))}(?:[\\\\/]|$)`, 'i');
+  return new RegExp(`^/${escapeRegExp(rootRelative(name))}(?:/|$)`, 'i');
 }
 
 function projectFile(name) {
-  return new RegExp(`^${escapeRegExp(path.join(__dirname, name))}$`, 'i');
+  return new RegExp(`^/${escapeRegExp(rootRelative(name))}$`, 'i');
 }
 
 module.exports = {
@@ -43,8 +49,8 @@ module.exports = {
       projectTree('data'),
       projectTree('design-references'),
       projectTree('experiments'),
-      projectTree(path.join('docs', 'validation')),
-      projectTree(path.join('docs', 'superpowers')),
+      projectTree('docs/validation'),
+      projectTree('docs/superpowers'),
       projectTree('test'),
       projectTree('evaluation')
     ],
