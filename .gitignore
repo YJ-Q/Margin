@@ -22,3 +22,12 @@ out*/
 electron-*.log
 handoff-output/
 .margin/
+
+# Local UI/session captures; public validation summaries remain tracked.
+docs/validation/r2-resource-bar/
+docs/validation/r3-electron-window.png
+docs/validation/r3.2/
+docs/validation/r3.3/
+
+# Generated implementation report retained outside Git for local reference.
+task-8-report.md

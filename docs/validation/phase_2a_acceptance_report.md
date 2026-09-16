@@ -81,7 +81,7 @@ The governed v1 Decision writer still owns Decision mutation. Its historical pay
 
 ## Verification evidence
 
-Commands were run from `D:\Echo` on 2026-08-24:
+Commands were run from the repository root on 2026-08-24:
 
 - Focused direct Node suite covering migrations, schema, Phase 2A persistence/validation/commands/queries/events, Run control, terminal tests and E2E: exit 0; `83` tests passed, `0` failed.
 - `npm test`: exit 0; `352` tests passed, `0` failed, `0` cancelled, `0` skipped, `0` todo.

@@ -204,7 +204,7 @@ git commit -m "feat: add continuity write routing hints"
 - Modify: `docs/audit/terminal_continuity_pilot_report.md`
 
 **Interfaces:**
-- Consumes: confirmed memory `9aff5475-e37c-4b13-a440-b211aca0ac6b` and the existing terminal pilot database.
+- Consumes: a confirmed memory record and the existing terminal pilot database.
 - Produces: reproducible sanitized evidence; no user prompt or credential content.
 
 - [ ] **Step 1: Run complete automated verification**

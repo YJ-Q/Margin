@@ -1303,7 +1303,7 @@ git commit -m "docs: record recruiter delivery verification"
 
 **Interfaces:**
 - Consumes: verified `case-study/index.html`, `case-study/web/`, `case-study/assets/`, and `case-study/dist/`.
-- Updates: Coze project `7667474883789455386`.
+- Updates: the configured Coze project (`<COZE_PROJECT_ID>`).
 - Produces: a `Succeeded` deployment and public URL.
 
 - [ ] **Step 1: Confirm Coze authentication**
@@ -1311,7 +1311,7 @@ git commit -m "docs: record recruiter delivery verification"
 Run:
 
 ```powershell
-node -e "global.navigator={}; process.argv=['node','coze','auth','status','--format','json']; require('C:/Users/邓志谦/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
+node -e "global.navigator={}; process.argv=['node','coze','auth','status','--format','json']; require('<USER_HOME>/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
 ```
 
 Expected: JSON contains `"logged_in": true`. If false, stop and complete `coze auth login` before continuing.
@@ -1342,7 +1342,7 @@ Expected: ZIP exists, is below 500 MB, and contains root `index.html`, `web`, `a
 Run:
 
 ```powershell
-node -e "global.navigator={}; process.argv=['node','coze','code','message','send','使用附件 @C:/Temp/margin-recruiter-delivery.zip 更新现有静态 Case Study。保留现有文案、视觉和十章正文；用附件完整替换站点静态资源，确保根路径、双语速览、两个 PDF 和 GitHub 链接可用。','-p','7667474883789455386','--format','json']; require('C:/Users/邓志谦/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
+node -e "global.navigator={}; process.argv=['node','coze','code','message','send','使用附件 @C:/Temp/margin-recruiter-delivery.zip 更新现有静态 Case Study。保留现有文案、视觉和十章正文；用附件完整替换站点静态资源，确保根路径、双语速览、两个 PDF 和 GitHub 链接可用。','-p','<COZE_PROJECT_ID>','--format','json']; require('<USER_HOME>/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
 ```
 
 Expected: JSON reports `"status": "sent"` and the same project ID.
@@ -1352,7 +1352,7 @@ Expected: JSON reports `"status": "sent"` and the same project ID.
 Run one status query per check:
 
 ```powershell
-node -e "global.navigator={}; process.argv=['node','coze','code','message','status','-p','7667474883789455386','--format','json']; require('C:/Users/邓志谦/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
+node -e "global.navigator={}; process.argv=['node','coze','code','message','status','-p','<COZE_PROJECT_ID>','--format','json']; require('<USER_HOME>/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
 ```
 
 Expected progression: `processing` → `done`. Do not deploy while the status is not `done`. Do not put an unbounded sleep loop in one shell call.
@@ -1362,7 +1362,7 @@ Expected progression: `processing` → `done`. Do not deploy while the status is
 Run only after message status is `done`:
 
 ```powershell
-$deployRaw = node -e "global.navigator={}; process.argv=['node','coze','code','deploy','7667474883789455386','--format','json']; require('C:/Users/邓志谦/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
+$deployRaw = node -e "global.navigator={}; process.argv=['node','coze','code','deploy','<COZE_PROJECT_ID>','--format','json']; require('<USER_HOME>/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
 $deploy = $deployRaw | ConvertFrom-Json
 if (-not $deploy.deployHistoryId) {
   throw 'Coze deploy did not return deployHistoryId.'
@@ -1380,7 +1380,7 @@ Run one status query per check:
 ```powershell
 $deploy = Get-Content -Raw -LiteralPath 'C:\Temp\margin-recruiter-deploy.json' | ConvertFrom-Json
 $deployId = [string]$deploy.deployHistoryId
-$statusRaw = node -e "global.navigator={}; process.argv=['node','coze','code','deploy','status','7667474883789455386','--deploy-id','$deployId','--format','json']; require('C:/Users/邓志谦/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
+$statusRaw = node -e "global.navigator={}; process.argv=['node','coze','code','deploy','status','<COZE_PROJECT_ID>','--deploy-id','$deployId','--format','json']; require('<USER_HOME>/AppData/Roaming/npm/node_modules/@coze/cli/bin/main')"
 $status = $statusRaw | ConvertFrom-Json
 $status | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath 'C:\Temp\margin-recruiter-deploy-status.json' -Encoding UTF8
 $status

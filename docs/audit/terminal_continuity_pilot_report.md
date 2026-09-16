@@ -28,23 +28,23 @@ Pilot state is isolated under `data/terminal-pilot/`. Reports contain only proje
 
 A YAPI-backed `gpt-5.6-terra` run completed on 2026-08-23 using the API key from the Windows user environment without writing the credential to the repository or report.
 
-- project: `931a8a49-ebae-491b-8c2a-cb93fb6b8012`;
-- Session A: `01a02d95-e261-7a12-9677-06e417fea230`;
-- Session B after `/new`: `01a02d95-f556-70cb-98f7-742eb84a80be`;
-- context digest: `c281b98ecbe4f04bc4611c7469304c384decf78f467dc02124bb9e733d9f0dbc`;
+- project: `<PROJECT_ID>`;
+- Session A: `<SESSION_A_ID>`;
+- Session B after `/new`: `<SESSION_B_ID>`;
+- context digest: `<CONTEXT_DIGEST>`;
 - registered tools: exactly the four Margin tools;
 - recorded result code: `allowed`;
 - safety flags: local-only, built-in tools disabled, external writes disabled.
 
 The run used read-only user instructions. Session B described the same active job-application task and next step after the Session boundary. This is a single technical smoke result, not a continuity success-rate or memory-quality measurement.
 
-A second focused run exercised the missing action-continuity path after review. Session `01a02d9c-ba11-70ae-980e-3f08cb8b794d` used natural language to invoke `action_update`, creating pending action `8f3933ec-fd7d-401c-8587-cdf5a17c8f29` with audit `a13182af-f936-4250-9756-8d11b4f47083`. After `/new`, Session `01a02d9c-e0a8-7be4-afe4-311621601511` received a context digest that included the open action, described it as pending, and `/state` displayed the same action ID and version. The sanitized result codes were `allowed` and `no_tool_call`; no-tool turns are no longer mislabeled as successful tool calls.
+A second focused run exercised the missing action-continuity path after review. A fresh Session used natural language to invoke `action_update`, creating a pending action with audit evidence. After `/new`, the next Session received a context digest that included the open action, described it as pending, and `/state` displayed the same action and version. The sanitized result codes were `allowed` and `no_tool_call`; no-tool turns are no longer mislabeled as successful tool calls.
 
 ## Real-use failure and retrieval closure
 
 A real Chinese progress update exposed four implementation failures: a mismatched `memoryPropose` permission name, Pi-populated empty optional fields entering the closed Core patch contract, missing model request IDs reaching required audit storage, and concurrent tool writes sharing one SQLite connection. The host also allowed optimistic assistant prose to appear above failed tool results. These failures were fixed with exact host permissions, empty-option pruning, host request-ID fallback, serialized adapter execution, operation-specific tool guidance, and a mandatory partial-write warning. The same task update then completed with `state_update=allowed`; `/state` showed task version 2 and the new current step.
 
-Memory `9aff5475-e37c-4b13-a440-b211aca0ac6b` was confirmed by the user at version 2. Before the retrieval fix it was stored but `/memory` returned no result because continuous Chinese text was treated as a whole token. Deterministic Chinese 2–3 character n-grams now provide the lexical half of lightweight hybrid retrieval. In a fresh Session, `/memory` recalled the same ID and version with its source Session and confirmed provenance. A preceding ordinary acknowledgement produced no tool result and did not enter durable state.
+A memory record was confirmed by the user at version 2. Before the retrieval fix it was stored but `/memory` returned no result because continuous Chinese text was treated as a whole token. Deterministic Chinese 2–3 character n-grams now provide the lexical half of lightweight hybrid retrieval. In a fresh Session, `/memory` recalled the same record and version with its source Session and confirmed provenance. A preceding ordinary acknowledgement produced no tool result and did not enter durable state.
 
 The semantic half is optional and default-off. Migration 2 adds versioned SQLite embedding storage; a deterministic fake embedder verifies semantic-only recall, hybrid evidence, model-version isolation, and lexical fallback when embedding fails. No paid embedding API was called, and the real pilot currently runs in lexical fallback mode.
 

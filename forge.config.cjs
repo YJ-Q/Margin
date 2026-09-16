@@ -44,6 +44,7 @@ module.exports = {
       projectTree('design-references'),
       projectTree('experiments'),
       projectTree(path.join('docs', 'validation')),
+      projectTree(path.join('docs', 'superpowers')),
       projectTree('test'),
       projectTree('evaluation')
     ],

@@ -22,7 +22,7 @@ The planner is bounded, deterministic, read-only, and source-addressable. It emi
 
 The credential-gated live smoke command is available through `npm run spike:pi-continuity`. Live smoke was run with `yapi/gpt-5.6-terra` on 2026-08-22 after securely loading the API key from the Windows user environment into that process only.
 
-Run `b508f14c-fea3-4bd5-b1d7-af19e1be65fb` created distinct Session A and Session B identifiers, registered exactly the four Margin tools, and produced context digest `dce348f345cf68b8e1d7be7efd38799134a922915f45ebc842df424d5315cb63`. Its sanitized report recorded `toolsRegistered`, `sessionBoundary`, `contextDelivered`, `provenancePresent`, and `safetyPolicy` as true.
+A sanitized live smoke run created distinct Session A and Session B identifiers, registered exactly the four Margin tools, and produced a context digest. Its report recorded `toolsRegistered`, `sessionBoundary`, `contextDelivered`, `provenancePresent`, and `safetyPolicy` as true.
 
 This is evidence that the isolated integration path can run against the configured provider. A single smoke run does not establish task success, recall quality, reliability, cost, market demand, or user value.
 

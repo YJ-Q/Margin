@@ -4,7 +4,7 @@ Date: 2026-07-07
 
 Environment:
 - isolated backend instance on `http://localhost:3101`
-- isolated database at `D:\Echo\data\acceptance\echo-acceptance.sqlite`
+- isolated database at `data/acceptance/echo-acceptance.sqlite`
 - provider: `local`
 
 ## Goal

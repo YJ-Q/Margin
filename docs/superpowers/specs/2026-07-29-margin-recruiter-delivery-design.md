@@ -464,7 +464,7 @@ dist/margin-case-study.en.pdf
 继续使用现有 Coze Web 项目：
 
 ```text
-project_id: 7667474883789455386
+project_id: <COZE_PROJECT_ID>
 ```
 
 更新流程：
