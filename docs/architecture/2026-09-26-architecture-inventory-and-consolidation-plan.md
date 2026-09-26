@@ -208,25 +208,29 @@ ADR 002（已接受，2026-08-24）原文：
 
 另：错误信封**不含 message**（ADR 002 禁止泄内文），所以需要上下文的错误码必须走结构化 `details`（如同 `version_conflict` 的 `currentVersion`）。
 
-### P3 — 退役 legacy（已有文档要求，尚未执行）
+### P3 — 退役 legacy ✅ 代码侧完成，数据侧待你决定
 
-按 `v1_minimum_incremental_architecture.md` 已定的"导出 → 分类为迁移/归档/删除候选 → 用户确认"执行，且**不删 `data/echo.sqlite`**。`src/routes/`、`src/services/`、`src/storage/memoryStore.js` 保持冻结直到分类完成。
+产出 `docs/audit/legacy_retirement_plan.md`：
 
-验收：`data/echo.sqlite` 的每个表有明确的迁移/归档/删除归属；legacy 表面的 33 个端点逐个有去留结论。
+- **只读清单复核**：10 表行数与 Phase 1 完全一致，并新增文件哈希（`1f565309…`）与 schema 哈希（`4c4fc799…`），使「未改动」从断言变成可复核证据
+- **发现的真问题**：退役 legacy 不是删死代码，而是**删掉五个只在废弃表面上存在的功能**——Management proposals、Achievements、Learning、Summaries、TTS。因此本轮**没有删除任何代码**，需要你逐功能给出「移植/归档/删除」结论
+- **可执行的冻结**：`test/legacyRetirement.test.js` 从每个当前入口做**静态 import 图遍历**，断言不可达 `src/app.js` / `src/routes/**` / `src/services/**` / `src/storage/memoryStore.js`；断言门控必须精确匹配 `'true'` 且只有 `run-legacy-api.js` 能打开；断言 `data/echo.sqlite` 保留且本文覆盖全部 10 张表
 
-### P4 — 接口收敛
+### P4 — 接口收敛 ✅ 完成
 
-1. 出一份单一接口清单（`docs/architecture/interface-registry.md`），每个端点标注 owner context + 契约版本 + 消费方
-2. 给 Contract 加版本纪律：`COMMAND_TYPES`/`QUERY_TYPES`/DTO 形状变化时，`CONTRACT_VERSION` 必须递增，并在测试里断言（有变化无递增即失败）
-3. **把 P2 发现的五处封闭清单收拢**：契约能力 map、`KNOWN_ERROR_CODES`、event→audit 的 `CASE` 白名单都改为像 `webCapabilities.js` 那样**启动即验证**，并出一份「增加一个 Contract 类型」的检查清单
-4. Feishu 表面从脚本内手写 if/else 改为 router + 契约校验（对齐 ADR 002 的 "Surface 只调用 Application API"）
+1. ✅ `docs/architecture/interface-registry.md`：两个 Context、四个 HTTP 表面全部端点、Contract 类型面（含 capability）、CLI、错误码；由 `test/interfaceRegistry.test.js` 守卫（**每个已声明类型必须出现在清单里**，漏一个就失败）
+2. ✅ 契约版本纪律：`CONTRACT_VERSION` 升到 **1.2**；`src/contracts/contractSurface.js` 派生指纹，`test/contractVersion.test.js` 冻结它。改面不升版本会带着新指纹失败。测试里的版本字面量改为引用常量，下次 bump 不再改测试
+3. ✅ **三处封闭清单已收拢**：
+   - capability map → **模块加载即抛**（新增）
+   - `KNOWN_ERROR_CODES` 白名单 → 反转为 `NEVER_EXPOSE_CODES` 黑名单（新增错误码默认透传，不再静默降级）
+   - event→audit 的 `CASE` 白名单 → **整份删除**（每个分支都是恒等映射，改为直接读 `payload.command`）
+   - `eventEnvelope.js` 的 `EVENT_TYPE_BY_EVIDENCE` 仍需人工同步，但已由 `test/activityTrace.test.js` 守住
+4. ⏳ Feishu 表面仍为脚本内手写路由（未改）
 
-验收：`interface-registry.md` 覆盖所有端点；契约版本纪律有测试守住；三处封闭清单均启动即验证；Feishu 不再在脚本里手写路由。
+### P5 — 命名与可观测 ✅ 完成
 
-### P5 — 命名与可观测
-
-1. `WORKER_KINDS` 改为从 descriptor registry 派生（消除同名不同义）
-2. 端到端 trace：一次会话从 Board 打开 → 生成 handoff → 绑定 Run → Workbench 可见，串起 requestId 与 event cursor
+1. ✅ `WORKER_KINDS` **不派生自 descriptor registry** —— 那会让 Core 依赖 ADR 003 刚分开的 Runtime 注册表，并让插件文件拓宽 Core 枚举。改为：补上缺失的 `claude`（桥让这个分歧变得致命：能读 Claude 会话却不能建 `workerKind=claude` 的 Run），并在两处定义点写明两者是**刻意不同**的分类，不变量由 `test/contractVersion.test.js` 钉住（Margin 自带的每个 agent type 都是合法 `workerKind`；`other` 是插件出口；列表保持封闭）
+2. ✅ `test/activityTrace.test.js`：一次写入必须作为**带 actor 的完整 activity 条目**出现，且 `skippedUnknownEvents` 为 0，cursor 单调可用作增量读位。这条测试同时能抓住上面两处静默耦合
 
 ---
 
