@@ -1,0 +1,151 @@
+{
+  "runId": "formal-case-02-A-2026-09-07T09-42-56-786Z",
+  "caseId": "case-02",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T09:43:06.876Z",
+  "endTs": "2026-09-07T09:44:52.955Z",
+  "durationMs": 106079,
+  "modelPromptStartMs": 36,
+  "modelPromptEndMs": 106079,
+  "sessionId": "01a07b3f-ff9d-7137-b82b-385221386710",
+  "rawResponse": "",
+  "parsedRecovery": null,
+  "hasAllRequiredKeys": false,
+  "parseError": "no final assistant text",
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788774188007
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Name, Length, LastWriteTime\"}",
+      "tsMs": 1788774188008
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788774189491
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788774189492
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788774189492
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788774189492
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 40\"}",
+      "tsMs": 1788774190476
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"(Get-Content .\\\\input\\\\session.jsonl | Measure-Object -Line).Lines\"}",
+      "tsMs": 1788774190484
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Item .\\\\input\\\\session.jsonl | Select-Object Length; (Get-Content .\\\\input\\\\session.jsonl | Measure-Object -Character -Line) | Format-List\"}",
+      "tsMs": 1788774211513
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp/AppData\"}",
+      "tsMs": 1788774211524
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd .\\\\workspace; git status --short | Select-Object -First 60; git branch --show-current; git rev-parse HEAD; git log -1 --format=\\\"%cI %s\\\"\"}",
+      "tsMs": 1788774211524
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$i=0; Get-Content .\\\\input\\\\session.jsonl | ForEach-Object { $i++; try { $e = $_ | ConvertFrom-Json; $p=$e.payload; $t=$e.type; $pt = if($p){$p.type}else{''}; $extra=''; if($t -eq 'response_item' -and $p.type -eq 'message'){ $role=$p.role; $txts=@($p.content | ForEach-Object { if($_.type -eq 'output_text' -or $_.type -eq 'input_text'){ $_.text } elseif($_.type -eq 'text'){ $_.text } } | Where-Object {$_} | ForEach-Object { if($_.Length -gt 150){$_.Substring(0,150)+'...'}else{$_} }); $extra=\\\"role=$role texts=[$($txts -join ' || ')]\\\" } elseif($t -eq 'response_item' -and $p.type -eq 'custom_tool_call'){ $extra=\\\"name=$($p.name) status=$($p.status) input=$($p.input)\\\" } elseif($t -eq 'event_msg'){ $extra=\\\"$pt\\\" } elseif($t -eq 'response_item' -and $p.type -eq 'reasoning'){ $extra='reasoning' }; \\\"{0,3}| {1} | {2} | {3} | {4}\\\" -f $i,$e.ordinal,$e.timestamp,$t,($pt + ' ' + $extra) } catch { \\\"{0,3}| ERR: {1}\\\" -f $i, $_.Exception.Message } }\"}",
+      "tsMs": 1788774216885
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; $out = for($i=0;$i -lt $lines.Count;$i++){ $l=$lines[$i]; $ord = if($l -match '\\\"ordinal\\\":\\\\s*(\\\\d+)'){$matches[1]}else{'?'}; $ts = if($l -match '\\\"timestamp\\\":\\\"([^\\\"]+)\\\"'){$matches[1]}else{'?'}; $ty = if($l -match '\\\"type\\\":\\\"([^\\\"]+)\\\"'){$matches[1]}else{'?'}; $pt = if($l -match '\\\"payload\\\":\\\\s*\\\\{\\\\s*\\\"type\\\":\\\"([^\\\"]+)\\\"'){$matches[1]}else{''}; $role=''; if($l -match '\\\"type\\\":\\\"message\\\"[^}]*\\\"role\\\":\\\"([^\\\"]+)\\\"'){$role=$matches[1]}; $starts = if($l -match '\\\"status\\\":\\\"([^\\\"]+)\\\"'){$matches[1]}else{''}; $name = if($l -match '\\\"name\\\":\\\"([^\\\"]+)\\\"'){$matches[1]}else{''}; \\\"{0,3} | ord={1,-3} | {2} | {3,-14} | ptype={4,-16} | role={5,-9} status={6,-10} name={7}\\\" -f ($i+1),$ord,$ts,$ty,$pt,$role,$starts,$name } ; $out\"}",
+      "tsMs": 1788774234364
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$raw = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes((Resolve-Path .\\\\input\\\\session.jsonl))); $lines = $raw -split \\\"`n\\\" | ForEach-Object { $_.TrimEnd(\\\"`r\\\") } | Where-Object { $_.Trim().Length -gt 0 }; \\\"TOTAL physical lines: $($lines.Count)\\\"; $out=@(); for($i=0;$i -lt $lines.Count;$i++){ try { $e=$lines[$i] | ConvertFrom-Json -ErrorAction Stop; $p=$e.payload; $kind = if($p){$p.type}else{''}; $note=''; if($kind -eq 'message'){ $txt = @($p.content | Where-Object { $_.type -in @('text','output_text','input_text') } | ForEach-Object { $_.text }) -join ' '; if($txt.Length -gt 400){$txt=$txt.Substring(0,400)+'...<TRUNC>'}; $note = \\\"[role=$($p.role)] $txt\\\" } elseif($kind -eq 'custom_tool_call'){ $inp=$p.input; if($inp -is [string]){ if($inp.Length -gt 400){$inp=$inp.Substring(0,400)+'...<TRUNC>'} } else { $inp = ($inp | ConvertTo-Json -Compress); if($inp.Length -gt 400){$inp=$inp.Substring(0,400)+'...<TRUNC>'} }; $note=\\\"call=$($p.name) status=$($p.status) INPUT: $inp\\\" }; $out += (\\\"{0,3} ord={1,-3} {2} {3,-14} | {4}\\\" -f ($i+1),$e.ordinal,$e.timestamp,$e.type,$note) } catch { $out += (\\\"{0,3} ord=? PARSE_FAIL: {1} | head={2}\\\" -f ($i+1),$_.Exception.Message,$lines[$i].Substring(0,[Math]::Min(160,$lines[$i].Length))) } }; $out\"}",
+      "tsMs": 1788774254130
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [Text.Encoding]::UTF8; $raw = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes((Resolve-Path .\\\\input\\\\session.jsonl))); $lines = $raw -split \\\"`n\\\" | ForEach-Object { $_.TrimEnd(\\\"`r\\\") } | Where-Object { $_.Trim().Length -gt 0 }; $e=$lines[8] | ConvertFrom-Json; ($e.payload.content | Where-Object {$_.text}) | ForEach-Object { $_.text }\"}",
+      "tsMs": 1788774264104
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [Text.Encoding]::UTF8; $raw = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes((Resolve-Path .\\\\input\\\\session.jsonl))); $lines = $raw -split \\\"`n\\\" | ForEach-Object { $_.TrimEnd(\\\"`r\\\") } | Where-Object { $_.Trim().Length -gt 0 }; $e=$lines[81] | ConvertFrom-Json; ($e.payload.content | Where-Object {$_.text}) | ForEach-Object { $_.text }\"}",
+      "tsMs": 1788774266484
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[Text.Encoding]::UTF8; Get-Content .\\\\workspace\\\\.git\\\\HEAD; \\\"---\\\"; Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main; \\\"--- packed-refs?\\\"; if(Test-Path .\\\\workspace\\\\.git\\\\packed-refs){ Select-String -Path .\\\\workspace\\\\.git\\\\packed-refs -Pattern 'main' }; \\\"--- .margin:\\\"; if(Test-Path .\\\\workspace\\\\.margin){ Get-ChildItem .\\\\workspace\\\\.margin -Force | Select-Object Name,Length,LastWriteTime } else { \\\"no .margin\\\" }; \\\"--- handoff-output:\\\"; Get-ChildItem .\\\\workspace -Recurse -Filter *.jsonl -ErrorAction SilentlyContinue | Where-Object { $_.FullName -match 'handoff|capture|session' } | Select-Object -First 20 FullName,Length\"}",
+      "tsMs": 1788774286124
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"workspace-overview|Workspace Overview|workspaceOverview\",\"path\":\"workspace/src\"}",
+      "tsMs": 1788774286124
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"workspace-overview|Workspace Overview|workspaceOverview\",\"path\":\"workspace/web\"}",
+      "tsMs": 1788774286148
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788774286153
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "[Console]::OutputEncoding=[Text.Encoding]::UTF8; Get-Content .\\workspace\\.git\\HEAD; \"---\"; Get-Content .\\workspace\\.git\\refs\\heads\\main; \"--- packed-refs?\"; if(Test-Path .\\workspace\\.git\\packed-refs){ Select-String -Path .\\workspace\\.git\\packed-refs -Pattern 'main' }; \"--- .margin:\"; if(Test-Path .\\workspace\\.margin){ Get-ChildItem .\\workspace\\.margin -Force | Select-Object Name,Length,LastWriteTime } else { \"no .margin\" }; \"--- handoff-output:\"; Get-ChildItem .\\workspace -Recurse -Filter *.jsonl -ErrorAction SilentlyContinue | Where-Object { $_.FullName -match 'handoff|capture|session' } | Select-Object -First 20 FullName,Length",
+      "reasons": [
+        "protected path fragment is disabled: \\.margin"
+      ],
+      "tsMs": 1788774286124
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 106079,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-02",
+    "arm": "A",
+    "runId": "formal-case-02-A-2026-09-07T09-42-56-786Z",
+    "startMs": "2026-09-07T09:43:05.261Z",
+    "endMs": "2026-09-07T09:44:52.956Z",
+    "durationMs": 107695,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-02-A-2026-09-07T09-42-56-786Z status=ok durationMs=106079\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-02-A-2026-09-07T09-42-56-786Z.cert.json"
+  }
+}

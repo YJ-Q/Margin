@@ -1,0 +1,306 @@
+{
+  "runId": "formal-case-01-B-2026-09-07T09-38-53-208Z",
+  "caseId": "case-01",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T09:39:03.623Z",
+  "endTs": "2026-09-07T09:42:56.763Z",
+  "durationMs": 233140,
+  "modelPromptStartMs": 38,
+  "modelPromptEndMs": 233139,
+  "sessionId": "01a07b3c-496b-74c9-869b-79d0d3a3a46d",
+  "rawResponse": "I have gathered sufficient evidence. Producing the recovery JSON.\n\n{\n  \"goal\": \"Complete Margin V2.2 — Agent Source Management (final pre-daily-use feature slice): a unified Agent Source Registry (`~/.margin/agent-sources.json`) shared by CLI and Electron with auto-detect + manual register + minimal adapters (`detect`, `validateSource`, `discoverSessions`); CLI subcommands `margin agent list|detect|add|remove`; Electron Settings 'Agent Sources' (detect/add/change-path/remove, empty state 'No supported Agent sources found'); semantics: registered source ≠ supported format, no fabricated sessions for adapter-less types (Pi/DeepSeek/Custom show 'Registered · Adapter required'), Claude 'Partial support' without quota, Resource Bar follows the active Codex source only, CLI/Electron see the same registry/active source; validation items 1-8 incl. fresh packaged-installer smoke; final output must be 'PASS — V2.2 ... ready for real daily use' or 'PARTIAL — <blocker>'; no parser/quota/credentials/cloud/database/updater scope. Historical goal is tagged Inferred in the handoff — confirm it is still current before acting on it.\",\n  \"progress\": \"Current repo truth (frozen snapshot only; inspection-based): the V2.2 implementation is fully present in the working tree but NOT committed. HEAD = refs/heads/main = a247e75ab9e78cce7853e3f281b85459a4f25e7c ('docs: record V2 resource bar daily-use baseline'), which is also the last reflog entry; the reflog shows no commit after it. Verified against the HEAD object tree: the following V2.2 files do NOT exist at HEAD (new/untracked): src/agents/sourceRegistry.js, src/agents/adapters.js, src/cli/agentSourceCli.js, test/agentSourceRegistry.test.js. Verified HEAD blobs of bin/margin.js, src/core/handoff/httpAdapter.js, and web/src/margin/MarginApp.js contain no 'agent-source'/'sourceRegistry' references, while the working-tree versions do, so those tracked files (plus likely SessionBoard.js, marginApiClient.js, and possibly other tests/electron files) were modified by the V2.2 work. The implementation content matches the brief: sourceRegistry.js implements profile-scoped registry, AGENT_TYPES codex|claude|pi|deepseek|custom, supportLevel mapping, detect-never-deletes-manual, and resolveActiveSource precedence manual > matching env path (CODEX_HOME/CLAUDE_HOME) > last auto; adapters.js gives codex full session discovery and claude discoverSessions=[] with adapterFor()==null for other types; agentSourceCli.js implements list/detect/add/remove with usage errors; bin/margin.js wires the 'margin agent' subcommand and resolves sessions via the active Codex source; httpAdapter.js adds startup detect + /api/agent-sources GET/POST/DELETE and routes /api/sessions and /api/resources/status through the active Codex source; the web margin SPA (MarginApp/SessionBoard/marginApiClient) adds Agent Sources UI and 'No supported Agent sources found'. No V2.2 plan/report/validation document exists in the snapshot's docs (no docs/validation V2.2 report, no recovery-handoffs folder inside the repo); the 'PASS — V2.2' statement exists only as a historical session/handoff claim, not as a repository artifact.\",\n  \"pending\": \"Cannot be fully established from this snapshot. At snapshot time the V2.2 work was uncommitted on top of a247e75; it is unknown whether the live repo later committed it or continued. No code-completeness gap was found by inspection, but current validation is unknown (nothing has been rerun here), so a safe continuation must: (1) in the real <repo> worktree re-run the 4-file focused node --test suite (agentSourceRegistry, agentResourceQuota, marginCli, marginDiscoveryParity), then full `npm test`, `npm run build`, and `npm run electron:make` (in a clean out dir); (2) re-run manual acceptance items 1-8 of the brief (real Codex auto-detect; CLI manual Codex then Electron uses same registry; GUI path change then CLI sees it; Custom/DeepSeek register without fake sessions; Claude Partial; no-agent clean startup; Codex session + Resource Bar + copy/save regression; fresh installer without repo cwd/global Node); (3) resolve/confirm the historically failed `npm test -- --test-name-pattern=\\\"(margin CLI entry|Codex discovery|Codex quota|missing source|Margin)\\\"` run and the 3 commands with no explicit historical result; (4) commit the uncommitted V2.2 changes if the live repo still lacks them; (5) then emit the required final PASS/PARTIAL statement.\",\n  \"historicalValidation\": \"From input/HANDOFF.md only (not independently reproduced): Confirmed historical test commands that exited 0: (a) `.{.runtime node} --test test/agentSourceRegistry.test.js test/agentResourceQuota.test.js test/marginCli.test.js test/marginDiscoveryParity.test.js`; (b) `.{.runtime node} --test test/margin*.test.js; npm run electron:make`. Confirmed historical failure (exit 1): `npm test -- --test-name-pattern=\\\"(margin CLI entry|Codex discovery|Codex quota|missing source|Margin)\\\"`. Confirmed historical failures: `npm run electron:make` twice errored `EBUSY: resource busy or locked, unlink ...app.asar` and `...margin-0.1.0-full.nupkg` (file-lock artifacts). Uncertain: 3 focused test commands had no explicit final result. Historical assistant report claimed 'PASS — V2.2 Agent Source Management ready for real daily use' (registry `~/.margin/agent-sources.json`, minimal adapters, manual-enabled Codex precedence over matching env path — report text is truncated). These are historical reports; none of them is current validation.\",\n  \"recommendedFollowUp\": \"In the live <repo> repository (not this read-only snapshot): 1) verify `git status`/HEAD — expect HEAD a247e75 with uncommitted V2.2 work unless later commits exist; 2) run the 4-file focused test command from package.json's node runtime; 3) if green run `npm test`, `npm run build`, then `npm run electron:make` after clearing/relocating any locked `out2` artifacts; 4) perform manual acceptance items 1-8 and a fresh-install smoke per the brief; 5) commit the V2.2 changes (no commit exists at snapshot time); 6) only after those reruns restate PASS or PARTIAL. Do not begin any new feature; the brief says stop after the slice is accepted.\",\n  \"currentApplicability\": \"This environment is a frozen, read-only snapshot plus a handoff summary; it cannot execute anything relevant: git, node, and npm are not on PATH, and the project's own runtime is gitignored and absent (`.runtime/node-v22.23.1-win-x64/node.exe`, `node_modules/`, `web/dist/`, `out*/`). Therefore no current test/build/electron validation was possible; 'current truth' here is limited to file presence/content and git-object inspection. The snapshot does faithfully reflect the V2.2 session's end-state worktree (implementation present, uncommitted, HEAD still at the V2.2 baseline a247e75), so resuming atop this tree is reasonable; but the live repo, the user-profile registry file (`~/.margin/agent-sources.json`, which lives outside the repo), real Codex/Claude installs, and GUI/installer behavior are all outside this snapshot and were not validated. The handoff's own '当前状态' confirms current validation was unknown even at handoff time.\",\n  \"unsafeAssumptions\": [\n    \"Historical exit-0 test runs and the historical 'PASS — V2.2' report are session/assistant claims, NOT current validation; they were not rerun and must not be treated as proof the tree is green.\",\n    \"Do not assume tests/build/electron:make can be executed in this environment — they cannot (no node/npm, no .runtime, no node_modules, no web/dist).\",\n    \"Do not assume the frozen workspace equals the live <repo> repository state at resume time; re-check git status/HEAD and whether V2.2 was committed after the snapshot.\",\n    \"Do not assume the historically failed `npm test -- --test-name-pattern=...` run indicates a currently unresolved bug; its relationship to the later green runs was never established.\",\n    \"Do not assume the two historical electron:make EBUSY failures were code defects needing a fix; they look like file-lock artifacts (app.asar / nupkg busy) and should be re-run, not 'fixed' blindly.\",\n    \"Do not infer file-level modifications from worktree-vs-git blob hash comparison: line-ending normalization (autocrlf/.gitattributes) makes raw hash comparison unreliable; only content inspection of specific HEAD blobs was used.\",\n    \"Do not assume the handoff's numerical counts (e.g., '322 tracked/untracked files') are current or independently verified.\",\n    \"Do not assume absence of a V2.2 report document in the repo means the feature is incomplete; the required report may have existed only in the session output (historical, not preserved as a repo file).\",\n    \"Do not assume the Inferred task goal in the handoff is still the operative goal without reconfirming it with the user.\"\n  ]\n}",
+  "parsedRecovery": {
+    "goal": "Complete Margin V2.2 — Agent Source Management (final pre-daily-use feature slice): a unified Agent Source Registry (`~/.margin/agent-sources.json`) shared by CLI and Electron with auto-detect + manual register + minimal adapters (`detect`, `validateSource`, `discoverSessions`); CLI subcommands `margin agent list|detect|add|remove`; Electron Settings 'Agent Sources' (detect/add/change-path/remove, empty state 'No supported Agent sources found'); semantics: registered source ≠ supported format, no fabricated sessions for adapter-less types (Pi/DeepSeek/Custom show 'Registered · Adapter required'), Claude 'Partial support' without quota, Resource Bar follows the active Codex source only, CLI/Electron see the same registry/active source; validation items 1-8 incl. fresh packaged-installer smoke; final output must be 'PASS — V2.2 ... ready for real daily use' or 'PARTIAL — <blocker>'; no parser/quota/credentials/cloud/database/updater scope. Historical goal is tagged Inferred in the handoff — confirm it is still current before acting on it.",
+    "progress": "Current repo truth (frozen snapshot only; inspection-based): the V2.2 implementation is fully present in the working tree but NOT committed. HEAD = refs/heads/main = a247e75ab9e78cce7853e3f281b85459a4f25e7c ('docs: record V2 resource bar daily-use baseline'), which is also the last reflog entry; the reflog shows no commit after it. Verified against the HEAD object tree: the following V2.2 files do NOT exist at HEAD (new/untracked): src/agents/sourceRegistry.js, src/agents/adapters.js, src/cli/agentSourceCli.js, test/agentSourceRegistry.test.js. Verified HEAD blobs of bin/margin.js, src/core/handoff/httpAdapter.js, and web/src/margin/MarginApp.js contain no 'agent-source'/'sourceRegistry' references, while the working-tree versions do, so those tracked files (plus likely SessionBoard.js, marginApiClient.js, and possibly other tests/electron files) were modified by the V2.2 work. The implementation content matches the brief: sourceRegistry.js implements profile-scoped registry, AGENT_TYPES codex|claude|pi|deepseek|custom, supportLevel mapping, detect-never-deletes-manual, and resolveActiveSource precedence manual > matching env path (CODEX_HOME/CLAUDE_HOME) > last auto; adapters.js gives codex full session discovery and claude discoverSessions=[] with adapterFor()==null for other types; agentSourceCli.js implements list/detect/add/remove with usage errors; bin/margin.js wires the 'margin agent' subcommand and resolves sessions via the active Codex source; httpAdapter.js adds startup detect + /api/agent-sources GET/POST/DELETE and routes /api/sessions and /api/resources/status through the active Codex source; the web margin SPA (MarginApp/SessionBoard/marginApiClient) adds Agent Sources UI and 'No supported Agent sources found'. No V2.2 plan/report/validation document exists in the snapshot's docs (no docs/validation V2.2 report, no recovery-handoffs folder inside the repo); the 'PASS — V2.2' statement exists only as a historical session/handoff claim, not as a repository artifact.",
+    "pending": "Cannot be fully established from this snapshot. At snapshot time the V2.2 work was uncommitted on top of a247e75; it is unknown whether the live repo later committed it or continued. No code-completeness gap was found by inspection, but current validation is unknown (nothing has been rerun here), so a safe continuation must: (1) in the real <repo> worktree re-run the 4-file focused node --test suite (agentSourceRegistry, agentResourceQuota, marginCli, marginDiscoveryParity), then full `npm test`, `npm run build`, and `npm run electron:make` (in a clean out dir); (2) re-run manual acceptance items 1-8 of the brief (real Codex auto-detect; CLI manual Codex then Electron uses same registry; GUI path change then CLI sees it; Custom/DeepSeek register without fake sessions; Claude Partial; no-agent clean startup; Codex session + Resource Bar + copy/save regression; fresh installer without repo cwd/global Node); (3) resolve/confirm the historically failed `npm test -- --test-name-pattern=\"(margin CLI entry|Codex discovery|Codex quota|missing source|Margin)\"` run and the 3 commands with no explicit historical result; (4) commit the uncommitted V2.2 changes if the live repo still lacks them; (5) then emit the required final PASS/PARTIAL statement.",
+    "historicalValidation": "From input/HANDOFF.md only (not independently reproduced): Confirmed historical test commands that exited 0: (a) `.{.runtime node} --test test/agentSourceRegistry.test.js test/agentResourceQuota.test.js test/marginCli.test.js test/marginDiscoveryParity.test.js`; (b) `.{.runtime node} --test test/margin*.test.js; npm run electron:make`. Confirmed historical failure (exit 1): `npm test -- --test-name-pattern=\"(margin CLI entry|Codex discovery|Codex quota|missing source|Margin)\"`. Confirmed historical failures: `npm run electron:make` twice errored `EBUSY: resource busy or locked, unlink ...app.asar` and `...margin-0.1.0-full.nupkg` (file-lock artifacts). Uncertain: 3 focused test commands had no explicit final result. Historical assistant report claimed 'PASS — V2.2 Agent Source Management ready for real daily use' (registry `~/.margin/agent-sources.json`, minimal adapters, manual-enabled Codex precedence over matching env path — report text is truncated). These are historical reports; none of them is current validation.",
+    "recommendedFollowUp": "In the live <repo> repository (not this read-only snapshot): 1) verify `git status`/HEAD — expect HEAD a247e75 with uncommitted V2.2 work unless later commits exist; 2) run the 4-file focused test command from package.json's node runtime; 3) if green run `npm test`, `npm run build`, then `npm run electron:make` after clearing/relocating any locked `out2` artifacts; 4) perform manual acceptance items 1-8 and a fresh-install smoke per the brief; 5) commit the V2.2 changes (no commit exists at snapshot time); 6) only after those reruns restate PASS or PARTIAL. Do not begin any new feature; the brief says stop after the slice is accepted.",
+    "currentApplicability": "This environment is a frozen, read-only snapshot plus a handoff summary; it cannot execute anything relevant: git, node, and npm are not on PATH, and the project's own runtime is gitignored and absent (`.runtime/node-v22.23.1-win-x64/node.exe`, `node_modules/`, `web/dist/`, `out*/`). Therefore no current test/build/electron validation was possible; 'current truth' here is limited to file presence/content and git-object inspection. The snapshot does faithfully reflect the V2.2 session's end-state worktree (implementation present, uncommitted, HEAD still at the V2.2 baseline a247e75), so resuming atop this tree is reasonable; but the live repo, the user-profile registry file (`~/.margin/agent-sources.json`, which lives outside the repo), real Codex/Claude installs, and GUI/installer behavior are all outside this snapshot and were not validated. The handoff's own '当前状态' confirms current validation was unknown even at handoff time.",
+    "unsafeAssumptions": [
+      "Historical exit-0 test runs and the historical 'PASS — V2.2' report are session/assistant claims, NOT current validation; they were not rerun and must not be treated as proof the tree is green.",
+      "Do not assume tests/build/electron:make can be executed in this environment — they cannot (no node/npm, no .runtime, no node_modules, no web/dist).",
+      "Do not assume the frozen workspace equals the live <repo> repository state at resume time; re-check git status/HEAD and whether V2.2 was committed after the snapshot.",
+      "Do not assume the historically failed `npm test -- --test-name-pattern=...` run indicates a currently unresolved bug; its relationship to the later green runs was never established.",
+      "Do not assume the two historical electron:make EBUSY failures were code defects needing a fix; they look like file-lock artifacts (app.asar / nupkg busy) and should be re-run, not 'fixed' blindly.",
+      "Do not infer file-level modifications from worktree-vs-git blob hash comparison: line-ending normalization (autocrlf/.gitattributes) makes raw hash comparison unreliable; only content inspection of specific HEAD blobs was used.",
+      "Do not assume the handoff's numerical counts (e.g., '322 tracked/untracked files') are current or independently verified.",
+      "Do not assume absence of a V2.2 report document in the repo means the feature is incomplete; the required report may have existed only in the session output (historical, not preserved as a repo file).",
+      "Do not assume the Inferred task goal in the handoff is still the operative goal without reconfirming it with the user."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788773945028
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Name, Length, Mode\"}",
+      "tsMs": 1788773945029
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788773946351
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788773946351
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788773946351
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788773946352
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788773947570
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git status --short 2>&1 | Select-Object -First 60; Write-Output \\\"---LOG---\\\"; git log --oneline -8 2>&1; Write-Output \\\"---BRANCH---\\\"; git branch -a 2>&1\"}",
+      "tsMs": 1788773949336
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/test\"}",
+      "tsMs": 1788773949343
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788773952441
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src\"}",
+      "tsMs": 1788773952442
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src\"}",
+      "tsMs": 1788773954308
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"agent-source|agentSource|agent_sources\",\"path\":\"workspace\",\"maxResults\":80}",
+      "tsMs": 1788773954308
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/agents/sourceRegistry.js\"}",
+      "tsMs": 1788773958655
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/agents/adapters.js\"}",
+      "tsMs": 1788773958655
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output \\\"---HEAD---\\\"; Get-Content .git/HEAD; Write-Output \\\"---refs---\\\"; Get-ChildItem -Recurse .git/refs -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output \\\"---mtime top-level---\\\"; Get-ChildItem -Force | Sort-Object LastWriteTime | Select-Object Name, LastWriteTime\"}",
+      "tsMs": 1788773961001
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers\"}",
+      "tsMs": 1788773961009
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output \\\"main ref:\\\"; Get-Content .git/refs/heads/main; Write-Output \\\"agent ref:\\\"; Get-Content .git/refs/heads/agent; Write-Output \\\"codex ref:\\\"; Get-Content .git/refs/heads/codex; Write-Output \\\"HEAD log refs:\\\"; Get-ChildItem .git/logs -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"logs/HEAD tail:\\\"; Get-Content .git/logs/HEAD -ErrorAction SilentlyContinue -Tail 5\"}",
+      "tsMs": 1788773964269
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers/sdd\"}",
+      "tsMs": 1788773964281
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788773970013
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem docs -Recurse -Directory | Select-Object FullName; Write-Output \\\"---design-references---\\\"; Get-ChildItem design-references -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"---evaluation---\\\"; Get-ChildItem evaluation -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788773970014
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem _tmp\\\\AppData -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object FullName -First 60; Write-Output \\\"---search git.exe---\\\"; Get-ChildItem workspace -Recurse -Filter \\\"git.exe\\\" -ErrorAction SilentlyContinue | Select-Object FullName -First 10\"}",
+      "tsMs": 1788773977399
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output \\\"---.runtime?---\\\"; Get-ChildItem -Force -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"---.gitmodules---\\\"; Get-Content .gitignore -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788773977411
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"node --version 2>&1; Write-Output \\\"---npm---\\\"; npm --version 2>&1; Write-Output \\\"---where git/node---\\\"; where.exe node 2>&1; where.exe git 2>&1\"}",
+      "tsMs": 1788773986170
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem src\\\\agents, src\\\\cli, bin, src\\\\core\\\\handoff -ErrorAction SilentlyContinue | Select-Object Directory,Name,Length,LastWriteTime\"}",
+      "tsMs": 1788773986181
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output \\\"---loose object check---\\\"; Get-ChildItem .git\\\\objects -Directory -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"---packs---\\\"; Get-ChildItem .git\\\\objects\\\\pack -ErrorAction SilentlyContinue | Select-Object Name,Length; Write-Output \\\"---HEAD obj files---\\\"; Get-ChildItem .git\\\\objects\\\\a2 -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"---index size---\\\"; (Get-Item .git\\\\index).Length\"}",
+      "tsMs": 1788773997320
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $sha='a247e75ab9e78cce7853e3f281b85459a4f25e7c'; $dir=$sha.Substring(0,2); $file=$sha.Substring(2); $path=\\\".git\\\\objects\\\\$dir\\\\$file\\\"; $bytes=[System.IO.File]::ReadAllBytes($path); Write-Output \\\"obj len: $($bytes.Length)\\\"; $ms=New-Object System.IO.MemoryStream(,$bytes); $ms.Position=2; $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress); $out=New-Object System.IO.MemoryStream; $ds.CopyTo($out); $ds.Dispose(); $text=[System.Text.Encoding]::ASCII.GetString($out.ToArray()); Write-Output $text\"}",
+      "tsMs": 1788774013589
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $base=(Get-Location).Path; $sha='a247e75ab9e78cce7853e3f281b85459a4f25e7c'; $p=Join-Path $base (\\\".git\\\\objects\\\\\\\"+$sha.Substring(0,2)+\\\"\\\\\\\"+$sha.Substring(2)); Write-Output $p; $bytes=[System.IO.File]::ReadAllBytes($p); Write-Output \\\"len=$($bytes.Length)\\\"; $ms=New-Object System.IO.MemoryStream(,$bytes); $ms.Position=2; $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress); $out=New-Object System.IO.MemoryStream; $ds.CopyTo($out); $ds.Dispose(); $text=[System.Text.Encoding]::ASCII.GetString($out.ToArray()); Write-Output $text\"}",
+      "tsMs": 1788774020868
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $base=(Get-Location).Path; function Get-Obj($sha){ $p=Join-Path $base (\\\".git\\\\objects\\\\\\\"+$sha.Substring(0,2)+\\\"\\\\\\\"+$sha.Substring(2)); if(Test-Path $p){ $bytes=[System.IO.File]::ReadAllBytes($p); $ms=New-Object System.IO.MemoryStream(,$bytes); $ms.Position=2; $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress); $out=New-Object System.IO.MemoryStream; $ds.CopyTo($out); $ds.Dispose(); return [System.Text.Encoding]::ASCII.GetString($out.ToArray()) } else { return $null } }; $t=Get-Obj 'f08f297a426fd51ea9bf21c89ac88822fb84bd7d'; if($t -eq $null){ Write-Output 'ROOT TREE NOT LOOSE (packed)' } else { Write-Output $t }\"}",
+      "tsMs": 1788774026524
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $base=(Get-Location).Path; $idx=[System.IO.File]::ReadAllBytes((Join-Path $base '.git\\\\index')); Write-Output \\\"sig: $([System.Text.Encoding]::ASCII.GetString($idx,0,4)) ver: $([System.BitConverter]::ToInt32([byte[]]@($idx[7],$idx[6],$idx[5],$idx[4]),0)) count: $([System.BitConverter]::ToInt32([byte[]]@($idx[11],$idx[10],$idx[9],$idx[8]),0)) total=$($idx.Length)\\\"\"}",
+      "tsMs": 1788774035505
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $base=(Get-Location).Path; $idx=[System.IO.File]::ReadAllBytes((Join-Path $base '.git\\\\index')); $cnt=[System.BitConverter]::ToInt32([byte[]]@($idx[11],$idx[10],$idx[9],$idx[8]),0); $pos=12; $names=@(); for($i=0;$i -lt $cnt;$i++){ $ns=$pos+62; $end=$ns; while($idx[$end] -ne 0){$end++}; $name=[System.Text.Encoding]::UTF8.GetString($idx,$ns,$end-$ns); $names+=$name; $shaBytes=$idx[($ns-20)..($ns-1)]; $shaHex=([System.BitConverter]::ToString($shaBytes)).Replace('-','').ToLower(); if($name -match 'agent|sourceRegist|marginCli|discoveryParity|session-source|margin\\\\.js|handoff|resourceQuota|codexSource|electron|SessionBoard|MarginApp|marginApiClient|adapters|quota|agent-sources'){ Write-Output \\\"$i  $name  $shaHex\\\" }; $len=62+($end-$ns)+1; $pad=(8-($len%8))%8; $pos=$pos+$len+$pad }; Write-Output \\\"total entries parsed ok; names count=$($names.Count)\\\"\"}",
+      "tsMs": 1788774043063
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $base=(Get-Location).Path\\nfunction ReadObj($sha){ $p=Join-Path $base (\\\".git\\\\objects\\\\\\\"+$sha.Substring(0,2)+\\\"\\\\\\\"+$sha.Substring(2)); if(Test-Path $p){ $bytes=[System.IO.File]::ReadAllBytes($p); $ms=New-Object System.IO.MemoryStream(,$bytes); $ms.Position=2; $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress); $out=New-Object System.IO.MemoryStream; $ds.CopyTo($out); $ds.Dispose(); $data=$out.ToArray(); return @{ loose=$true; data=$data } } else { return @{ loose=$false; data=$null } } }\\nfunction ParseTree($data){ $res=@{}; $pos=0; while($data[$pos] -ne 0){$pos++}; $pos++; while($pos -lt $data.Length){ $sp=$pos; while($data[$sp] -ne 32){$sp++}; $mode=[System.Text.Encoding]::ASCII.GetString($data,$pos,$sp-$pos); $nul=$sp+1; while($data[$nul] -ne 0){$nul++}; $name=[System.Text.Encoding]::UTF8.GetString($data,$sp+1,$nul-$sp-1); $shaBytes=$data[($nul+1)..($nul+20)]; $sha=([System.BitConverter]::ToString($shaBytes)).Replace('-','').ToLower(); $res[$name]=@{mode=$mode;sha=$sha}; $pos=$nul+21 }; return $res }\\nfunction Walk($pathPrefix,$treeSha,$want,$found){ $o=ReadObj $treeSha; if(-not $o.loose){ Write-Output \\\"PACKED-TREE: $pathPrefix $treeSha\\\"; return }; $t=ParseTree $o.data; foreach($k in $t.Keys){ $full=if($pathPrefix){ \\\"$pathPrefix/$k\\\" } else { $k }; $isTree=($t[$k].mode -eq '40000'); if($isTree){ if($want.Keys -contains $full){ Walk $full $t[$k].sha $want $found } } else { if($want.ContainsKey($full)){ Write-Output \\\"BLOB $full sha=$($t[$k].sha) mode=$($t[$k].mode)\\\" } } } }\\n$want=@{}; foreach($f in @('src/agents/sourceRegistry.js','src/agents/adapters.js','src/cli/agentSourceCli.js','test/agentSourceRegistry.test.js','src/core/handoff/httpAdapter.js','bin/margin.js','src/core/handoff/session-source.js','electron/main.js','web/src/margin/MarginApp.js','web/src/margin/SessionBoard.js','web/src/margin/marginApiClient.js','test/marginCli.test.js','test/agentResourceQuota.test.js",
+      "tsMs": 1788774062467
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $base=(Get-Location).Path\\nfunction ReadObj($sha){ $p=Join-Path $base (\\\".git\\\\objects\\\\\\\"+$sha.Substring(0,2)+\\\"\\\\\\\"+$sha.Substring(2)); if(Test-Path $p){ $bytes=[System.IO.File]::ReadAllBytes($p); $ms=New-Object System.IO.MemoryStream(,$bytes); $ms.Position=2; $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress); $out=New-Object System.IO.MemoryStream; $ds.CopyTo($out); $ds.Dispose(); return @{ loose=$true; data=$out.ToArray() } } else { return @{ loose=$false } } }\\nfunction ParseTree($data){ $res=@{}; $pos=0; while($data[$pos] -ne 0){$pos++}; $pos++; while($pos -lt $data.Length){ $sp=$pos; while($data[$sp] -ne 32){$sp++}; $mode=[System.Text.Encoding]::ASCII.GetString($data,$pos,$sp-$pos); $nul=$sp+1; while($data[$nul] -ne 0){$nul++}; $name=[System.Text.Encoding]::UTF8.GetString($data,$sp+1,$nul-$sp-1); $shaBytes=$data[($nul+1)..($nul+20)]; $sha=([System.BitConverter]::ToString($shaBytes)).Replace('-','').ToLower(); $res[$name]=@{mode=$mode;sha=$sha}; $pos=$nul+21 }; return $res }\\n$script:want=@{}; foreach($f in @('src/agents/sourceRegistry.js','src/agents/adapters.js','src/cli/agentSourceCli.js','test/agentSourceRegistry.test.js','src/core/handoff/httpAdapter.js','bin/margin.js','src/core/handoff/session-source.js','electron/main.js','web/src/margin/MarginApp.js','web/src/margin/SessionBoard.js','web/src/margin/marginApiClient.js','test/marginCli.test.js','test/agentResourceQuota.test.js','test/marginDiscoveryParity.test.js')){$script:want[$f]=$true}\\nfunction HasChild($prefix){ foreach($k in $script:want.Keys){ if($k.StartsWith($prefix+'/')){ return $true } }; return $false }\\nfunction Walk($pathPrefix,$treeSha){ $o=ReadObj $treeSha; if(-not $o.loose){ Write-Output \\\"PACKED-TREE: [$pathPrefix] $treeSha\\\"; return }; $t=ParseTree $o.data; foreach($k in $t.Keys){ $full=if($pathPrefix){ \\\"$pathPrefix/$k\\\" } else { $k }; if($t[$k].mode -eq '40000'){ if($pathPrefix -eq '' -or (HasChild ",
+      "tsMs": 1788774068503
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $base=(Get-Location).Path\\n$idx=[System.IO.File]::ReadAllBytes((Join-Path $base '.git\\\\index'))\\n$cnt=[System.BitConverter]::ToInt32([byte[]]@($idx[11],$idx[10],$idx[9],$idx[8]),0)\\n$pos=12; $map=@{}\\nfor($i=0;$i -lt $cnt;$i++){\\n  $shaStart=$pos+40  # after ctime8+mtime8+dev4+ino4+mode4+uid4+gid4+size4 =40; wait compute\\n  # fields: ctime(8) mtime(8) dev(4) ino(4) mode(4) uid(4) gid(4) size(4) => 40 bytes, sha at +40..+60, flags at +60..+62\\n  $ns=$pos+62\\n  $end=$ns; while($idx[$end] -ne 0){$end++}\\n  $name=[System.Text.Encoding]::UTF8.GetString($idx,$ns,$end-$ns)\\n  $shaBytes=$idx[($pos+40)..($pos+59)]\\n  $sha=([System.BitConverter]::ToString($shaBytes)).Replace('-','').ToLower()\\n  $map[$name]=$sha\\n  $len=62+($end-$ns)+1; $pad=(8-($len%8))%8; $pos=$pos+$len+$pad\\n}\\nWrite-Output \\\"index entries: $($map.Count)\\\"\\n# For sanity check, print a few exact index shas\\nforeach($k in @('bin/margin.js','src/core/handoff/httpAdapter.js','test/marginCli.test.js','web/src/margin/MarginApp.js','electron/main.js')){ Write-Output \\\"INDEX $k = $($map[$k])\\\" }\\n# Compute sha1 of files on disk\\nfunction DiskSha($rel){ $full=Join-Path $base $rel; if(Test-Path $full -PathType Leaf){ $s=[System.Security.Cryptography.SHA1]::Create(); $fs=[System.IO.File]::OpenRead($full); $h=$s.ComputeHash($fs); $fs.Close(); return ([System.BitConverter]::ToString($h)).Replace('-','').ToLower() } else { return $null } }\\n$changed=@(); foreach($k in $map.Keys){ $d=DiskSha $k; if($d -ne $null -and $d -ne $map[$k]){ $changed += $k } elseif($d -eq $null){ $changed += \\\"MISSING: $k\\\" } }\\nWrite-Output \\\"MODIFIED/MISSING vs index: $($changed.Count)\\\"; $changed | Sort-Object\"}",
+      "tsMs": 1788774089749
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; $base=(Get-Location).Path\\nfunction ReadObj($sha){ $p=Join-Path $base (\\\".git\\\\objects\\\\\\\"+$sha.Substring(0,2)+\\\"\\\\\\\"+$sha.Substring(2)); if(Test-Path $p){ $bytes=[System.IO.File]::ReadAllBytes($p); $ms=New-Object System.IO.MemoryStream(,$bytes); $ms.Position=2; $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress); $out=New-Object System.IO.MemoryStream; $ds.CopyTo($out); $ds.Dispose(); return $out.ToArray() } else { return $null } }\\nforeach($obj in @(@{f='httpAdapter.js';sha='3fb6864c54afc1001f87630599eb87db117e34a9'},@{f='bin/margin.js';sha='78a4f8faff2bc721a182ed6f096db35be17dab3e'},@{f='MarginApp.js';sha='5614fd279865841dbdc965bd301814c7e36c3b40'})){\\n  $data=ReadObj $obj.sha\\n  if($data -eq $null){ Write-Output \\\"$($obj.f): PACKED (cannot read directly)\\\" }\\n  else { $txt=[System.Text.Encoding]::UTF8.GetString($data); Write-Output \\\"--- $($obj.f) @HEAD: contains 'agent-source'? $($txt.Contains('agent-source')); contains 'sourceRegistry'? $($txt.Contains('sourceRegistry')); length=$($txt.Length)\\\" }\\n}\"}",
+      "tsMs": 1788774099606
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem docs\\\\validation -Recurse -ErrorAction SilentlyContinue | Select-Object FullName | Select-String -Pattern 'recovery|handoff' ; Write-Output \\\"---dirs in docs/validation---\\\"; Get-ChildItem docs\\\\validation -Directory -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"---files at docs/validation root---\\\"; Get-ChildItem docs\\\\validation -File -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788774107257
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/electron\",\"pattern\":\"agent|Agent|margin\\\\.html|agent-sources\"}",
+      "tsMs": 1788774107265
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output \\\"---electron dir---\\\"; Get-ChildItem electron -ErrorAction SilentlyContinue | Select-Object Name,Length; Write-Output \\\"---files with v2.2/agent-source in name---\\\"; Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'agent-source|v2\\\\.2|agentSource|sourceRegist' } | Select-Object FullName; Write-Output \\\"---untracked-looking top-level files (not in gitignore)---\\\"; Get-ChildItem -File -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788774112637
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/cli/agentSourceCli.js\"}",
+      "tsMs": 1788774112645
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/bin/margin.js\"}",
+      "tsMs": 1788774115252
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace/src/core/handoff/httpAdapter.js\",\"pattern\":\"agent-sources|detectAgentSources|active source|resolveActiveSource|resource\"}",
+      "tsMs": 1788774115253
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788774117507
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/main.js\"}",
+      "tsMs": 1788774120825
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":20,\"path\":\"workspace/test/agentSourceRegistry.test.js\",\"pattern\":\"^\\\\s*(test|it)\\\\(|describe\\\\(\"}",
+      "tsMs": 1788774142614
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":20,\"path\":\"workspace/test/marginCli.test.js\",\"pattern\":\"agent |active source|sourceRegistry|registry|margin agent\"}",
+      "tsMs": 1788774142615
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/agentSourceRegistry.test.js\"}",
+      "tsMs": 1788774144436
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace/test/marginCli.test.js\",\"pattern\":\"agent\"}",
+      "tsMs": 1788774144437
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":25,\"path\":\"workspace/test/marginDiscoveryParity.test.js\",\"pattern\":\"registry|Registry|source|Source|discover|CODEX_HOME\"}",
+      "tsMs": 1788774148545
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\",\"offsetChars\":0,\"limitChars\":4500}",
+      "tsMs": 1788774148546
+    }
+  ],
+  "deniedToolCalls": [],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 233140,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-01",
+    "arm": "B",
+    "runId": "formal-case-01-B-2026-09-07T09-38-53-208Z",
+    "startMs": "2026-09-07T09:39:02.090Z",
+    "endMs": "2026-09-07T09:42:56.763Z",
+    "durationMs": 234673,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-01-B-2026-09-07T09-38-53-208Z status=ok durationMs=233140\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-01-B-2026-09-07T09-38-53-208Z.cert.json"
+  }
+}

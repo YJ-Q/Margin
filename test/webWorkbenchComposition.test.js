@@ -7,6 +7,7 @@ import path from 'node:path';
 import test from 'node:test';
 import { createMarginCore } from '../src/core/createMarginCore.js';
 import { createWebWorkbench } from '../src/web/createWebWorkbench.js';
+import { CONTRACT_VERSION } from '../src/contracts/contractTypes.js';
 
 const pinnedNode = path.resolve('.runtime/node-v22.23.1-win-x64/node.exe');
 
@@ -81,7 +82,7 @@ test('composition opens exactly one configured Core, uses terminal-safe Pi defau
     assert.equal(started.host, '127.0.0.1');
     assert.ok(started.port > 0);
     const health = await fetch(`${started.origin}/api/health`).then((response) => response.json());
-    assert.deepEqual(health, { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: '1.1' });
+    assert.deepEqual(health, { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: CONTRACT_VERSION });
 
     await f.workbench.close();
     await f.workbench.close();
@@ -110,7 +111,7 @@ test('development routes health, commands, queries, and events before the Vite S
       return { status: response.status, body: await response.json() };
     };
     const health = await api('/api/health');
-    assert.deepEqual(health, { status: 200, body: { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: '1.1' } });
+    assert.deepEqual(health, { status: 200, body: { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: CONTRACT_VERSION } });
 
     const query = await api('/api/queries', {
       method: 'POST', headers: { 'content-type': 'application/json' },
@@ -148,7 +149,7 @@ test('production composition starts API-only when no web assets are present', as
     const started = await workbench.start();
     assert.ok(started.port > 0);
     const health = await fetch(`${started.origin}/api/health`).then((response) => response.json());
-    assert.deepEqual(health, { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: '1.1' });
+    assert.deepEqual(health, { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: CONTRACT_VERSION });
     // The API answers; nothing is served for a browser path because no static app is mounted.
     const page = await fetch(`${started.origin}/`);
     assert.equal(page.status, 404);

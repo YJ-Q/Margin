@@ -1,0 +1,253 @@
+{
+  "runId": "formal-case-09-B-2026-09-07T07-37-54-354Z",
+  "caseId": "case-09",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T07:38:03.383Z",
+  "endTs": "2026-09-07T07:40:59.653Z",
+  "durationMs": 176270,
+  "modelPromptStartMs": 32,
+  "modelPromptEndMs": 176270,
+  "sessionId": "01a07acd-8115-767a-a3e4-e58e7f158ac0",
+  "rawResponse": "I have enough evidence to reconstruct the recovery state. Let me compile the JSON summary.\n\n**Evidence assembled:**\n- `input/HANDOFF.md` is a Margin Distiller \"Smart Handoff\" for codex session `01a070e6-3bd9-7591-aa4e-31b364badda1` about the **Phase 1 Margin Distiller PoC**.\n- Frozen repo truth: `.git/refs/heads/main` = `a247e75ab9e78cce7853e3f281b85459a4f25e7c` — matches the handoff-reported HEAD; last commit `2026-09-06 17:44:36 UTC`.\n- `experiments/` is **empty** (0 files) in the snapshot — the 13 claimed deliverable files were untracked and not preserved.\n- Tracked repo at this HEAD already contains a committed formal core: `src/core/handoff/*`, `src/cli/margin/*`, `bin/margin.js`, and related tests.\n- `docs/validation` and `.margin` are protected/denied; `.runtime` node binary is absent.\n\n```json\n{\n  \"goal\": \"Build Phase 1 'Margin Distiller PoC' for the Margin product (workspace repo <repo>): validate that Margin can accurately recover enough development state from a Codex session + Tool-Call/Result + Git/Workspace evidence — using continues 4.1.1 for session discovery and base parsing without re-developing it — so that a successor agent can continue work, using far less context than the full session. Priorities: continuation quality > information truthfulness > token efficiency. Must build a traceable evidence layer (especially 'Tool Call -> Tool Result' for exec/shell/patch/write/test), label facts Confirmed/Inferred/Uncertain, refresh repo truth (branch/HEAD/files) before generating, and never mark tasks completed merely because the assistant claimed completion. Historical request continuation is inferred as: 'finish the remaining work'; confirm whether that goal still holds before proceeding.\",\n  \"progress\": \"HISTORICAL, assistant-reported: 'Phase 1 Distiller PoC complete' milestone. Structured session work touched/created 13 files, all UNTRACKED, under experiments/phase0-continues (package.json, .gitignore, run-baseline.mjs, verify-baseline.mjs, README.md) and experiments/phase1-distiller (package.json, .gitignore, evidence.mjs, distiller.mjs, run-distiller.mjs, distiller.test.mjs, evaluation.md, README.md). CURRENT repo truth observed in THIS environment: branch main, HEAD = a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches the handoff-reported HEAD at checkpoint 2026-09-07T04:47:58Z); however experiments/ exists but is EMPTY (0 files) in the frozen snapshot, so the 13 deliverables are not present here. The tracked tree at this HEAD already contains a committed formal handoff core ('feat: establish Margin handoff core and CLI V1', 2026-09-06): src/core/handoff/*, src/cli/margin/*, bin/margin.js, plus tests test/handoff.test.js, test/resumeSummary.test.js, test/codexSourceNormalization.test.js.\",\n  \"pending\": \"Not derivable with certainty from the artifact. The handoff records no explicit open TODO list; it marks as Uncertain: 17 edit operations with no explicit historical result and 28 internal operations with no clear terminal state, plus 'current validation: unknown' because the focused distiller tests were never re-run against the current observation. Inferred remaining work = complete the rest of the Phase 1 PoC validation (evidence/repo-truth refresh/handoff generation quality) and independently verify rather than assume milestone completion. Since the 13 PoC files and the analyzed session are absent from this snapshot, no PoC-specific action is executable inside this isolated environment.\",\n  \"historicalValidation\": \"Historical only, not current validation: per the handoff, 10 focused test commands exited 0 — primarily `node --test experiments/phase1-distiller/distiller.test.mjs` and a variant piped to experiments/phase1-distiller/output/targeted-tests.tap — plus historical npm install exit 0 in phase0-continues. These ran in the original <repo> working tree and CANNOT be reproduced here (files absent; .runtime node binary absent). docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md additionally states 15 pass items at that time came from existing experiment records and were not re-run; it also describes that earlier distiller produced placeholder Decisions and fixed Next Step suggestions.\",\n  \"recommendedFollowUp\": \"Recommendation only — not a verified, currently executable action, and possibly stale. In the real <repo> where the untracked experiments still exist: (1) re-run the phase1-distiller targeted tests with the pinned .runtime node binary and confirm exit status; (2) re-verify current file states and output TAP against handoff claims; (3) read experiments/phase1-distiller/README.md and evaluation.md to locate the actual unfinished work; (4) reconcile against the already-committed formal core (src/core/handoff) so experiment changes stay in experiments (product code must not depend on experiments per docs/architecture/2026-09-05); (5) only then execute the genuinely missing next steps. Do not declare completion based on an empty old TODO array.\",\n  \"currentApplicability\": \"In this isolated environment only the git-tracked tree is available. HEAD (a247e75, main) matches the handoff repo-truth, but the 13 claimed experiment files do not exist here (experiments/ is empty); docs/validation and .margin paths are protected/denied, and .runtime/node_modules are absent. Therefore the handoff's '13/13 current file corroboration' and its historical test results cannot be independently re-validated in this environment. Any statement that the Phase 1 PoC exists or passes is historical evidence, not current truth; the committed formal core is the current tracked codebase.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the 13 experiments/phase0-continues and experiments/phase1-distiller files still exist unchanged in <repo> — unverifiable here; experiments/ is empty in the frozen snapshot.\",\n    \"Assuming the 10 historical test commands (exit_code=0) prove the code currently passes — current validation was explicitly marked unknown and cannot be rerun in this environment.\",\n    \"Assuming the assistant-reported milestone 'Phase 1 Distiller PoC complete' equals task completion — the handoff itself marks current validation unknown and earlier analysis found placeholder Decisions/fixed Next Steps in the distiller.\",\n    \"Assuming the frozen workspace reflects the full working tree of the interrupted session — it contains only git-tracked content; untracked deliverables, outputs, .runtime, and the analyzed session were not preserved.\",\n    \"Assuming the committed formal handoff core (src/core/handoff, committed 2026-09-06) is the deliverable of this session or that the experiments are current product source — docs treat experiments as PoC records and mandate product code not depend on them.\",\n    \"Treating the handoff's 接手建议 (read existing artifacts, only execute genuinely missing steps, reuse verified files) as a currently executable action plan — it is a recommendation based on a repo state not fully present in this snapshot.\",\n    \"Assuming continues 4.1.1 / acorn 8.18.0 / the pinned Node 22 runtime are available for test execution — node_modules and .runtime are not part of this environment.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Build Phase 1 'Margin Distiller PoC' for the Margin product (workspace repo <repo>): validate that Margin can accurately recover enough development state from a Codex session + Tool-Call/Result + Git/Workspace evidence — using continues 4.1.1 for session discovery and base parsing without re-developing it — so that a successor agent can continue work, using far less context than the full session. Priorities: continuation quality > information truthfulness > token efficiency. Must build a traceable evidence layer (especially 'Tool Call -> Tool Result' for exec/shell/patch/write/test), label facts Confirmed/Inferred/Uncertain, refresh repo truth (branch/HEAD/files) before generating, and never mark tasks completed merely because the assistant claimed completion. Historical request continuation is inferred as: 'finish the remaining work'; confirm whether that goal still holds before proceeding.",
+    "progress": "HISTORICAL, assistant-reported: 'Phase 1 Distiller PoC complete' milestone. Structured session work touched/created 13 files, all UNTRACKED, under experiments/phase0-continues (package.json, .gitignore, run-baseline.mjs, verify-baseline.mjs, README.md) and experiments/phase1-distiller (package.json, .gitignore, evidence.mjs, distiller.mjs, run-distiller.mjs, distiller.test.mjs, evaluation.md, README.md). CURRENT repo truth observed in THIS environment: branch main, HEAD = a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches the handoff-reported HEAD at checkpoint 2026-09-07T04:47:58Z); however experiments/ exists but is EMPTY (0 files) in the frozen snapshot, so the 13 deliverables are not present here. The tracked tree at this HEAD already contains a committed formal handoff core ('feat: establish Margin handoff core and CLI V1', 2026-09-06): src/core/handoff/*, src/cli/margin/*, bin/margin.js, plus tests test/handoff.test.js, test/resumeSummary.test.js, test/codexSourceNormalization.test.js.",
+    "pending": "Not derivable with certainty from the artifact. The handoff records no explicit open TODO list; it marks as Uncertain: 17 edit operations with no explicit historical result and 28 internal operations with no clear terminal state, plus 'current validation: unknown' because the focused distiller tests were never re-run against the current observation. Inferred remaining work = complete the rest of the Phase 1 PoC validation (evidence/repo-truth refresh/handoff generation quality) and independently verify rather than assume milestone completion. Since the 13 PoC files and the analyzed session are absent from this snapshot, no PoC-specific action is executable inside this isolated environment.",
+    "historicalValidation": "Historical only, not current validation: per the handoff, 10 focused test commands exited 0 — primarily `node --test experiments/phase1-distiller/distiller.test.mjs` and a variant piped to experiments/phase1-distiller/output/targeted-tests.tap — plus historical npm install exit 0 in phase0-continues. These ran in the original <repo> working tree and CANNOT be reproduced here (files absent; .runtime node binary absent). docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md additionally states 15 pass items at that time came from existing experiment records and were not re-run; it also describes that earlier distiller produced placeholder Decisions and fixed Next Step suggestions.",
+    "recommendedFollowUp": "Recommendation only — not a verified, currently executable action, and possibly stale. In the real <repo> where the untracked experiments still exist: (1) re-run the phase1-distiller targeted tests with the pinned .runtime node binary and confirm exit status; (2) re-verify current file states and output TAP against handoff claims; (3) read experiments/phase1-distiller/README.md and evaluation.md to locate the actual unfinished work; (4) reconcile against the already-committed formal core (src/core/handoff) so experiment changes stay in experiments (product code must not depend on experiments per docs/architecture/2026-09-05); (5) only then execute the genuinely missing next steps. Do not declare completion based on an empty old TODO array.",
+    "currentApplicability": "In this isolated environment only the git-tracked tree is available. HEAD (a247e75, main) matches the handoff repo-truth, but the 13 claimed experiment files do not exist here (experiments/ is empty); docs/validation and .margin paths are protected/denied, and .runtime/node_modules are absent. Therefore the handoff's '13/13 current file corroboration' and its historical test results cannot be independently re-validated in this environment. Any statement that the Phase 1 PoC exists or passes is historical evidence, not current truth; the committed formal core is the current tracked codebase.",
+    "unsafeAssumptions": [
+      "Assuming the 13 experiments/phase0-continues and experiments/phase1-distiller files still exist unchanged in <repo> — unverifiable here; experiments/ is empty in the frozen snapshot.",
+      "Assuming the 10 historical test commands (exit_code=0) prove the code currently passes — current validation was explicitly marked unknown and cannot be rerun in this environment.",
+      "Assuming the assistant-reported milestone 'Phase 1 Distiller PoC complete' equals task completion — the handoff itself marks current validation unknown and earlier analysis found placeholder Decisions/fixed Next Steps in the distiller.",
+      "Assuming the frozen workspace reflects the full working tree of the interrupted session — it contains only git-tracked content; untracked deliverables, outputs, .runtime, and the analyzed session were not preserved.",
+      "Assuming the committed formal handoff core (src/core/handoff, committed 2026-09-06) is the deliverable of this session or that the experiments are current product source — docs treat experiments as PoC records and mandate product code not depend on them.",
+      "Treating the handoff's 接手建议 (read existing artifacts, only execute genuinely missing steps, reuse verified files) as a currently executable action plan — it is a recommendation based on a repo state not fully present in this snapshot.",
+      "Assuming continues 4.1.1 / acorn 8.18.0 / the pinned Node 22 runtime are available for test execution — node_modules and .runtime are not part of this environment."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788766684607
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Name, Length, LastWriteTime\"}",
+      "tsMs": 1788766684608
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788766686418
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Force input | Select-Object FullName, Length\"}",
+      "tsMs": 1788766686419
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Force workspace | Select-Object FullName, Length, LastWriteTime\"}",
+      "tsMs": 1788766686426
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788766702150
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Force -Name | Where-Object { $_ -notin @('.git','.superpowers','design-references') }\"}",
+      "tsMs": 1788766705718
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Set-Location workspace; git status --short --branch 2>&1 | Select-Object -First 40; git log --oneline -5 2>&1\"}",
+      "tsMs": 1788766705730
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace\\\\.git\\\\HEAD; Write-Output '--- refs/heads/main ---'; Get-Content workspace\\\\.git\\\\refs\\\\heads\\\\main; Write-Output '--- refs/heads/agent ---'; Get-Content workspace\\\\.git\\\\refs\\\\heads\\\\agent; Write-Output '--- refs/remotes/origin/main ---'; Get-Content workspace\\\\.git\\\\refs\\\\remotes\\\\origin\\\\main; Write-Output '--- config ---'; Get-Content workspace\\\\.git\\\\config\"}",
+      "tsMs": 1788766709918
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\experiments -Recurse -File | Where-Object { $_.FullName -notmatch 'node_modules|\\\\.runtime' } | Select-Object FullName, Length, LastWriteTime\"}",
+      "tsMs": 1788766709930
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\experiments -Force | Select-Object Name, Length, Mode, LastWriteTime\"}",
+      "tsMs": 1788766713056
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Force -Directory | Select-Object Name; Write-Output '--- count of files under experiments ---'; (Get-ChildItem workspace\\\\experiments -Recurse -File -Force -ErrorAction SilentlyContinue).Count\"}",
+      "tsMs": 1788766713067
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cmd /c dir /a workspace\\\\experiments 2>&1 | Select-Object -First 30\"}",
+      "tsMs": 1788766716374
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Force -Directory | ForEach-Object { $n=(Get-ChildItem $_.FullName -Recurse -File -Force -ErrorAction SilentlyContinue).Count; Write-Output (\\\"{0}: {1} files\\\" -f $_.Name, $n) }\"}",
+      "tsMs": 1788766716384
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"experiments\",\"path\":\"workspace/.git/index\",\"maxResults\":30}",
+      "tsMs": 1788766724635
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"phase1-distiller|phase0-continues\",\"path\":\"workspace/.git\",\"maxResults\":30}",
+      "tsMs": 1788766724636
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/.gitignore\"}",
+      "tsMs": 1788766725595
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\docs\\\\validation -Recurse -Force -ErrorAction SilentlyContinue | Select-Object FullName, Length\"}",
+      "tsMs": 1788766732937
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/docs\",\"pattern\":\"distiller|phase1|phase0-continues|recovery-handoffs\"}",
+      "tsMs": 1788766732937
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md\"}",
+      "tsMs": 1788766736224
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\docs -Force -Recurse -File | Select-Object FullName, Length | Format-Table -AutoSize -Wrap\"}",
+      "tsMs": 1788766746449
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\experiments -Force -Recurse -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '--- validation files dir listing via ls ---'; [System.IO.Directory]::GetFiles('<repo>-bench\\\\ab-continuation\\\\sandboxes\\\\formal-case-09-B\\\\workspace\\\\docs\\\\validation','*',[System.IO.SearchOption]::AllDirectories) | Select-Object -First 5\"}",
+      "tsMs": 1788766754594
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/architecture/phase_1_persistent_core.md\"}",
+      "tsMs": 1788766754595
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":60,\"path\":\"workspace\",\"pattern\":\"distiller|phase1-distiller|phase0-continues|cli-continues|continues 4\"}",
+      "tsMs": 1788766770609
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace\\\\.git\\\\logs\\\\HEAD -Tail 15 -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788766797604
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788766797611
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace\\\\src\\\\cli\\\\margin\\\\runMarginCli.js -TotalCount 40; Write-Output '=== index.js head ==='; Get-Content workspace\\\\src\\\\core\\\\handoff\\\\index.js -TotalCount 30\"}",
+      "tsMs": 1788766797612
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\src\\\\core\\\\handoff -File | Select-Object Name; Write-Output '--- tests ---'; Get-ChildItem workspace\\\\test -File | Select-Object Name; Write-Output '--- .margin? ---'; Test-Path workspace\\\\.margin; Write-Output '--- index has .margin / handoff-output? ---'; Select-String -Path workspace\\\\.git\\\\index -Pattern 'margin|HANDOFF' -SimpleMatch -Encoding Byte -ErrorAction SilentlyContinue | Select-Object -First 5\"}",
+      "tsMs": 1788766813974
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/Margin_Phase0_PoC_Plan.md\",\"limitChars\":1200}",
+      "tsMs": 1788766813974
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\src\\\\core\\\\handoff -File | Select-Object Name; Write-Output '--- tests ---'; Get-ChildItem workspace\\\\test -File | Select-Object Name; Write-Output '--- root dirs ---'; Test-Path workspace\\\\.margin; Write-Output '--- package-lock continues/acorn pins ---'; Select-String -Path workspace\\\\package-lock.json -Pattern 'continues|acorn|node_modules/continues' -SimpleMatch | Select-Object -First 6\"}",
+      "tsMs": 1788766816598
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\src\\\\core\\\\handoff -File | Select-Object Name; Write-Output '--- tests ---'; Get-ChildItem workspace\\\\test -File | Select-Object Name\"}",
+      "tsMs": 1788766818657
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[DateTimeOffset]::FromUnixTimeSeconds(1788716676).ToString('yyyy-MM-dd HH:mm:ss zzz'); [DateTimeOffset]::FromUnixTimeSeconds(1788716597).ToString('yyyy-MM-dd HH:mm:ss zzz'); Write-Output '--- working tree evidence of tracked handoff files committed in HEAD (via index check): ---'; Get-ChildItem workspace\\\\src\\\\core\\\\handoff, workspace\\\\src\\\\cli\\\\margin, workspace\\\\bin -File | Select-Object FullName\"}",
+      "tsMs": 1788766829032
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":20,\"path\":\"workspace/docs\",\"pattern\":\"2026-09-0[5-9]|phase 1|Phase 1|PoC|PoC 已完成\"}",
+      "tsMs": 1788766829039
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem workspace\\docs\\validation -Recurse -Force -ErrorAction SilentlyContinue | Select-Object FullName, Length",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788766732937
+    },
+    {
+      "command": "Get-ChildItem workspace\\experiments -Force -Recurse -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '--- validation files dir listing via ls ---'; [System.IO.Directory]::GetFiles('<repo>-bench\\ab-continuation\\sandboxes\\formal-case-09-B\\workspace\\docs\\validation','*',[System.IO.SearchOption]::AllDirectories) | Select-Object -First 5",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788766754595
+    },
+    {
+      "command": "Get-ChildItem workspace\\src\\core\\handoff -File | Select-Object Name; Write-Output '--- tests ---'; Get-ChildItem workspace\\test -File | Select-Object Name; Write-Output '--- .margin? ---'; Test-Path workspace\\.margin; Write-Output '--- index has .margin / handoff-output? ---'; Select-String -Path workspace\\.git\\index -Pattern 'margin|HANDOFF' -SimpleMatch -Encoding Byte -ErrorAction SilentlyContinue | Select-Object -First 5",
+      "reasons": [
+        "protected path fragment is disabled: \\.margin"
+      ],
+      "tsMs": 1788766813974
+    },
+    {
+      "command": "Get-ChildItem workspace\\src\\core\\handoff -File | Select-Object Name; Write-Output '--- tests ---'; Get-ChildItem workspace\\test -File | Select-Object Name; Write-Output '--- root dirs ---'; Test-Path workspace\\.margin; Write-Output '--- package-lock continues/acorn pins ---'; Select-String -Path workspace\\package-lock.json -Pattern 'continues|acorn|node_modules/continues' -SimpleMatch | Select-Object -First 6",
+      "reasons": [
+        "protected path fragment is disabled: \\.margin"
+      ],
+      "tsMs": 1788766816598
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 176270,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-09",
+    "arm": "B",
+    "runId": "formal-case-09-B-2026-09-07T07-37-54-354Z",
+    "startMs": "2026-09-07T07:38:02.103Z",
+    "endMs": "2026-09-07T07:40:59.655Z",
+    "durationMs": 177552,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-09-B-2026-09-07T07-37-54-354Z status=ok durationMs=176270\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-09-B-2026-09-07T07-37-54-354Z.cert.json"
+  }
+}

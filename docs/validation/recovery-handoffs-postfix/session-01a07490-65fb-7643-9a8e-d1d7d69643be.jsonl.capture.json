@@ -1,0 +1,10 @@
+{
+  "capturedAt": "2026-09-07T04:47:57.648Z",
+  "originalPath": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T10-33-35-01a07490-65fb-7643-9a8e-d1d7d69643be.jsonl",
+  "snapshotPath": "<repo>\\docs\\validation\\recovery-handoffs-postfix\\session-01a07490-65fb-7643-9a8e-d1d7d69643be.jsonl",
+  "bytes": 2763251,
+  "sha256": "6e18dec92f65d5c36c0cc0cbbcf090688059e98ff34791907a34ea14e2cdd690",
+  "omittedTrailingBytes": 0,
+  "sessionId": "01a07490-65fb-7643-9a8e-d1d7d69643be",
+  "cwd": "<repo>"
+}

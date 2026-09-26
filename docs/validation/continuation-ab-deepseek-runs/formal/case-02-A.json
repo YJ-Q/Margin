@@ -1,0 +1,255 @@
+{
+  "runId": "formal-case-02-A-2026-09-07T06-11-32-002Z",
+  "caseId": "case-02",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T06:11:40.259Z",
+  "endTs": "2026-09-07T06:16:01.010Z",
+  "durationMs": 260751,
+  "modelPromptStartMs": 35,
+  "modelPromptEndMs": 260751,
+  "sessionId": "01a07a7e-6a83-7754-a59a-3d9536aabc46",
+  "rawResponse": "{\n  \"goal\": \"Recovered session (id 01a074ec-9f30-7c62-bb5f-257091ef242a, 2026-09-06 04:14Z, cwd <repo>, repo origin YJ-Q/Echo branch main, then-HEAD 0836e800) was the user task \\\"Margin Slice 3.3 R1 - 只调研，不修改代码\\\" (research only, no code changes): define the minimal read-only Workspace Overview so a user can judge per workspace what it was last working on, recent progress, currently observable repo state, and which session to open next, while explicitly forbidding inference of any cross-session 'overall task state'. Deliverable was a 12-section analysis: workspace truth model; latest-session selection rule; 3-5 overview fields; multi-session aggregation rules (no merging of Goal/Progress/Validation/Intent/targets); repo-truth boundary; primary-action naming ('Open latest session', not 'Continue'); API/data-contract decision including a minimal DTO; a real Margin multi-session sample check; Slice 3.3 implementation objective; acceptance criteria; model ROI; and a final STOP-or-blocker verdict. Explicitly out of scope: implementation, cross-agent launchers, live monitoring, usage metrics, checkpoint lifecycle.\",\n  \"progress\": \"The source session ran read-only and ended normally (final event: task_complete). It inspected the handoff Core (src/core/handoff session-source.js, httpAdapter.js, repo-truth.js, resume-summary.js, index.js, evidence/distiller), the web surface and its tests, and the Margin plan/architecture docs; then ran live discovery plus git state on the host, observing main @ 0836e800 with ~71 modified/untracked entries and 27 resumable Margin-workspace sessions in which the newest was this research session itself, the previous was a Phase 3 Midpoint research session, and only earlier work was the Slice 3.2 implementation - evidence that 'most recent resumable session by updatedAt' must be labeled 'Latest session' and never 'Current workspace state'. It confirmed GET /api/sessions returns discovery metadata only (progress/applicability/validation exist only as one-session projections from capture->evidence->repo-truth->distill), so a new read-only endpoint is required. The final assistant message delivered the complete 12-section answer ending 'STOP - enough evidence for Slice 3.3'. The session made no repository edits and wrote no report file; its deliverable was conversational.\",\n  \"pending\": \"Nothing remains inside the recovered session's own research-only scope (it finished with the STOP verdict). Its historical recommendation is to implement the read-only Workspace Overview. The current workspace snapshot already contains such an implementation at Core/HTTP/UI-component/test level: src/core/handoff/workspace-overview.js (selectLatestSession = updatedAt desc, id desc; createWorkspaceOverview DTO with workspaceKey/name, otherResumableSessionCount, latestSession {id,label,updatedAt,historicalBranch,goal,progress,currentApplicability} and repo {observedAt,stableDuringObservation,branch,shortHead,dirtyCount}); route GET /api/workspace-overview plus /api/sessions?workspaceKey= in httpAdapter.js; a WorkspaceOverview card in web/src/margin/RecentSessionsList.js with 'Open latest session'/'View sessions'/'N other resumable sessions'; marginApiClient.getWorkspaceOverview; tests test/marginWorkspaceOverview.test.js and Slice 3.3 cases in test/marginSurfaceHttpAdapter.test.js. Observable open questions that need confirmation before continuing: (1) the WorkspaceOverview UI is not wired into the currently mounted surface - web/src/margin/MarginApp.js renders SessionBoard, which never imports RecentSessionsList/WorkspaceOverview (RecentSessionsList is referenced only by its own test), so it is unknown whether this is an intended redesign or an unfinished integration; (2) no current-run verification is possible in this environment (node/git unavailable). Whether these are true gaps is UNKNOWN.\",\n  \"historicalValidation\": \"The source transcript ran NO test suite (research-only). Its live observations (main @ 0836e800 with ~71 dirty/untracked files on 2026-09-06 04:14Z; 27 resumable Margin sessions; the content/shape of files it read) are in-session claims about the host at that moment, not current validation. A separate historical report, workspace-root task-8-report.md (2026-08-24, Phase 2B Web Workbench Task 8), claims npm test passed 461 then 462, build/stage1/audit passed, and git diff --check clean; that belongs to an earlier milestone and is not current validation. In this isolated environment node/python/git are all unavailable, so no test or git command can be executed; current test/validation status is UNKNOWN.\",\n  \"recommendedFollowUp\": \"Historical recommendation from the recovered session (stale; not an independently validated or executable current decision): implement the conservative read-only Workspace Overview - 5 first-screen items, explicit 'Latest session' labeling, no merging of goal/progress/validation across sessions, at most one session analyzed per overview, new minimal /api/workspace-overview DTO resolved server-side, 'Open latest session' as the primary action, suggested model GPT-5.6 Terra medium. Given the current snapshot already contains code matching that spec, a reasonable (still unvalidated) follow-up if continuing here would be to run the repository test suite (e.g. node --test on marginWorkspaceOverview.test.js, marginSurfaceHttpAdapter.test.js, marginRecentSessionsList.test.js, resumeSummary.test.js, handoff.test.js) to re-establish current status, diff the implementation against the transcript's acceptance criteria, and decide whether RecentSessionsList/WorkspaceOverview should be wired into the mounted SessionBoard surface or is intentionally superseded. This is only a recommendation; nothing was executed.\",\n  \"currentApplicability\": \"Current repository truth in this sandbox (frozen snapshot of the same repo, origin https://github.com/YJ-Q/Echo.git, branch main, .git refs/heads/main = a247e75a, which postdates the source session's HEAD 0836e800): the Margin handoff Core exists (src/core/handoff/*) and a complete Workspace Overview feature is present by inspection - server module, index export, HTTP route, UI component and API client, and dedicated tests; these paths are also present in the git index. The source session changed no files, so nothing it produced needs re-applying; its durable value is the specification contained in its final message. Executable state here is UNKNOWN: no node/git, no test run, no live git status, and no .margin/HANDOFF.md checkpoint exists in this snapshot. The real Codex session store and <repo> path the source session sampled are not present here, so its 27-session real-sample evidence cannot be reproduced.\",\n  \"unsafeAssumptions\": [\n    \"Assume the source session's observed repo state (HEAD 0836e800, ~71 dirty/untracked entries, 27 sessions, discovery shapes) describes the current workspace - the snapshot HEAD is a247e75a and live git status is unverifiable here.\",\n    \"Assume that because a workspace-overview implementation exists in the current tree, Slice 3.3 is complete or passing - no tests were run here, and RecentSessionsList/WorkspaceOverview is not imported by the currently mounted MarginApp->SessionBoard surface.\",\n    \"Assume 'most recent resumable session by updatedAt' represents current workspace state or task - the transcript explicitly shows this misleads (latest was this research session) and mandates the label 'Latest session' only.\",\n    \"Assume the task-8-report.md historical 461/462-pass claims validate current code - they describe an earlier milestone, and the repo's own Repo Truth design treats historical test success as non-current.\",\n    \"Assume the final 'STOP - enough evidence for Slice 3.3' message, or the mere presence of matching code, means the implementation meets the acceptance criteria or that the historical recommendations (new API, UI, model choice) were approved or executed.\",\n    \"Assume the repository is clean, or that dirty files can be attributed to any session - git cannot run in this sandbox and Repo Truth explicitly forbids such attribution.\",\n    \"Assume the sandbox UI (SessionBoard) differing from the researched UI (RecentSessionsList) indicates a regression rather than a deliberate later redesign - no execution or commit-level evidence is available to decide.\",\n    \"Assume the recovered session was incomplete or had unfinished code work - it was research-only, ended with task_complete, and made no code changes.\"\n  ]\n}",
+  "parsedRecovery": {
+    "goal": "Recovered session (id 01a074ec-9f30-7c62-bb5f-257091ef242a, 2026-09-06 04:14Z, cwd <repo>, repo origin YJ-Q/Echo branch main, then-HEAD 0836e800) was the user task \"Margin Slice 3.3 R1 - 只调研，不修改代码\" (research only, no code changes): define the minimal read-only Workspace Overview so a user can judge per workspace what it was last working on, recent progress, currently observable repo state, and which session to open next, while explicitly forbidding inference of any cross-session 'overall task state'. Deliverable was a 12-section analysis: workspace truth model; latest-session selection rule; 3-5 overview fields; multi-session aggregation rules (no merging of Goal/Progress/Validation/Intent/targets); repo-truth boundary; primary-action naming ('Open latest session', not 'Continue'); API/data-contract decision including a minimal DTO; a real Margin multi-session sample check; Slice 3.3 implementation objective; acceptance criteria; model ROI; and a final STOP-or-blocker verdict. Explicitly out of scope: implementation, cross-agent launchers, live monitoring, usage metrics, checkpoint lifecycle.",
+    "progress": "The source session ran read-only and ended normally (final event: task_complete). It inspected the handoff Core (src/core/handoff session-source.js, httpAdapter.js, repo-truth.js, resume-summary.js, index.js, evidence/distiller), the web surface and its tests, and the Margin plan/architecture docs; then ran live discovery plus git state on the host, observing main @ 0836e800 with ~71 modified/untracked entries and 27 resumable Margin-workspace sessions in which the newest was this research session itself, the previous was a Phase 3 Midpoint research session, and only earlier work was the Slice 3.2 implementation - evidence that 'most recent resumable session by updatedAt' must be labeled 'Latest session' and never 'Current workspace state'. It confirmed GET /api/sessions returns discovery metadata only (progress/applicability/validation exist only as one-session projections from capture->evidence->repo-truth->distill), so a new read-only endpoint is required. The final assistant message delivered the complete 12-section answer ending 'STOP - enough evidence for Slice 3.3'. The session made no repository edits and wrote no report file; its deliverable was conversational.",
+    "pending": "Nothing remains inside the recovered session's own research-only scope (it finished with the STOP verdict). Its historical recommendation is to implement the read-only Workspace Overview. The current workspace snapshot already contains such an implementation at Core/HTTP/UI-component/test level: src/core/handoff/workspace-overview.js (selectLatestSession = updatedAt desc, id desc; createWorkspaceOverview DTO with workspaceKey/name, otherResumableSessionCount, latestSession {id,label,updatedAt,historicalBranch,goal,progress,currentApplicability} and repo {observedAt,stableDuringObservation,branch,shortHead,dirtyCount}); route GET /api/workspace-overview plus /api/sessions?workspaceKey= in httpAdapter.js; a WorkspaceOverview card in web/src/margin/RecentSessionsList.js with 'Open latest session'/'View sessions'/'N other resumable sessions'; marginApiClient.getWorkspaceOverview; tests test/marginWorkspaceOverview.test.js and Slice 3.3 cases in test/marginSurfaceHttpAdapter.test.js. Observable open questions that need confirmation before continuing: (1) the WorkspaceOverview UI is not wired into the currently mounted surface - web/src/margin/MarginApp.js renders SessionBoard, which never imports RecentSessionsList/WorkspaceOverview (RecentSessionsList is referenced only by its own test), so it is unknown whether this is an intended redesign or an unfinished integration; (2) no current-run verification is possible in this environment (node/git unavailable). Whether these are true gaps is UNKNOWN.",
+    "historicalValidation": "The source transcript ran NO test suite (research-only). Its live observations (main @ 0836e800 with ~71 dirty/untracked files on 2026-09-06 04:14Z; 27 resumable Margin sessions; the content/shape of files it read) are in-session claims about the host at that moment, not current validation. A separate historical report, workspace-root task-8-report.md (2026-08-24, Phase 2B Web Workbench Task 8), claims npm test passed 461 then 462, build/stage1/audit passed, and git diff --check clean; that belongs to an earlier milestone and is not current validation. In this isolated environment node/python/git are all unavailable, so no test or git command can be executed; current test/validation status is UNKNOWN.",
+    "recommendedFollowUp": "Historical recommendation from the recovered session (stale; not an independently validated or executable current decision): implement the conservative read-only Workspace Overview - 5 first-screen items, explicit 'Latest session' labeling, no merging of goal/progress/validation across sessions, at most one session analyzed per overview, new minimal /api/workspace-overview DTO resolved server-side, 'Open latest session' as the primary action, suggested model GPT-5.6 Terra medium. Given the current snapshot already contains code matching that spec, a reasonable (still unvalidated) follow-up if continuing here would be to run the repository test suite (e.g. node --test on marginWorkspaceOverview.test.js, marginSurfaceHttpAdapter.test.js, marginRecentSessionsList.test.js, resumeSummary.test.js, handoff.test.js) to re-establish current status, diff the implementation against the transcript's acceptance criteria, and decide whether RecentSessionsList/WorkspaceOverview should be wired into the mounted SessionBoard surface or is intentionally superseded. This is only a recommendation; nothing was executed.",
+    "currentApplicability": "Current repository truth in this sandbox (frozen snapshot of the same repo, origin https://github.com/YJ-Q/Echo.git, branch main, .git refs/heads/main = a247e75a, which postdates the source session's HEAD 0836e800): the Margin handoff Core exists (src/core/handoff/*) and a complete Workspace Overview feature is present by inspection - server module, index export, HTTP route, UI component and API client, and dedicated tests; these paths are also present in the git index. The source session changed no files, so nothing it produced needs re-applying; its durable value is the specification contained in its final message. Executable state here is UNKNOWN: no node/git, no test run, no live git status, and no .margin/HANDOFF.md checkpoint exists in this snapshot. The real Codex session store and <repo> path the source session sampled are not present here, so its 27-session real-sample evidence cannot be reproduced.",
+    "unsafeAssumptions": [
+      "Assume the source session's observed repo state (HEAD 0836e800, ~71 dirty/untracked entries, 27 sessions, discovery shapes) describes the current workspace - the snapshot HEAD is a247e75a and live git status is unverifiable here.",
+      "Assume that because a workspace-overview implementation exists in the current tree, Slice 3.3 is complete or passing - no tests were run here, and RecentSessionsList/WorkspaceOverview is not imported by the currently mounted MarginApp->SessionBoard surface.",
+      "Assume 'most recent resumable session by updatedAt' represents current workspace state or task - the transcript explicitly shows this misleads (latest was this research session) and mandates the label 'Latest session' only.",
+      "Assume the task-8-report.md historical 461/462-pass claims validate current code - they describe an earlier milestone, and the repo's own Repo Truth design treats historical test success as non-current.",
+      "Assume the final 'STOP - enough evidence for Slice 3.3' message, or the mere presence of matching code, means the implementation meets the acceptance criteria or that the historical recommendations (new API, UI, model choice) were approved or executed.",
+      "Assume the repository is clean, or that dirty files can be attributed to any session - git cannot run in this sandbox and Repo Truth explicitly forbids such attribution.",
+      "Assume the sandbox UI (SessionBoard) differing from the researched UI (RecentSessionsList) indicates a regression rather than a deliberate later redesign - no execution or commit-level evidence is available to decide.",
+      "Assume the recovered session was incomplete or had unfinished code work - it was research-only, ended with task_complete, and made no code changes."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788761501698
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C ./workspace status 2>&1 | Select-Object -First 40\"}",
+      "tsMs": 1788761501699
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788761504555
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788761504556
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788761504556
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788761504556
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 5\"}",
+      "tsMs": 1788761505819
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"(Get-Content .\\\\input\\\\session.jsonl | Measure-Object -Line).Lines\"}",
+      "tsMs": 1788761505826
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl | Select-Object -Skip 4 -First 40 | ForEach-Object { $j = $_ | ConvertFrom-Json; $p = $j.payload; $t = $p.type; if ($t -eq 'event_msg') { \\\"[$($j.ordinal)] event_msg type=$($p.type)\\\"; if ($p.payload) { $p.payload | ConvertTo-Json -Depth 3 -Compress } } elseif ($t -eq 'response_item') { $role = $p.role; $txt = ($p.content | ForEach-Object { if ($_.type -eq 'input_text') { $_.text } elseif ($_.type -eq 'output_text') { $_.text } }) -join ' '; $len = $txt.Length; \\\"[$($j.ordinal)] resp role=$role len=$len\\\"; if ($len -gt 0 -and $len -le 1200) { $txt.Substring(0,[Math]::Min($len,1200)) } } else { \\\"[$($j.ordinal)] other type=$t\\\" } }\"}",
+      "tsMs": 1788761510139
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"node --version; python --version\"}",
+      "tsMs": 1788761527249
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788761527260
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$i=0; Get-Content .\\\\input\\\\session.jsonl | ForEach-Object { $len=$_.Length; $o=([regex]::Match($_, '\\\"ordinal\\\":(\\\\d+)')).Groups[1].Value; $t=([regex]::Match($_, '^\\\\{\\\"timestamp\\\":\\\"[^\\\"]*\\\",\\\"ordinal\\\":\\\\d+,\\\"type\\\":\\\"([a-z_]+)\\\"')).Groups[1].Value; \\\"{0}`tord={1}`ttype={2}`tlen={3}\\\" -f $i,$o,$t,$len; $i++ }\"}",
+      "tsMs": 1788761533764
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; $out = New-Object System.Collections.Generic.List[string]; foreach ($line in $lines) { try { $j = $line | ConvertFrom-Json } catch { $out.Add(\\\"PARSE-FAIL\\\"); continue }; if ($j.type -eq 'response_item') { $p = $j.payload; if ($p.type -eq 'message') { $txt = ($p.content | ForEach-Object { if ($_.type -eq 'input_text' -or $_.type -eq 'output_text') { $_.text } }) -join \\\"`n\\\"; if ($txt) { $short = if ($txt.Length -gt 900) { $txt.Substring(0,900) + ' ...[truncated]' } else { $txt }; $out.Add(\\\"[ord $($j.ordinal)] ROLE=$($p.role)`n$short\\\") } } } }; $out | ForEach-Object { $_; \\\"----\\\" }\"}",
+      "tsMs": 1788761548323
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $lines = Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; $out = New-Object System.Collections.Generic.List[string]; foreach ($line in $lines) { try { $j = $line | ConvertFrom-Json } catch { $out.Add(\\\"PARSE-FAIL at line for ordinal\\\"); continue }; if ($j.type -eq 'response_item') { $p = $j.payload; if ($p.type -eq 'message') { $txt = ($p.content | ForEach-Object { if ($_.type -eq 'input_text' -or $_.type -eq 'output_text') { $_.text } }) -join \\\"`n\\\"; if ($txt) { $short = if ($txt.Length -gt 4000) { $txt.Substring(0,4000) + ' ...[truncated]' } else { $txt }; $out.Add(\\\"[ord $($j.ordinal)] ROLE=$($p.role)`n$short\\\") } } } }; $out | ForEach-Object { $_; \\\"----\\\" }\"}",
+      "tsMs": 1788761556343
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach ($line in $lines) { try { $j = $line | ConvertFrom-Json } catch { continue }; if ($j.type -eq 'response_item') { $p = $j.payload; $extra = ''; if ($p.type -eq 'message') { $extra = 'role=' + $p.role } elseif ($p.type -eq 'reasoning') { $extra = 'summary=' + [string]($p.summary) } elseif ($p.type -eq 'custom_tool_call') { $extra = 'name=' + $p.name; if ($p.arguments) { $a = $p.arguments | ConvertTo-Json -Compress -Depth 4; $extra += ' args=' + $a.Substring(0,[Math]::Min(220,$a.Length)) } } elseif ($p.type -eq 'custom_tool_call_output') { $o = $p.output; $extra = 'outputlen=' + ([string]$o).Length } ; \\\"ord=$($j.ordinal) itemtype=$($p.type) $extra\\\" } elseif ($j.type -eq 'event_msg') { $p = $j.payload; $extra = ''; if ($p.type -eq 'item_completed') { $it = $p.item; if ($it) { $extra = \\\"itemtype=$($it.type) status=$($it.status)\\\" } } elseif ($p.type -eq 'task_started') { $extra = \\\"task_started\\\" }; \\\"ord=$($j.ordinal) event=$($p.type) $extra\\\" } elseif ($j.type -in @('world_state','turn_context','token_usage_record','session_meta')) { \\\"ord=$($j.ordinal) type=$($j.type)\\\" } }\"}",
+      "tsMs": 1788761562134
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $lines = Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; $line = $lines | Where-Object { $_ -match '\\\"ordinal\\\":81' }; $j = $line | ConvertFrom-Json; $txt = ($j.payload.content | ForEach-Object { if ($_.type -eq 'output_text') { $_.text } }) -join \\\"`n\\\"; $txt.Substring([Math]::Min(3800,$txt.Length))\"}",
+      "tsMs": 1788761578591
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\HEAD; Get-Content .\\\\workspace\\\\.git\\\\config -ErrorAction SilentlyContinue | Select-Object -First 20\"}",
+      "tsMs": 1788761588463
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $items = @('src/core/handoff','src/core/handoff/index.js','src/core/handoff/session-source.js','src/core/handoff/repo-truth.js','src/core/handoff/resume-summary.js','src/core/handoff/httpAdapter.js','src/core/handoff/evidence.js','src/core/handoff/distiller.js','src/core/handoff/handoff.js','src/core/handoff/smartSelect.js','src/core/handoff/createMarginSurface.js','web/src/margin','web/src/margin/MarginApp.js','web/src/margin/SessionDetail.js','web/src/margin/RecentSessionsList.js','web/src/margin/marginApiClient.js','web/margin.html','test/handoff.test.js','test/marginSurfaceHttpAdapter.test.js','test/marginWorkspaceSessions.test.js','test/resumeSummary.test.js','test/smartSelect.test.js','test/codexSourceNormalization.test.js','test/marginSessionDetail.test.js','test/marginRecentSessionsList.test.js','docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md','scripts/generate-handoff.js','.margin','src/core/handoff/evidence.js'); foreach ($i in $items) { $full = Join-Path '.\\\\workspace' $i; \\\"{0}`t{1}\\\" -f (Test-Path $full), $i }\"}",
+      "tsMs": 1788761588469
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main; \\\"----\\\"; Get-Content .\\\\workspace\\\\.git\\\\packed-refs -ErrorAction SilentlyContinue | Select-Object -First 5\"}",
+      "tsMs": 1788761603048
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"workspace-overview|workspaceOverview|Workspace Overview|workspace overview|otherResumableSessionCount\",\"path\":\"workspace\",\"maxResults\":30}",
+      "tsMs": 1788761603055
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-ChildItem .\\\\workspace\\\\docs\\\\architecture, .\\\\workspace\\\\docs\\\\superpowers\\\\plans, .\\\\workspace\\\\docs\\\\superpowers\\\\specs -ErrorAction SilentlyContinue | Sort-Object Name | ForEach-Object { $_.FullName.Replace((Get-Location).Path,'') }\"}",
+      "tsMs": 1788761612147
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace\",\"pattern\":\"Slice 3\\\\.3|slice-3-3|slice3\\\\.3|workspace-overview\"}",
+      "tsMs": 1788761612155
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/workspace-overview.js\"}",
+      "tsMs": 1788761620583
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginWorkspaceOverview.test.js\"}",
+      "tsMs": 1788761620584
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -ErrorAction SilentlyContinue | Select-Object -Last 15; \\\"----REFS----\\\"; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue | Select-Object -Last 15\"}",
+      "tsMs": 1788761630046
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788761630054
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/RecentSessionsList.js\"}",
+      "tsMs": 1788761645209
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/marginApiClient.js\"}",
+      "tsMs": 1788761645209
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/MarginApp.js\"}",
+      "tsMs": 1788761660603
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/index.js\"}",
+      "tsMs": 1788761660603
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-ChildItem .\\\\workspace\\\\test -Filter *.test.js | Sort-Object Name | Select-Object -ExpandProperty Name\"}",
+      "tsMs": 1788761660604
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $lines = Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach ($ord in @(14,21,28,35,44,51,64,71)) { $line = $lines | Where-Object { $_ -match ('\\\"ordinal\\\":' + $ord + ',') } | Select-Object -First 1; if (-not $line) { continue }; try { $j = $line | ConvertFrom-Json } catch { continue }; $p = $j.payload; $cmd = ''; if ($p.type -eq 'custom_tool_call') { $a = $p.arguments; $cmd = $a.command }; if ($cmd) { $c = if ($cmd.Length -gt 900) { $cmd.Substring(0,900) + ' …' } else { $cmd }; \\\"=== ord $ord $($p.name) ===`n$c\\\" } }\"}",
+      "tsMs": 1788761677268
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $lines = Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach ($ord in @(14,21,28,35,44,51,64,71)) { $line = $lines | Where-Object { $_ -match ('\\\"ordinal\\\":' + $ord + ',') } | Select-Object -First 1; if (-not $line) { \\\"no line for $ord\\\"; continue }; try { $j = $line | ConvertFrom-Json } catch { \\\"parse fail ord $ord\\\"; continue }; $p = $j.payload; if ($p.type -eq 'custom_tool_call') { $argJson = $p.arguments | ConvertTo-Json -Depth 6 -Compress; $txt = ($p.input | ConvertTo-Json -Depth 6 -Compress); \\\"=== ord $ord name=$($p.name) ===\\\"; $argJson.Substring(0,[Math]::Min(1400,$argJson.Length)) } }\"}",
+      "tsMs": 1788761682131
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$bytes = [System.IO.File]::ReadAllBytes((Resolve-Path '.\\\\workspace\\\\.git\\\\index')); $ascii = [System.Text.Encoding]::ASCII.GetString($bytes); foreach ($needle in @('workspace-overview.js','src/core/handoff/session-source.js','test/marginWorkspaceOverview.test.js','web/src/margin/RecentSessionsList.js','src/core/handoff/httpAdapter.js','scripts/generate-handoff.js','task-8-report.md','web/src/margin/SessionBoard.js')) { \\\"{0}`t{1}\\\" -f ($ascii.Contains($needle)), $needle }\"}",
+      "tsMs": 1788761696401
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/web\",\"pattern\":\"RecentSessionsList|onOpenLatest|onViewSessions|openLatest|viewSessions|workspaceKey\"}",
+      "tsMs": 1788761717295
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-ChildItem .\\\\workspace\\\\web\\\\src\\\\margin | Select-Object -ExpandProperty Name\"}",
+      "tsMs": 1788761717299
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\"}",
+      "tsMs": 1788761720294
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":20,\"path\":\"workspace\",\"pattern\":\"RecentSessionsList|WorkspaceOverview\"}",
+      "tsMs": 1788761726447
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginRecentSessionsList.test.js\"}",
+      "tsMs": 1788761726529
+    }
+  ],
+  "deniedToolCalls": [],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 260751,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-02",
+    "arm": "A",
+    "runId": "formal-case-02-A-2026-09-07T06-11-32-002Z",
+    "startMs": "2026-09-07T06:11:38.859Z",
+    "endMs": "2026-09-07T06:16:01.012Z",
+    "durationMs": 262153,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-02-A-2026-09-07T06-11-32-002Z status=ok durationMs=260751\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-02-A-2026-09-07T06-11-32-002Z.cert.json"
+  }
+}

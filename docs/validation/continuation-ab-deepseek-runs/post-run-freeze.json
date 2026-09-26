@@ -1,0 +1,18 @@
+{
+  "redaction": {
+    "appliedAt": "2026-09-26",
+    "scope": "machine paths in handoff outputs",
+    "note": "Handoff outputs were redacted before entering version control: home and repository paths were replaced with placeholders, and the hashes below attest the redacted artifacts. Source session inputs were not modified and are not tracked."
+  },
+  "frozenAt": "2026-09-07T08:26:38.5572211Z",
+  "scope": "final deliverables, frozen outputs ledger/manifests, ground truth (hashes only)",
+  "files": {
+    "docs/validation/margin_continuation_ab_deepseek.json": "425FA6AE5E11F03CE4338740BA74122D7842F21945D6DA56F5C0621141744358",
+    "docs/validation/margin_continuation_ab_deepseek.md": "A8552FAD28679D4A61E703FF555105B83BC8D951D32DBF0C505D06D0533EDCF7",
+    "docs/validation/continuation-ab-deepseek-runs/formal-run-ledger.json": "B44C72C811CABB0E62366AE14BCB89CD04A95DB98142A9B62AD021B76FA69FC8",
+    "docs/validation/continuation-ab-deepseek-runs/freeze-manifest.json": "A44BE548C3B5293670839F8B32E4FE56D90C41246694274ABA60C1E9B2176733",
+    "docs/validation/continuation-ab-deepseek-runs/harness-freeze.json": "AFF8C8E49D6F205BF962EA6932385EB7782EADB1D077DF733311D29B23580F4F",
+    "docs/validation/continuation-ab-deepseek-runs/_scoring/extract-grading.json": "B26CFA9ADCD2AAD28DFA9E89310759A26686F1C44BDD3336B2D6D195064762DE",
+    "docs/validation/recovery-benchmark-ground-truth.json": "8BFA7E421299E5432C55E6DD4A2FF71C1D6B44B940C356F0A453A3F5C5FBF8FB"
+  }
+}

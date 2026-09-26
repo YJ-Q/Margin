@@ -1,0 +1,899 @@
+{
+  "benchmark": "margin_continuation_ab_deepseek",
+  "schema_version": 1,
+  "generatedAt": "2026-09-07T08:25:36.731Z",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoning": "high",
+  "arms": {
+    "A": "direct recovery from raw historical Codex Session",
+    "B": "Margin HANDOFF-assisted recovery by DeepSeek"
+  },
+  "frozen": {
+    "snapshotHead": "a247e75ab9e78cce7853e3f281b85459a4f25e7c",
+    "harnessFreeze": "docs/validation/continuation-ab-deepseek-runs/harness-freeze.json",
+    "outputFreeze": "docs/validation/continuation-ab-deepseek-runs/freeze-manifest.json",
+    "timingLedger": "docs/validation/continuation-ab-deepseek-runs/formal-run-ledger.json",
+    "groundTruthHash": "8BFA7E421299E5432C55E6DD4A2FF71C1D6B44B940C356F0A453A3F5C5FBF8FB"
+  },
+  "scoring": {
+    "method": "Manual semantic scoring of the frozen per-run recovery JSON against the frozen per-case ground-truth reference, performed after all 24 formal outputs were frozen. One point per field; 5 fields per run (goal, progress, pending, validation, follow-up). Runs whose final text contained no parseable recovery JSON score 0 on all five fields and are retained as observations (no retries).",
+    "fieldMap": {
+      "goal": "Goal",
+      "progress": "Completed",
+      "pending": "Pending",
+      "validation": "Validation state",
+      "follow": "Safest next action"
+    },
+    "safeContinuationDefinition": "Structured recovery JSON with all required keys AND goal/progress/pending/validation all correct (situational awareness needed to continue safely); follow-up is not part of the safety gate."
+  },
+  "timing": {
+    "note": "controller-side wall-clock duration per run (ms). No token usage is recorded or estimated.",
+    "ms": {
+      "A": {
+        "medianMs": 378904,
+        "meanMs": 381771,
+        "n": 12
+      },
+      "B": {
+        "medianMs": 242452,
+        "meanMs": 283527,
+        "n": 12
+      },
+      "pairedMedianDeltaMs": -118464,
+      "pairedMeanDeltaMs": -98243,
+      "bFasterCases": 9,
+      "aFasterCases": 3,
+      "medianReductionPct": 0.36012288072968346,
+      "meanReductionPct": 0.25733751384992576
+    }
+  },
+  "pairs": [
+    {
+      "caseId": "case-01",
+      "A": 259862,
+      "B": 214117,
+      "delta": -45745,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-02",
+      "A": 262153,
+      "B": 362842,
+      "delta": 100689,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-03",
+      "A": 407343,
+      "B": 349959,
+      "delta": -57384,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-04",
+      "A": 408626,
+      "B": 194494,
+      "delta": -214132,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-05",
+      "A": 348188,
+      "B": 172643,
+      "delta": -175545,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-06",
+      "A": 373018,
+      "B": 447473,
+      "delta": 74455,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-07",
+      "A": 542416,
+      "B": 421039,
+      "delta": -121377,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-08",
+      "A": 347048,
+      "B": 443192,
+      "delta": 96144,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-09",
+      "A": 293103,
+      "B": 177552,
+      "delta": -115551,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-10",
+      "A": 421310,
+      "B": 134115,
+      "delta": -287195,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-11",
+      "A": 384790,
+      "B": 246072,
+      "delta": -138718,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-12",
+      "A": 533390,
+      "B": 238831,
+      "delta": -294559,
+      "faster": "B"
+    }
+  ],
+  "runs": [
+    {
+      "caseId": "case-01",
+      "arm": "A",
+      "title": "V2.2 Agent Source Management",
+      "sessionId": "01a07a76-f71d-7328-922e-e215667559e1",
+      "runId": "formal-case-01-A-2026-09-07T06-03-24-378Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 259862,
+      "workerDurationMs": 258695,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "V2.2 Agent Source Management correctly identified from raw session.",
+        "progress": "Implementation present+uncommitted at a247e75; historical PASS reported as report.",
+        "pending": "Close-out = commit/report/verify, no new feature; matches GT.",
+        "validation": "Historical 13/13+build+smoke vs current-unknown distinction kept.",
+        "follow": "Run focused+full tests, triage stale boundary tests, then commit decision."
+      }
+    },
+    {
+      "caseId": "case-01",
+      "arm": "B",
+      "title": "V2.2 Agent Source Management",
+      "sessionId": "01a07a7b-0c22-7258-9ec6-7f689d4e1612",
+      "runId": "formal-case-01-B-2026-09-07T06-07-50-685Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 214117,
+      "workerDurationMs": 212493,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "V2.2 identified from HANDOFF (marked Inferred).",
+        "progress": "Current workspace truth verified; implementation consistent; uncommitted.",
+        "pending": "No new implementation; validation rerun+commit+acceptance remain.",
+        "validation": "Historical exit codes from HANDOFF kept historical; current not rerun.",
+        "follow": "Rerun full validation set, diagnose prior exit-1, commit, then PASS/PARTIAL."
+      }
+    },
+    {
+      "caseId": "case-02",
+      "arm": "A",
+      "title": "Slice 3.3 R1 Workspace Overview research",
+      "sessionId": "01a07a7e-6a83-7754-a59a-3d9536aabc46",
+      "runId": "formal-case-02-A-2026-09-07T06-11-32-002Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 262153,
+      "workerDurationMs": 260751,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Slice 3.3 R1 research-only Workspace Overview identified.",
+        "progress": "Research concluded w/ 12-section answer, task_complete, no edits.",
+        "pending": "Research done; current repo already implements it; wire/verify question open.",
+        "validation": "Research-only; host observations are in-session, not current.",
+        "follow": "Run tests and reconcile existing implementation vs spec before decisions."
+      }
+    },
+    {
+      "caseId": "case-02",
+      "arm": "B",
+      "title": "Slice 3.3 R1 Workspace Overview research",
+      "sessionId": "01a07a82-8506-715c-a8ba-079861f99cc3",
+      "runId": "formal-case-02-B-2026-09-07T06-16-01-037Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 362842,
+      "workerDurationMs": 361621,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 0,
+        "pending": 0,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Research-only Slice 3.3 R1 from HANDOFF.",
+        "progress": "Claims session deliverables not produced recoverably / progress unknown - contradicts GT (research concluded w/ recommendations).",
+        "pending": "Treats research as still to be done - contradicts GT pending (implement or supersede).",
+        "validation": "Unknown per HANDOFF; not current; older doc claims not promoted.",
+        "follow": "Confirm goal currency, inspect existing implementation, refine not greenfield."
+      }
+    },
+    {
+      "caseId": "case-03",
+      "arm": "A",
+      "title": "V2 Floating Window Host Architecture research",
+      "sessionId": "01a07a88-2b41-7113-861b-067329f63b4e",
+      "runId": "formal-case-03-A-2026-09-07T06-22-10-837Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 407343,
+      "workerDurationMs": 406054,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "V2 Floating Window Host research-only identified.",
+        "progress": "Research concluded (Electron+HTTP Surface); current repo has committed impl.",
+        "pending": "No in-scope residue; verify/iterate committed host or new request undecidable - matches GT intent.",
+        "validation": "Historical claims not re-validated; doc claims dated.",
+        "follow": "Re-establish truth (tests/build/smoke) and compare to slice criteria."
+      }
+    },
+    {
+      "caseId": "case-03",
+      "arm": "B",
+      "title": "V2 Floating Window Host Architecture research",
+      "sessionId": "01a07a8e-7f0a-7101-bcdf-1d8af6d09f99",
+      "runId": "formal-case-03-B-2026-09-07T06-29-05-507Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 349959,
+      "workerDurationMs": 348644,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "V2 Floating Window Host research from HANDOFF.",
+        "progress": "Recommendation corroborated as implemented at HEAD; report not persisted.",
+        "pending": "Uncertainty (report vs slice) + verify first Electron slice - captures GT pending.",
+        "validation": "No session validation recovered; historical only; not reproducible.",
+        "follow": "Confirm goal, run focused tests/build/smoke, reuse verified files."
+      }
+    },
+    {
+      "caseId": "case-04",
+      "arm": "A",
+      "title": "Repository cleanup audit",
+      "sessionId": "01a07a93-f189-7248-95a6-8e5d54c43bf6",
+      "runId": "formal-case-04-A-2026-09-07T06-35-02-760Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 408626,
+      "workerDurationMs": 407358,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Read-only cleanup audit identified.",
+        "progress": "Audit completed historically w/ classifications; transcript task_complete.",
+        "pending": "Cleanup plan steps unexecuted but unauthorized; candidates changed vs current tree.",
+        "validation": "Session-reported tests not reproducible; file claims partially re-verified.",
+        "follow": "Reconcile with current tree, re-run scans, validate before deleting."
+      }
+    },
+    {
+      "caseId": "case-04",
+      "arm": "B",
+      "title": "Repository cleanup audit",
+      "sessionId": "01a07a9a-485e-77c3-b75f-8f714f01cc66",
+      "runId": "formal-case-04-B-2026-09-07T06-41-58-454Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 194494,
+      "workerDurationMs": 193244,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 0,
+        "pending": 0,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Read-only cleanup audit from HANDOFF.",
+        "progress": "States audit deliverable missing / not recovered - contradicts GT (audit concluded w/ candidates).",
+        "pending": "Pending = possibly re-derive whole audit - contradicts GT (decide approved cleanup).",
+        "validation": "Historical exit-0 + doc claims; current impossible; not promoted.",
+        "follow": "Check original snapshot for report; else re-derive audit read-only before any delete."
+      }
+    },
+    {
+      "caseId": "case-05",
+      "arm": "A",
+      "title": "Token Usage Source R1 research",
+      "sessionId": "01a07a9d-5c41-7474-b3b8-b912fd8cb5cd",
+      "runId": "formal-case-05-A-2026-09-07T06-45-19-793Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 348188,
+      "workerDurationMs": 346856,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Token Usage Source R1 research identified.",
+        "progress": "Research completed w/ verdict PASS; task_complete; no code changed.",
+        "pending": "R2 implementation candidate pending explicit approval; report not persisted.",
+        "validation": "Machine-local empirical claims; no tests; not current-verifiable.",
+        "follow": "Confirm next step; build V1 w/ fixtures after approval; re-verify on real machine."
+      }
+    },
+    {
+      "caseId": "case-05",
+      "arm": "B",
+      "title": "Token Usage Source R1 research",
+      "sessionId": "01a07aa2-ca7b-7238-815b-c7c69273bfa2",
+      "runId": "formal-case-05-B-2026-09-07T06-51-15-107Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 172643,
+      "workerDurationMs": 171246,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 0,
+        "pending": 0,
+        "validation": 1,
+        "follow": 0
+      },
+      "fieldRationale": {
+        "goal": "Token Usage Source R1 from HANDOFF.",
+        "progress": "Claims no research output/deliverable exists - contradicts GT (research concluded w/ detailed findings).",
+        "pending": "Pending = full brief still to do - contradicts GT (implement usage-source slice unless superseded).",
+        "validation": "Unknown per HANDOFF; historical only; not rerun.",
+        "follow": "Redo research/probes instead of GT next action (inspect impl+tests, reconcile) - misses research outcome."
+      }
+    },
+    {
+      "caseId": "case-06",
+      "arm": "A",
+      "title": "Slice 2.6 Terminal Handoff Action Hierarchy Fix",
+      "sessionId": "01a07aa5-8701-72b7-bc3b-625061341fbe",
+      "runId": "formal-case-06-A-2026-09-07T06-54-15-388Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 373018,
+      "workerDurationMs": 371769,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": false,
+      "parseError": "no parseable JSON object in final text",
+      "fieldScores": {
+        "goal": 0,
+        "progress": 0,
+        "pending": 0,
+        "validation": 0,
+        "follow": 0
+      },
+      "fieldRationale": {
+        "goal": "No parseable recovery JSON in final text.",
+        "progress": "No parseable recovery JSON.",
+        "pending": "No parseable recovery JSON.",
+        "validation": "No parseable recovery JSON.",
+        "follow": "No parseable recovery JSON."
+      }
+    },
+    {
+      "caseId": "case-06",
+      "arm": "B",
+      "title": "Slice 2.6 Terminal Handoff Action Hierarchy Fix",
+      "sessionId": "01a07aab-54be-7477-aded-62ff38aacdfa",
+      "runId": "formal-case-06-B-2026-09-07T07-00-35-253Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 447473,
+      "workerDurationMs": 446328,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Slice 2.6 hierarchy fix from HANDOFF.",
+        "progress": "Selector present at committed HEAD; uncommitted delta is a different feature.",
+        "pending": "Rerun tests, scope-check delta, re-verify regression, commit - verification only.",
+        "validation": "Historical exit-1 kept historical; current unverified.",
+        "follow": "Run focused suites, fix smallest cause, reconcile delta scope before commit."
+      }
+    },
+    {
+      "caseId": "case-07",
+      "arm": "A",
+      "title": "Slice 3.2 Resume-first Checkpoint Experience",
+      "sessionId": "01a07ab8-cef2-71a8-b43c-420e407dc3c6",
+      "runId": "formal-case-07-A-2026-09-07T07-15-18-349Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 542416,
+      "workerDurationMs": 541248,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Slice 3.2 Resume-first identified from raw session.",
+        "progress": "Implementation complete (projection/UI/API/tests); uncommitted; reported done.",
+        "pending": "No in-scope item; full-suite 3 failures explained; no Slice 3.3 start.",
+        "validation": "Historical 53/53+build/diff clean; whole-suite 576/579; not current.",
+        "follow": "Reconcile vs current repo, rerun focused tests+build before extending."
+      }
+    },
+    {
+      "caseId": "case-07",
+      "arm": "B",
+      "title": "Slice 3.2 Resume-first Checkpoint Experience",
+      "sessionId": "01a07ab2-45f9-715f-a995-4b7f10309cd3",
+      "runId": "formal-case-07-B-2026-09-07T07-08-10-162Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 421039,
+      "workerDurationMs": 419556,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Slice 3.2 from HANDOFF.",
+        "progress": "Artifacts present and internally consistent at HEAD.",
+        "pending": "Verification/refinement + completion report; no new implementation pending.",
+        "validation": "Historical mixed results; current not rerun; not promoted.",
+        "follow": "Re-establish truth, run 4-file focused tests+build, then report; stop before 3.3."
+      }
+    },
+    {
+      "caseId": "case-08",
+      "arm": "A",
+      "title": "Repository Cleanup Slice 1",
+      "sessionId": "01a07ac8-1764-775f-81ae-47d18759b7fc",
+      "runId": "formal-case-08-A-2026-09-07T07-31-59-366Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 347048,
+      "workerDurationMs": 345689,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Cleanup Slice 1 (mainline convergence) identified.",
+        "progress": "PARTIAL history: routing/vite/wrappers/Forge-ignore done; installer blocked.",
+        "pending": "Two locked app.asar + Python-blocked packaging remain - matches GT.",
+        "validation": "Historical 76/76, build, diff-check; installer blocked; not rerun.",
+        "follow": "git status/log first, fresh validation, packaging only if required; then stop."
+      }
+    },
+    {
+      "caseId": "case-08",
+      "arm": "B",
+      "title": "Repository Cleanup Slice 1",
+      "sessionId": "01a07ac1-353b-7342-b79f-e81981dd8d5d",
+      "runId": "formal-case-08-B-2026-09-07T07-24-28-334Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 443192,
+      "workerDurationMs": 441807,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": false,
+      "parseError": "no parseable JSON object in final text",
+      "fieldScores": {
+        "goal": 0,
+        "progress": 0,
+        "pending": 0,
+        "validation": 0,
+        "follow": 0
+      },
+      "fieldRationale": {
+        "goal": "No parseable recovery JSON in final text.",
+        "progress": "No parseable recovery JSON.",
+        "pending": "No parseable recovery JSON.",
+        "validation": "No parseable recovery JSON.",
+        "follow": "No parseable recovery JSON."
+      }
+    },
+    {
+      "caseId": "case-09",
+      "arm": "A",
+      "title": "Phase 1 Distiller PoC",
+      "sessionId": "01a07ad0-546c-74b6-8605-e977ef55ae13",
+      "runId": "formal-case-09-A-2026-09-07T07-40-59-677Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 293103,
+      "workerDurationMs": 291813,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Phase0+Phase1 Distiller PoC identified.",
+        "progress": "Phase0 confirmed; Phase1 experiment built historically; artifacts absent from snapshot.",
+        "pending": "Next independent continuation-quality experiment NOT done - matches GT.",
+        "validation": "Historical 15 tests+hash claims; refactor doc says not re-run; current unknown.",
+        "follow": "Verify goal applicability, regenerate artifacts if needed, run focused tests."
+      }
+    },
+    {
+      "caseId": "case-09",
+      "arm": "B",
+      "title": "Phase 1 Distiller PoC",
+      "sessionId": "01a07acd-8115-767a-a3e4-e58e7f158ac0",
+      "runId": "formal-case-09-B-2026-09-07T07-37-54-354Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 177552,
+      "workerDurationMs": 176270,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 0,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Phase 1 Distiller PoC from HANDOFF.",
+        "progress": "Historical completion reported; current repo shows formal core; PoC files absent.",
+        "pending": "No explicit TODO; inferred validation-only - misses GT pending (run next independent experiment).",
+        "validation": "Historical exit-0 runs; not reproducible; not promoted.",
+        "follow": "Rerun distiller tests, read README/evaluation for real next step, reconcile."
+      }
+    },
+    {
+      "caseId": "case-10",
+      "arm": "A",
+      "title": "V2.1 Electron Floating Host",
+      "sessionId": "01a07ad7-1762-7496-b2e2-d057400c4f3d",
+      "runId": "formal-case-10-A-2026-09-07T07-48-22-438Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 421310,
+      "workerDurationMs": 420008,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "V2.1 Electron Floating Host identified.",
+        "progress": "Implementation committed+present; session ended PARTIAL at Forge make.",
+        "pending": "Clean electron:make blocked by ECONNRESET; smoke/baselines/regression remain.",
+        "validation": "Focused 26/26 + packaged smoke historical; not re-verified here.",
+        "follow": "Resume at make: retry headers/prebuilds, packaged smoke, baselines, regression."
+      }
+    },
+    {
+      "caseId": "case-10",
+      "arm": "B",
+      "title": "V2.1 Electron Floating Host",
+      "sessionId": "01a07ad4-ec97-7096-a9b2-a115c3212570",
+      "runId": "formal-case-10-B-2026-09-07T07-46-00-398Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 134115,
+      "workerDurationMs": 132768,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "V2.1 Electron Floating Host from HANDOFF.",
+        "progress": "HEAD matches; host/packaging implementation present and consistent.",
+        "pending": "Make blocked (ECONNRESET/asar); build env + validations remain - matches GT.",
+        "validation": "Historical exit-0 groups + 111-doc claim; current not rerun.",
+        "follow": "git status first, reinstall deps, retry make on blockers, run smoke/regression."
+      }
+    },
+    {
+      "caseId": "case-11",
+      "arm": "A",
+      "title": "V2 UI R3 first implementation",
+      "sessionId": "01a07ae1-8712-7225-8d7c-62909caa2de2",
+      "runId": "formal-case-11-A-2026-09-07T07-59-45-852Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 384790,
+      "workerDurationMs": 383417,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "V2 UI R3 first implementation identified.",
+        "progress": "Implementation+62/62+build+collapsed smoke; PARTIAL (no real session data); repo moved on.",
+        "pending": "Real-Electron data-state acceptance outstanding - matches GT.",
+        "validation": "Historical 62/62+build+screenshot; no full-suite green; not current.",
+        "follow": "Treat session as history; restore toolchain+data, validate data states or confirm supersession."
+      }
+    },
+    {
+      "caseId": "case-11",
+      "arm": "B",
+      "title": "V2 UI R3 first implementation",
+      "sessionId": "01a07add-a4c6-772c-b90c-609c93f46fd3",
+      "runId": "formal-case-11-B-2026-09-07T07-55-31-715Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 246072,
+      "workerDurationMs": 244729,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 0,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "R3 first implementation from HANDOFF.",
+        "progress": "Claims interrupted session executed nothing successfully - contradicts GT (implementation completed, PARTIAL only on data acceptance).",
+        "pending": "Real-Electron acceptance items 1-12 + regression - matches GT pending.",
+        "validation": "Historical unknown per HANDOFF; current unknown; not promoted.",
+        "follow": "git diff, rerun suite+build, reconcile spec vs committed R3.x, provision data, real acceptance."
+      }
+    },
+    {
+      "caseId": "case-12",
+      "arm": "A",
+      "title": "V2 UI R3.3 controls, refresh, settings and save feedback",
+      "sessionId": "01a07aeb-4c60-7606-baa2-8eb1bc94557c",
+      "runId": "formal-case-12-A-2026-09-07T08-10-26-098Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 533390,
+      "workerDurationMs": 531984,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "R3.3 controls/refresh/settings/save identified.",
+        "progress": "R3.3 committed at HEAD; later resource-status + in-flight agent-sources noted.",
+        "pending": "Nothing in R3.3 scope; deferred token source; verify before new work.",
+        "validation": "Historical PASS/focused tests + baseline 111; current unknown.",
+        "follow": "Reconcile repo identity, run pinned validation, do NOT re-implement R3.3."
+      }
+    },
+    {
+      "caseId": "case-12",
+      "arm": "B",
+      "title": "V2 UI R3.3 controls, refresh, settings and save feedback",
+      "sessionId": "01a07ae7-85f3-7275-b9a6-dd81004f675f",
+      "runId": "formal-case-12-B-2026-09-07T08-06-19-074Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 238831,
+      "workerDurationMs": 237506,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "R3.3 from HANDOFF.",
+        "progress": "Implementation committed at HEAD a247e75; baseline PASS claim historical.",
+        "pending": "Verify via git/tests/build; spec-vs-code drift + summary-toggle gap to reconcile.",
+        "validation": "Historical exit-0 + 111 claims; 33 ops no terminal state; not rerun.",
+        "follow": "git status/diff, rerun focused commands+build, inspect drift and last-touched edits."
+      }
+    }
+  ],
+  "metrics": {
+    "fieldAccuracy": {
+      "goal": "22/24 (91.67%)",
+      "progress": "18/24 (75.00%)",
+      "pending": "18/24 (75.00%)",
+      "validation": "22/24 (91.67%)",
+      "follow": "21/24 (87.50%)",
+      "overall": "101/120 (84.17%)",
+      "A": "55/60 (91.67%)",
+      "B": "46/60 (76.67%)"
+    },
+    "allFivePassRate": {
+      "overall": "17/24 (70.83%)",
+      "A": "11/12 (91.67%)",
+      "B": "6/12 (50.00%)"
+    },
+    "safeContinuationPassRate": {
+      "overall": "17/24 (70.83%)",
+      "A": "11/12 (91.67%)",
+      "B": "6/12 (50.00%)"
+    }
+  },
+  "failuresAndLimitations": [
+    "case-06-A and case-08-B returned final assistant text with no parseable recovery JSON object (infra ok, exit 0); scored 0/5 each and retained as observations, not retried or replaced.",
+    "No provider token counts are available from this runtime; token usage is not recorded or estimated anywhere in this report.",
+    "Manual semantic field scoring is subjective; per-field rationale strings are embedded above for every cell so the 120 decisions can be re-audited from the frozen records and ground truth.",
+    "Single model/provider (DeepSeek V4 Flash, high reasoning); frozen repo snapshot at a247e75; results apply only to this experiment, not to other repositories/models/sessions.",
+    "case-02-B, case-04-B, case-05-B and case-11-B recovered materially less session content than ground truth (the distilled HANDOFF lacked the original findings); those accuracy losses are part of the measured recovery outcome, not protocol failures.",
+    "Isolation certs were ok for all 24 runs; 24 unique in-memory sessions; A never saw a HANDOFF file and B never saw a raw session file in the sandbox."
+  ],
+  "resumeSafeMetrics": {
+    "validCleanRuns": "24/24 (infra ok, exit 0, isolation certificate ok)",
+    "uniqueSessions": "24/24",
+    "parseableRecoveryJson": "22/24 (case-06-A, case-08-B not parseable)",
+    "balancedOrder": "case-01..06 A before B; case-07..12 B before A",
+    "preflightInMetrics": "No (metrics use formal records only)",
+    "silentRetriesOrReplacedObservations": "None",
+    "harnessModifiedDuringRun": "No",
+    "timings": "controller-side wall clock",
+    "tokenCounts": "Not available; not estimated"
+  }
+}

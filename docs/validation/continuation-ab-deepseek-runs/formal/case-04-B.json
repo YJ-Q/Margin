@@ -1,0 +1,292 @@
+{
+  "runId": "formal-case-04-B-2026-09-07T06-41-58-454Z",
+  "caseId": "case-04",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T06:42:06.528Z",
+  "endTs": "2026-09-07T06:45:19.772Z",
+  "durationMs": 193244,
+  "modelPromptStartMs": 33,
+  "modelPromptEndMs": 193243,
+  "sessionId": "01a07a9a-485e-77c3-b75f-8f714f01cc66",
+  "rawResponse": "Based on my investigation of the isolated environment, here is the recovery state.\n\n```json\n{\n  \"goal\": \"Perform a READ-ONLY cleanup audit of the Margin repository (do not modify or delete any files), per input/HANDOFF.md. Current product mainline = CLI V1 (bin/margin.js + src/core/handoff core) + Electron V2 shell (electron/main.js, preload.cjs) + current Margin React Surface (web/src/margin/*, entry web/src/margin/main.jsx). Scan imports/exports, package.json scripts, tests, and runtime entry points; classify every directory/file as KEEP / RETIRE / GENERATED / DEFER, focusing on old Workstream/Run/Memory/Pilot/Application/Workbench paths and determining which are fully disconnected from the product mainline. For each deletable item, list reference evidence, affected tests/scripts, deletion risk, then give one minimal cleanup plan. Only mark an item DELETE CANDIDATE when absence of any current-mainline dependency is confirmed; never delete because a path 'looks old'.\",\n  \"progress\": \"Environment facts verified in this frozen workspace (independent of the handoff): (1) Repo HEAD on branch main is a247e75ab9e78cce7853e3f281b85459a4f25e7c, confirmed directly from workspace/.git/refs/heads/main, and matches HANDOFF.md's stated HEAD; last commit is 'docs: record V2 resource bar daily-use baseline'. (2) Mainline components exist on disk and are wired: src/core/handoff/* (12 files), src/cli/margin/*, bin/margin.js (imports src/core/handoff/index.js, src/cli/margin/index.js, src/cli/agentSourceCli.js), scripts/generate-handoff.js and run-margin-surface.js, electron/main.js+preload.cjs, web/src/margin/* (MarginApp.js, SessionBoard.js, RecentSessionsList.js, SessionDetail.js, marginApiClient.js, main.jsx). (3) Candidate legacy/retire scope is present on disk: src/services, src/routes, src/storage/memoryStore.js, src/domain (run.js, workstream.js), src/application (workstreamService, runService, artifactService, checkpointService, needsOwnerService, memoryService, resumeBriefService, v1ToolSet, workstreamSwitchService, marginApplicationContract...), src/contracts, src/http, src/pilot, src/runtime (pi + claude), src/surfaces/feishu*, src/continuity, src/config, src/web/createWebWorkbench.js, plus old web/src Workbench UI (App.js/App.jsx, components/Workstream*, RunControls, MemoryPanel, NeedsOwnerPanel, ActivityPanel, ArtifactPanel, ConversationPanel, hooks/useWorkbenchData.js, useEventPolling.js, workbenchState.js). (4) README.md still claims 'Current Status: Phase 2B Web Workbench', which is stale relative to the newer CLI-V1/Electron-V2 line. (5) experiments/ is EMPTY on disk (0 files) even though docs/architecture/2026-09-05-... describes experiments/phase1-distiller content. (6) No audit deliverable file (no classification/cleanup-plan report) exists anywhere in the frozen workspace; the newest repo docs are dated <= 2026-09-07 and none is a cleanup-audit product. (7) A subset of files (src/core/handoff/*, test/handoff.test.js, bin/margin.js, src/agents/sourceRegistry.js, src/resources/*, src/cli/agentSourceCli.js, web/src/margin/*) carry mtimes after the HEAD commit (~2026-09-07T02:00-04:47Z), evidencing an uncommitted dirty worktree at freeze, consistent with HANDOFF.md's '112 tracked modified/untracked files' claim, though that exact count could not be independently reproduced (no git CLI in this environment).\",\n  \"pending\": \"The actual audit deliverable is NOT present as a readable artifact in this environment: no KEEP/RETIRE/GENERATED/DEFER classification, no DELETE-CANDIDATE evidence list, no minimal cleanup plan, and no per-item risk/affected-tests notes. HANDOFF.md only says (Inferred, historical) the audit 'was completed without modifying files' and that sentence is truncated ('当前产品主链是：' with no content after it). Therefore: verify whether the interrupted session's report was persisted only in the original repo evidence snapshot (<repo>\\\\docs\\\\validation\\\\recovery-handoffs-postfix\\\\session-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl - protected/absent in this sandbox and not readable here). If not recoverable, the pending work is to re-derive the full audit: trace current-mainline reachability from the entry points above, classify all legacy paths (src/services, src/routes, src/storage, src/domain, src/application, src/contracts, src/http, src/pilot, src/runtime, src/surfaces/feishu, src/continuity, src/config, src/web, old web/src Workbench UI, empty experiments/, stale README) with import/export + package-script + test evidence, and produce the minimal cleanup plan - all read-only. The 13 interrupted tool operations without recorded final states and 2 failed compound scan commands from the prior session mean parts of the prior evidence-gathering (import scans) may be incomplete or lost.\",\n  \"historicalValidation\": \"HISTORICAL ONLY, not current validation: (a) HANDOFF.md records one focused test command (set beginning test/handoff.test.js, test/marginCli.test.js, test/marginSurfaceHttpAdapter.test.js, test/marginRecentSessionsList.test.js, test/m...) exiting 0, and a second focused test command with no explicit final result; it also records 2 failed compound scan commands (exit_code=1) and 13 internal operations with no recorded final state. (b) task-8-report.md (2026-08-24) claims full suite 461/462 passed and build passed - that is an unrelated earlier Task-8 (Phase 2B Web Workbench) report. (c) docs/validation/v2_resource_bar_daily_use_baseline.md (2026-09-07) claims '111 passed, 0 failed' for CLI/Electron/Handoff/HTTP/resource focused tests and npm run build passed. (d) CURRENT validation is impossible in this sandbox: no node runtime (no node.exe anywhere), no workspace/.runtime/ node-v22.23.1 runtime referenced by package.json scripts, no node_modules, and no git CLI - tests cannot be rerun and git status/diff cannot be recomputed. None of the historical passes was rerun against this frozen tree.\",\n  \"recommendedFollowUp\": \"Do not trust the handoff's 'audit complete'; treat the deliverable as missing until proven otherwise. First, in the real repo (this sandbox cannot run anything), check whether the prior session's audit report exists in docs/validation/recovery-handoffs-postfix/session-01a07639-...jsonl (SHA-256 a79da02da... per HANDOFF.md) or any doc added near 2026-09-07; if found, reuse/correct it. If absent, perform the read-only audit from scratch: enumerate current-mainline entry points (bin/margin.js, src/core/handoff/index.js + its tree, src/cli/margin/*, src/agents, src/resources, scripts/run-margin-surface.js, generate-handoff.js, electron/main.js/preload.cjs, web/src/margin/main.jsx), then scan reverse imports/exports and package.json scripts plus test/ coverage to decide KEEP/RETIRE/GENERATED/DEFER per legacy path; for every RETIRE candidate verify zero references from the mainline and note which tests/scripts still exercise it (e.g., webWorkstreams.test.js, webRunActivity.test.js, workstreamDomain.test.js, runDomain.test.js, terminal* tests, memoryLifecycle.test.js, phase2b* / webWorkbenchComposition / webShell tests likely pin the old Workbench chain) before marking DELETE CANDIDATE, and output the classification + minimal cleanup plan as the final report without modifying any file.\",\n  \"currentApplicability\": \"PARTIAL. Verified current/true in this environment: the frozen repo exists, HEAD = main @ a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches handoff), and the described product mainline components (CLI V1, src/core/handoff, Electron V2, web/src/margin React surface) are all present and import-wired; the worktree is dirty at freeze (handoff/agents/resources/cli/margin-web files modified after HEAD). NOT currently verifiable / only historical: 'audit complete without modifications' (no report artifact readable here; sentence truncated and marked Inferred); '112 modified/untracked files' count (no git CLI to recount); focused-test exit 0 and all repo-doc pass counts (no node runtime to rerun); the exact content of the 'current product mainline' classification. The audit therefore remains open: conclusions must be re-derived from the current frozen files, not taken from the handoff text.\",\n  \"unsafeAssumptions\": [\n    \"Assuming HANDOFF.md's '审计完成，未修改任何文件' (audit complete, no files modified) means the audit deliverable exists and the task needs no continuation - no such report is readable anywhere in this workspace and the handoff sentence is truncated and self-labeled Inferred.\",\n    \"Assuming historical test exit_code=0, task-8-report's 461/462 pass, or v2_resource_bar_baseline's '111 passed' validates the current frozen tree - nothing was rerun; no node/.runtime/node_modules exists here.\",\n    \"Assuming the '112 tracked modified/untracked files' figure is independently confirmed repo truth - git CLI is unavailable in this environment; only a small subset of post-HEAD mtimes was verified.\",\n    \"Assuming docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md's KEEP/Adapt/Retire table is the current cleanup/delete plan - that doc explicitly states it is analysis, not a deletion list, and that the first refactor slice performs no cleanup.\",\n    \"Assuming docs/audit/legacy_data_disposition.md (2026-08-23, Phase 1 data disposition) is the deliverable for this audit - it concerns a different, older legacy-data decision.\",\n    \"Assuming README.md's 'Current Status: Phase 2B Web Workbench' describes the current product mainline - it appears stale versus the newer CLI-V1/Electron-V2/R3 commits and is itself an audit finding, not ground truth.\",\n    \"Assuming experiments/ still contains the phase1-distiller content referenced by the 2026-09-05 analysis doc - experiments/ is empty (0 files) in the frozen workspace.\",\n    \"Assuming the recent mtimes on src/core/handoff/*, test/handoff.test.js, web/src/margin/*, src/agents/*, src/resources/* etc. were caused by the interrupted (read-only) audit session - unverifiable; they are merely on-disk state at freeze.\",\n    \"Assuming the evidence snapshot docs/validation/recovery-handoffs-postfix/session-01a07639-....jsonl is present and readable in this environment - that path is protected/disabled here and was not found in the frozen docs/validation tree.\",\n    \"Assuming files unchanged since the checkpoint remain unchanged in the real repo - only a frozen snapshot is observable here; no live repo access exists.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Perform a READ-ONLY cleanup audit of the Margin repository (do not modify or delete any files), per input/HANDOFF.md. Current product mainline = CLI V1 (bin/margin.js + src/core/handoff core) + Electron V2 shell (electron/main.js, preload.cjs) + current Margin React Surface (web/src/margin/*, entry web/src/margin/main.jsx). Scan imports/exports, package.json scripts, tests, and runtime entry points; classify every directory/file as KEEP / RETIRE / GENERATED / DEFER, focusing on old Workstream/Run/Memory/Pilot/Application/Workbench paths and determining which are fully disconnected from the product mainline. For each deletable item, list reference evidence, affected tests/scripts, deletion risk, then give one minimal cleanup plan. Only mark an item DELETE CANDIDATE when absence of any current-mainline dependency is confirmed; never delete because a path 'looks old'.",
+    "progress": "Environment facts verified in this frozen workspace (independent of the handoff): (1) Repo HEAD on branch main is a247e75ab9e78cce7853e3f281b85459a4f25e7c, confirmed directly from workspace/.git/refs/heads/main, and matches HANDOFF.md's stated HEAD; last commit is 'docs: record V2 resource bar daily-use baseline'. (2) Mainline components exist on disk and are wired: src/core/handoff/* (12 files), src/cli/margin/*, bin/margin.js (imports src/core/handoff/index.js, src/cli/margin/index.js, src/cli/agentSourceCli.js), scripts/generate-handoff.js and run-margin-surface.js, electron/main.js+preload.cjs, web/src/margin/* (MarginApp.js, SessionBoard.js, RecentSessionsList.js, SessionDetail.js, marginApiClient.js, main.jsx). (3) Candidate legacy/retire scope is present on disk: src/services, src/routes, src/storage/memoryStore.js, src/domain (run.js, workstream.js), src/application (workstreamService, runService, artifactService, checkpointService, needsOwnerService, memoryService, resumeBriefService, v1ToolSet, workstreamSwitchService, marginApplicationContract...), src/contracts, src/http, src/pilot, src/runtime (pi + claude), src/surfaces/feishu*, src/continuity, src/config, src/web/createWebWorkbench.js, plus old web/src Workbench UI (App.js/App.jsx, components/Workstream*, RunControls, MemoryPanel, NeedsOwnerPanel, ActivityPanel, ArtifactPanel, ConversationPanel, hooks/useWorkbenchData.js, useEventPolling.js, workbenchState.js). (4) README.md still claims 'Current Status: Phase 2B Web Workbench', which is stale relative to the newer CLI-V1/Electron-V2 line. (5) experiments/ is EMPTY on disk (0 files) even though docs/architecture/2026-09-05-... describes experiments/phase1-distiller content. (6) No audit deliverable file (no classification/cleanup-plan report) exists anywhere in the frozen workspace; the newest repo docs are dated <= 2026-09-07 and none is a cleanup-audit product. (7) A subset of files (src/core/handoff/*, test/handoff.test.js, bin/margin.js, src/agents/sourceRegistry.js, src/resources/*, src/cli/agentSourceCli.js, web/src/margin/*) carry mtimes after the HEAD commit (~2026-09-07T02:00-04:47Z), evidencing an uncommitted dirty worktree at freeze, consistent with HANDOFF.md's '112 tracked modified/untracked files' claim, though that exact count could not be independently reproduced (no git CLI in this environment).",
+    "pending": "The actual audit deliverable is NOT present as a readable artifact in this environment: no KEEP/RETIRE/GENERATED/DEFER classification, no DELETE-CANDIDATE evidence list, no minimal cleanup plan, and no per-item risk/affected-tests notes. HANDOFF.md only says (Inferred, historical) the audit 'was completed without modifying files' and that sentence is truncated ('当前产品主链是：' with no content after it). Therefore: verify whether the interrupted session's report was persisted only in the original repo evidence snapshot (<repo>\\docs\\validation\\recovery-handoffs-postfix\\session-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl - protected/absent in this sandbox and not readable here). If not recoverable, the pending work is to re-derive the full audit: trace current-mainline reachability from the entry points above, classify all legacy paths (src/services, src/routes, src/storage, src/domain, src/application, src/contracts, src/http, src/pilot, src/runtime, src/surfaces/feishu, src/continuity, src/config, src/web, old web/src Workbench UI, empty experiments/, stale README) with import/export + package-script + test evidence, and produce the minimal cleanup plan - all read-only. The 13 interrupted tool operations without recorded final states and 2 failed compound scan commands from the prior session mean parts of the prior evidence-gathering (import scans) may be incomplete or lost.",
+    "historicalValidation": "HISTORICAL ONLY, not current validation: (a) HANDOFF.md records one focused test command (set beginning test/handoff.test.js, test/marginCli.test.js, test/marginSurfaceHttpAdapter.test.js, test/marginRecentSessionsList.test.js, test/m...) exiting 0, and a second focused test command with no explicit final result; it also records 2 failed compound scan commands (exit_code=1) and 13 internal operations with no recorded final state. (b) task-8-report.md (2026-08-24) claims full suite 461/462 passed and build passed - that is an unrelated earlier Task-8 (Phase 2B Web Workbench) report. (c) docs/validation/v2_resource_bar_daily_use_baseline.md (2026-09-07) claims '111 passed, 0 failed' for CLI/Electron/Handoff/HTTP/resource focused tests and npm run build passed. (d) CURRENT validation is impossible in this sandbox: no node runtime (no node.exe anywhere), no workspace/.runtime/ node-v22.23.1 runtime referenced by package.json scripts, no node_modules, and no git CLI - tests cannot be rerun and git status/diff cannot be recomputed. None of the historical passes was rerun against this frozen tree.",
+    "recommendedFollowUp": "Do not trust the handoff's 'audit complete'; treat the deliverable as missing until proven otherwise. First, in the real repo (this sandbox cannot run anything), check whether the prior session's audit report exists in docs/validation/recovery-handoffs-postfix/session-01a07639-...jsonl (SHA-256 a79da02da... per HANDOFF.md) or any doc added near 2026-09-07; if found, reuse/correct it. If absent, perform the read-only audit from scratch: enumerate current-mainline entry points (bin/margin.js, src/core/handoff/index.js + its tree, src/cli/margin/*, src/agents, src/resources, scripts/run-margin-surface.js, generate-handoff.js, electron/main.js/preload.cjs, web/src/margin/main.jsx), then scan reverse imports/exports and package.json scripts plus test/ coverage to decide KEEP/RETIRE/GENERATED/DEFER per legacy path; for every RETIRE candidate verify zero references from the mainline and note which tests/scripts still exercise it (e.g., webWorkstreams.test.js, webRunActivity.test.js, workstreamDomain.test.js, runDomain.test.js, terminal* tests, memoryLifecycle.test.js, phase2b* / webWorkbenchComposition / webShell tests likely pin the old Workbench chain) before marking DELETE CANDIDATE, and output the classification + minimal cleanup plan as the final report without modifying any file.",
+    "currentApplicability": "PARTIAL. Verified current/true in this environment: the frozen repo exists, HEAD = main @ a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches handoff), and the described product mainline components (CLI V1, src/core/handoff, Electron V2, web/src/margin React surface) are all present and import-wired; the worktree is dirty at freeze (handoff/agents/resources/cli/margin-web files modified after HEAD). NOT currently verifiable / only historical: 'audit complete without modifications' (no report artifact readable here; sentence truncated and marked Inferred); '112 modified/untracked files' count (no git CLI to recount); focused-test exit 0 and all repo-doc pass counts (no node runtime to rerun); the exact content of the 'current product mainline' classification. The audit therefore remains open: conclusions must be re-derived from the current frozen files, not taken from the handoff text.",
+    "unsafeAssumptions": [
+      "Assuming HANDOFF.md's '审计完成，未修改任何文件' (audit complete, no files modified) means the audit deliverable exists and the task needs no continuation - no such report is readable anywhere in this workspace and the handoff sentence is truncated and self-labeled Inferred.",
+      "Assuming historical test exit_code=0, task-8-report's 461/462 pass, or v2_resource_bar_baseline's '111 passed' validates the current frozen tree - nothing was rerun; no node/.runtime/node_modules exists here.",
+      "Assuming the '112 tracked modified/untracked files' figure is independently confirmed repo truth - git CLI is unavailable in this environment; only a small subset of post-HEAD mtimes was verified.",
+      "Assuming docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md's KEEP/Adapt/Retire table is the current cleanup/delete plan - that doc explicitly states it is analysis, not a deletion list, and that the first refactor slice performs no cleanup.",
+      "Assuming docs/audit/legacy_data_disposition.md (2026-08-23, Phase 1 data disposition) is the deliverable for this audit - it concerns a different, older legacy-data decision.",
+      "Assuming README.md's 'Current Status: Phase 2B Web Workbench' describes the current product mainline - it appears stale versus the newer CLI-V1/Electron-V2/R3 commits and is itself an audit finding, not ground truth.",
+      "Assuming experiments/ still contains the phase1-distiller content referenced by the 2026-09-05 analysis doc - experiments/ is empty (0 files) in the frozen workspace.",
+      "Assuming the recent mtimes on src/core/handoff/*, test/handoff.test.js, web/src/margin/*, src/agents/*, src/resources/* etc. were caused by the interrupted (read-only) audit session - unverifiable; they are merely on-disk state at freeze.",
+      "Assuming the evidence snapshot docs/validation/recovery-handoffs-postfix/session-01a07639-....jsonl is present and readable in this environment - that path is protected/disabled here and was not found in the frozen docs/validation tree.",
+      "Assuming files unchanged since the checkpoint remain unchanged in the real repo - only a frozen snapshot is observable here; no live repo access exists."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788763327779
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788763329181
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788763329182
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788763329182
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788763330346
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788763330347
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git log --oneline -8; git status --short | Select-Object -First 40; git branch --show-current\"}",
+      "tsMs": 1788763331598
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788763331606
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Force | Select-Object Name, Mode; Write-Output '---'; Get-ChildItem workspace/.git -ErrorAction SilentlyContinue | Select-Object -First 10 Name\"}",
+      "tsMs": 1788763335251
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/.runtime -ErrorAction SilentlyContinue | Select-Object Name; Get-Command node -ErrorAction SilentlyContinue | Select-Object Source\"}",
+      "tsMs": 1788763335261
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/HEAD; Write-Output '---'; Get-Content workspace/.git/config -ErrorAction SilentlyContinue; Write-Output '--- branches ---'; Get-ChildItem workspace/.git/refs/heads | Select-Object Name\"}",
+      "tsMs": 1788763339157
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/src/core -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- src ---'; Get-ChildItem workspace/src | Select-Object Name\"}",
+      "tsMs": 1788763339167
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/refs/heads/main -ErrorAction SilentlyContinue; Write-Output '--- packed-refs ---'; Get-Content workspace/.git/packed-refs -ErrorAction SilentlyContinue | Select-Object -Last 20; Write-Output '--- FETCH_HEAD ---'; Get-Content workspace/.git/FETCH_HEAD -ErrorAction SilentlyContinue | Select-Object -First 5\"}",
+      "tsMs": 1788763341093
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/package.json\"}",
+      "tsMs": 1788763341103
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/docs/validation -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- recovery-handoffs-postfix ---'; Get-ChildItem workspace/docs/validation/recovery-handoffs-postfix -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788763345581
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/docs -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- top-level non-dir files recently? ---'; Get-ChildItem workspace | Sort-Object LastWriteTime -Descending | Select-Object -First 10 Name, LastWriteTime\"}",
+      "tsMs": 1788763345581
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/docs/audit -ErrorAction SilentlyContinue | Select-Object Name, LastWriteTime; Write-Output '--- validation ---'; Get-ChildItem workspace/docs/validation -ErrorAction SilentlyContinue | Select-Object Name, LastWriteTime\"}",
+      "tsMs": 1788763347524
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/docs/architecture -ErrorAction SilentlyContinue | Select-Object Name; Get-ChildItem workspace/docs/evaluation -ErrorAction SilentlyContinue | Select-Object Name; Get-ChildItem workspace/docs/superpowers -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788763347534
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -gt [datetime]'2026-09-06' } | Sort-Object LastWriteTime -Descending | Select-Object -First 60 FullName, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788763349881
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -gt [datetime]'2026-09-07T02:00:00' } | Sort-Object LastWriteTime -Descending | Select-Object FullName, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788763352480
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem -Recurse -File -Include *.md | Select-String -Pattern 'DELETE CANDIDATE|cleanup plan|KEEP / RETIRE|RETIRE / GENERATED' -List | Select-Object Path | Format-Table -AutoSize\"}",
+      "tsMs": 1788763362530
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem docs -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -gt [datetime]'2026-09-07T00:00:00' } | Select-Object FullName, LastWriteTime | Format-Table -AutoSize; Write-Output '--- also root md/others ---'; Get-ChildItem -File | Where-Object { $_.LastWriteTime -gt [datetime]'2026-09-07T00:00:00' } | Select-Object Name, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788763362541
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/src/core/handoff/distiller.js, workspace/package.json, workspace/task-8-report.md, workspace/src/agents/sourceRegistry.js, workspace/README.md | Select-Object Name, LastWriteTime, Length | Format-Table -AutoSize\"}",
+      "tsMs": 1788763366220
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/src/core/handoff | Select-Object Name, Length, LastWriteTime | Format-Table -AutoSize; Write-Output '--- test dir top ---'; Get-ChildItem workspace/test | Select-Object Name | Format-Table -AutoSize\"}",
+      "tsMs": 1788763366227
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Name; Write-Output '--- _tmp ---'; Get-ChildItem _tmp -Force -Recurse -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '--- workspace hidden ---'; Get-ChildItem workspace -Force | Select-Object Name; Write-Output '--- .superpowers ---'; Get-ChildItem workspace/.superpowers -Force -Recurse -ErrorAction SilentlyContinue | Select-Object -First 30 FullName\"}",
+      "tsMs": 1788763380009
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'cleanup|audit|disposition|retire' -or $_.Directory.Name -match 'audit' } | Select-Object FullName, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788763380018
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/.superpowers -Recurse -Force -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize; Write-Output '--- node search ---'; Get-ChildItem -Recurse -Filter \\\"node.exe\\\" -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '--- done ---'\"}",
+      "tsMs": 1788763385089
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/audit/current_margin_status.md\"}",
+      "tsMs": 1788763385096
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/logs/HEAD -ErrorAction SilentlyContinue | Select-Object -Last 15\"}",
+      "tsMs": 1788763400919
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/src/core/handoff/*.js, workspace/test/handoff.test.js, workspace/src/agents/sourceRegistry.js, workspace/src/resources/*.js | Select-Object FullName, LastWriteTime | Format-Table -AutoSize; Write-Output '--- latest docs files by time ---'; Get-ChildItem workspace/docs -Recurse -File -Include *.md | Sort-Object LastWriteTime -Descending | Select-Object -First 15 FullName, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788763400925
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md\"}",
+      "tsMs": 1788763407851
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/audit/legacy_data_disposition.md\"}",
+      "tsMs": 1788763407852
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/src -Directory | Select-Object Name; Write-Output '--- src deeper ---'; Get-ChildItem workspace/src -Recurse -Directory -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788763434077
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/web/src -Recurse -File | Select-Object FullName | Format-Table -AutoSize; Write-Output '--- bin ---'; Get-ChildItem workspace/bin -Recurse -File | Select-Object FullName; Write-Output '--- experiments ---'; Get-ChildItem workspace/experiments -Directory | Select-Object Name; Write-Output '--- top dirs ---'; Get-ChildItem workspace -Directory | Select-Object Name\"}",
+      "tsMs": 1788763434084
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '--- scripts ---'; Get-ChildItem scripts -File | Select-Object Name; Write-Output '--- experiments ---'; Get-ChildItem experiments -Force | ForEach-Object { $_.Name }; Write-Output '--- data ---'; Get-ChildItem data -Force | ForEach-Object { $_.Name }; Write-Output '--- electron ---'; Get-ChildItem electron -File | Select-Object Name; Write-Output '--- web root ---'; Get-ChildItem web -Force | ForEach-Object { $_.Name }\"}",
+      "tsMs": 1788763444066
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '--- head of bin/margin.js ---'; Get-Content bin/margin.js -TotalCount 30; Write-Output '--- cli dir ---'; Get-ChildItem src/cli -Recurse -File | Select-Object FullName; Write-Output '--- src/cli/margin ---'; Get-ChildItem src/cli/margin -File | Select-Object Name\"}",
+      "tsMs": 1788763444073
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem experiments -Force -Recurse -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize; Write-Output '--- count ---'; (Get-ChildItem experiments -Force -Recurse -File -ErrorAction SilentlyContinue | Measure-Object).Count; Write-Output '--- src/web, src/continuity, src/config, src/agents, src/resources, src/surfaces, src/application ---'; Get-ChildItem src/web, src/continuity, src/config, src/agents, src/resources, src/surfaces, src/application -File -Recurse -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788763447697
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '--- handoff.test.js head ---'; Get-Content test/handoff.test.js -TotalCount 25; Write-Output '--- generate-handoff.js head ---'; Get-Content scripts/generate-handoff.js -TotalCount 20; Write-Output '--- marginApiClient/margin main entry ---'; Get-Content web/src/margin/main.jsx -TotalCount 30\"}",
+      "tsMs": 1788763447704
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-Content .gitignore; Write-Output '=== README head ==='; Get-Content README.md -TotalCount 60\"}",
+      "tsMs": 1788763459770
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '--- marginCli tests exist? ---'; @('test/handoff.test.js','test/marginCli.test.js','test/marginSurfaceHttpAdapter.test.js','test/marginRecentSessionsList.test.js') | ForEach-Object { \\\"$_ : $(Test-Path $_)\\\" }; Write-Output '--- docs validation recent md head ---'; Get-Content docs/validation/v2_resource_bar_daily_use_baseline.md -TotalCount 40\"}",
+      "tsMs": 1788763459777
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '--- design-references ---'; Get-ChildItem design-references -Force -Recurse -ErrorAction SilentlyContinue | Select-Object -First 20 FullName; Write-Output '--- evaluation ---'; Get-ChildItem evaluation -Force -Recurse -ErrorAction SilentlyContinue | Select-Object -First 20 FullName; Write-Output '--- docs root ---'; Get-ChildItem docs | Select-Object Name\"}",
+      "tsMs": 1788763464922
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '--- search files mentioning 01a07639 or this session id ---'; Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | Select-String -Pattern '01a07639' -List -ErrorAction SilentlyContinue | Select-Object Path; Write-Output '--- search for recovery-handoffs ---'; Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -match 'recovery-handoffs' } | Select-Object FullName; Write-Output '--- done ---'\"}",
+      "tsMs": 1788763464930
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '--- web/src/margin files ---'; Get-ChildItem web/src/margin -File | Select-Object Name; Write-Output '--- core dir files ---'; Get-ChildItem src/core -File | Select-Object Name; Write-Output '--- core/handoff files ---'; Get-ChildItem src/core/handoff -File | Select-Object Name; Write-Output '--- http/routes/contracts/domain/pilot/service dirs ---'; @('src/http','src/routes','src/contracts','src/domain','src/pilot','src/services','src/storage','src/runtime','src/surfaces','src/application','src/evaluation','src/lib') | ForEach-Object { Write-Output \\\"== $_ ==\\\"; Get-ChildItem $_ -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 12 Name }\"}",
+      "tsMs": 1788763498847
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem workspace/docs/validation -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- recovery-handoffs-postfix ---'; Get-ChildItem workspace/docs/validation/recovery-handoffs-postfix -ErrorAction SilentlyContinue | Select-Object Name",
+      "reasons": [
+        "protected path fragment is disabled: recovery-handoffs"
+      ],
+      "tsMs": 1788763345581
+    },
+    {
+      "command": "cd workspace; Write-Output '--- search files mentioning 01a07639 or this session id ---'; Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | Select-String -Pattern '01a07639' -List -ErrorAction SilentlyContinue | Select-Object Path; Write-Output '--- search for recovery-handoffs ---'; Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -match 'recovery-handoffs' } | Select-Object FullName; Write-Output '--- done ---'",
+      "reasons": [
+        "protected path fragment is disabled: recovery-handoffs"
+      ],
+      "tsMs": 1788763464930
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 193244,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-04",
+    "arm": "B",
+    "runId": "formal-case-04-B-2026-09-07T06-41-58-454Z",
+    "startMs": "2026-09-07T06:42:05.279Z",
+    "endMs": "2026-09-07T06:45:19.773Z",
+    "durationMs": 194494,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-04-B-2026-09-07T06-41-58-454Z status=ok durationMs=193244\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-04-B-2026-09-07T06-41-58-454Z.cert.json"
+  }
+}

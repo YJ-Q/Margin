@@ -1,0 +1,311 @@
+{
+  "runId": "formal-case-04-A-2026-09-07T10-01-00-471Z",
+  "caseId": "case-04",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T10:01:12.029Z",
+  "endTs": "2026-09-07T10:09:23.403Z",
+  "durationMs": 491374,
+  "modelPromptStartMs": 48,
+  "modelPromptEndMs": 491374,
+  "sessionId": "01a07b50-8e8a-74ab-a794-ee171f29abd4",
+  "rawResponse": "{\n  \"goal\": \"Perform a read-only cleanup audit of the Margin repository (repo formerly Echo; audited session ran at <repo> on 2026-09-06). Treat CLI V1 + src/core/handoff + Electron V2 + the current Margin React Surface as the product mainline. Scan imports, exports, package scripts, tests, and runtime entries; classify legacy Workstream/Run/Memory/Pilot/Application/Workbench paths and other code as KEEP / RETIRE / GENERATED / DEFER; determine which directories/files have fully disconnected from the current mainline; and for each deletable item list reference evidence, affected tests/scripts, and deletion risk, then produce one minimal cleanup plan. Explicitly: do not delete or modify files, and only mark DELETE CANDIDATE when absence of current-mainline dependencies is confirmed (not merely because something looks old).\",\n  \"progress\": \"The audited session (session_id 01a07639-d0ef-7452-a987-af0de51b29e3, 2026-09-06 ~10:18-10:21Z) ran ~13 read-only exec commands (rg reference scans, Get-Content of entry/composition files, git ls-files/status, Get-FileHash) and one focused mainline test run. It delivered a complete final audit report in chat (no file was written; every tool call was read-only): mainline chain identified as Electron V2/CLI V1 -> src/core/handoff -> handoff HTTP adapter -> margin.html -> web/src/margin. Classification delivered: KEEP = bin/margin.js, src/cli/margin/, src/core/handoff/, electron/, web/margin.html, web/src/margin/, scripts/run-margin-surface.js; RETIRE = old Web Workbench (web/index.html, web/src/main.jsx, web/src/App.js/App.jsx, web/src/components/*.js, apiClient.js, useWorkbenchData.js, useEventPolling.js, workbenchState.js, styles.css), the persistent Workstream/Run/Memory app stack (src/application, src/continuity, src/contracts, src/domain, src/http, src/web, src/pilot, src/runtime/pi, plus src/core non-handoff persistent-core files), and legacy Express (src/app.js, src/server.js, src/routes, src/services, src/storage, src/config); DEFER = src/core/migrations, legacy data scripts (backup/import/inventory/export) and data/, Feishu + src/runtime/claude surfaces, src/evaluation + evaluation/ + experiments + pi spike/audit scripts and historical docs; GENERATED = web/dist, out*/out-electron* etc., electron logs, handoff-output, .worktrees, .runtime, node_modules, runtime data. Only confirmed DELETE CANDIDATE: 11 one-line re-export wrappers web/src/components/*.jsx with zero import references. A 5-step minimal cleanup plan was presented (switch start/dev + Docker + run-margin-local.cmd to run-margin-surface and make Vite build only margin.html; delete the 11 unreferenced .jsx wrappers then rebuild + rerun 88 mainline tests; move Workbench + persistent Workstream/Run/Memory stack to a legacy/archive package and remove its scripts/tests; later handle legacy Express, data-export tools and migrations behind data/migration strategy; finally clean generated artifacts). Session ended normally with task_complete (10:21:17Z); the audit itself was complete.\",\n  \"pending\": \"Nothing further remained inside the audited session (it ended with a final answer and task_complete), and plan execution was out of scope by design (read-only request). In the current frozen tree (./workspace), parts of plan step 1 already appear applied: package.json start/dev point to scripts/run-margin-surface.js, a new legacy:workbench script aliases the old run-web-workbench.js, web/vite.config.js builds only margin.html, and Dockerfile/docker-compose.yml/run-margin-local.cmd target run-margin-surface; the 11 .jsx wrappers are also absent from the snapshot. Still present and NOT retired/removed in the current tree: old Workbench entry web/index.html + web/src/main.jsx + App.js/App.jsx + 11 web/src/components/*.js + apiClient/hooks/styles/conflictState.js, the legacy app stack dirs (src/application, src/continuity, src/contracts, src/domain, src/http, src/web, src/pilot, src/runtime/pi, src/routes, src/services, src/storage, src/config, src/app.js, src/server.js, src/core createMarginCore/marginCoreStore/memoryRetrieval/migrations/tools), scripts/run-web-workbench.js, run-legacy-api.js, run-terminal-pilot.js, run-feishu-surface.js, backup/import/inventory/export-legacy-data scripts, and the tests tied to them. Whether those later steps should now be executed is an open product decision; the audited task authorized only analysis. Unknown: whether the margin-surface default-entry changes visible in the working tree are committed (repo HEAD is main @ a247e75ab9e78cce7853e3f281b85459a4f25e7c, but working-tree contents for package.json and web/vite.config.js differ from the git index, so commit vs uncommitted status is unverified), and no persisted report/artifact of this audit exists in the repo.\",\n  \"historicalValidation\": \"Within the audited session the focused mainline run (11 named test files incl. test/marginWorkspaceOverviewUi.test.js) passed 88/88 (pass 88, fail 0) at ~10:20-10:21Z, and commentary cited that the current Surface intentionally excludes SQLite/Application Contract/Workstream/Run/Memory. Older repo docs (e.g., task-8-report.md claims 461/462 full-suite passes, 2026-08-24) are earlier history. None of this is current validation: it was produced against the repo state at session time (uncommitted worktree on top of main @ 0836e800a4bf386e58ec1e9c02be5b7279497c9f), not against this sandbox snapshot. This environment has no node/.runtime, no node_modules, and no git CLI, so no tests/build can be re-run here; additionally the snapshot has diverged (e.g., test/marginWorkspaceOverviewUi.test.js from the historical 88-test run is absent now, and MarginApp.js/web files differ), so the 88/88 result cannot be assumed to hold for the current tree.\",\n  \"recommendedFollowUp\": \"Before any continuation, in an environment that has the repo runtime: (1) reconcile the snapshot's git state (HEAD a247e75 vs dirty working tree; determine which package.json/vite.config/web changes are uncommitted) and note the missing test/marginWorkspaceOverviewUi.test.js; (2) re-run the focused mainline tests, the full npm test suite, and npm run build against the current tree and re-verify every audit claim against current files, because multiple audit-time premises are stale; (3) then, only if the user confirms the cleanup should be implemented (the audited request was read-only), proceed with the audit plan's remaining steps: retire/archive old Workbench sources plus the persistent Workstream/Run/Memory/Express stacks and their scripts/tests, and treat DEFER items (migrations, data tools, Feishu/claude surfaces, evaluation/experiments) with a data-migration/retention strategy first; the earlier 'delete the 11 jsx wrappers' action is already moot because they no longer exist in the snapshot. A written audit report file (matching repo conventions such as docs/audit/*.md) was never created and may be wanted as the deliverable.\",\n  \"currentApplicability\": \"The audit's central conclusion still matches the current frozen tree: the product mainline (electron/main.js -> src/core/handoff/createMarginSurface -> handoff HTTP adapter -> web/margin.html -> web/src/margin) exists and is distinct from the legacy Workstream/Run/Memory/Express code, which remains present and only reachable via scripts/tests (run-web-workbench, run-legacy-api, pilot/feishu surfaces, backup/legacy-data scripts, ~80 test files under test/). However, specific audit statements are stale relative to the snapshot: default start/dev, Dockerfile, docker-compose and run-margin-local.cmd already run run-margin-surface; Vite already builds only margin.html (the audit cited index.html+margin.html dual inputs); the package script was renamed workbench -> legacy:workbench; the audit's sole DELETE CANDIDATE set (11 web/src/components/*.jsx wrappers) does not exist in this snapshot (they were never git-tracked, so absence here may just reflect that this snapshot carries tracked files); and at least one test file from the historical 88-test run is gone. Any continuation must re-derive the KEEP/RETIRE/DEFER/DELETE evidence against the current tree rather than reuse the session's file-level conclusions verbatim.\",\n  \"unsafeAssumptions\": [\n    \"That the audit-time repository state equals this sandbox snapshot - FALSE: HEAD moved from 0836e800 (session start) to a247e75 (4 later commits on 2026-09-06 17:43-44Z: handoff core+CLI V1, Electron V2, resource status, docs baseline) and the working tree has further edits beyond the git index.\",\n    \"That the 11 web/src/components/*.jsx wrappers were deleted as cleanup execution - unsupported: they were never tracked in git and their absence in this tracked-file snapshot is not proof of a deletion action.\",\n    \"That the historical 88/88 focused-test pass validates the current tree - cannot: no runtime here and the tree changed since the run.\",\n    \"That the cleanup plan steps are authorized to execute - the original user task explicitly required a read-only audit and prohibited deletion; later steps are recommendations only.\",\n    \"That the observed margin-surface default-entry changes are committed - unverified: working-tree hashes of package.json and web/vite.config.js differ from git-index blobs and no git CLI is available to confirm status.\",\n    \"That the final answer's classification and line-referenced evidence (electron/main.js:3, createMarginSurface.js:33, vite.config.js:9, marginCoreStore.js:4, 88 mainline tests) are current repo truth - they were verified only against the session-time state; the current tree diverges.\",\n    \"That the 2026-09-05 architecture doc's Retire decisions imply executed or imminent cleanup - the doc states analysis/planning only and that the first slice does not clean old chains.\",\n    \"That the repo state includes all untracked working files that existed at audit time (e.g., .jsx wrappers, .runtime, node_modules, out dirs) - this snapshot omits ignored/untracked content, so the original dirty worktree cannot be fully reconstructed here.\",\n    \"That the 'interrupted task' is a mid-turn stop of the audited session - the transcript actually ends with a final answer and task_complete; the open work is the unexecuted cleanup plan and repo evolution beyond the session, not a truncated turn.\"\n  ]\n}",
+  "parsedRecovery": {
+    "goal": "Perform a read-only cleanup audit of the Margin repository (repo formerly Echo; audited session ran at <repo> on 2026-09-06). Treat CLI V1 + src/core/handoff + Electron V2 + the current Margin React Surface as the product mainline. Scan imports, exports, package scripts, tests, and runtime entries; classify legacy Workstream/Run/Memory/Pilot/Application/Workbench paths and other code as KEEP / RETIRE / GENERATED / DEFER; determine which directories/files have fully disconnected from the current mainline; and for each deletable item list reference evidence, affected tests/scripts, and deletion risk, then produce one minimal cleanup plan. Explicitly: do not delete or modify files, and only mark DELETE CANDIDATE when absence of current-mainline dependencies is confirmed (not merely because something looks old).",
+    "progress": "The audited session (session_id 01a07639-d0ef-7452-a987-af0de51b29e3, 2026-09-06 ~10:18-10:21Z) ran ~13 read-only exec commands (rg reference scans, Get-Content of entry/composition files, git ls-files/status, Get-FileHash) and one focused mainline test run. It delivered a complete final audit report in chat (no file was written; every tool call was read-only): mainline chain identified as Electron V2/CLI V1 -> src/core/handoff -> handoff HTTP adapter -> margin.html -> web/src/margin. Classification delivered: KEEP = bin/margin.js, src/cli/margin/, src/core/handoff/, electron/, web/margin.html, web/src/margin/, scripts/run-margin-surface.js; RETIRE = old Web Workbench (web/index.html, web/src/main.jsx, web/src/App.js/App.jsx, web/src/components/*.js, apiClient.js, useWorkbenchData.js, useEventPolling.js, workbenchState.js, styles.css), the persistent Workstream/Run/Memory app stack (src/application, src/continuity, src/contracts, src/domain, src/http, src/web, src/pilot, src/runtime/pi, plus src/core non-handoff persistent-core files), and legacy Express (src/app.js, src/server.js, src/routes, src/services, src/storage, src/config); DEFER = src/core/migrations, legacy data scripts (backup/import/inventory/export) and data/, Feishu + src/runtime/claude surfaces, src/evaluation + evaluation/ + experiments + pi spike/audit scripts and historical docs; GENERATED = web/dist, out*/out-electron* etc., electron logs, handoff-output, .worktrees, .runtime, node_modules, runtime data. Only confirmed DELETE CANDIDATE: 11 one-line re-export wrappers web/src/components/*.jsx with zero import references. A 5-step minimal cleanup plan was presented (switch start/dev + Docker + run-margin-local.cmd to run-margin-surface and make Vite build only margin.html; delete the 11 unreferenced .jsx wrappers then rebuild + rerun 88 mainline tests; move Workbench + persistent Workstream/Run/Memory stack to a legacy/archive package and remove its scripts/tests; later handle legacy Express, data-export tools and migrations behind data/migration strategy; finally clean generated artifacts). Session ended normally with task_complete (10:21:17Z); the audit itself was complete.",
+    "pending": "Nothing further remained inside the audited session (it ended with a final answer and task_complete), and plan execution was out of scope by design (read-only request). In the current frozen tree (./workspace), parts of plan step 1 already appear applied: package.json start/dev point to scripts/run-margin-surface.js, a new legacy:workbench script aliases the old run-web-workbench.js, web/vite.config.js builds only margin.html, and Dockerfile/docker-compose.yml/run-margin-local.cmd target run-margin-surface; the 11 .jsx wrappers are also absent from the snapshot. Still present and NOT retired/removed in the current tree: old Workbench entry web/index.html + web/src/main.jsx + App.js/App.jsx + 11 web/src/components/*.js + apiClient/hooks/styles/conflictState.js, the legacy app stack dirs (src/application, src/continuity, src/contracts, src/domain, src/http, src/web, src/pilot, src/runtime/pi, src/routes, src/services, src/storage, src/config, src/app.js, src/server.js, src/core createMarginCore/marginCoreStore/memoryRetrieval/migrations/tools), scripts/run-web-workbench.js, run-legacy-api.js, run-terminal-pilot.js, run-feishu-surface.js, backup/import/inventory/export-legacy-data scripts, and the tests tied to them. Whether those later steps should now be executed is an open product decision; the audited task authorized only analysis. Unknown: whether the margin-surface default-entry changes visible in the working tree are committed (repo HEAD is main @ a247e75ab9e78cce7853e3f281b85459a4f25e7c, but working-tree contents for package.json and web/vite.config.js differ from the git index, so commit vs uncommitted status is unverified), and no persisted report/artifact of this audit exists in the repo.",
+    "historicalValidation": "Within the audited session the focused mainline run (11 named test files incl. test/marginWorkspaceOverviewUi.test.js) passed 88/88 (pass 88, fail 0) at ~10:20-10:21Z, and commentary cited that the current Surface intentionally excludes SQLite/Application Contract/Workstream/Run/Memory. Older repo docs (e.g., task-8-report.md claims 461/462 full-suite passes, 2026-08-24) are earlier history. None of this is current validation: it was produced against the repo state at session time (uncommitted worktree on top of main @ 0836e800a4bf386e58ec1e9c02be5b7279497c9f), not against this sandbox snapshot. This environment has no node/.runtime, no node_modules, and no git CLI, so no tests/build can be re-run here; additionally the snapshot has diverged (e.g., test/marginWorkspaceOverviewUi.test.js from the historical 88-test run is absent now, and MarginApp.js/web files differ), so the 88/88 result cannot be assumed to hold for the current tree.",
+    "recommendedFollowUp": "Before any continuation, in an environment that has the repo runtime: (1) reconcile the snapshot's git state (HEAD a247e75 vs dirty working tree; determine which package.json/vite.config/web changes are uncommitted) and note the missing test/marginWorkspaceOverviewUi.test.js; (2) re-run the focused mainline tests, the full npm test suite, and npm run build against the current tree and re-verify every audit claim against current files, because multiple audit-time premises are stale; (3) then, only if the user confirms the cleanup should be implemented (the audited request was read-only), proceed with the audit plan's remaining steps: retire/archive old Workbench sources plus the persistent Workstream/Run/Memory/Express stacks and their scripts/tests, and treat DEFER items (migrations, data tools, Feishu/claude surfaces, evaluation/experiments) with a data-migration/retention strategy first; the earlier 'delete the 11 jsx wrappers' action is already moot because they no longer exist in the snapshot. A written audit report file (matching repo conventions such as docs/audit/*.md) was never created and may be wanted as the deliverable.",
+    "currentApplicability": "The audit's central conclusion still matches the current frozen tree: the product mainline (electron/main.js -> src/core/handoff/createMarginSurface -> handoff HTTP adapter -> web/margin.html -> web/src/margin) exists and is distinct from the legacy Workstream/Run/Memory/Express code, which remains present and only reachable via scripts/tests (run-web-workbench, run-legacy-api, pilot/feishu surfaces, backup/legacy-data scripts, ~80 test files under test/). However, specific audit statements are stale relative to the snapshot: default start/dev, Dockerfile, docker-compose and run-margin-local.cmd already run run-margin-surface; Vite already builds only margin.html (the audit cited index.html+margin.html dual inputs); the package script was renamed workbench -> legacy:workbench; the audit's sole DELETE CANDIDATE set (11 web/src/components/*.jsx wrappers) does not exist in this snapshot (they were never git-tracked, so absence here may just reflect that this snapshot carries tracked files); and at least one test file from the historical 88-test run is gone. Any continuation must re-derive the KEEP/RETIRE/DEFER/DELETE evidence against the current tree rather than reuse the session's file-level conclusions verbatim.",
+    "unsafeAssumptions": [
+      "That the audit-time repository state equals this sandbox snapshot - FALSE: HEAD moved from 0836e800 (session start) to a247e75 (4 later commits on 2026-09-06 17:43-44Z: handoff core+CLI V1, Electron V2, resource status, docs baseline) and the working tree has further edits beyond the git index.",
+      "That the 11 web/src/components/*.jsx wrappers were deleted as cleanup execution - unsupported: they were never tracked in git and their absence in this tracked-file snapshot is not proof of a deletion action.",
+      "That the historical 88/88 focused-test pass validates the current tree - cannot: no runtime here and the tree changed since the run.",
+      "That the cleanup plan steps are authorized to execute - the original user task explicitly required a read-only audit and prohibited deletion; later steps are recommendations only.",
+      "That the observed margin-surface default-entry changes are committed - unverified: working-tree hashes of package.json and web/vite.config.js differ from git-index blobs and no git CLI is available to confirm status.",
+      "That the final answer's classification and line-referenced evidence (electron/main.js:3, createMarginSurface.js:33, vite.config.js:9, marginCoreStore.js:4, 88 mainline tests) are current repo truth - they were verified only against the session-time state; the current tree diverges.",
+      "That the 2026-09-05 architecture doc's Retire decisions imply executed or imminent cleanup - the doc states analysis/planning only and that the first slice does not clean old chains.",
+      "That the repo state includes all untracked working files that existed at audit time (e.g., .jsx wrappers, .runtime, node_modules, out dirs) - this snapshot omits ignored/untracked content, so the original dirty worktree cannot be fully reconstructed here.",
+      "That the 'interrupted task' is a mid-turn stop of the audited session - the transcript actually ends with a final answer and task_complete; the open work is the unexecuted cleanup plan and repo evolution beyond the session, not a truncated turn."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788775273477
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C .\\\\workspace status 2>&1 | Select-Object -First 40\"}",
+      "tsMs": 1788775273478
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788775276436
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788775276437
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788775276437
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788775276437
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Item .\\\\input\\\\session.jsonl | Select-Object Length, LastWriteTime; (Get-Content .\\\\input\\\\session.jsonl | Measure-Object -Line).Lines\"}",
+      "tsMs": 1788775277762
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp/AppData\"}",
+      "tsMs": 1788775277770
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 5\"}",
+      "tsMs": 1788775279117
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl | ForEach-Object { $o = $_ | ConvertFrom-Json; \\\"$($o.ordinal)`t$($o.type)`t$($o.payload.type)\\\" }\"}",
+      "tsMs": 1788775282512
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"node --version; python --version\"}",
+      "tsMs": 1788775375632
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Add-Type -AssemblyName System.Text.Json; $i=0; Get-Content .\\\\input\\\\session.jsonl | ForEach-Object { $i++; try { $d=[System.Text.Json.JsonDocument]::Parse($_) ; $r=$d.RootElement; $t=$r.GetProperty('type').GetString(); $pt=''; if($r.TryGetProperty('payload',$p)){} ; $info=\\\"$i`t$t\\\"; if($r.TryGetProperty('payload',$pr)){ $pl=$r.GetProperty('payload'); if($pl.ValueKind -eq [System.Text.Json.JsonValueKind]::Object){ if($pl.TryGetProperty('type',$ptp)){ $info+=\\\"`t\\\"+$ptp.GetString() } elseif($pl.TryGetProperty('role',$rpp)){ $info+=\\\"`tROLE:\\\"+$rpp.GetString() } }; if($pl.TryGetProperty('name',$np)){ $info+=\\\"`tNAME:\\\"+$np.GetString() } }; Write-Output $info; $d.Dispose() } catch { Write-Output \\\"$i`t<PARSE-ERROR>\\\" } }\"}",
+      "tsMs": 1788775384180
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$i=0; Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8 | ForEach-Object { $i++; try { $o=$_|ConvertFrom-Json; $info=\\\"$i`t$($o.type)\\\"; if($o.payload){ if($o.payload.type){$info+=\\\"`t$($o.payload.type)\\\"}; if($o.payload.role){$info+=\\\"`trole=$($o.payload.role)\\\"} }; Write-Output $info } catch { Write-Output \\\"$i`t<PARSE-ERROR $($_.Exception.Message.Substring(0,[Math]::Min(80,$_.Exception.Message.Length)))>\\\" } }\"}",
+      "tsMs": 1788775395180
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach($ln in 6,9){ $o=$lines[$ln-1]|ConvertFrom-Json; Write-Output \\\"===== LINE $ln role=$($o.payload.role) =====\\\"; foreach($c in $o.payload.content){ Write-Output \\\"[type=$($c.type)]\\\"; if($c.text){ Write-Output $c.text } } }\"}",
+      "tsMs": 1788775398690
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; $o=$lines[8]|ConvertFrom-Json; foreach($c in $o.payload.content){ if($c.text){ Write-Output $c.text } }\"}",
+      "tsMs": 1788775403474
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach($ln in 12,49,102,111){ $o=$lines[$ln-1]|ConvertFrom-Json; $phase=$o.payload.phase; Write-Output \\\"===== LINE $ln role=$($o.payload.role) phase=$phase =====\\\"; foreach($c in $o.payload.content){ if($c.text){ Write-Output $c.text } } }\"}",
+      "tsMs": 1788775410230
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach($ln in 13,20,27,34,41,50,59,66,73,80,87,94,103){ $o=$lines[$ln-1]|ConvertFrom-Json; $pl=$o.payload; $name=$pl.name; $args=$pl.arguments; if(-not $name){$name=$pl.tool_name}; $s=($args|ConvertTo-Json -Compress -Depth 6); if($s.Length -gt 1200){$s=$s.Substring(0,1200)+'...[TRUNC]'}; Write-Output \\\"===== LINE $ln name=$name =====\\\"; Write-Output $s }\"}",
+      "tsMs": 1788775435065
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; $o=$lines[12]|ConvertFrom-Json; $pl=$o.payload; $pl.PSObject.Properties | ForEach-Object { $n=$_.Name; $v=($_.Value | ConvertTo-Json -Compress -Depth 4); if($v.Length -gt 700){$v=$v.Substring(0,700)+'...TRUNC'}; Write-Output \\\"$n = $v\\\" }\"}",
+      "tsMs": 1788775437030
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; $i=0; foreach($l in $lines){ $i++; $o=$null; try{$o=$l|ConvertFrom-Json}catch{}; if($o -and $o.type -eq 'response_item' -and $o.payload.type -eq 'custom_tool_call'){ $t=$o.payload.input; if($t.Length -gt 1500){$t=$t.Substring(0,1500)+' ...[TRUNC]'}; Write-Output \\\"===== LINE $i =====\\\"; Write-Output $t } }\"}",
+      "tsMs": 1788775440085
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content .\\\\workspace\\\\.git\\\\HEAD -ErrorAction SilentlyContinue; Get-Content .\\\\workspace\\\\.git\\\\config -ErrorAction SilentlyContinue | Select-Object -First 20\"}",
+      "tsMs": 1788775453060
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-ChildItem .\\\\workspace\\\\web\\\\src\\\\components\\\\*.jsx -ErrorAction SilentlyContinue | Select-Object Name,Length; Write-Output '--- margin.html / index.html / vite ---'; Get-ChildItem .\\\\workspace\\\\web\\\\ -Filter *.html | Select-Object Name; Get-Item .\\\\workspace\\\\web\\\\vite.config.js | Select-Object Name,Length\"}",
+      "tsMs": 1788775453068
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-ChildItem .\\\\workspace\\\\web\\\\src -Recurse -File | Select-Object -First 100 | ForEach-Object { $_.FullName.Replace((Get-Location).Path+'\\\\workspace\\\\','') }\"}",
+      "tsMs": 1788775456414
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $head=Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue; Write-Output \\\"main ref=$head\\\"; Write-Output '--- git log via refs ---'; Get-ChildItem .\\\\workspace\\\\.git\\\\logs -Recurse -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Replace((Get-Location).Path+'\\\\workspace\\\\','') }\"}",
+      "tsMs": 1788775456423
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Write-Output '--- HEAD log (last 20) ---'; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -ErrorAction SilentlyContinue | Select-Object -Last 20; Write-Output '--- main log (last 30) ---'; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue | Select-Object -Last 30\"}",
+      "tsMs": 1788775462475
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach($ln in 100,101,102,103,104,105,106,107,108,109,110,111,112,113,114){ $o=$lines[$ln-1]|ConvertFrom-Json; $ts=$o.timestamp; $sum=\\\"\\\"; if($o.payload.reasoning){$sum=\\\" REASON:\\\"+($o.payload.reasoning.Substring(0,[Math]::Min(300,$o.payload.reasoning.Length)))}; elseif($o.payload.summary){$sum=\\\" SUMMARY:\\\"+$o.payload.summary}; elseif($o.payload.item){$sum=\\\" ITEM:\\\"+($o.payload.item|ConvertTo-Json -Compress -Depth 3)}; elseif($o.payload.phase){$sum=\\\" PHASE:\\\"+$o.payload.phase}; Write-Output \\\"LINE $ln ts=$ts type=$($o.type)$sum\\\" }\"}",
+      "tsMs": 1788775500828
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-ChildItem .\\\\workspace -Force | Select-Object Name,Mode | ForEach-Object { \\\"$($_.Mode)`t$($_.Name)\\\" }\"}",
+      "tsMs": 1788775523250
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788775523258
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/AGENTS.md\"}",
+      "tsMs": 1788775523259
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $bytes=[System.IO.File]::ReadAllBytes((Resolve-Path '.\\\\workspace\\\\.git\\\\index')); $text=[System.Text.Encoding]::UTF8.GetString($bytes); foreach($n in 'ActivityPanel.jsx','ArtifactPanel.jsx','WorkstreamList.jsx','components/','App.jsx','main.jsx','conflictState.js'){ $idx=$text.IndexOf($n); Write-Output \\\"$n -> idx=$idx\\\" }\"}",
+      "tsMs": 1788775537734
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content .\\\\workspace\\\\.gitignore -ErrorAction SilentlyContinue; Write-Output '--- pack files? ---'; Get-ChildItem .\\\\workspace\\\\.git\\\\objects -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788775537742
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach($ln in 18,25,33,40,47,56,58,65,72,79,86,93,100,109){ $o=$lines[$ln-1]|ConvertFrom-Json; $r=$o.payload.reasoning; if(-not $r){$r=$o.payload.summary}; if($r){ Write-Output \\\"===== LINE $ln ($($o.payload.type)) =====\\\"; Write-Output $r } }\"}",
+      "tsMs": 1788775543703
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; $o=$lines[15]|ConvertFrom-Json; $o.payload.PSObject.Properties | ForEach-Object { $n=$_.Name; $v=($_.Value|ConvertTo-Json -Compress -Depth 3); if($v.Length -gt 400){$v=$v.Substring(0,400)+'...TRUNC'}; Write-Output \\\"$n = $v\\\" }\"}",
+      "tsMs": 1788775547828
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $lines=Get-Content .\\\\input\\\\session.jsonl -Encoding UTF8; foreach($ln in 16,23,30,37,44,53,62,69,76,83,90,97,106){ $o=$lines[$ln-1]|ConvertFrom-Json; $txt=''; if($o.payload.output){ foreach($c in $o.payload.output){ if($c.text){$txt+=$c.text} } }; $status=$o.payload.status; $len=$txt.Length; Write-Output \\\"===== LINE $ln status=$status len=$len =====\\\"; if($len -gt 2000){ Write-Output $txt.Substring($len-2000) } else { Write-Output $txt } }\"}",
+      "tsMs": 1788775550741
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Write-Output '=== package.json ==='; Get-Content .\\\\workspace\\\\package.json; Write-Output '=== web/vite.config.js ==='; Get-Content .\\\\workspace\\\\web\\\\vite.config.js; Write-Output '=== run-margin-local.cmd ==='; Get-Content .\\\\workspace\\\\run-margin-local.cmd; Write-Output '=== Dockerfile ==='; Get-Content .\\\\workspace\\\\Dockerfile; Write-Output '=== docker-compose.yml ==='; Get-Content .\\\\workspace\\\\docker-compose.yml\"}",
+      "tsMs": 1788775568529
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $fs=[System.IO.File]::OpenRead((Resolve-Path '.\\\\workspace\\\\.git\\\\index')); $br=New-Object System.IO.BinaryReader($fs); $sig=$br.ReadInt32(); $ver=$br.ReadInt32(); $count=$br.ReadInt32(); Write-Output \\\"sig=$sig ver=$ver count=$count\\\"; $found=@{'package.json'=$false;'web/vite.config.js'=$false;'src/core/handoff/createMarginSurface.js'=$false;'web/src/margin/MarginApp.js'=$false}; $entries=@(); for($e=0;$e -lt $count;$e++){ $start=$fs.Position; $null=$br.ReadBytes(40); $sha=$br.ReadBytes(20); $flags=$br.ReadUInt16(); $nameLen=$flags -band 0xFFF; $pathBytes=$br.ReadBytes($nameLen); $path=[System.Text.Encoding]::UTF8.GetString($pathBytes); if($nameLen -ge 0xFF){ while($br.ReadByte() -ne 0){} } else { $null=$br.ReadByte() }; $pad=8-(($fs.Position-$start)%8); if($pad -ne 8){ $null=$br.ReadBytes($pad) }; if($found.ContainsKey($path)){ $hex=($sha|ForEach-Object{$_.ToString('x2')}) -join ''; Write-Output \\\"TRACKED $path sha=$hex\\\"; $found[$path]=$true } } $br.Close(); $fs.Close(); Write-Output '--- done ---'\"}",
+      "tsMs": 1788775594403
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $bytes=[System.IO.File]::ReadAllBytes((Resolve-Path '.\\\\workspace\\\\.git\\\\index')); $s=[System.Text.Encoding]::ASCII.GetString($bytes); foreach($n in 'package.json','web/vite.config.js','src/core/handoff/createMarginSurface.js','web/src/components/ActivityPanel.js','src/core/handoff/index.js'){ $idx=$s.IndexOf($n); if($idx -lt 0){ Write-Output \\\"$n NOT FOUND in index\\\"; continue }; $shaStart=$idx-20; if($shaStart -lt 0){ Write-Output \\\"$n found at $idx but no preceding sha\\\"; continue }; $sha=$bytes[$shaStart..($idx-1)]; $hex=($sha|ForEach-Object{$_.ToString('x2')}) -join ''; Write-Output \\\"$n idx=$idx sha=$hex\\\" }\"}",
+      "tsMs": 1788775598881
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Test-Path '.\\\\workspace\\\\.git\\\\objects\\\\f3\\\\4b57ed5c7b59fc673e18f51d01ceee7ff8000c'; Test-Path '.\\\\workspace\\\\.git\\\\objects\\\\pack'; Get-ChildItem '.\\\\workspace\\\\.git\\\\objects\\\\pack' -ErrorAction SilentlyContinue | Select-Object Name,Length\"}",
+      "tsMs": 1788775602867
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-ChildItem '.\\\\_tmp\\\\AppData\\\\Roaming' -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '---search git---'; Get-ChildItem '.\\\\_tmp' -Recurse -Filter 'git.exe' -ErrorAction SilentlyContinue | Select-Object -First 5 FullName\"}",
+      "tsMs": 1788775602876
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; function Get-GitBlobHash($path){ $data=[System.IO.File]::ReadAllBytes($path); $len=$data.Length; $pre=[System.Text.Encoding]::ASCII.GetBytes(\\\"blob $len`0\\\"); $all=New-Object byte[] ($pre.Length+$len); [Array]::Copy($pre,0,$all,0,$pre.Length); [Array]::Copy($data,0,$all,$pre.Length,$len); $sha=[System.Security.Cryptography.SHA1]::Create(); $h=$sha.ComputeHash($all); return (($h|ForEach-Object{$_.ToString('x2')}) -join '') }; foreach($f in @('package.json','web/vite.config.js','src/core/handoff/createMarginSurface.js','src/core/handoff/index.js','web/src/components/ActivityPanel.js')){ $p=Join-Path '.\\\\workspace' $f; if(Test-Path $p){ Write-Output \\\"$f -> $((Get-GitBlobHash $p))\\\" } else { Write-Output \\\"$f MISSING\\\" } }\"}",
+      "tsMs": 1788775613842
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-ChildItem '.\\\\_tmp\\\\AppData\\\\Roaming' -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 60 FullName | ForEach-Object { $_.FullName.Replace((Get-Location).Path+'\\\\_tmp\\\\','') }\"}",
+      "tsMs": 1788775649668
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md\",\"limitChars\":6000}",
+      "tsMs": 1788775649677
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"DELETE CANDIDATE|cleanup|清理|退役|retire\",\"path\":\"workspace/docs\",\"maxResults\":30}",
+      "tsMs": 1788775666498
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"margin-surface|run-margin-surface|legacy:workbench\",\"path\":\"workspace/docs\",\"maxResults\":30}",
+      "tsMs": 1788775666509
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers\"}",
+      "tsMs": 1788775666518
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $pre=[System.Text.Encoding]::ASCII.GetBytes(\\\"blob 0`0\\\"); $sha=[System.Security.Cryptography.SHA1]::Create(); $h=$sha.ComputeHash($pre); Write-Output (($h|ForEach-Object{$_.ToString('x2')}) -join ''); Write-Output ('expected: e69de29bb2d1d6434b8b29ae775ad8c2e48c5391')\"}",
+      "tsMs": 1788775671662
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; $bytes=[System.IO.File]::ReadAllBytes((Resolve-Path '.\\\\workspace\\\\.git\\\\index')); $s=[System.Text.Encoding]::ASCII.GetString($bytes); function Get-GitBlobHash($path){ $data=[System.IO.File]::ReadAllBytes($path); $len=$data.Length; $pre=[System.Text.Encoding]::ASCII.GetBytes(\\\"blob $len`0\\\"); $all=New-Object byte[] ($pre.Length+$len); [Array]::Copy($pre,0,$all,0,$pre.Length); [Array]::Copy($data,0,$all,$pre.Length,$len); $sha=[System.Security.Cryptography.SHA1]::Create(); $h=$sha.ComputeHash($all); return (($h|ForEach-Object{$_.ToString('x2')}) -join '') }; foreach($n in 'package.json','web/vite.config.js','src/core/handoff/createMarginSurface.js','web/src/components/ActivityPanel.js','web/src/margin/MarginApp.js','electron/main.js','src/core/handoff/index.js'){ $idx=$s.IndexOf($n); $sha=$bytes[($idx-22)..($idx-3)]; $hex=($sha|ForEach-Object{$_.ToString('x2')}) -join ''; $p=Join-Path '.\\\\workspace' $n; $wt='(missing)'; if(Test-Path $p){ $wt=Get-GitBlobHash $p }; $match='DIFF'; if($hex -eq $wt){$match='SAME'}; Write-Output \\\"$n`n  index=$hex`n  work =$wt`n  => $match\\\" }\"}",
+      "tsMs": 1788775680811
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Write-Output '=== electron/main.js ==='; Get-Content .\\\\workspace\\\\electron\\\\main.js; Write-Output '=== scripts listing ==='; Get-ChildItem .\\\\workspace\\\\scripts -File | Select-Object -ExpandProperty Name; Write-Output '=== src top dirs ==='; Get-ChildItem .\\\\workspace\\\\src -Directory | Select-Object -ExpandProperty Name; Write-Output '=== core dir ==='; Get-ChildItem .\\\\workspace\\\\src\\\\core -Recurse -File | ForEach-Object { $_.FullName.Replace((Get-Location).Path+'\\\\workspace\\\\','') }\"}",
+      "tsMs": 1788775703745
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Write-Output '=== web/index.html ==='; Get-Content .\\\\workspace\\\\web\\\\index.html; Write-Output '=== web/margin.html ==='; Get-Content .\\\\workspace\\\\web\\\\margin.html\"}",
+      "tsMs": 1788775722184
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-ChildItem .\\\\workspace\\\\test -Filter *.test.js | Select-Object -ExpandProperty Name; Write-Output '--- mainline test file presence ---'; foreach($f in 'handoff.test.js','marginCli.test.js','marginSurfaceHttpAdapter.test.js','marginRecentSessionsList.test.js','marginSessionDetail.test.js','marginWorkspaceOverview.test.js','marginWorkspaceOverviewUi.test.js','marginWorkspaceSessions.test.js','resumeSummary.test.js','smartSelect.test.js','electronHost.test.js'){ $p=Join-Path '.\\\\workspace\\\\test' $f; Write-Output \\\"$f -> $(Test-Path $p)\\\" }\"}",
+      "tsMs": 1788775722192
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; foreach($f in 'src\\\\server.js','src\\\\app.js','src\\\\web\\\\createWebWorkbench.js','web\\\\src\\\\App.js','web\\\\src\\\\App.jsx','web\\\\src\\\\main.jsx','web\\\\src\\\\apiClient.js','web\\\\src\\\\styles.css','web\\\\src\\\\useWorkbenchData.js','web\\\\src\\\\components'){ $p=Join-Path '.\\\\workspace' $f; $kind='?'; if(Test-Path $p){ if((Get-Item $p).PSIsContainer){ $n=(Get-ChildItem $p -File).Count; $kind=\\\"DIR($n files)\\\" } else { $kind='file' } } else { $kind='MISSING' }; Write-Output \\\"$f -> $kind\\\" }; Write-Output '--- components files ---'; Get-ChildItem .\\\\workspace\\\\web\\\\src\\\\components -File | Select-Object -ExpandProperty Name\"}",
+      "tsMs": 1788775743705
+    }
+  ],
+  "deniedToolCalls": [],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 491374,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-04",
+    "arm": "A",
+    "runId": "formal-case-04-A-2026-09-07T10-01-00-471Z",
+    "startMs": "2026-09-07T10:01:10.249Z",
+    "endMs": "2026-09-07T10:09:23.405Z",
+    "durationMs": 493156,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-04-A-2026-09-07T10-01-00-471Z status=ok durationMs=491374\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-04-A-2026-09-07T10-01-00-471Z.cert.json"
+  }
+}

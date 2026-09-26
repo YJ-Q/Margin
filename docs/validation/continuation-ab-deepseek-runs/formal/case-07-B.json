@@ -1,0 +1,372 @@
+{
+  "runId": "formal-case-07-B-2026-09-07T07-08-10-162Z",
+  "caseId": "case-07",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T07:08:18.767Z",
+  "endTs": "2026-09-07T07:15:18.323Z",
+  "durationMs": 419556,
+  "modelPromptStartMs": 44,
+  "modelPromptEndMs": 419556,
+  "sessionId": "01a07ab2-45f9-715f-a995-4b7f10309cd3",
+  "rawResponse": "Based on the evidence gathered, I now have a sufficiently complete recovery picture. Environment check confirms no Node/git runtime is reachable inside the sandbox, so current test status cannot be executed here.\n\n```json\n{\n  \"goal\": \"Historical request recorded in input/HANDOFF.md (benchmark case-07-B, session 01a074d4...): implement/complete Margin Slice 3.2 'Resume-first Checkpoint Experience' in repo <repo> (frozen copy in ./workspace). Per the embedded spec: (A) expose only a browser-safe projection of the already-distilled state, (B) resume-first SessionDetail where auto-fresh-generation renders Goal/Progress/Current-applicability/Current-validation above the fold with 'Copy checkpoint' primary and 'Save to workspace' secondary, (C) full portable Markdown stays collapsed behind 'View full checkpoint', (D) keep Select -> one auto-generate -> Copy <=2 interactions, (E) POST /api/handoff/generate returns {session, markdown, resumeSummary} and nothing raw (evidence/truth/operations/paths), (F) do not add checkpoint lifecycle/status/Resume semantics, (G) do not start Slice 3.3. The handoff states '本 Slice 已完成 R1' and asks the receiver to re-confirm the goal before continuing; this goal is therefore Inferred/historical, not a currently re-issued instruction.\",\n  \"progress\": \"Current repo truth in ./workspace (frozen copy; README-ENVIRONMENT.md): git HEAD = main @ a247e75ab9e78cce7853e3f281b85459a4f25e7c, matching the handoff's stated HEAD. Slice 3.2 artifacts are present and internally consistent by file inspection and blob-hash comparison against the HEAD tree: src/core/handoff/resume-summary.js (projectResumeSummary + PROGRESS_LIMIT=3; pure projection over state.progress kinds/temporalScope, no raw-evidence rescan) matches HEAD byte-for-byte; src/core/handoff/index.js wires generateHandoff to return {evidence, truth, state, markdown, resumeSummary}; src/core/handoff/httpAdapter.js POST /api/handoff/generate returns ok({markdown, resumeSummary, session: sessionSummary(meta)}) only (verified as real uncommitted content, not line-ending noise); web/src/margin/marginApiClient.js exposes generateHandoff/saveToWorkspace; web/src/margin/SessionDetail.js implements the resume-first UI (four summary sections, 'Copy checkpoint', 'Save to workspace', 'View full checkpoint' collapsed default, Retry, 'Preparing fresh checkpoint…') and matches HEAD; focused tests exist: test/resumeSummary.test.js, test/marginSessionDetail.test.js, test/marginSurfaceHttpAdapter.test.js (all match HEAD) and test/handoff.test.js (modified). Static cross-check of the tests against the code (resume-summary projection, SessionDetail, generate-endpoint key set) found consistent expectations. Uncommitted content differences vs HEAD also exist in handoff-core files: src/core/handoff/evidence.js, exec.js, handoff.js, distiller.js, httpAdapter.js, test/handoff.test.js, web/src/margin/marginApiClient.js (plus many repo-wide files whose byte diffs I did not fully attribute and which may include CRLF noise; I could not run git to produce an authoritative status). The handoff-core edits (e.g., native CommandExecution / item_completed / exit_code record handling in evidence.js/exec.js, related handoff.js/distiller.js/handoff.test.js changes) read as coherent, but they were the most recently written files in the snapshot and are unverified. No Node/git runtime is reachable in this sandbox, so I could not execute any test or build; all 'passing' claims below are historical only.\",\n  \"pending\": \"Unknown in this sandbox (cannot run tests/build/UI). Work apparently interrupted during verification/refinement of Slice 3.2 (the checkpoint's last edits touch distiller.js/evidence.js/handoff.js/exec.js/handoff.test.js immediately before the snapshot). Concrete next actions that remain to be performed in a real environment: rerun the focused test commands named by the handoff (e.g., node --test test/resumeSummary.test.js test/marginSessionDetail.test.js test/marginSurfaceHttpAdapter.test.js test/handoff.test.js) plus the npm run build step; confirm whether the earlier exit-1 failures are resolved on the current files; check test/handoff.test.js and the evidence/exec/distiller/handoff uncommitted edits for syntax/regression issues (they postdate the recorded passing runs); run git diff --check; then produce the spec section-39 completion report (projection DTO + sources, info hierarchy, progress selection, terminology, HTTP exposure, files changed, tests with real commands/results, Sample A research-only and Sample B implementation-session real UI validation, time-to-resume, semantic-safety checks, regression, scope/deferred confirmation, deviations). Do not start Slice 3.3. Note: several runs in the handoff show no explicit final result, so the current pass/fail state of the working tree is genuinely unestablished.\",\n  \"historicalValidation\": \"From input/HANDOFF.md only (strictly historical; none rerun against this snapshot, and files changed after some runs): (1) Confirmed exit_code=0 twice for 'node --test test/resumeSummary.test.js test/marginSessionDetail.test.js test/marginSurfaceHttpAdapter.test.js test/handoff.test.js; npm run …' (trailing build command truncated in the record); (2) Confirmed exit_code=1 for 'npm test -- --test-name-pattern=\\\"(resumeSummary|SessionDetail|handoff/generate|research-only progress|implementation progress)\\\"'; (3) Confirmed exit_code=1 for the same 4-file node --test invocation run without the trailing npm step; (4) 4 further focused-test invocations recorded with no explicit success/failure result (Unknown). Handoff also records an assistant-reported milestone that DTO tests kept the research milestone worded 'Assistant-reported research milestone' with applicability/validation Unknown (not promoted to implementation complete), and an open note that 14 internal operations in the captured evidence had no explicit terminal state. The handoff itself states current validation was not rerun against the current repository observation.\",\n  \"recommendedFollowUp\": \"Recommendation only (not independently re-validated here): first re-establish current truth on the live <repo> repo rather than trusting any historical test result. (1) Confirm with the user that the active goal is still Slice 3.2 per input/HANDOFF.md. (2) In a real Node 22.23.1 environment, run the four-file focused test command from the handoff and then the production build, capture real exit codes, and reconcile the previously failing/unknown invocations against the current files; the uncommitted evidence.js/exec.js/distiller.js/handoff.js/handoff.test.js changes must be re-tested because they are newer than the recorded passing runs. (3) Statically review those last-touched files for completeness before running (the snapshot may contain a mid-edit state). (4) Run git status/diff --check to get the authoritative change set (my content-hash diff of the frozen copy cannot reproduce git status, and the handoff's '112 modified/untracked files' figure was not independently confirmable here). (5) Only after green focused tests + build proceed to the spec section-39 completion report and stop; do not start Slice 3.3.\",\n  \"currentApplicability\": \"For this recovery snapshot: code presence is confirmed by direct inspection, but current executable/validated applicability is Unknown — no tests or build could be run in this isolated sandbox (no reachable Node/git), and the handoff likewise states current validation was not rerun and gives Current Applicability = Unknown ('No structured repo targets are available for reconciliation', a research-only session). The repo's projectApplicability logic itself returns 'unknown' when no structured repo targets are observed; I did not (and cannot) run a fresh generate/reconciliation here. Treat 'implementation present' as file truth, not as proof the Slice passes or is shippable.\",\n  \"unsafeAssumptions\": [\n    \"Assumed ./workspace is a faithful frozen copy of <repo> at the checkpoint (README-ENVIRONMENT.md states this and the HEAD SHA matches the handoff); byte-level equality of uncommitted files to the original could not be independently verified.\",\n    \"Assumed HEAD a247e75a is the repo truth HEAD referenced by the handoff because refs/heads/main resolves to that SHA; consistent with the handoff but not re-derived from the live repo.\",\n    \"Assumed resume-first implementation counts as 'done R1' because resume-summary.js/SessionDetail.js/focused tests exist and match HEAD content; file presence/hash equality is not a test pass.\",\n    \"Assumed the uncommitted handoff-core edits (evidence.js, exec.js, distiller.js, handoff.js, httpAdapter.js, handoff.test.js) belong to the interrupted work and are complete rather than mid-edit; their content is coherent by reading, but I could not syntax-check or run them, and precise mtime-to-checkpoint ordering is weak evidence.\",\n    \"Assumed the two historical exit-0 runs validate the current files; this is false-by-design since files changed afterward, and the instruction to distinguish historical reports from current truth was respected.\",\n    \"Assumed the handoff's full Slice 3.2 spec is the operative task text without user re-confirmation; the goal section itself instructs the receiver to confirm whether it is still current.\",\n    \"Assumed the test commands and test-name-pattern recorded in the handoff map to the current package.json/scripts and current files; command strings were truncated in the record and not re-executed.\",\n    \"Assumed repo-wide content-hash differences (287/386 tracked files differ from HEAD blobs) reflect real changes; many are likely CRLF-vs-LF artifacts and this global count should not be reported as an authoritative git status (the handoff's '112 modified/untracked' was not confirmable).\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Historical request recorded in input/HANDOFF.md (benchmark case-07-B, session 01a074d4...): implement/complete Margin Slice 3.2 'Resume-first Checkpoint Experience' in repo <repo> (frozen copy in ./workspace). Per the embedded spec: (A) expose only a browser-safe projection of the already-distilled state, (B) resume-first SessionDetail where auto-fresh-generation renders Goal/Progress/Current-applicability/Current-validation above the fold with 'Copy checkpoint' primary and 'Save to workspace' secondary, (C) full portable Markdown stays collapsed behind 'View full checkpoint', (D) keep Select -> one auto-generate -> Copy <=2 interactions, (E) POST /api/handoff/generate returns {session, markdown, resumeSummary} and nothing raw (evidence/truth/operations/paths), (F) do not add checkpoint lifecycle/status/Resume semantics, (G) do not start Slice 3.3. The handoff states '本 Slice 已完成 R1' and asks the receiver to re-confirm the goal before continuing; this goal is therefore Inferred/historical, not a currently re-issued instruction.",
+    "progress": "Current repo truth in ./workspace (frozen copy; README-ENVIRONMENT.md): git HEAD = main @ a247e75ab9e78cce7853e3f281b85459a4f25e7c, matching the handoff's stated HEAD. Slice 3.2 artifacts are present and internally consistent by file inspection and blob-hash comparison against the HEAD tree: src/core/handoff/resume-summary.js (projectResumeSummary + PROGRESS_LIMIT=3; pure projection over state.progress kinds/temporalScope, no raw-evidence rescan) matches HEAD byte-for-byte; src/core/handoff/index.js wires generateHandoff to return {evidence, truth, state, markdown, resumeSummary}; src/core/handoff/httpAdapter.js POST /api/handoff/generate returns ok({markdown, resumeSummary, session: sessionSummary(meta)}) only (verified as real uncommitted content, not line-ending noise); web/src/margin/marginApiClient.js exposes generateHandoff/saveToWorkspace; web/src/margin/SessionDetail.js implements the resume-first UI (four summary sections, 'Copy checkpoint', 'Save to workspace', 'View full checkpoint' collapsed default, Retry, 'Preparing fresh checkpoint…') and matches HEAD; focused tests exist: test/resumeSummary.test.js, test/marginSessionDetail.test.js, test/marginSurfaceHttpAdapter.test.js (all match HEAD) and test/handoff.test.js (modified). Static cross-check of the tests against the code (resume-summary projection, SessionDetail, generate-endpoint key set) found consistent expectations. Uncommitted content differences vs HEAD also exist in handoff-core files: src/core/handoff/evidence.js, exec.js, handoff.js, distiller.js, httpAdapter.js, test/handoff.test.js, web/src/margin/marginApiClient.js (plus many repo-wide files whose byte diffs I did not fully attribute and which may include CRLF noise; I could not run git to produce an authoritative status). The handoff-core edits (e.g., native CommandExecution / item_completed / exit_code record handling in evidence.js/exec.js, related handoff.js/distiller.js/handoff.test.js changes) read as coherent, but they were the most recently written files in the snapshot and are unverified. No Node/git runtime is reachable in this sandbox, so I could not execute any test or build; all 'passing' claims below are historical only.",
+    "pending": "Unknown in this sandbox (cannot run tests/build/UI). Work apparently interrupted during verification/refinement of Slice 3.2 (the checkpoint's last edits touch distiller.js/evidence.js/handoff.js/exec.js/handoff.test.js immediately before the snapshot). Concrete next actions that remain to be performed in a real environment: rerun the focused test commands named by the handoff (e.g., node --test test/resumeSummary.test.js test/marginSessionDetail.test.js test/marginSurfaceHttpAdapter.test.js test/handoff.test.js) plus the npm run build step; confirm whether the earlier exit-1 failures are resolved on the current files; check test/handoff.test.js and the evidence/exec/distiller/handoff uncommitted edits for syntax/regression issues (they postdate the recorded passing runs); run git diff --check; then produce the spec section-39 completion report (projection DTO + sources, info hierarchy, progress selection, terminology, HTTP exposure, files changed, tests with real commands/results, Sample A research-only and Sample B implementation-session real UI validation, time-to-resume, semantic-safety checks, regression, scope/deferred confirmation, deviations). Do not start Slice 3.3. Note: several runs in the handoff show no explicit final result, so the current pass/fail state of the working tree is genuinely unestablished.",
+    "historicalValidation": "From input/HANDOFF.md only (strictly historical; none rerun against this snapshot, and files changed after some runs): (1) Confirmed exit_code=0 twice for 'node --test test/resumeSummary.test.js test/marginSessionDetail.test.js test/marginSurfaceHttpAdapter.test.js test/handoff.test.js; npm run …' (trailing build command truncated in the record); (2) Confirmed exit_code=1 for 'npm test -- --test-name-pattern=\"(resumeSummary|SessionDetail|handoff/generate|research-only progress|implementation progress)\"'; (3) Confirmed exit_code=1 for the same 4-file node --test invocation run without the trailing npm step; (4) 4 further focused-test invocations recorded with no explicit success/failure result (Unknown). Handoff also records an assistant-reported milestone that DTO tests kept the research milestone worded 'Assistant-reported research milestone' with applicability/validation Unknown (not promoted to implementation complete), and an open note that 14 internal operations in the captured evidence had no explicit terminal state. The handoff itself states current validation was not rerun against the current repository observation.",
+    "recommendedFollowUp": "Recommendation only (not independently re-validated here): first re-establish current truth on the live <repo> repo rather than trusting any historical test result. (1) Confirm with the user that the active goal is still Slice 3.2 per input/HANDOFF.md. (2) In a real Node 22.23.1 environment, run the four-file focused test command from the handoff and then the production build, capture real exit codes, and reconcile the previously failing/unknown invocations against the current files; the uncommitted evidence.js/exec.js/distiller.js/handoff.js/handoff.test.js changes must be re-tested because they are newer than the recorded passing runs. (3) Statically review those last-touched files for completeness before running (the snapshot may contain a mid-edit state). (4) Run git status/diff --check to get the authoritative change set (my content-hash diff of the frozen copy cannot reproduce git status, and the handoff's '112 modified/untracked files' figure was not independently confirmable here). (5) Only after green focused tests + build proceed to the spec section-39 completion report and stop; do not start Slice 3.3.",
+    "currentApplicability": "For this recovery snapshot: code presence is confirmed by direct inspection, but current executable/validated applicability is Unknown — no tests or build could be run in this isolated sandbox (no reachable Node/git), and the handoff likewise states current validation was not rerun and gives Current Applicability = Unknown ('No structured repo targets are available for reconciliation', a research-only session). The repo's projectApplicability logic itself returns 'unknown' when no structured repo targets are observed; I did not (and cannot) run a fresh generate/reconciliation here. Treat 'implementation present' as file truth, not as proof the Slice passes or is shippable.",
+    "unsafeAssumptions": [
+      "Assumed ./workspace is a faithful frozen copy of <repo> at the checkpoint (README-ENVIRONMENT.md states this and the HEAD SHA matches the handoff); byte-level equality of uncommitted files to the original could not be independently verified.",
+      "Assumed HEAD a247e75a is the repo truth HEAD referenced by the handoff because refs/heads/main resolves to that SHA; consistent with the handoff but not re-derived from the live repo.",
+      "Assumed resume-first implementation counts as 'done R1' because resume-summary.js/SessionDetail.js/focused tests exist and match HEAD content; file presence/hash equality is not a test pass.",
+      "Assumed the uncommitted handoff-core edits (evidence.js, exec.js, distiller.js, handoff.js, httpAdapter.js, handoff.test.js) belong to the interrupted work and are complete rather than mid-edit; their content is coherent by reading, but I could not syntax-check or run them, and precise mtime-to-checkpoint ordering is weak evidence.",
+      "Assumed the two historical exit-0 runs validate the current files; this is false-by-design since files changed afterward, and the instruction to distinguish historical reports from current truth was respected.",
+      "Assumed the handoff's full Slice 3.2 spec is the operative task text without user re-confirmation; the goal section itself instructs the receiver to confirm whether it is still current.",
+      "Assumed the test commands and test-name-pattern recorded in the handoff map to the current package.json/scripts and current files; command strings were truncated in the record and not re-executed.",
+      "Assumed repo-wide content-hash differences (287/386 tracked files differ from HEAD blobs) reflect real changes; many are likely CRLF-vs-LF artifacts and this global count should not be reported as an authoritative git status (the handoff's '112 modified/untracked' was not confirmable)."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788764900040
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Name, Length, LastWriteTime\"}",
+      "tsMs": 1788764900041
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788764901809
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788764901810
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788764901810
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788764901810
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788764903175
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Depth 1 _tmp | Select-Object FullName\"}",
+      "tsMs": 1788764903176
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788764905175
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git status; git log --oneline -10\"}",
+      "tsMs": 1788764905176
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force workspace/.git | Select-Object Name; Test-Path workspace/.git; where.exe git 2>$null; Get-Command git -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788764910835
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src\"}",
+      "tsMs": 1788764910841
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/test\"}",
+      "tsMs": 1788764910841
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/HEAD; Get-Content workspace/.git/REBASE_HEAD -ErrorAction SilentlyContinue; Get-Content workspace/.git/ORIG_HEAD -ErrorAction SilentlyContinue; Get-Content workspace/package.json -TotalCount 80\"}",
+      "tsMs": 1788764918525
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force -Recurse -Depth 2 workspace/.runtime 2>$null | Select-Object FullName | Select-Object -First 20; Test-Path workspace/src/http\"}",
+      "tsMs": 1788764918535
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/refs/heads/main; Get-ChildItem workspace/.git/logs/refs/heads/ | Select-Object Name; Get-Content workspace/.git/logs/refs/heads/main -Tail 5\"}",
+      "tsMs": 1788764924219
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Force | Where-Object { $_.Name -like '*.runtime*' } ; Get-ChildItem workspace/.runtime -Force -ErrorAction SilentlyContinue | Select-Object Name; Test-Path 'C:\\\\Users\\\\<user>\\\\AppData\\\\Roaming\\\\npm\\\\node_modules'; where.exe node 2>$null; node --version 2>$null\"}",
+      "tsMs": 1788764924229
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Depth 3 _tmp/AppData | Select-Object FullName | Select-Object -First 60\"}",
+      "tsMs": 1788764928927
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Directory -Filter \\\"node*\\\" workspace -ErrorAction SilentlyContinue | Select-Object -First 20 FullName; Get-ChildItem workspace/bin, workspace/scripts -ErrorAction SilentlyContinue | Select-Object FullName | Select-Object -First 30\"}",
+      "tsMs": 1788764928938
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"resumeSummary\",\"path\":\"workspace/src\"}",
+      "tsMs": 1788764937580
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"resumeSummary|projectResumeSummary|Resume Summary\",\"path\":\"workspace/web\"}",
+      "tsMs": 1788764937603
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Depth 4 _tmp/AppData/Roaming -Force | Select-Object FullName | Select-Object -First 80\"}",
+      "tsMs": 1788764937607
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path . -Recurse -Filter \\\"node.exe\\\" -ErrorAction SilentlyContinue | Select-Object -First 10 FullName; Get-ChildItem -Path . -Recurse -Filter \\\"git.exe\\\" -ErrorAction SilentlyContinue | Select-Object -First 10 FullName\"}",
+      "tsMs": 1788764942855
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/resume-summary.js\"}",
+      "tsMs": 1788764942866
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/resumeSummary.test.js\"}",
+      "tsMs": 1788764963799
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788764963799
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionDetail.js\"}",
+      "tsMs": 1788764968444
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginSessionDetail.test.js\"}",
+      "tsMs": 1788764968445
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/index.js\"}",
+      "tsMs": 1788764986722
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse workspace/.git/objects -ErrorAction SilentlyContinue | Select-Object FullName, Length | Select-Object -First 40\"}",
+      "tsMs": 1788764986723
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Get-GitObject([string]$sha) {\\n  $dir = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $dir))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6)  # skip zlib header(2) + adler(4) guess\\n  $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $sr = New-Object System.IO.StreamReader($ds)\\n  return $sr.ReadToEnd()\\n}\\n$sha = 'a247e75ab9e78cce7853e3f281b85459a4f25e7c'\\n$raw = Get-GitObject $sha\\n$raw\"}",
+      "tsMs": 1788764992092
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-Obj([string]$sha) {\\n  $dir = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  if (-not (Test-Path $dir)) { return $null }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $dir))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6)\\n  $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $sr = New-Object System.IO.StreamReader($ds)\\n  return $sr.ReadToEnd()\\n}\\nfunction List-Tree([string]$sha, [string]$prefix='') {\\n  $raw = Read-Obj $sha\\n  if ($null -eq $raw) { return }\\n  $body = $raw.Substring($raw.IndexOf([char]0) + 1)\\n  $i = 0\\n  while ($i -lt $body.Length) {\\n    $sp = $body.IndexOf([char]0x20, $i)\\n    $mode = $body.Substring($i, $sp - $i)\\n    $i = $sp + 1\\n    $nul = $body.IndexOf([char]0, $i)\\n    $name = $body.Substring($i, $nul - $i)\\n    $i = $nul + 1\\n    $shaHex = -join ($body.Substring($i, 20).ToCharArray() | ForEach-Object { '{0:x2}' -f [int][char]$_ })\\n    $i += 20\\n    Write-Output ($prefix + $name + ' [' + $mode + '] ' + $shaHex)\\n  }\\n}\\nList-Tree 'f08f297a426fd51ea9bf21c89ac88822fb84bd7d' | Select-Object -First 40\"}",
+      "tsMs": 1788765000163
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-Blob([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  if (-not (Test-Path $p)) { return $null }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6)\\n  $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  $out.ToArray()\\n}\\nfunction Find-Tree([string]$sha, [string]$wanted) {\\n  $blob = Read-Blob $sha\\n  if ($null -eq $blob) { return $null }\\n  # skip \\\"tree <len>\\\\0\\\"\\n  $i = 0\\n  while ($blob[$i] -ne 0) { $i++ }\\n  $i++\\n  while ($i -lt $blob.Length) {\\n    $sp = $i\\n    while ($blob[$sp] -ne 32) { $sp++ }\\n    $mode = [System.Text.Encoding]::ASCII.GetString($blob, $i, $sp - $i)\\n    $nul = $sp + 1\\n    while ($blob[$nul] -ne 0) { $nul++ }\\n    $name = [System.Text.Encoding]::ASCII.GetString($blob, $sp + 1, $nul - $sp - 1)\\n    $oid = -join ($blob[($nul+1)..($nul+20)] | ForEach-Object { $_.ToString('x2') })\\n    if ($name -eq $wanted) { return @{ mode=$mode; oid=$oid; type= if($mode -eq '40000'){'tree'}elseif($mode -eq '040000'){'tree'}else{'blob'} } }\\n    $i = $nul + 21\\n  }\\n  return $null\\n}\\n# recurse\\nfunction Find-Path([string]$rootTree, [string]$relPath) {\\n  $parts = $relPath -split '/'\\n  $sha = $rootTree\\n  foreach ($part in $parts) {\\n    $found = Find-Tree $sha $part\\n    if ($null -eq $found) { return $null }\\n    if ($found.mode -eq '40000' -or $found.mode -eq '040000') { $sha = $found.oid } else { return $found }\\n  }\\n  return @{ mode='tree'; oid=$sha }\\n}\\n$commitTree = 'f08f297a426fd51ea9bf21c89ac88822fb84bd7d'\\nFind-Path $commitTree 'src'\"}",
+      "tsMs": 1788765007209
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$commitTree = 'f08f297a426fd51ea9bf21c89ac88822fb84bd7d'\\nforeach ($path in @('src/core/handoff/resume-summary.js','src/core/handoff/httpAdapter.js','src/core/handoff/index.js','test/resumeSummary.test.js','test/marginSessionDetail.test.js','test/marginSurfaceHttpAdapter.test.js','web/src/margin/SessionDetail.js','task-8-report.md','src/cli/margin/render.js')) {\\n  $parts = $path -split '/'\\n  $sha = $commitTree\\n  $found = $null\\n  foreach ($part in $parts) {\\n    $f = Find-Tree $sha $part\\n    if ($null -eq $f) { $found = $null; break }\\n    $found = $f\\n    if ($f.mode -eq '40000' -or $f.mode -eq '040000') { $sha = $f.oid } else { $sha = $f.oid; break }\\n  }\\n  if ($null -ne $found) { Write-Output ($path + ' => COMMITTED ' + $found.oid) } else { Write-Output ($path + ' => NOT IN HEAD TREE') }\\n}\"}",
+      "tsMs": 1788765011192
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-Blob([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  if (-not (Test-Path $p)) { return $null }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6)\\n  $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  return $out.ToArray()\\n}\\nfunction Find-Tree([string]$sha, [string]$wanted) {\\n  $blob = Read-Blob $sha\\n  if ($null -eq $blob) { return $null }\\n  $i = 0; while ($blob[$i] -ne 0) { $i++ }; $i++\\n  while ($i -lt $blob.Length) {\\n    $sp = $i; while ($blob[$sp] -ne 32) { $sp++ }\\n    $mode = [System.Text.Encoding]::ASCII.GetString($blob, $i, $sp - $i)\\n    $nul = $sp + 1; while ($blob[$nul] -ne 0) { $nul++ }\\n    $name = [System.Text.Encoding]::ASCII.GetString($blob, $sp + 1, $nul - $sp - 1)\\n    $oid = -join ($blob[($nul+1)..($nul+20)] | ForEach-Object { $_.ToString('x2') })\\n    if ($name -eq $wanted) { return @{ mode=$mode; oid=$oid } }\\n    $i = $nul + 21\\n  }\\n  return $null\\n}\\nfunction Find-Path([string]$rootTree, [string]$relPath) {\\n  $parts = $relPath -split '/'\\n  $sha = $rootTree\\n  foreach ($part in $parts) {\\n    $f = Find-Tree $sha $part\\n    if ($null -eq $f) { return $null }\\n    if ($f.mode -eq '40000' -or $f.mode -eq '040000') { $sha = $f.oid } else { return $f }\\n  }\\n  return @{ mode='tree'; oid=$sha }\\n}\\n$commitTree = 'f08f297a426fd51ea9bf21c89ac88822fb84bd7d'\\nforeach ($path in @('src','src/core','src/core/handoff','src/core/handoff/index.js','src/core/handoff/resume-summary.js','src/core/handoff/httpAdapter.js','test','test/resumeSummary.test.js','test/handoff.test.js','web','web/src/margin/SessionDetail.js','task-8-report.md')) {\\n  $r = Find-Path $commitTree $path\\n  if ($null -eq $r) { Write-Output ($path + ' => N",
+      "tsMs": 1788765017630
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Get-GitShaOfFile([string]$path) {\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $path))\\n  $header = [System.Text.Encoding]::ASCII.GetBytes(\\\"blob $($bytes.Length)`0\\\")\\n  $all = New-Object System.IO.MemoryStream\\n  $all.Write($header,0,$header.Length)\\n  $all.Write($bytes,0,$bytes.Length)\\n  $sha1 = [System.Security.Cryptography.SHA1]::Create()\\n  $hash = $sha1.ComputeHash($all.ToArray())\\n  -join ($hash | ForEach-Object { $_.ToString('x2') })\\n}\\nforeach ($f in @('src/core/handoff/resume-summary.js','src/core/handoff/httpAdapter.js','src/core/handoff/index.js','src/core/handoff/workspace-overview.js','test/resumeSummary.test.js','test/marginSessionDetail.test.js','test/marginSurfaceHttpAdapter.test.js','test/handoff.test.js','web/src/margin/SessionDetail.js','task-8-report.md')) {\\n  $p = Join-Path 'workspace' $f\\n  if (Test-Path $p) { Write-Output ($f + '  ' + (Get-GitShaOfFile $p)) } else { Write-Output ($f + '  MISSING') }\\n}\"}",
+      "tsMs": 1788765028544
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.gitattributes -ErrorAction SilentlyContinue | Select-Object -First 30; Write-Output '--- config ---'; Get-Content workspace/.git/config; Write-Output '--- reflog full ---'; Get-Content workspace/.git/logs/refs/heads/main | Select-Object -Last 20\"}",
+      "tsMs": 1788765059136
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-Blob([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  if (-not (Test-Path $p)) { return $null }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6)\\n  $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  return $out.ToArray()\\n}\\nfunction Find-Tree([string]$sha, [string]$wanted) {\\n  $blob = Read-Blob $sha\\n  if ($null -eq $blob) { return $null }\\n  $i = 0; while ($blob[$i] -ne 0) { $i++ }; $i++\\n  while ($i -lt $blob.Length) {\\n    $sp = $i; while ($blob[$sp] -ne 32) { $sp++ }\\n    $mode = [System.Text.Encoding]::ASCII.GetString($blob, $i, $sp - $i)\\n    $nul = $sp + 1; while ($blob[$nul] -ne 0) { $nul++ }\\n    $name = [System.Text.Encoding]::ASCII.GetString($blob, $sp + 1, $nul - $sp - 1)\\n    $oid = -join ($blob[($nul+1)..($nul+20)] | ForEach-Object { $_.ToString('x2') })\\n    if ($name -eq $wanted) { return @{ mode=$mode; oid=$oid } }\\n    $i = $nul + 21\\n  }\\n  return $null\\n}\\nfunction Find-Path([string]$rootTree, [string]$relPath) {\\n  $parts = $relPath -split '/'\\n  $sha = $rootTree\\n  foreach ($part in $parts) {\\n    $f = Find-Tree $sha $part\\n    if ($null -eq $f) { return $null }\\n    if ($f.mode -eq '40000' -or $f.mode -eq '040000') { $sha = $f.oid } else { return $f }\\n  }\\n  return @{ mode='tree'; oid=$sha }\\n}\\nfunction GitShaOfFile([string]$path) {\\n  if (-not (Test-Path $path)) { return 'MISSING' }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $path))\\n  $header = [System.Text.Encoding]::ASCII.GetBytes(\\\"blob $($bytes.Length)`0\\\")\\n  $all = New-Object System.IO.MemoryStream\\n  $all.Write($header,0,$header.Length); $all.Write($bytes,0,$bytes.Length)\\n  $sha1 = [System.Security.Cryptography.SHA1]::Create()\\n  -join",
+      "tsMs": 1788765083111
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/src/core/handoff/*.js, workspace/test/handoff.test.js, workspace/test/resumeSummary.test.js, workspace/web/src/margin/*.js, workspace/task-8-report.md | Select-Object LastWriteTime, Length, FullName | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788765098310
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-Blob([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  if (-not (Test-Path $p)) { return $null }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6)\\n  $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  return $out.ToArray()\\n}\\nfunction Parse-TreeEntries([string]$sha) {\\n  $blob = Read-Blob $sha\\n  if ($null -eq $blob) { return @() }\\n  $i = 0; while ($blob[$i] -ne 0) { $i++ }; $i++\\n  $entries = @()\\n  while ($i -lt $blob.Length) {\\n    $sp = $i; while ($blob[$sp] -ne 32) { $sp++ }\\n    $mode = [System.Text.Encoding]::ASCII.GetString($blob, $i, $sp - $i)\\n    $nul = $sp + 1; while ($blob[$nul] -ne 0) { $nul++ }\\n    $name = [System.Text.Encoding]::ASCII.GetString($blob, $sp + 1, $nul - $sp - 1)\\n    $oid = -join ($blob[($nul+1)..($nul+20)] | ForEach-Object { $_.ToString('x2') })\\n    $entries += ,@{ mode=$mode; name=$name; oid=$oid }\\n    $i = $nul + 21\\n  }\\n  return $entries\\n}\\n$headFiles = @{}\\n$stack = New-Object System.Collections.Stack\\n$stack.Push(@{ path=''; sha='f08f297a426fd51ea9bf21c89ac88822fb84bd7d' })\\nwhile ($stack.Count -gt 0) {\\n  $cur = $stack.Pop()\\n  $entries = Parse-TreeEntries $cur.sha\\n  foreach ($e in $entries) {\\n    if ($e.mode -eq '40000' -or $e.mode -eq '040000') {\\n      $stack.Push(@{ path=($cur.path + $e.name + '/'); sha=$e.oid })\\n    } else {\\n      $headFiles[($cur.path + $e.name)] = $e.oid\\n    }\\n  }\\n}\\nWrite-Output (\\\"HEAD tracked file count: \\\" + $headFiles.Count)\\n$modified = @()\\n$same = 0\\nforeach ($k in $headFiles.Keys) {\\n  $fp = Join-Path 'workspace' ($k -replace '/','\\\\')\\n  if (-not (Test-Path $fp)) { $modified += ,($k + '   [DELETED]'); continue }\\n  $bytes = [System.IO.File]::ReadAllBytes",
+      "tsMs": 1788765113333
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-ObjText([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  if (-not (Test-Path $p)) { return $null }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6)\\n  $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  $all = $out.ToArray()\\n  # find header end\\n  $i = 0; while ($all[$i] -ne 0) { $i++ }\\n  $i++\\n  return [System.Text.Encoding]::UTF8.GetString($all, $i, $all.Length - $i)\\n}\\n$maps = @{\\n 'src/core/handoff/evidence.js' = '98784b75';  # actual HEAD sha prefix? Need full\\n}\\n# Instead compare using known full HEAD shas computed earlier:\\n$files = @(\\n @{p='src/core/handoff/evidence.js'; h=''},\\n @{p='src/core/handoff/distiller.js'; h=''},\\n @{p='src/core/handoff/handoff.js'; h=''},\\n @{p='src/core/handoff/exec.js'; h=''}\\n)\\n# resolve HEAD blob sha for each via tree walk\\nfunction Read-Blob([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  if (-not (Test-Path $p)) { return $null }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6); $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream; $ds.CopyTo($out)\\n  return $out.ToArray()\\n}\\nfunction Find-Tree([string]$sha, [string]$wanted) {\\n  $blob = Read-Blob $sha\\n  if ($null -eq $blob) { return $null }\\n  $i = 0; while ($blob[$i] -ne 0) { $i++ }; $i++\\n  while ($i -lt $blob.Length) {\\n    $sp = $i; while ($blob[$sp] -ne 32) { $sp++ }\\n    $mode = [System.Text.Encoding]::ASCII.GetString($blob, $i, $sp - $i)\\n    $nul =",
+      "tsMs": 1788765133299
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-ObjText([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6); $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream; $ds.CopyTo($out)\\n  $all = $out.ToArray()\\n  $i = 0; while ($all[$i] -ne 0) { $i++ }; $i++\\n  return [System.Text.Encoding]::UTF8.GetString($all, $i, $all.Length - $i)\\n}\\n$map = @{\\n 'evidence.js' = '98784b755e8172227ca7193a130188bebb159cd8'\\n 'distiller.js' = '7630697e5679383fd9422a9011fa62c469a13b62'\\n 'handoff.js' = 'b2772b4b6c73dfcc92166e6c7cb311368bea3780'\\n 'exec.js' = 'b7f6fa2c419886f9ede2d6b8f500ca06577d53bc'\\n 'handoff.test.js' = 'de7e9bb79136d4028954d639709ab00b7ce7d7ac'\\n 'httpAdapter.js' = '3fb6864c54afc1001f87630599eb87db117e34a9'\\n}\\nforeach ($name in $map.Keys) {\\n  $head = Read-ObjText $map[$name]\\n  $wt = Get-Content -Raw (Join-Path 'workspace\\\\src\\\\core\\\\handoff' $name) 2>$null\\n  if ($null -eq $wt) { $wt = Get-Content -Raw (Join-Path 'workspace\\\\test' $name) 2>$null }\\n  if ($null -eq $wt) { $wt = Get-Content -Raw (Join-Path 'workspace\\\\web\\\\src\\\\margin' $name) 2>$null }\\n  $hl = $head -split \\\"`r?`n\\\"\\n  $wl = $wt -split \\\"`r?`n\\\"\\n  Write-Output (\\\"==================== \\\" + $name + \\\" (HEAD lines=\\\" + $hl.Count + \\\" WT lines=\\\" + $wl.Count + \\\")\\\")\\n}\"}",
+      "tsMs": 1788765139418
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-ObjText([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6); $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream; $ds.CopyTo($out)\\n  $all = $out.ToArray()\\n  $i = 0; while ($all[$i] -ne 0) { $i++ }; $i++\\n  return [System.Text.Encoding]::UTF8.GetString($all, $i, $all.Length - $i)\\n}\\n$head = (Read-ObjText '98784b755e8172227ca7193a130188bebb159cd8') -split \\\"`r?`n\\\"\\n$wt = (Get-Content -Raw 'workspace\\\\src\\\\core\\\\handoff\\\\evidence.js') -split \\\"`r?`n\\\"\\n$max = [Math]::Max($head.Count, $wt.Count)\\n$ctx = 0\\nfor ($n = 0; $n -lt $max; $n++) {\\n  $h = if ($n -lt $head.Count) { $head[$n] } else { $null }\\n  $w = if ($n -lt $wt.Count) { $wt[$n] } else { $null }\\n  $h = $h -replace \\\"`r\\\",\\\"\\\"; $w = $w -replace \\\"`r\\\",\\\"\\\"\\n  if ($h -ne $w) {\\n    $s = [Math]::Max(0, $n-2)\\n    Write-Output (\\\"--- hunk at WT line \\\" + ($n+1))\\n    for ($k=$s; $k -le $n+2; $k++) {\\n      $hh = if ($k -lt $head.Count) { $head[$k] -replace \\\"`r\\\",\\\"\\\" } else { $null }\\n      $ww = if ($k -lt $wt.Count) { $wt[$k] -replace \\\"`r\\\",\\\"\\\" } else { $null }\\n      if ($hh -ne $ww) {\\n        if ($null -ne $hh) { Write-Output (\\\"  - \\\" + $hh) }\\n        if ($null -ne $ww) { Write-Output (\\\"  + \\\" + $ww) }\\n      } else {\\n        Write-Output (\\\"    \\\" + $hh)\\n      }\\n    }\\n    Write-Output \\\"\\\"\\n  }\\n}\"}",
+      "tsMs": 1788765158298
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$bytes = [System.IO.File]::ReadAllBytes((Resolve-Path 'workspace\\\\.git\\\\index'))\\nWrite-Output (\\\"index size: \\\" + $bytes.Length)\\n$sig = [System.Text.Encoding]::ASCII.GetString($bytes,0,4)\\n$ver = [BitConverter]::ToInt32([byte[]]@($bytes[4],$bytes[5],$bytes[6],$bytes[7]),0)\\n$count = [BitConverter]::ToInt32([byte[]]@($bytes[8],$bytes[9],$bytes[10],$bytes[11]),0)\\nWrite-Output (\\\"sig=$sig ver=$ver count=$count\\\")\"}",
+      "tsMs": 1788765189163
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$bytes = [System.IO.File]::ReadAllBytes((Resolve-Path 'workspace\\\\.git\\\\index'))\\nfunction BE32([int]$off) { return [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($bytes, $off)) }\\n$ver = BE32 4\\n$count = BE32 8\\nWrite-Output (\\\"ver=$ver count=$count\\\")\\n$pos = 12\\n$entries = @()\\nfor ($e = 0; $e -lt $count; $e++) {\\n  $ctime = BE32 $pos\\n  $shaOffset = $pos + 40   # ctime(8)+mtime(8)+dev(4)+ino(4)+mode(4)+uid(4)+gid(4)+size(4) = 40\\n  $sha = -join ($bytes[($shaOffset)..($shaOffset+19)] | ForEach-Object { $_.ToString('x2') })\\n  $flags = BE32 ($shaOffset + 20)\\n  $flags16 = ($flags -shr 16) -band 0xFFFF\\n  $nameLen = $flags16 -band 0x0FFF\\n  $nameStart = $shaOffset + 24\\n  if ($nameLen -ge 0x0FFF) {\\n    # v4 style: read until NUL\\n    $nul = $nameStart; while ($bytes[$nul] -ne 0) { $nul++ }\\n    $name = [System.Text.Encoding]::UTF8.GetString($bytes, $nameStart, $nul - $nameStart)\\n    $entryLen = ($nul - $pos) + 1\\n  } else {\\n    $name = [System.Text.Encoding]::UTF8.GetString($bytes, $nameStart, $nameLen)\\n    $entryLen = $nameStart - $pos + $nameLen\\n  }\\n  # pad to multiple of 8\\n  $entryLen = [Math]::Ceiling($entryLen / 8.0) * 8\\n  $entries += ,@{ name=$name; sha=$sha }\\n  $pos += $entryLen\\n}\\nWrite-Output (\\\"parsed entries: \\\" + $entries.Count)\\n$entries | Select-Object -First 5 name\\n# Search for our key files\\nforeach ($target in @('src/core/handoff/resume-summary.js','src/core/handoff/httpAdapter.js','src/core/handoff/evidence.js','test/resumeSummary.test.js','test/handoff.test.js','web/src/margin/SessionDetail.js','task-8-report.md')) {\\n  $found = $entries | Where-Object { $_.name -eq $target }\\n  if ($found) { Write-Output ($target + ' => index sha ' + $found.sha.Substring(0,12)) } else { Write-Output ($target + ' => NOT in index') }\\n}\"}",
+      "tsMs": 1788765194478
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"resumeSummary|resume-summary\",\"path\":\"workspace/test/handoff.test.js\"}",
+      "tsMs": 1788765213607
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/marginApiClient.js\"}",
+      "tsMs": 1788765213608
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginSurfaceHttpAdapter.test.js\"}",
+      "tsMs": 1788765213608
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"function Read-ObjText([string]$sha) {\\n  $p = Join-Path (Join-Path 'workspace\\\\.git\\\\objects' $sha.Substring(0,2)) $sha.Substring(2)\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($bytes, 2, $bytes.Length - 6); $ms.Position = 0\\n  $ds = New-Object System.IO.Compression.DeflateStream($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream; $ds.CopyTo($out)\\n  $all = $out.ToArray()\\n  $i = 0; while ($all[$i] -ne 0) { $i++ }; $i++\\n  return [System.Text.Encoding]::UTF8.GetString($all, $i, $all.Length - $i)\\n}\\n$head = (Read-ObjText '3fb6864c54afc1001f87630599eb87db117e34a9') -split \\\"`r?`n\\\"\\n$wt = (Get-Content -Raw 'workspace\\\\src\\\\core\\\\handoff\\\\httpAdapter.js') -split \\\"`r?`n\\\"\\n$max = [Math]::Max($head.Count, $wt.Count)\\nfor ($n = 0; $n -lt $max; $n++) {\\n  $h = if ($n -lt $head.Count) { ($head[$n] -replace \\\"`r\\\",\\\"\\\") } else { $null }\\n  $w = if ($n -lt $wt.Count) { ($wt[$n] -replace \\\"`r\\\",\\\"\\\") } else { $null }\\n  if ($h -ne $w) {\\n    Write-Output (\\\"line \\\" + ($n+1))\\n    if ($null -ne $h) { Write-Output (\\\"  - \\\" + $h) }\\n    if ($null -ne $w) { Write-Output (\\\"  + \\\" + $w) }\\n  }\\n}\"}",
+      "tsMs": 1788765225870
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Directory workspace/docs/validation -ErrorAction SilentlyContinue | Select-Object FullName; Test-Path 'workspace/docs/validation/recovery-handoffs-postfix/session-01a074d4-f3b2-76e1-8411-9f93be0a91a2.jsonl'\"}",
+      "tsMs": 1788765235930
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs\"}",
+      "tsMs": 1788765235930
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/data\"}",
+      "tsMs": 1788765235930
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/handoff.js\"}",
+      "tsMs": 1788765255186
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/exec.js\"}",
+      "tsMs": 1788765255187
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/web\",\"pattern\":\"margin-resume-summary|margin-summary-section|margin-full-checkpoint|margin-handoff-actions|margin-primary-action\"}",
+      "tsMs": 1788765279514
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/web/src/margin\",\"pattern\":\"SessionDetail|RecentSessionsList|SessionBoard\",\"maxResults\":40}",
+      "tsMs": 1788765279518
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Command python,py,node,npm,git -ErrorAction SilentlyContinue | Select-Object Name,Source; Get-ChildItem -Path 'C:\\\\Windows\\\\System32\\\\where.exe' -ErrorAction SilentlyContinue | Out-Null; [bool](Get-ChildItem -Recurse -Filter 'node*.exe' . -ErrorAction SilentlyContinue | Select-Object -First 1)\"}",
+      "tsMs": 1788765285123
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path 'C:\\\\Program Files\\\\nodejs\\\\node.exe'; & 'C:\\\\Program Files\\\\nodejs\\\\node.exe' --version 2>&1 | Select-Object -First 1\"}",
+      "tsMs": 1788765289176
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem workspace -Force | Where-Object { $_.Name -like '*.runtime*' } ; Get-ChildItem workspace/.runtime -Force -ErrorAction SilentlyContinue | Select-Object Name; Test-Path 'C:\\Users\\<user>\\AppData\\Roaming\\npm\\node_modules'; where.exe node 2>$null; node --version 2>$null",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: C:\\Users/<user>/appdata/roaming/npm/node_modules"
+      ],
+      "tsMs": 1788764924229
+    },
+    {
+      "command": "Get-ChildItem -Recurse -Directory workspace/docs/validation -ErrorAction SilentlyContinue | Select-Object FullName; Test-Path 'workspace/docs/validation/recovery-handoffs-postfix/session-01a074d4-f3b2-76e1-8411-9f93be0a91a2.jsonl'",
+      "reasons": [
+        "protected path fragment is disabled: recovery-handoffs"
+      ],
+      "tsMs": 1788765235930
+    },
+    {
+      "command": "Test-Path 'C:\\Program Files\\nodejs\\node.exe'; & 'C:\\Program Files\\nodejs\\node.exe' --version 2>&1 | Select-Object -First 1",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: c:\\program"
+      ],
+      "tsMs": 1788765289176
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 419556,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-07",
+    "arm": "B",
+    "runId": "formal-case-07-B-2026-09-07T07-08-10-162Z",
+    "startMs": "2026-09-07T07:08:17.286Z",
+    "endMs": "2026-09-07T07:15:18.325Z",
+    "durationMs": 421039,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-07-B-2026-09-07T07-08-10-162Z status=ok durationMs=419556\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-07-B-2026-09-07T07-08-10-162Z.cert.json"
+  }
+}

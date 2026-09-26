@@ -1,0 +1,23 @@
+{
+  "runId": "formal-case-08-B-2026-09-07T07-24-28-334Z",
+  "caseId": "case-08",
+  "arm": "B",
+  "phase": "formal",
+  "sandboxDir": "<repo>-bench\\ab-continuation\\sandboxes\\formal-case-08-B",
+  "workspaceVerification": {
+    "checkedFiles": 634,
+    "forbiddenNameHits": [],
+    "uuidHits": [],
+    "ok": true
+  },
+  "inputFolderEntries": [
+    "HANDOFF.md"
+  ],
+  "inputArtifact": {
+    "name": "HANDOFF.md",
+    "sha256": "A7B3AB6F47A0EE9260EB445A19ECAD8ED54E08F9D768DF035E5BE176C45A3A9D",
+    "source": "case-08.md"
+  },
+  "sandboxWideForbiddenHits": [],
+  "ok": true
+}

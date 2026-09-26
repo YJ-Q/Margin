@@ -1,0 +1,280 @@
+{
+  "runId": "formal-case-03-B-2026-09-07T09-57-49-781Z",
+  "caseId": "case-03",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T09:58:00.300Z",
+  "endTs": "2026-09-07T10:01:00.448Z",
+  "durationMs": 180148,
+  "modelPromptStartMs": 36,
+  "modelPromptEndMs": 180147,
+  "sessionId": "01a07b4d-a18e-716f-93d0-e99c8866ff89",
+  "rawResponse": "{\n  \"goal\": \"Margin V2 R1 — Floating Window Host Architecture. A research/decision-only task (stated: 只调研，不修改代码) to select the simplest reliable desktop floating-window host for Margin V2. Scope: compare Electron, Tauri, and other mature lightweight desktop/WebView options on reuse of the existing React/Web UI, ability to call the local Node/Core backend, Windows support, installer size, memory, tray/always-on-top/hide-show, development and packaging/signing complexity, community maturity, and cross-platform cost; choose how the GUI binds to Core (direct Core call vs local backend vs reusing the existing HTTP Surface); keep the V2 minimum product limited to Workspace Overview, Recent Sessions, Resume Summary, Generate/Save HANDOFF, and Copy checkpoint (explicitly exclude live agent monitoring, usage, launcher, checkpoint lifecycle, search/archive/delete, complex settings); and deliver outputs 1-11 (host comparison, recommended host, Core<->GUI architecture, existing Browser-code reuse, packaging approach, V2 minimum window behavior, biggest risks, first implementation slice, acceptance criteria, model ROI, and a 'STOP - enough evidence' marker).\",\n  \"progress\": \"Historical (HANDOFF.md, 2026-09-07T09:27Z, session 01a0755d): the assistant reported the research essentially concluded, recommending Electron + the existing local HTTP Surface (not Tauri; Tauri's size win is offset by keeping the Node Core running plus Rust/sidecar/native-dependency costs), with Electron Forge for packaging, vite build -> Forge package/make, a single-instance lock, a small always-hideable frameless floating BrowserWindow (~460x680 expanded per report text; the report also mentions collapsed-tray behavior), tray show/hide, Close->hide, Quit cleans up the loopback server, and near-zero UI business-code change for the first slice. It claimed it modified no code or workspace files. Current repository truth (verified in this sandbox, branch main, HEAD a247e75ab9e78cce7853e3f281b85459a4f25e7c, which matches the HANDOFF's recorded repo-truth HEAD): the frozen repo already contains an Electron V2 floating host implementation consistent with that historical recommendation - electron/main.js (createElectronHost: requestSingleInstanceLock, Tray, Close->hide, Always-on-top toggle, expandable shell 44px collapsed <-> up to 720px expanded, IPC preload electron/preload.cjs exposing marginShell), forge.config.cjs (Squirrel/Zip makers, auto-unpack-natives, extraResource web), package.json with main=electron/main.js plus electron:start/package/make scripts and Electron/Forge devDependencies, React/Vite Margin Surface under web/src/margin (MarginApp, RecentSessionsList, SessionBoard, SessionDetail, marginApiClient), Core handoff under src/core/handoff (createMarginSurface, httpAdapter, handoff, resume-summary, workspace-overview), CLI bin/margin.js, and validation evidence docs/validation/v2_resource_bar_daily_use_baseline.md (dated 2026-09-07, 'PASS') plus r2/r3.x screenshots. No case-03 plan/spec/ADR/decision document exists anywhere in the repo, and README.md (header still 'Phase 2B Web Workbench') and CHANGELOG.md (top still Phase 2A/2B-era) do not yet document the V2 Electron/CLI handoff state.\",\n  \"pending\": \"Unknown and must be re-confirmed against the task source. (1) The interrupted session produced no persisted artifact in this repo, so if the deliverable is an in-repo design/decision document (plan/spec/ADR) capturing outputs 1-11 and a STOP marker, none was written and that remains to be produced. (2) If the deliverable is only the in-chat research report, the historical report claims completion, but that is unverified (full transcript/evidence is not in this sandbox; only input/HANDOFF.md). (3) The historical 'first implementation slice' recommendation appears to be already realized in-tree at HEAD (Electron host, tray, single-instance, close->hide, always-on-top, Forge packaging, margin Surface via loopback HTTP), so no greenfield build is indicated without first reconciling intent vs current code. (4) README/CHANGELOG not yet updated for the V2/Electron/CLI state is an observed documentation gap, but the historical task was research-only and forbade file modification, so acting on it requires explicit instruction.\",\n  \"historicalValidation\": \"No direct test execution or pass/fail result for this research-only session was recovered; the frozen session evidence JSONL referenced by the HANDOFF (docs/validation/recovery-handoffs-r7-full/session-01a0755d-*.jsonl) is NOT present in this sandbox. Pre-existing repo artifacts contain only historical validation claims from earlier work, not current validation of this session: workspace/task-8-report.md (e.g., 462/462 and earlier 461/461 test passes, build pass, Stage1 10/10, dated 2026-08-24) and docs/validation/v2_resource_bar_daily_use_baseline.md (111 focused tests passed, npm run build passed, dated 2026-09-07). None of these were rerun here and none can be rerun in this environment: workspace has no node_modules, no web/dist, no pinned .runtime node, no git binary, node is not runnable, the sandbox is inspect-only, and data/ is empty except .gitkeep.\",\n  \"recommendedFollowUp\": \"Do not implement or write anything yet. First reopen the task contract to confirm the expected deliverable format/location (in-repo architecture/decision record vs in-chat report) and whether the repo base for this task predates the Electron V2 commits now present at HEAD. Then, if a decision record is required, write it grounded in the CURRENT in-tree state (cite electron/main.js, electron/preload.cjs, forge.config.cjs, package.json electron scripts/devDeps, web/src/margin/*, src/core/handoff/createMarginSurface.js + httpAdapter, docs/validation/v2_resource_bar_daily_use_baseline.md) rather than treating the architecture as unbuilt; verify each historical claim against these files before using it. Do not rely on the missing evidence JSONL, do not attempt builds/tests/launches in this sandbox (no toolchain; frozen files), and do not promote the historical first-slice recommendation into executable work until it is confirmed not already satisfied by the committed Electron host. Flag the README/CHANGELOG drift as a documentation follow-up only if instructed.\",\n  \"currentApplicability\": \"The HANDOFF snapshot and this frozen workspace are consistent at the commit level (refs/heads/main = a247e75a..., matching the HANDOFF's recorded repo truth), so the historical report is current with respect to that HEAD and no later commits exist here. However, the repo content already embodies an Electron-based floating V2 implementation that matches the historical recommendation, meaning the research conclusion is consistent with but partially redundant against the current tree - the premise that the Floating Window host 'still needs to be chosen' may be stale relative to what is committed. The research task was research-only; no code belongs to this task in either the historical or current view. Current-tooling truth for any continuation: no node/git/electron toolchain is runnable and the workspace is read-only, so all 'validation' statements must remain historical unless executed elsewhere.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the historical recommendation (Electron + existing local HTTP Surface) implies executable implementation work is pending: the repo at HEAD already contains that implementation (electron/main.js, Forge config, margin Surface, tray/close-to-hide/single-instance/always-on-top), so the historical first-slice may already be satisfied.\",\n    \"Assuming the historical assistant's 'completion'/STOP claim is current independent truth: only an excerpt is preserved in HANDOFF.md; the session evidence JSONL is absent from this sandbox, so completion of outputs 1-11 cannot be verified.\",\n    \"Assuming the HANDOFF's claim of 328 tracked-modified/untracked files in <repo> applies to this frozen workspace: no git is available to verify working-tree dirtiness; treat the worktree state as unverifiable rather than dirty.\",\n    \"Assuming pre-existing repo test-pass claims (task-8 461/462; v2 baseline 111 passed; build passes) validate the current state of this session: they are historical records from other tasks and were not and cannot be rerun here (no node_modules, no .runtime, no git, no node, read-only sandbox).\",\n    \"Assuming repo documentation reflects the current code: README.md still declares 'Phase 2B Web Workbench' as current status and CHANGELOG.md's top entries predate the V2 handoff-core/Electron/Codex commits, so doc statements about architecture/status may lag the tree.\",\n    \"Assuming the evidence file path in the HANDOFF (docs/validation/recovery-handoffs-r7-full/...) is accessible here: it does not exist in this environment, so historical claims traceable only to that JSONL are unconfirmable.\",\n    \"Assuming a deliverable document is expected inside the repo (e.g., ADR/design doc) or, conversely, that none is needed: neither the original brief file nor evidence transcript is present in this sandbox to decide this; it must be re-confirmed with the task source.\",\n    \"Assuming any runtime/toolchain exists to build, test, or launch Electron in this environment: node, the pinned .runtime runtime, node_modules, web/dist, and git are all absent, and the environment is explicitly inspect-only.\"\n  ]\n}",
+  "parsedRecovery": {
+    "goal": "Margin V2 R1 — Floating Window Host Architecture. A research/decision-only task (stated: 只调研，不修改代码) to select the simplest reliable desktop floating-window host for Margin V2. Scope: compare Electron, Tauri, and other mature lightweight desktop/WebView options on reuse of the existing React/Web UI, ability to call the local Node/Core backend, Windows support, installer size, memory, tray/always-on-top/hide-show, development and packaging/signing complexity, community maturity, and cross-platform cost; choose how the GUI binds to Core (direct Core call vs local backend vs reusing the existing HTTP Surface); keep the V2 minimum product limited to Workspace Overview, Recent Sessions, Resume Summary, Generate/Save HANDOFF, and Copy checkpoint (explicitly exclude live agent monitoring, usage, launcher, checkpoint lifecycle, search/archive/delete, complex settings); and deliver outputs 1-11 (host comparison, recommended host, Core<->GUI architecture, existing Browser-code reuse, packaging approach, V2 minimum window behavior, biggest risks, first implementation slice, acceptance criteria, model ROI, and a 'STOP - enough evidence' marker).",
+    "progress": "Historical (HANDOFF.md, 2026-09-07T09:27Z, session 01a0755d): the assistant reported the research essentially concluded, recommending Electron + the existing local HTTP Surface (not Tauri; Tauri's size win is offset by keeping the Node Core running plus Rust/sidecar/native-dependency costs), with Electron Forge for packaging, vite build -> Forge package/make, a single-instance lock, a small always-hideable frameless floating BrowserWindow (~460x680 expanded per report text; the report also mentions collapsed-tray behavior), tray show/hide, Close->hide, Quit cleans up the loopback server, and near-zero UI business-code change for the first slice. It claimed it modified no code or workspace files. Current repository truth (verified in this sandbox, branch main, HEAD a247e75ab9e78cce7853e3f281b85459a4f25e7c, which matches the HANDOFF's recorded repo-truth HEAD): the frozen repo already contains an Electron V2 floating host implementation consistent with that historical recommendation - electron/main.js (createElectronHost: requestSingleInstanceLock, Tray, Close->hide, Always-on-top toggle, expandable shell 44px collapsed <-> up to 720px expanded, IPC preload electron/preload.cjs exposing marginShell), forge.config.cjs (Squirrel/Zip makers, auto-unpack-natives, extraResource web), package.json with main=electron/main.js plus electron:start/package/make scripts and Electron/Forge devDependencies, React/Vite Margin Surface under web/src/margin (MarginApp, RecentSessionsList, SessionBoard, SessionDetail, marginApiClient), Core handoff under src/core/handoff (createMarginSurface, httpAdapter, handoff, resume-summary, workspace-overview), CLI bin/margin.js, and validation evidence docs/validation/v2_resource_bar_daily_use_baseline.md (dated 2026-09-07, 'PASS') plus r2/r3.x screenshots. No case-03 plan/spec/ADR/decision document exists anywhere in the repo, and README.md (header still 'Phase 2B Web Workbench') and CHANGELOG.md (top still Phase 2A/2B-era) do not yet document the V2 Electron/CLI handoff state.",
+    "pending": "Unknown and must be re-confirmed against the task source. (1) The interrupted session produced no persisted artifact in this repo, so if the deliverable is an in-repo design/decision document (plan/spec/ADR) capturing outputs 1-11 and a STOP marker, none was written and that remains to be produced. (2) If the deliverable is only the in-chat research report, the historical report claims completion, but that is unverified (full transcript/evidence is not in this sandbox; only input/HANDOFF.md). (3) The historical 'first implementation slice' recommendation appears to be already realized in-tree at HEAD (Electron host, tray, single-instance, close->hide, always-on-top, Forge packaging, margin Surface via loopback HTTP), so no greenfield build is indicated without first reconciling intent vs current code. (4) README/CHANGELOG not yet updated for the V2/Electron/CLI state is an observed documentation gap, but the historical task was research-only and forbade file modification, so acting on it requires explicit instruction.",
+    "historicalValidation": "No direct test execution or pass/fail result for this research-only session was recovered; the frozen session evidence JSONL referenced by the HANDOFF (docs/validation/recovery-handoffs-r7-full/session-01a0755d-*.jsonl) is NOT present in this sandbox. Pre-existing repo artifacts contain only historical validation claims from earlier work, not current validation of this session: workspace/task-8-report.md (e.g., 462/462 and earlier 461/461 test passes, build pass, Stage1 10/10, dated 2026-08-24) and docs/validation/v2_resource_bar_daily_use_baseline.md (111 focused tests passed, npm run build passed, dated 2026-09-07). None of these were rerun here and none can be rerun in this environment: workspace has no node_modules, no web/dist, no pinned .runtime node, no git binary, node is not runnable, the sandbox is inspect-only, and data/ is empty except .gitkeep.",
+    "recommendedFollowUp": "Do not implement or write anything yet. First reopen the task contract to confirm the expected deliverable format/location (in-repo architecture/decision record vs in-chat report) and whether the repo base for this task predates the Electron V2 commits now present at HEAD. Then, if a decision record is required, write it grounded in the CURRENT in-tree state (cite electron/main.js, electron/preload.cjs, forge.config.cjs, package.json electron scripts/devDeps, web/src/margin/*, src/core/handoff/createMarginSurface.js + httpAdapter, docs/validation/v2_resource_bar_daily_use_baseline.md) rather than treating the architecture as unbuilt; verify each historical claim against these files before using it. Do not rely on the missing evidence JSONL, do not attempt builds/tests/launches in this sandbox (no toolchain; frozen files), and do not promote the historical first-slice recommendation into executable work until it is confirmed not already satisfied by the committed Electron host. Flag the README/CHANGELOG drift as a documentation follow-up only if instructed.",
+    "currentApplicability": "The HANDOFF snapshot and this frozen workspace are consistent at the commit level (refs/heads/main = a247e75a..., matching the HANDOFF's recorded repo truth), so the historical report is current with respect to that HEAD and no later commits exist here. However, the repo content already embodies an Electron-based floating V2 implementation that matches the historical recommendation, meaning the research conclusion is consistent with but partially redundant against the current tree - the premise that the Floating Window host 'still needs to be chosen' may be stale relative to what is committed. The research task was research-only; no code belongs to this task in either the historical or current view. Current-tooling truth for any continuation: no node/git/electron toolchain is runnable and the workspace is read-only, so all 'validation' statements must remain historical unless executed elsewhere.",
+    "unsafeAssumptions": [
+      "Assuming the historical recommendation (Electron + existing local HTTP Surface) implies executable implementation work is pending: the repo at HEAD already contains that implementation (electron/main.js, Forge config, margin Surface, tray/close-to-hide/single-instance/always-on-top), so the historical first-slice may already be satisfied.",
+      "Assuming the historical assistant's 'completion'/STOP claim is current independent truth: only an excerpt is preserved in HANDOFF.md; the session evidence JSONL is absent from this sandbox, so completion of outputs 1-11 cannot be verified.",
+      "Assuming the HANDOFF's claim of 328 tracked-modified/untracked files in <repo> applies to this frozen workspace: no git is available to verify working-tree dirtiness; treat the worktree state as unverifiable rather than dirty.",
+      "Assuming pre-existing repo test-pass claims (task-8 461/462; v2 baseline 111 passed; build passes) validate the current state of this session: they are historical records from other tasks and were not and cannot be rerun here (no node_modules, no .runtime, no git, no node, read-only sandbox).",
+      "Assuming repo documentation reflects the current code: README.md still declares 'Phase 2B Web Workbench' as current status and CHANGELOG.md's top entries predate the V2 handoff-core/Electron/Codex commits, so doc statements about architecture/status may lag the tree.",
+      "Assuming the evidence file path in the HANDOFF (docs/validation/recovery-handoffs-r7-full/...) is accessible here: it does not exist in this environment, so historical claims traceable only to that JSONL are unconfirmable.",
+      "Assuming a deliverable document is expected inside the repo (e.g., ADR/design doc) or, conversely, that none is needed: neither the original brief file nor evidence transcript is present in this sandbox to decide this; it must be re-confirmed with the task source.",
+      "Assuming any runtime/toolchain exists to build, test, or launch Electron in this environment: node, the pinned .runtime runtime, node_modules, web/dist, and git are all absent, and the environment is explicitly inspect-only."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788775081726
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C ./workspace status 2>&1 | Out-String\"}",
+      "tsMs": 1788775081727
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788775084567
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788775084567
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788775084568
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788775084568
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788775085686
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers\"}",
+      "tsMs": 1788775085687
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788775087891
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers/sdd\"}",
+      "tsMs": 1788775087892
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\HEAD; Write-Output '---'; Get-Content .\\\\workspace\\\\.git\\\\packed-refs -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788775087892
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '--- refs/heads/main ---'; Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue; Write-Output '--- packed-refs ---'; if (Test-Path .\\\\workspace\\\\.git\\\\packed-refs) { Get-Content .\\\\workspace\\\\.git\\\\packed-refs } else { Write-Output 'none' }; Write-Output '--- logs/HEAD last 5 ---'; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -Tail 5 -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788775091196
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/design-references\"}",
+      "tsMs": 1788775091205
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/.superpowers/sdd/.gitignore\"}",
+      "tsMs": 1788775091205
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$dates = 1788626351,1788716597,1788716617,1788716632,1788716676; foreach ($d in $dates) { [DateTimeOffset]::FromUnixTimeSeconds($d).ToString('yyyy-MM-ddTHH:mm:ssZ') }\"}",
+      "tsMs": 1788775102981
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs\"}",
+      "tsMs": 1788775102993
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Force | Select-Object Name; Write-Output '--- git status via no git: check index/worktree files recently modified ---'; Get-ChildItem .\\\\workspace -Recurse -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 15 FullName,LastWriteTime\"}",
+      "tsMs": 1788775102993
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"Floating Window|floating window|floating-window|Tauri|Electron\",\"path\":\"workspace\",\"maxResults\":80}",
+      "tsMs": 1788775114440
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation\"}",
+      "tsMs": 1788775114522
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/electron\"}",
+      "tsMs": 1788775114522
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\_tmp -Recurse -Force -ErrorAction SilentlyContinue | Select-Object -First 60 FullName\"}",
+      "tsMs": 1788775132655
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation/r3-electron\"}",
+      "tsMs": 1788775132662
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation/r2-resource-bar\"}",
+      "tsMs": 1788775132663
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs\\\\validation -Recurse -File | Select-Object FullName\"}",
+      "tsMs": 1788775135676
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788775135676
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs -Recurse -File | Select-Object -ExpandProperty FullName\"}",
+      "tsMs": 1788775154188
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/main.js\"}",
+      "tsMs": 1788775154196
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\web -Recurse -File | Select-Object -ExpandProperty FullName; Write-Output '--- src/core/handoff ---'; Get-ChildItem .\\\\workspace\\\\src\\\\core\\\\handoff -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output '--- scripts (root) ---'; Get-ChildItem .\\\\workspace\\\\scripts -File | Select-Object -ExpandProperty Name\"}",
+      "tsMs": 1788775173232
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/forge.config.cjs\"}",
+      "tsMs": 1788775173243
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/validation/v2_resource_bar_daily_use_baseline.md\"}",
+      "tsMs": 1788775173244
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"floating|Floating\",\"path\":\"workspace/docs/superpowers/plans\"}",
+      "tsMs": 1788775185562
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"case-03|case 03|Floating Window V2|floating-window|浮窗|浮云|floating host\",\"path\":\"workspace\"}",
+      "tsMs": 1788775185566
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$c = Get-Content .\\\\workspace\\\\CHANGELOG.md -TotalCount 60; Write-Output $c\"}",
+      "tsMs": 1788775185682
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '--- commands ---'; Get-Command node, npm, git -ErrorAction SilentlyContinue | Select-Object Name,Source; Write-Output '--- .runtime exists? ---'; Test-Path .\\\\workspace\\\\.runtime; Write-Output '--- _tmp AppData recurse ---'; Get-ChildItem .\\\\_tmp\\\\AppData -Recurse -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName; Write-Output '--- sandbox root dirs ---'; Get-ChildItem . -Force | Select-Object Name\"}",
+      "tsMs": 1788775194253
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/README.md\",\"limitChars\":3000}",
+      "tsMs": 1788775194260
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\logs\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue; Write-Output '--- HEAD log count ---'; (Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD).Count\"}",
+      "tsMs": 1788775203248
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/preload.cjs\"}",
+      "tsMs": 1788775203256
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output 'node_modules present:'; Test-Path .\\\\workspace\\\\node_modules; Write-Output 'web/dist present:'; Test-Path .\\\\workspace\\\\web\\\\dist; Write-Output 'data dirs:'; Get-ChildItem .\\\\workspace\\\\data -Force -ErrorAction SilentlyContinue | Select-Object -First 20 Name; Write-Output 'node on path:'; try { & node --version } catch { Write-Output 'node not runnable' }; Write-Output 'evidence snapshot dir present:'; Test-Path .\\\\workspace\\\\docs\\\\validation\\\\recovery-handoffs-r7-full\"}",
+      "tsMs": 1788775221673
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output 'node_modules present:'; Test-Path .\\\\workspace\\\\node_modules; Write-Output 'web/dist present:'; Test-Path .\\\\workspace\\\\web\\\\dist; Write-Output 'data dirs:'; Get-ChildItem .\\\\workspace\\\\data -Force -ErrorAction SilentlyContinue | Select-Object -First 20 -ExpandProperty Name; Write-Output 'node on path:'; try { & node --version } catch { Write-Output 'node not runnable' }\"}",
+      "tsMs": 1788775223928
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation\"}",
+      "tsMs": 1788775223936
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output 'workspace-HEAD-ref:'; Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main; Write-Output 'recent-commits-subjects:'; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\refs\\\\heads\\\\main | Select-Object -Last 4\"}",
+      "tsMs": 1788775241983
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem .\\workspace\\docs\\validation -Recurse -File | Select-Object FullName",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788775135676
+    },
+    {
+      "command": "Write-Output 'node_modules present:'; Test-Path .\\workspace\\node_modules; Write-Output 'web/dist present:'; Test-Path .\\workspace\\web\\dist; Write-Output 'data dirs:'; Get-ChildItem .\\workspace\\data -Force -ErrorAction SilentlyContinue | Select-Object -First 20 Name; Write-Output 'node on path:'; try { & node --version } catch { Write-Output 'node not runnable' }; Write-Output 'evidence snapshot dir present:'; Test-Path .\\workspace\\docs\\validation\\recovery-handoffs-r7-full",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788775221673
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 180148,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-03",
+    "arm": "B",
+    "runId": "formal-case-03-B-2026-09-07T09-57-49-781Z",
+    "startMs": "2026-09-07T09:57:58.794Z",
+    "endMs": "2026-09-07T10:01:00.449Z",
+    "durationMs": 181655,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-03-B-2026-09-07T09-57-49-781Z status=ok durationMs=180148\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-03-B-2026-09-07T09-57-49-781Z.cert.json"
+  }
+}

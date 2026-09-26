@@ -1,0 +1,277 @@
+{
+  "runId": "formal-case-12-B-2026-09-07T08-06-19-074Z",
+  "caseId": "case-12",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T08:06:28.566Z",
+  "endTs": "2026-09-07T08:10:26.072Z",
+  "durationMs": 237506,
+  "modelPromptStartMs": 31,
+  "modelPromptEndMs": 237506,
+  "sessionId": "01a07ae7-85f3-7275-b9a6-dd81004f675f",
+  "rawResponse": "Based on my inspection of the isolated environment, here is the recovered state:\n\n```json\n{\n  \"goal\": \"Historical task request (source session, must be re-confirmed before acting): Margin V2 Electron floating-window work on repo <repo> — complete/validate R3.3 'Responsive Controls + Refresh + Settings + Save Feedback': single-row ~44px Usage Bar with fixed left region, flex/scroll usage viewport (no real Token Usage), overlay right window controls with Quit/Hide/Pin semantics synced with the Tray; Settings rendered in-place in the Session Board content area (modes preserved) with minimal persisted settings only; responsive Session Rows with fixed right slot (time + hover Copy/Save, no layout shift); refresh on Board expand / window focus / ~30s while expanded; Save must verify the actual filesystem write to <workspace>/.margin/HANDOFF.md before showing Saved; single-slot window-level Toast with ellipsis; end with PASS/PARTIAL. The input artifact explicitly labels this '历史请求，接手前请确认是否更新'. Current repository truth already contains an R3.3 implementation plus a committed PASS baseline, so treat the literal spec text as possibly superseded.\",\n  \"progress\": \"Current repo truth (frozen copy at checkpoint 2026-09-07T04:47:59.451Z, workspace <repo>): branch main, HEAD a247e75ab9e78cce7853e3f281b85459a4f25e7c 'docs: record V2 resource bar daily-use baseline' (confirmed via .git/refs/heads/main and .git/logs/HEAD). The working tree contains the implemented R3.3 feature set: UsageBar with expand toggle + Pin/Hide/Quit and CSS overlay control dock; Pin synced to Electron always-on-top and Tray menu (electron/main.js, preload.cjs); SessionBoard with Workspace/Agent/Sessions modes, in-place Settings panel, session rows with fixed right slot and hover overlay actions; MarginApp with refresh-on-expand/focus/30s interval, single-slot window-level toast, settings persisted to localStorage; server-side /api/handoff/save re-reads the written .margin/HANDOFF.md to confirm the write before returning a path (httpAdapter.js); R3.3 validation screenshots exist under docs/validation/r3.3 (01..08 .png) with capture script scripts/capture-r33-electron.cjs. Committed baseline doc docs/validation/v2_resource_bar_daily_use_baseline.md (in HEAD) claims historical PASS with '111 passed, 0 failed' and 'npm run build passed'. mtime evidence shows post-HEAD uncommitted edits to: web/src/margin/{SessionBoard.js,MarginApp.js,marginApiClient.js}, src/core/handoff/httpAdapter.js, src/agents/{sourceRegistry.js,adapters.js}, src/resources/{agentResourceService.js,codexQuotaSource.js}, src/cli/agentSourceCli.js, bin/margin.js, test/agentSourceRegistry.test.js; and most recently (12:42-12:47 local, seconds before the checkpoint) src/core/handoff/{distiller.js,evidence.js,exec.js,handoff.js} + test/handoff.test.js. Current validation status: UNKNOWN — no node_modules, no .runtime, and no accessible git/node executables inside this sandbox, so tests/build/git diff cannot be re-run here.\",\n  \"pending\": \"Nothing can be executed or authoritatively diffed in this frozen sandbox; on the real repo the following are open/uncertain: (1) obtain an authoritative git status/diff — the HANDOFF claim of '112 tracked modified/untracked files' is NOT verifiable here (no git binary); (2) re-run the recorded focused tests (npm test -- --test-name-pattern \\\"R3 board|Electron host|handoff/save\\\"; node --test test/electronHost.test.js test/marginR3Board.test.js test/marginSurfaceHttpAdapter.test.js; node --test test/marginCli.test.js test/marginDiscoveryParity.test.js), npm run build, and git diff --check against the CURRENT tree, since exit_code=0 results are historical only; (3) verify the only R3.3 spec point whose implementation I could not find in the code: Settings 'Show workspace/session summary' persists but no code path renders a 'N workspaces · M sessions' summary — UsageBar ignores its settings prop and nothing consumes settings.showSummary or the unused CSS class .margin-usage-summary; confirm whether this was intentionally dropped or is an actual gap; (4) reconcile spec-vs-code drift: UsageBar has no 'Today' token, window-control order is Expand/Pin/Hide/Quit (Quit far right; existing tests assert this), and Settings contains an extra 'Agent Sources' section beyond the 'do not add other settings' constraint — determine whether the historical spec text is stale or the code diverges; (5) the exact purpose of the interrupted session's final edits (src/core/handoff/{distiller,evidence,exec,handoff}.js + test/handoff.test.js, touched seconds before the checkpoint) is unknown — inspect git status and the evidence snapshot on the real machine before assuming that work finished.\",\n  \"historicalValidation\": \"Historical only, NOT current truth: three focused test command groups were reported to exit with code 0 in the source session (test-name-pattern 'R3 board|Electron host|handoff/save'; direct node --test over electronHost/marginR3Board/marginSurfaceHttpAdapter tests; node --test over marginCli/marginDiscoveryParity tests, plus git diff --check and docs/validation/r3.3 listing). The committed baseline doc additionally claims '111 passed, 0 failed' and 'npm run build passed'. The input HANDOFF also flags 33 internal operations with no explicit terminal state in captured evidence (including empty patch returns/truncations), and records that the three test commands had no explicit final result in its own captured evidence — the 'exit 0' facts and the 'PASS — R3.3 ready for continued daily-use' inference both come from historical reports, not from a re-run against the current tree.\",\n  \"recommendedFollowUp\": \"Recommendation only, not an assertion that these actions are currently executable: (1) on the real repo <repo>, first run git status/git diff and re-run the three focused test commands plus npm run build and git diff --check against the current working tree before making any edit; (2) read the input HANDOFF.md and the committed docs/validation baseline, then verify the summary-toggle rendering path and the spec-vs-code drift items listed above before changing behavior; (3) inspect the most recently touched handoff-core files (distiller/evidence/exec/handoff + handoff.test.js) to learn what the interrupted session was doing; (4) reuse existing validated files/dependencies; do not rebuild or reinstall from scratch and do not declare completion from empty todo arrays or from the historical PASS claim.\",\n  \"currentApplicability\": \"The historical R3.3 goal still maps onto the current tree — the frozen workspace is a faithful copy of the repo at the checkpoint, HEAD matches the HANDOFF record (a247e75 on main), all R3.3 code and R3.3 screenshots are present, and no later tree changes exist in this sandbox. However: the spec text in the HANDOFF predates several implemented refinements (control order, no 'Today' item, extra Agent Sources settings section), so it should not be executed verbatim; the committed PASS baseline and exit-0 test reports are historical and unverifiable here; and this environment cannot run tests/build or git (no node_modules/.runtime, no git executable, external paths denied), so 'current validation' must be re-established on the real machine.\",\n  \"unsafeAssumptions\": [\n    \"Assumption that the historical exit_code=0 test runs still pass on the current working tree — unsafe: multiple R3.3 files (SessionBoard.js, MarginApp.js, marginApiClient.js, httpAdapter.js, agent-source files) and handoff-core files were modified after HEAD and after those runs.\",\n    \"Assumption that 'PASS — R3.3 ready for continued daily-use' is current independent truth — unsafe: it is a committed doc/historical inference, not a re-run result; baseline also predates the last file edits.\",\n    \"Assumption that the HANDOFF's '112 tracked modified/untracked files' figure is accurate — unsafe: unverifiable here (no git binary); must be re-derived via git status on the real repo.\",\n    \"Assumption that the R3.3 spec text in input/HANDOFF.md is authoritative over current code — unsafe: code/tests contradict it on control ordering (test asserts 'Quit at the far right'), absence of a 'Today' element, and Settings containing an 'Agent Sources' section the spec forbids.\",\n    \"Assumption that the 'Show workspace/session summary' setting is broken/missing just because no consumer of settings.showSummary or .margin-usage-summary exists in this snapshot — unsafe: the feature may have been deliberately dropped/superseded; treat as 'verify intent' not 'fix bug'.\",\n    \"Assumption that absence of node_modules/.runtime in this frozen copy means the real repo lacks them or needs a fresh install — unsafe: they were simply not copied; the real repo's package.json expects .\\\\.runtime\\\\node-v22.23.1-win-x64 and node_modules.\",\n    \"Assumption that mtime/evidence artifacts (screenshots, baseline doc) prove current UI behavior — unsafe: they are historical capture artifacts, not validation of the present tree.\",\n    \"Assumption that the session was interrupted mid-R3.3 — unsafe: last activity (seconds before checkpoint) was on the handoff-core tooling files; the R3.3 deliverable was already reported PASS and committed; the interrupted work topic is unknown.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Historical task request (source session, must be re-confirmed before acting): Margin V2 Electron floating-window work on repo <repo> — complete/validate R3.3 'Responsive Controls + Refresh + Settings + Save Feedback': single-row ~44px Usage Bar with fixed left region, flex/scroll usage viewport (no real Token Usage), overlay right window controls with Quit/Hide/Pin semantics synced with the Tray; Settings rendered in-place in the Session Board content area (modes preserved) with minimal persisted settings only; responsive Session Rows with fixed right slot (time + hover Copy/Save, no layout shift); refresh on Board expand / window focus / ~30s while expanded; Save must verify the actual filesystem write to <workspace>/.margin/HANDOFF.md before showing Saved; single-slot window-level Toast with ellipsis; end with PASS/PARTIAL. The input artifact explicitly labels this '历史请求，接手前请确认是否更新'. Current repository truth already contains an R3.3 implementation plus a committed PASS baseline, so treat the literal spec text as possibly superseded.",
+    "progress": "Current repo truth (frozen copy at checkpoint 2026-09-07T04:47:59.451Z, workspace <repo>): branch main, HEAD a247e75ab9e78cce7853e3f281b85459a4f25e7c 'docs: record V2 resource bar daily-use baseline' (confirmed via .git/refs/heads/main and .git/logs/HEAD). The working tree contains the implemented R3.3 feature set: UsageBar with expand toggle + Pin/Hide/Quit and CSS overlay control dock; Pin synced to Electron always-on-top and Tray menu (electron/main.js, preload.cjs); SessionBoard with Workspace/Agent/Sessions modes, in-place Settings panel, session rows with fixed right slot and hover overlay actions; MarginApp with refresh-on-expand/focus/30s interval, single-slot window-level toast, settings persisted to localStorage; server-side /api/handoff/save re-reads the written .margin/HANDOFF.md to confirm the write before returning a path (httpAdapter.js); R3.3 validation screenshots exist under docs/validation/r3.3 (01..08 .png) with capture script scripts/capture-r33-electron.cjs. Committed baseline doc docs/validation/v2_resource_bar_daily_use_baseline.md (in HEAD) claims historical PASS with '111 passed, 0 failed' and 'npm run build passed'. mtime evidence shows post-HEAD uncommitted edits to: web/src/margin/{SessionBoard.js,MarginApp.js,marginApiClient.js}, src/core/handoff/httpAdapter.js, src/agents/{sourceRegistry.js,adapters.js}, src/resources/{agentResourceService.js,codexQuotaSource.js}, src/cli/agentSourceCli.js, bin/margin.js, test/agentSourceRegistry.test.js; and most recently (12:42-12:47 local, seconds before the checkpoint) src/core/handoff/{distiller.js,evidence.js,exec.js,handoff.js} + test/handoff.test.js. Current validation status: UNKNOWN — no node_modules, no .runtime, and no accessible git/node executables inside this sandbox, so tests/build/git diff cannot be re-run here.",
+    "pending": "Nothing can be executed or authoritatively diffed in this frozen sandbox; on the real repo the following are open/uncertain: (1) obtain an authoritative git status/diff — the HANDOFF claim of '112 tracked modified/untracked files' is NOT verifiable here (no git binary); (2) re-run the recorded focused tests (npm test -- --test-name-pattern \"R3 board|Electron host|handoff/save\"; node --test test/electronHost.test.js test/marginR3Board.test.js test/marginSurfaceHttpAdapter.test.js; node --test test/marginCli.test.js test/marginDiscoveryParity.test.js), npm run build, and git diff --check against the CURRENT tree, since exit_code=0 results are historical only; (3) verify the only R3.3 spec point whose implementation I could not find in the code: Settings 'Show workspace/session summary' persists but no code path renders a 'N workspaces · M sessions' summary — UsageBar ignores its settings prop and nothing consumes settings.showSummary or the unused CSS class .margin-usage-summary; confirm whether this was intentionally dropped or is an actual gap; (4) reconcile spec-vs-code drift: UsageBar has no 'Today' token, window-control order is Expand/Pin/Hide/Quit (Quit far right; existing tests assert this), and Settings contains an extra 'Agent Sources' section beyond the 'do not add other settings' constraint — determine whether the historical spec text is stale or the code diverges; (5) the exact purpose of the interrupted session's final edits (src/core/handoff/{distiller,evidence,exec,handoff}.js + test/handoff.test.js, touched seconds before the checkpoint) is unknown — inspect git status and the evidence snapshot on the real machine before assuming that work finished.",
+    "historicalValidation": "Historical only, NOT current truth: three focused test command groups were reported to exit with code 0 in the source session (test-name-pattern 'R3 board|Electron host|handoff/save'; direct node --test over electronHost/marginR3Board/marginSurfaceHttpAdapter tests; node --test over marginCli/marginDiscoveryParity tests, plus git diff --check and docs/validation/r3.3 listing). The committed baseline doc additionally claims '111 passed, 0 failed' and 'npm run build passed'. The input HANDOFF also flags 33 internal operations with no explicit terminal state in captured evidence (including empty patch returns/truncations), and records that the three test commands had no explicit final result in its own captured evidence — the 'exit 0' facts and the 'PASS — R3.3 ready for continued daily-use' inference both come from historical reports, not from a re-run against the current tree.",
+    "recommendedFollowUp": "Recommendation only, not an assertion that these actions are currently executable: (1) on the real repo <repo>, first run git status/git diff and re-run the three focused test commands plus npm run build and git diff --check against the current working tree before making any edit; (2) read the input HANDOFF.md and the committed docs/validation baseline, then verify the summary-toggle rendering path and the spec-vs-code drift items listed above before changing behavior; (3) inspect the most recently touched handoff-core files (distiller/evidence/exec/handoff + handoff.test.js) to learn what the interrupted session was doing; (4) reuse existing validated files/dependencies; do not rebuild or reinstall from scratch and do not declare completion from empty todo arrays or from the historical PASS claim.",
+    "currentApplicability": "The historical R3.3 goal still maps onto the current tree — the frozen workspace is a faithful copy of the repo at the checkpoint, HEAD matches the HANDOFF record (a247e75 on main), all R3.3 code and R3.3 screenshots are present, and no later tree changes exist in this sandbox. However: the spec text in the HANDOFF predates several implemented refinements (control order, no 'Today' item, extra Agent Sources settings section), so it should not be executed verbatim; the committed PASS baseline and exit-0 test reports are historical and unverifiable here; and this environment cannot run tests/build or git (no node_modules/.runtime, no git executable, external paths denied), so 'current validation' must be re-established on the real machine.",
+    "unsafeAssumptions": [
+      "Assumption that the historical exit_code=0 test runs still pass on the current working tree — unsafe: multiple R3.3 files (SessionBoard.js, MarginApp.js, marginApiClient.js, httpAdapter.js, agent-source files) and handoff-core files were modified after HEAD and after those runs.",
+      "Assumption that 'PASS — R3.3 ready for continued daily-use' is current independent truth — unsafe: it is a committed doc/historical inference, not a re-run result; baseline also predates the last file edits.",
+      "Assumption that the HANDOFF's '112 tracked modified/untracked files' figure is accurate — unsafe: unverifiable here (no git binary); must be re-derived via git status on the real repo.",
+      "Assumption that the R3.3 spec text in input/HANDOFF.md is authoritative over current code — unsafe: code/tests contradict it on control ordering (test asserts 'Quit at the far right'), absence of a 'Today' element, and Settings containing an 'Agent Sources' section the spec forbids.",
+      "Assumption that the 'Show workspace/session summary' setting is broken/missing just because no consumer of settings.showSummary or .margin-usage-summary exists in this snapshot — unsafe: the feature may have been deliberately dropped/superseded; treat as 'verify intent' not 'fix bug'.",
+      "Assumption that absence of node_modules/.runtime in this frozen copy means the real repo lacks them or needs a fresh install — unsafe: they were simply not copied; the real repo's package.json expects .\\.runtime\\node-v22.23.1-win-x64 and node_modules.",
+      "Assumption that mtime/evidence artifacts (screenshots, baseline doc) prove current UI behavior — unsafe: they are historical capture artifacts, not validation of the present tree.",
+      "Assumption that the session was interrupted mid-R3.3 — unsafe: last activity (seconds before checkpoint) was on the handoff-core tooling files; the R3.3 deliverable was already reported PASS and committed; the interrupted work topic is unknown."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788768389880
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Mode, Length, Name; Write-Output '---'; if (Test-Path .\\\\input) { Get-ChildItem .\\\\input -Force | Select-Object Length, Name }\"}",
+      "tsMs": 1788768389881
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788768391415
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788768391415
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788768391416
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git status --short | Select-Object -First 60; Write-Output '--- count ---'; (git status --short | Measure-Object).Count; Write-Output '--- HEAD ---'; git log --oneline -5; Write-Output '--- branch ---'; git branch -a 2>$null | Select-Object -First 10\"}",
+      "tsMs": 1788768393410
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem docs/validation -Force -ErrorAction SilentlyContinue | Select-Object Name, Length, LastWriteTime; Write-Output '--- r3.3? ---'; Get-ChildItem docs/validation/r3.3 -Force -ErrorAction SilentlyContinue | Select-Object Name, Length\"}",
+      "tsMs": 1788768393417
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\.git -Force | Select-Object Mode, Length, Name; Write-Output '--- git bin search ---'; Get-ChildItem 'C:\\\\Program Files\\\\Git' -ErrorAction SilentlyContinue | Select-Object Name; where.exe git 2>$null; Get-ChildItem .\\\\_tmp -Force -ErrorAction SilentlyContinue | Select-Object Name,Length\"}",
+      "tsMs": 1788768397590
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem docs/validation/r3.3 -Force | Select-Object Name, Length, LastWriteTime; Write-Output '--- parent ---'; Get-ChildItem docs/validation/recovery-handoffs-postfix -Force -ErrorAction SilentlyContinue | Select-Object Name, Length\"}",
+      "tsMs": 1788768397590
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-Content .git/HEAD; Write-Output '--- packed refs? ---'; if (Test-Path .git/packed-refs) { Get-Content .git/packed-refs | Select-Object -First 10 }; Write-Output '--- logs HEAD last ---'; if (Test-Path .git/logs/HEAD) { Get-Content .git/logs/HEAD | Select-Object -Last 8 }\"}",
+      "tsMs": 1788768401070
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-Content package.json -TotalCount 60\"}",
+      "tsMs": 1788768401082
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== docs/validation/r3.3 ==='; Get-ChildItem docs/validation/r3.3 -Recurse -Force | Select-Object FullName, Length, LastWriteTime | Format-Table -AutoSize | Out-String -Width 250\"}",
+      "tsMs": 1788768413726
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== electron ==='; Get-ChildItem electron -Recurse -File | Select-Object FullName, Length | Format-Table -AutoSize | Out-String -Width 200; Write-Output '=== test ==='; Get-ChildItem test -File | Select-Object Name, Length | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788768413737
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== web ==='; Get-ChildItem web -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch 'node_modules|dist' } | Select-Object FullName, Length | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788768413743
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== root dirs ==='; Get-ChildItem -Force | Select-Object Name; Write-Output '=== runtime? ==='; if (Test-Path .runtime) { Get-ChildItem .runtime -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object FullName | Select-Object -First 20 }; Write-Output '=== node_modules? ==='; if (Test-Path node_modules) { (Get-ChildItem node_modules | Measure-Object).Count } else { 'no node_modules' }; Write-Output '=== git under sandbox ==='; Get-ChildItem . -Recurse -Filter git.exe -ErrorAction SilentlyContinue -Depth 4 | Select-Object FullName -First 5\"}",
+      "tsMs": 1788768428232
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== src ==='; Get-ChildItem src -Recurse -File | Select-Object FullName, Length | Format-Table -AutoSize | Out-String -Width 200; Write-Output '=== docs/validation/r3.3 sub files? any md? ==='; Get-ChildItem docs -Recurse -File -Filter *.md | Where-Object { $_.FullName -match 'r3' } | Select-Object FullName | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788768428243
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-Content electron/main.js; Write-Output '=== preload ==='; Get-Content electron/preload.cjs; Write-Output '=== margin.html ==='; Get-Content web/margin.html; Write-Output '=== HEAD ref ==='; Get-Content .git/refs/heads/main -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788768434539
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"Always on top|alwaysOnTop|setAlwaysOnTop|Pin|Tray|tray\",\"path\":\"workspace/electron\",\"maxResults\":40}",
+      "tsMs": 1788768434550
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/MarginApp.js\"}",
+      "tsMs": 1788768442810
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\"}",
+      "tsMs": 1788768442811
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"showSummary|workspace/session|sessions summary|summary\",\"path\":\"workspace/web\",\"maxResults\":30}",
+      "tsMs": 1788768450175
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/marginApiClient.js\"}",
+      "tsMs": 1788768450180
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/margin.css\"}",
+      "tsMs": 1788768450180
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace\",\"pattern\":\"margin-usage-summary|margin-usage-today|UsageBar\"}",
+      "tsMs": 1788768456521
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace\",\"pattern\":\"Today|workspaces · |sessions · \"}",
+      "tsMs": 1788768456642
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginR3Board.test.js\"}",
+      "tsMs": 1788768460874
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/electronHost.test.js\"}",
+      "tsMs": 1788768460874
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== 45 most recently modified files (mtime) ==='; Get-ChildItem -Recurse -File -Force | Where-Object { $_.FullName -notmatch '\\\\\\\\.git\\\\\\\\|node_modules|\\\\.runtime\\\\\\\\' } | Sort-Object LastWriteTime -Descending | Select-Object -First 45 LastWriteTime, Length, FullName | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788768492998
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== .gitignore margin related ==='; Select-String -Path .gitignore -Pattern 'margin|\\\\.margin|runtime|node_modules' -SimpleMatch; Write-Output '=== .superpowers ==='; Get-ChildItem .superpowers -Recurse -Force -ErrorAction SilentlyContinue | Select-Object FullName -First 30; Write-Output '=== data ==='; Get-ChildItem data -Force -ErrorAction SilentlyContinue | Select-Object Name | Select-Object -First 20\"}",
+      "tsMs": 1788768493006
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/docs\",\"pattern\":\"R3\\\\.3|r3\\\\.3|session board|SessionBoard|Usage Bar\"}",
+      "tsMs": 1788768515154
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/validation/v2_resource_bar_daily_use_baseline.md\"}",
+      "tsMs": 1788768515165
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Get-ChildItem docs -Directory | Select-Object Name; Write-Output '=== docs top files ==='; Get-ChildItem docs -File | Select-Object Name, Length | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788768515165
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788768555277
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/handoff.js\"}",
+      "tsMs": 1788768555278
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":20,\"path\":\"workspace/web/src/margin\",\"pattern\":\"usage-summary|workspaceCount|count|settings\\\\.|settings\\\\?|\\\\.settings\"}",
+      "tsMs": 1788768575416
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== main.jsx ==='; Get-Content web/src/margin/main.jsx; Write-Output '=== RecentSessionsList head ==='; Get-Content web/src/margin/RecentSessionsList.js -TotalCount 30; Write-Output '=== SessionDetail head ==='; Get-Content web/src/margin/SessionDetail.js -TotalCount 30\"}",
+      "tsMs": 1788768575418
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Command git,node,npm,vite -ErrorAction SilentlyContinue | Select-Object Name, Source; Write-Output '--- check common tool paths ---'; Test-Path .\\\\workspace\\\\.runtime; Test-Path .\\\\workspace\\\\node_modules; Test-Path .\\\\workspace\\\\.git\\\\index; Write-Output '--- .git index size ---'; (Get-Item .\\\\workspace\\\\.git\\\\index -ErrorAction SilentlyContinue).Length\"}",
+      "tsMs": 1788768583875
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== HEAD log full (first 20) ==='; Get-Content .git/logs/HEAD | Select-Object -First 20; Write-Output '=== count lines ==='; (Get-Content .git/logs/HEAD | Measure-Object).Count\"}",
+      "tsMs": 1788768583882
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; Write-Output '=== marginR3Board test name list ==='; Select-String -Path test/marginR3Board.test.js -Pattern \\\"^test\\\\(\\\" | ForEach-Object { $_.Line }; Write-Output '=== baseline vs current: files with mtime after HEAD commit (2026-09-07 01:44:36 +08) ==='; Get-ChildItem -Recurse -File -Force | Where-Object { $_.LastWriteTime -gt (Get-Date '2026-09-07 01:44:36') -and $_.FullName -notmatch '\\\\\\\\.git\\\\\\\\' } | Sort-Object LastWriteTime | Select-Object LastWriteTime, FullName | Format-Table -AutoSize | Out-String -Width 220\"}",
+      "tsMs": 1788768605435
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem .\\workspace\\.git -Force | Select-Object Mode, Length, Name; Write-Output '--- git bin search ---'; Get-ChildItem 'C:\\Program Files\\Git' -ErrorAction SilentlyContinue | Select-Object Name; where.exe git 2>$null; Get-ChildItem .\\_tmp -Force -ErrorAction SilentlyContinue | Select-Object Name,Length",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: c:\\program"
+      ],
+      "tsMs": 1788768397590
+    },
+    {
+      "command": "cd workspace; Get-ChildItem docs/validation/r3.3 -Force | Select-Object Name, Length, LastWriteTime; Write-Output '--- parent ---'; Get-ChildItem docs/validation/recovery-handoffs-postfix -Force -ErrorAction SilentlyContinue | Select-Object Name, Length",
+      "reasons": [
+        "protected path fragment is disabled: recovery-handoffs"
+      ],
+      "tsMs": 1788768397590
+    },
+    {
+      "command": "cd workspace; Write-Output '=== .gitignore margin related ==='; Select-String -Path .gitignore -Pattern 'margin|\\.margin|runtime|node_modules' -SimpleMatch; Write-Output '=== .superpowers ==='; Get-ChildItem .superpowers -Recurse -Force -ErrorAction SilentlyContinue | Select-Object FullName -First 30; Write-Output '=== data ==='; Get-ChildItem data -Force -ErrorAction SilentlyContinue | Select-Object Name | Select-Object -First 20",
+      "reasons": [
+        "protected path fragment is disabled: \\.margin"
+      ],
+      "tsMs": 1788768493006
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 237506,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-12",
+    "arm": "B",
+    "runId": "formal-case-12-B-2026-09-07T08-06-19-074Z",
+    "startMs": "2026-09-07T08:06:27.244Z",
+    "endMs": "2026-09-07T08:10:26.075Z",
+    "durationMs": 238831,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-12-B-2026-09-07T08-06-19-074Z status=ok durationMs=237506\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-12-B-2026-09-07T08-06-19-074Z.cert.json"
+  }
+}

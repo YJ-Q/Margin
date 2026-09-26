@@ -1,0 +1,23 @@
+{
+  "runId": "formal-case-05-A-2026-09-07T10-12-21-479Z",
+  "caseId": "case-05",
+  "arm": "A",
+  "phase": "formal",
+  "sandboxDir": "<repo>-bench\\ab-continuation\\sandboxes-r7full\\formal-case-05-A",
+  "workspaceVerification": {
+    "checkedFiles": 634,
+    "forbiddenNameHits": [],
+    "uuidHits": [],
+    "ok": true
+  },
+  "inputFolderEntries": [
+    "session.jsonl"
+  ],
+  "inputArtifact": {
+    "name": "session.jsonl",
+    "sha256": "0787744584FE6F29BC428A725D387D582EAA7297679D4D41CEB23754A24D9408",
+    "source": "session-01a07786-adf5-77a3-91ba-e4a75ceda7e7.jsonl"
+  },
+  "sandboxWideForbiddenHits": [],
+  "ok": true
+}

@@ -1,0 +1,11 @@
+{
+  "runId": "formal-case-07-B-2026-09-07T07-08-10-162Z",
+  "caseId": "case-07",
+  "arm": "B",
+  "phase": "formal",
+  "sandboxRoot": "<repo>-bench\\ab-continuation\\sandboxes\\formal-case-07-B",
+  "promptFile": "<repo>-bench\\ab-continuation\\prompt.txt",
+  "providerId": "deepseek",
+  "modelId": "deepseek-v4-flash",
+  "thinking": "high"
+}

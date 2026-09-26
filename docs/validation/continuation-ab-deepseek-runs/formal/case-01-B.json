@@ -1,0 +1,366 @@
+{
+  "runId": "formal-case-01-B-2026-09-07T06-07-50-685Z",
+  "caseId": "case-01",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T06:07:59.487Z",
+  "endTs": "2026-09-07T06:11:31.980Z",
+  "durationMs": 212493,
+  "modelPromptStartMs": 39,
+  "modelPromptEndMs": 212493,
+  "sessionId": "01a07a7b-0c22-7258-9ec6-7f689d4e1612",
+  "rawResponse": "I've completed my inspection of the isolated environment. Since git and node binaries are denied and the workspace has no `.runtime`/`node_modules`, execution-based validation is impossible here; all conclusions below come from file inspection plus the single recovery artifact.\n\n```json\n{\n  \"goal\": \"Historical task description — from input/HANDOFF.md only (marked Inferred; handoff itself says to re-confirm before continuing): 'Margin V2.2 — Agent Source Management', the last feature slice before real daily use. Build a unified Agent Source Registry + Auto Detect + Manual Register + minimal Adapter shared by CLI and Electron; store only id/type/name/path/auto|manual/enabled/supportLevel (never credentials/tokens/sessions); adapter limited to detect/validateSource/discoverSessions; add CLI `margin agent list|detect|add <type> --path <path>|remove <id>`; add Electron Settings 'Agent Sources' and a Board 'No supported Agent sources found' Detect/Add prompt; custom/DeepSeek/Pi sources may be saved but must never yield fake sessions; Claude = Partial support without quota; Resource Bar must follow the active Codex source; CLI/Electron must see one registry and one active source; do not rewrite the existing Codex parser or Handoff Core; validate via the 8 listed scenarios + focused tests + build + Forge make + fresh-install smoke; end PASS or PARTIAL, stop, then enter Daily-use Evaluation. No V2.2 spec/plan file exists inside the repo snapshot (grep found none), so this handoff is the only in-environment statement of the goal.\",\n  \"progress\": \"Current repo truth (frozen workspace inspection): refs/heads/main = a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches handoff). Last commit 2026-09-06T17:44:36Z 'docs: record V2 resource bar daily-use baseline'; the V2.2 implementation files have mtimes 2026-09-06T18:14–18:17Z, i.e. AFTER HEAD — so all V2.2 work is UNCOMMITTED in this snapshot. Implementation present and internally consistent: src/agents/sourceRegistry.js (CRUD/detect/resolveActiveSource with precedence manual > CODEX_HOME match > last; profile-scoped ~/.margin/agent-sources.json; output objects whitelisted to required fields, no credentials/sessions); src/agents/adapters.js (codex full incl. discoverSessions; claude partial with no session discovery; adapterFor returns null for pi/deepseek/custom); src/cli/agentSourceCli.js with bin/margin.js dispatching `margin agent`; src/core/handoff/httpAdapter.js exposing /api/agent-sources (+detect, POST replaceId, DELETE manual-only), /api/resources/status keyed to the resolved active Codex path, and /api/sessions sourced only from the enabled codex adapter (no fake sessions); web margin UI (MarginApp.js/SessionBoard.js) with Settings 'Agent Sources' (Auto Detect / Add Source / Change path / Remove manual-only) and EmptySources 'No supported Agent sources found'; electron/main.js starts this shared surface. New/changed tests visible: test/agentSourceRegistry.test.js; existing marginCli.test.js ('margin CLI entry ...') and marginDiscoveryParity.test.js ('Codex discovery honors ...') exercise CLI/parity paths. No automated tests were found for the new HTTP agent-source routes or the web UI (only registry/CLI/parity-level coverage).\",\n  \"pending\": \"Current validation is impossible in this isolated environment: the workspace has no node_modules and no .runtime\\\\node (package.json test/build/electron scripts require .\\\\.runtime\\\\node-v22.23.1-win-x64\\\\node.exe), and external node/git binaries are DENIED by the sandbox. No current test/build/electron:make result exists here. Remaining work (in the real <repo> environment, where the toolchain lives): (1) rerun validation from scratch — focused tests (agentSourceRegistry, agentResourceQuota, marginCli, marginDiscoveryParity, margin*.test.js), full npm test, npm run build, electron:make, fresh-install smoke (acceptance item 8) and acceptance scenarios 1–7 incl. no-Agent startup and Codex/Resource-Bar/Copy/Save regression (item 7); (2) reproduce/explain the historically failing `npm test -- --test-name-pattern=\\\"(margin CLI entry|Codex discovery|Codex quota|missing source|Margin)\\\"` (exit 1, cause not recorded); (3) confirm the handoff goal is still current; (4) commit the uncommitted V2.2 changes; (5) before committing, check in the real repo whether stale .git/REBASE_HEAD (2aaf5a055d..., object exists, but no rebase-merge/apply dirs) or the phase2.5-continuity worktree affect state.\",\n  \"historicalValidation\": \"From input/HANDOFF.md only (historical; not rerunnable here): Confirmed-historical exit 0 for `node --test test/agentSourceRegistry.test.js test/agentResourceQuota.test.js test/marginCli.test.js test/marginDiscoveryParity.test.js`; Confirmed-historical exit 0 for `node --test test/margin*.test.js; npm run electron:make`; Confirmed-historical exit 1 for `npm test -- --test-name-pattern=\\\"(margin CLI entry|Codex discovery|Codex quota|missing source|Margin)\\\"` with no recorded cause; electron:make failed twice with EBUSY locked output files before a later success; 3 test commands and 34 internal operations reportedly lack explicit terminal status; the 'PASS — V2.2 Agent Source Management ready for real daily use' verdict is Inferred/historical, not independently confirmed. None of these results validate the current frozen snapshot.\",\n  \"recommendedFollowUp\": \"Do not promote the historical PASS or any historical exit-0 into current truth. Because this sandbox cannot run the toolchain, the safe next step lives in the real repo: rerun the full V2.2 validation set (focused + full tests, build, electron:make, the 8 acceptance scenarios incl. fresh-install smoke), diagnose the unexplained earlier npm-test exit-1 before trusting green focused runs, then commit the uncommitted V2.2 work and only then issue PASS or PARTIAL. Treat the inspected implementation as structurally complete but currently unvalidated. Also re-confirm with the user that the handoff's V2.2 goal is still the active objective before acting on it.\",\n  \"currentApplicability\": \"The frozen snapshot is self-consistent at code level: registry, adapters, CLI commands, HTTP routes, Electron surface wiring, and web UI are all present and wired as the V2.2 slice requires, and the git HEAD matches the handoff's stated commit. Applicability is nevertheless limited: no test could be executed here, the V2.2 files are uncommitted relative to HEAD, the handoff's '112 tracked modified/untracked files' claim is not independently verifiable (no git binary), the referenced evidence JSONL (docs/validation/recovery-handoffs-postfix/...jsonl) is not present in this workspace, and no V2.2 design document exists in-repo. Net current state: implementation appears complete but is uncommitted and unvalidated-now; PASS/PARTIAL and green test reports are historical claims only.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the historical 'PASS — V2.2 Agent Source Management ready for real daily use' verdict is current truth.\",\n    \"Assuming historical test exit-0 results validate the current frozen snapshot's files.\",\n    \"Assuming the earlier npm-test exit-1 failure was resolved merely because later focused runs exited 0 (cause unknown, never explained).\",\n    \"Assuming the frozen workspace bytes are identical to the live <repo> working tree at the checkpoint (HEAD sha matches, but working-tree identity/count is not independently verifiable here).\",\n    \"Assuming the handoff's '112 tracked modified/untracked files' git-status figure is accurate.\",\n    \"Assuming the handoff's V2.2 goal/scope is still the active task (the handoff itself requests confirmation before continuation).\",\n    \"Assuming all V2.2 work is contained in the files inspected here (presence and mtimes are the only evidence; no V2.2 spec/commit exists in-repo).\",\n    \"Assuming no V2.2 changes were committed after HEAD a247e75 in the real repo (this snapshot shows none).\",\n    \"Assuming the stale .git/REBASE_HEAD and the phase2.5-continuity worktree have no bearing on resuming (their significance is unknown).\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Historical task description — from input/HANDOFF.md only (marked Inferred; handoff itself says to re-confirm before continuing): 'Margin V2.2 — Agent Source Management', the last feature slice before real daily use. Build a unified Agent Source Registry + Auto Detect + Manual Register + minimal Adapter shared by CLI and Electron; store only id/type/name/path/auto|manual/enabled/supportLevel (never credentials/tokens/sessions); adapter limited to detect/validateSource/discoverSessions; add CLI `margin agent list|detect|add <type> --path <path>|remove <id>`; add Electron Settings 'Agent Sources' and a Board 'No supported Agent sources found' Detect/Add prompt; custom/DeepSeek/Pi sources may be saved but must never yield fake sessions; Claude = Partial support without quota; Resource Bar must follow the active Codex source; CLI/Electron must see one registry and one active source; do not rewrite the existing Codex parser or Handoff Core; validate via the 8 listed scenarios + focused tests + build + Forge make + fresh-install smoke; end PASS or PARTIAL, stop, then enter Daily-use Evaluation. No V2.2 spec/plan file exists inside the repo snapshot (grep found none), so this handoff is the only in-environment statement of the goal.",
+    "progress": "Current repo truth (frozen workspace inspection): refs/heads/main = a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches handoff). Last commit 2026-09-06T17:44:36Z 'docs: record V2 resource bar daily-use baseline'; the V2.2 implementation files have mtimes 2026-09-06T18:14–18:17Z, i.e. AFTER HEAD — so all V2.2 work is UNCOMMITTED in this snapshot. Implementation present and internally consistent: src/agents/sourceRegistry.js (CRUD/detect/resolveActiveSource with precedence manual > CODEX_HOME match > last; profile-scoped ~/.margin/agent-sources.json; output objects whitelisted to required fields, no credentials/sessions); src/agents/adapters.js (codex full incl. discoverSessions; claude partial with no session discovery; adapterFor returns null for pi/deepseek/custom); src/cli/agentSourceCli.js with bin/margin.js dispatching `margin agent`; src/core/handoff/httpAdapter.js exposing /api/agent-sources (+detect, POST replaceId, DELETE manual-only), /api/resources/status keyed to the resolved active Codex path, and /api/sessions sourced only from the enabled codex adapter (no fake sessions); web margin UI (MarginApp.js/SessionBoard.js) with Settings 'Agent Sources' (Auto Detect / Add Source / Change path / Remove manual-only) and EmptySources 'No supported Agent sources found'; electron/main.js starts this shared surface. New/changed tests visible: test/agentSourceRegistry.test.js; existing marginCli.test.js ('margin CLI entry ...') and marginDiscoveryParity.test.js ('Codex discovery honors ...') exercise CLI/parity paths. No automated tests were found for the new HTTP agent-source routes or the web UI (only registry/CLI/parity-level coverage).",
+    "pending": "Current validation is impossible in this isolated environment: the workspace has no node_modules and no .runtime\\node (package.json test/build/electron scripts require .\\.runtime\\node-v22.23.1-win-x64\\node.exe), and external node/git binaries are DENIED by the sandbox. No current test/build/electron:make result exists here. Remaining work (in the real <repo> environment, where the toolchain lives): (1) rerun validation from scratch — focused tests (agentSourceRegistry, agentResourceQuota, marginCli, marginDiscoveryParity, margin*.test.js), full npm test, npm run build, electron:make, fresh-install smoke (acceptance item 8) and acceptance scenarios 1–7 incl. no-Agent startup and Codex/Resource-Bar/Copy/Save regression (item 7); (2) reproduce/explain the historically failing `npm test -- --test-name-pattern=\"(margin CLI entry|Codex discovery|Codex quota|missing source|Margin)\"` (exit 1, cause not recorded); (3) confirm the handoff goal is still current; (4) commit the uncommitted V2.2 changes; (5) before committing, check in the real repo whether stale .git/REBASE_HEAD (2aaf5a055d..., object exists, but no rebase-merge/apply dirs) or the phase2.5-continuity worktree affect state.",
+    "historicalValidation": "From input/HANDOFF.md only (historical; not rerunnable here): Confirmed-historical exit 0 for `node --test test/agentSourceRegistry.test.js test/agentResourceQuota.test.js test/marginCli.test.js test/marginDiscoveryParity.test.js`; Confirmed-historical exit 0 for `node --test test/margin*.test.js; npm run electron:make`; Confirmed-historical exit 1 for `npm test -- --test-name-pattern=\"(margin CLI entry|Codex discovery|Codex quota|missing source|Margin)\"` with no recorded cause; electron:make failed twice with EBUSY locked output files before a later success; 3 test commands and 34 internal operations reportedly lack explicit terminal status; the 'PASS — V2.2 Agent Source Management ready for real daily use' verdict is Inferred/historical, not independently confirmed. None of these results validate the current frozen snapshot.",
+    "recommendedFollowUp": "Do not promote the historical PASS or any historical exit-0 into current truth. Because this sandbox cannot run the toolchain, the safe next step lives in the real repo: rerun the full V2.2 validation set (focused + full tests, build, electron:make, the 8 acceptance scenarios incl. fresh-install smoke), diagnose the unexplained earlier npm-test exit-1 before trusting green focused runs, then commit the uncommitted V2.2 work and only then issue PASS or PARTIAL. Treat the inspected implementation as structurally complete but currently unvalidated. Also re-confirm with the user that the handoff's V2.2 goal is still the active objective before acting on it.",
+    "currentApplicability": "The frozen snapshot is self-consistent at code level: registry, adapters, CLI commands, HTTP routes, Electron surface wiring, and web UI are all present and wired as the V2.2 slice requires, and the git HEAD matches the handoff's stated commit. Applicability is nevertheless limited: no test could be executed here, the V2.2 files are uncommitted relative to HEAD, the handoff's '112 tracked modified/untracked files' claim is not independently verifiable (no git binary), the referenced evidence JSONL (docs/validation/recovery-handoffs-postfix/...jsonl) is not present in this workspace, and no V2.2 design document exists in-repo. Net current state: implementation appears complete but is uncommitted and unvalidated-now; PASS/PARTIAL and green test reports are historical claims only.",
+    "unsafeAssumptions": [
+      "Assuming the historical 'PASS — V2.2 Agent Source Management ready for real daily use' verdict is current truth.",
+      "Assuming historical test exit-0 results validate the current frozen snapshot's files.",
+      "Assuming the earlier npm-test exit-1 failure was resolved merely because later focused runs exited 0 (cause unknown, never explained).",
+      "Assuming the frozen workspace bytes are identical to the live <repo> working tree at the checkpoint (HEAD sha matches, but working-tree identity/count is not independently verifiable here).",
+      "Assuming the handoff's '112 tracked modified/untracked files' git-status figure is accurate.",
+      "Assuming the handoff's V2.2 goal/scope is still the active task (the handoff itself requests confirmation before continuation).",
+      "Assuming all V2.2 work is contained in the files inspected here (presence and mtimes are the only evidence; no V2.2 spec/commit exists in-repo).",
+      "Assuming no V2.2 changes were committed after HEAD a247e75 in the real repo (this snapshot shows none).",
+      "Assuming the stale .git/REBASE_HEAD and the phase2.5-continuity worktree have no bearing on resuming (their significance is unknown)."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788761280736
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788761282200
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788761282201
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788761282201
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788761282201
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788761282989
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git log --oneline -5; git status --short | Select-Object -First 40; git branch -a\"}",
+      "tsMs": 1788761285413
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src\"}",
+      "tsMs": 1788761285421
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/test\"}",
+      "tsMs": 1788761285421
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/.git/HEAD\"}",
+      "tsMs": 1788761289324
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788761289325
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Command git -ErrorAction SilentlyContinue; where.exe git 2>$null; Get-ChildItem Env: | Where-Object { $_.Name -match 'PATH' } | Format-List\"}",
+      "tsMs": 1788761289325
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/.git/refs/heads/main\"}",
+      "tsMs": 1788761297519
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers\"}",
+      "tsMs": 1788761297520
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs\"}",
+      "tsMs": 1788761297520
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src/agents\"}",
+      "tsMs": 1788761297520
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src/cli\"}",
+      "tsMs": 1788761297520
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation\"}",
+      "tsMs": 1788761303180
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src/cli/margin\"}",
+      "tsMs": 1788761303180
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/agents/sourceRegistry.js\"}",
+      "tsMs": 1788761303180
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/agents/adapters.js\"}",
+      "tsMs": 1788761303181
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788761311109
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path workspace/.runtime; Test-Path workspace/node_modules; Test-Path workspace/.git/index; Get-ChildItem workspace/.git -Force | Select-Object Name\"}",
+      "tsMs": 1788761311109
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/cli/agentSourceCli.js\"}",
+      "tsMs": 1788761311119
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/REBASE_HEAD; Get-Content workspace/.git/rebase-merge 2>$null | Select-Object -First 30; Test-Path workspace/.git/rebase-merge; Test-Path workspace/.git/rebase-apply\"}",
+      "tsMs": 1788761315066
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/logs/HEAD -Tail 40\"}",
+      "tsMs": 1788761315076
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"node --version; Test-Path 'C:\\\\Program Files\\\\nodejs\\\\node.exe'; & 'C:\\\\Program Files\\\\nodejs\\\\node.exe' --version 2>&1 | Select-Object -First 3\"}",
+      "tsMs": 1788761315082
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788761329998
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/agentSourceRegistry.test.js\"}",
+      "tsMs": 1788761329999
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginDiscoveryParity.test.js\"}",
+      "tsMs": 1788761329999
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/bin\"}",
+      "tsMs": 1788761334843
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"agentSourceCli|agent-source|Agent Sources|No supported Agent sources found|agent list|agentSources\",\"path\":\"workspace/src\",\"maxResults\":60}",
+      "tsMs": 1788761334844
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"agentSourceCli|runAgentSourceCli|agent (list|detect|add|remove)\",\"path\":\"workspace\",\"maxResults\":60}",
+      "tsMs": 1788761334865
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/bin/margin.js\"}",
+      "tsMs": 1788761338101
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788761338101
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/src/agents, workspace/src/cli/agentSourceCli.js, workspace/bin/margin.js, workspace/test/agentSourceRegistry.test.js, workspace/test/marginDiscoveryParity.test.js, workspace/test/agentResourceQuota.test.js, workspace/test/marginCli.test.js, workspace/test/codexSourceNormalization.test.js, workspace/src/core/handoff/httpAdapter.js, workspace/src/resources/agentResourceService.js -Recurse -File 2>$null | Select-Object LastWriteTime, Length, FullName | Sort-Object LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788761342958
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/electron\",\"pattern\":\"agent-source|Agent Sources|agentSource|No supported Agent\"}",
+      "tsMs": 1788761342964
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/web\",\"pattern\":\"agent-source|Agent Sources|agentSource|No supported Agent\"}",
+      "tsMs": 1788761342965
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/COMMIT_EDITMSG; Write-Output '---ORIG---'; Get-Content workspace/.git/ORIG_HEAD 2>$null; Write-Output '---FETCH---'; Get-Content workspace/.git/FETCH_HEAD 2>$null; Write-Output '---packed---'; Get-Content workspace/.git/packed-refs 2>$null\"}",
+      "tsMs": 1788761361388
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$objs = Get-ChildItem workspace/.git/objects -Directory | Select-Object -ExpandProperty Name; Write-Output ($objs -join ', '); Write-Output '---counts---'; Get-ChildItem workspace/.git/objects -Recurse -File | Group-Object { $_.Directory.Name } | Select-Object Name, Count | Format-Table -AutoSize\"}",
+      "tsMs": 1788761361395
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/resources/agentResourceService.js\"}",
+      "tsMs": 1788761361401
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"& 'D:\\\\Git\\\\cmd\\\\git.exe' --version 2>&1 | Select-Object -First 3\"}",
+      "tsMs": 1788761365128
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/logs/refs/heads/main -Tail 15\"}",
+      "tsMs": 1788761365128
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/.git/objects/pack | Select-Object Name, Length; Get-ChildItem workspace/.git/objects -Recurse -File | Where-Object { $_.Directory.Name -eq 'a2' } | Select-Object Name\"}",
+      "tsMs": 1788761365135
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[DateTimeOffset]::FromUnixTimeSeconds(1788716676).ToString('yyyy-MM-dd HH:mm:ss zzz'); [DateTimeOffset]::FromUnixTimeSeconds(1788716597).ToString('yyyy-MM-dd HH:mm:ss zzz'); Write-Output 'file mtimes UTC:'; Get-ChildItem workspace/src/agents, workspace/src/cli/agentSourceCli.js, workspace/bin/margin.js, workspace/test/agentSourceRegistry.test.js, workspace/src/core/handoff/httpAdapter.js -File | Select-Object @{N='UTC';E={$_.LastWriteTime.ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss')}}, FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788761377571
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginCli.test.js\"}",
+      "tsMs": 1788761377578
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/electron\"}",
+      "tsMs": 1788761398895
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/electron\",\"pattern\":\"handoff|agent-sources|margin\\\\.html|loadURL|loadFile\"}",
+      "tsMs": 1788761398895
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\"}",
+      "tsMs": 1788761398896
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/createMarginSurface.js\"}",
+      "tsMs": 1788761401782
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":80,\"path\":\"workspace/test\",\"pattern\":\"Codex discovery|Codex quota|missing source|agent source|margin CLI entry\"}",
+      "tsMs": 1788761401782
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace\",\"pattern\":\"V2\\\\.2|Agent Source Management|agent source management\"}",
+      "tsMs": 1788761410691
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/main.js\"}",
+      "tsMs": 1788761410783
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers/sdd\"}",
+      "tsMs": 1788761410783
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '---worktrees---'; Get-ChildItem workspace/.git/worktrees -Force | Select-Object Name; Write-Output '---REBASE_HEAD log?---'; Test-Path workspace/.git/logs/REBASE_HEAD; Write-Output '---REBASE_HEAD obj exists?---'; Test-Path workspace/.git/objects/2a/af5a055d12b553da75e8577c5b010c5dcecffb; Write-Output '---head tree obj---'; Test-Path workspace/.git/objects/a2/47e75ab9e78cce7853e3f281b85459a4f25e7c\"}",
+      "tsMs": 1788761435791
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/session-source.js\"}",
+      "tsMs": 1788761435799
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":60,\"path\":\"workspace/test\",\"pattern\":\"agent-sources|sourceRegistry|EmptySources|No supported Agent|margin-board-message|agent source\"}",
+      "tsMs": 1788761464217
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/MarginApp.js\"}",
+      "tsMs": 1788761464229
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "node --version; Test-Path 'C:\\Program Files\\nodejs\\node.exe'; & 'C:\\Program Files\\nodejs\\node.exe' --version 2>&1 | Select-Object -First 3",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: c:\\program"
+      ],
+      "tsMs": 1788761315082
+    },
+    {
+      "command": "& 'D:\\Git\\cmd\\git.exe' --version 2>&1 | Select-Object -First 3",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: d:\\git/cmd/git.exe"
+      ],
+      "tsMs": 1788761365128
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 212493,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-01",
+    "arm": "B",
+    "runId": "formal-case-01-B-2026-09-07T06-07-50-685Z",
+    "startMs": "2026-09-07T06:07:57.865Z",
+    "endMs": "2026-09-07T06:11:31.982Z",
+    "durationMs": 214117,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-01-B-2026-09-07T06-07-50-685Z status=ok durationMs=212493\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-01-B-2026-09-07T06-07-50-685Z.cert.json"
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "runId": "formal-case-09-A-2026-09-07T11-00-12-227Z",
+  "caseId": "case-09",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T11:00:23.592Z",
+  "endTs": "2026-09-07T11:05:25.545Z",
+  "durationMs": 301953,
+  "modelPromptStartMs": 37,
+  "modelPromptEndMs": 301953,
+  "sessionId": "01a07b86-bfca-729b-9b05-6b8236f9d491",
+  "rawResponse": "Based on all the evidence gathered, I have reconstructed the state. Here is the recovery JSON:\n\n```json\n{\n  \"goal\": \"Validate and advance the Margin 'coding continuity / cross-agent handoff' pipeline for resuming real AI coding sessions. Within the recorded session this unfolded in two stages: (Phase 0, user msg at ordinal 8) verify yigitkonur/cli-continues ('continues' 4.1.1) as the base Session discovery/parsing layer on a real local Codex Session and emit baseline-session-info.md / baseline-continues-handoff.md / baseline-context.json; (Phase 1, user msgs at ordinals 271 and 436 '完成剩余的工作') build the Margin Distiller PoC in an isolated experiments directory: an Evidence Layer relating Tool Call <-> Tool Result from raw session evidence (Confirmed/Inferred/Uncertain), refresh real repo truth (branch/HEAD/SHA/file hashes) before each handoff, generate evidence-layer/repo-truth/distilled-state/margin-handoff/measurements artifacts plus an offline evaluation, keep everything in experiments/phase1-distiller, do not modify continues upstream or production Margin code, and preserve all pre-existing uncommitted changes. The agent's own stated next validation (not yet done) is a behavior-level Continuation-Quality experiment with a real new agent on an independent fail-fix-test session comparing Margin Handoff vs continues standard.\",\n  \"progress\": \"In the recorded session (cwd <repo>, branch main @ 0836e800a4bf386e58ec1e9c02be5b7279497c9f) the agent: (1) captured a git-before snapshot and cloned continues upstream into .runtime/phase0-continues/upstream (HEAD e486cd22a592d89d890cff056624647fbe9cbe80); (2) Phase 0 - confirmed the public ESM API path adapters.codex.parseSessions()/extractContext()/generateHandoffMarkdown(), installed continues 4.1.1 into experiments/phase0-continues, froze one real Codex session (191 raw records, 25 tool calls, 24 returns), generated output/discovery-initial.json, baseline-context.json, baseline-continues-handoff.md, baseline-session-info.md, and ran targeted checks (claimed 15 passed); findings included standard preset keeping only ~8 tool samples, empty filesModified/pendingTasks despite successful file patches, Windows cwd/path-normalization divergence, no local archived_sessions dir so archived handling unproven, and exec-wrapped tools being collapsed into generic summaries losing result/edit semantics. (3) Phase 1 - built experiments/phase1-distiller with package.json, run-distiller.mjs, evidence.mjs (acorn-based static extraction), distiller.mjs, distiller.test.mjs, README.md, evaluation.md; the pipeline statically splits the outer exec calls into 37 internal operations (Confirmed 18 / Failed 5 / Running 2 / Uncertain 12), pairs results by emission order handling Promise.all/allSettled, PTY write_stdin/wait session_ids, missing/duplicate/truncated outputs, and test recognition; generated output/evidence-layer.json, repo-truth.json, distilled-state.json, margin-handoff.md, measurements.json with measured offline-o200k tokens: Margin handoff 2,835 vs continues standard 1,893 vs raw session 387,346 (~0.73%); distilled-state summary showed Completed 5, Failed 5, OpenIssues 2, ChangedFiles 3, Tests 2, repo-truth stableDuringObservation true, 40/40 pre-existing Phase0 file hashes unchanged. Final report (ordinal 469-473) declared 'Phase 1 Distiller PoC 已完成', 15 tests passed / 0 failed in distiller.test.mjs, and task_complete. All of the above are historical transcripts from the original checkout; none of the experiment files exist in the frozen workspace.\",\n  \"pending\": \"No unexecuted user instruction remained in the captured transcript: the last user turn ('完成剩余的工作') was answered with a completion report and the turn ended task_complete. Open work is implied rather than instructed: the agent's recommended next experiment (real new-agent continuation-quality comparison on an independent fail-fix-test session vs continues standard) is not done and was explicitly labeled not yet validated; fidelity gaps were also noted as unresolved (Uncertain 12 / Running 2 of 37 ops, truncated-output and missing-result cases remain Uncertain, long-session and archived-session behavior unproven). Within the frozen workspace specifically, none of the experiments/phase0-continues or experiments/phase1-distiller artifacts are present (the directory is empty), so any continuation there must be re-scoped onto the current productized src/core/handoff code rather than the removed experiment scripts.\",\n  \"historicalValidation\": \"Transcript-reported validations (not independently reproducible here): Phase 0 '15 项定向校验通过' over the frozen baseline sample; Phase 1 distiller.test.mjs run twice (TAP subtests visible through 'ok 10', final answer claims '15 tests passed / 0 failed'); end-of-turn rerun of run-distiller.mjs plus measurements/evidence/repo-truth inspection (Coverage 24/25, Ops 37, Stable True); offline evaluation.md written as a self-review of continuation questions, explicitly not an independent judge, blind test, or real-agent continuation experiment. These were executed in the original <repo> checkout using the pinned .runtime node (v22.23.1) and local ~/.codex session data. Current-workspace validity is unknown: this sandbox has no node/npm/git/.runtime/node_modules and no experiments content, so nothing can be rerun; the present repo instead carries different, later tests (test/handoff.test.js, test/marginSessionDetail.test.js) whose pass state was never recorded in this input.\",\n  \"recommendedFollowUp\": \"First establish which context a successor is operating in, because they differ. (a) If continuing inside the recorded checkout (<repo> at main @ 0836e800 with experiments present): verify git state, re-run 'node experiments/phase1-distiller/run-distiller.mjs' and 'node --test experiments/phase1-distiller/distiller.test.mjs' to regenerate/confirm outputs, then design the stated real new-agent fail-fix-test continuation experiment against continues standard. (b) If continuing in this frozen/current repo (main @ a247e75ab9e78cce7853e3f281b85459a4f25e7c): treat the productized module src/core/handoff (session-source.js, evidence.js, distiller.js, exec.js, repo-truth.js, handoff.js, resume-summary.js, smartSelect.js, createMarginSurface.js, httpAdapter.js, index.js) with scripts/generate-handoff.js (--session/--list/--refresh) and test/handoff.test.js as the live equivalent of the deleted experiment; read docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md (the closest authoritative plan; it cites the removed experiments/phase1-distiller files and at its writing the refactor was 'not yet executed'), then install dependencies and run test/handoff.test.js before changing anything, and re-record git/workspace state first. If the goal is simply to continue the Margin roadmap, the single highest-value unvalidated question remains the agent-stated one: can a fresh agent continue more accurately/faster from the Margin Handoff than from continues standard without duplicating or misjudging work. Do not re-run or rely on experiments/phase0-continues or phase1-distiller scripts in this workspace; use input/session.jsonl as the only surviving evidence of those runs.\",\n  \"currentApplicability\": \"The frozen workspace is a later snapshot of the same Margin repository and has moved beyond the recorded session. Git: refs/heads/main points to a247e75ab9e78cce7853e3f281b85459a4f25e7c, while the session ran at 0836e800a4bf386e58ec1e9c02be5b7279497c9f which now survives only as refs/heads/backup/pre-resource-bar-baseline. The working tree contains productized, fixture-decoupled handoff code (src/core/handoff/* and scripts/generate-handoff.js, test/handoff.test.js, web session-list/detail components) that is plainly derived from the experiment work described in the session, and docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md explicitly references experiments/phase1-distiller/evidence.mjs and distiller.mjs as the foundation. workspace/experiments exists but is completely empty and nothing under it is in the git index; therefore every session-claimed artifact path (baseline outputs, discovery-initial.json, evidence-layer.json, repo-truth.json, distilled-state.json, margin-handoff.md, measurements.json, evaluation.md) is absent here. The pre-existing uncommitted changes recorded at session start (package.json, package-lock.json, src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js plus untracked src/runtime/claude, src/surfaces, scripts/*, .claude) are also not visible as a delta in this tree, so a successor must not assume they are still uncommitted or match the recorded hashes. No toolchain exists inside this sandbox to execute node/npm/git, and the real local Codex session files under ~/.codex/sessions are outside its reach, so current validation state is unknown rather than green.\",\n  \"unsafeAssumptions\": [\n    \"That the session-reported artifacts (experiments/phase0-continues/output/*, experiments/phase1-distiller/* and its output/*) still exist: in the frozen workspace experiments/ is empty and these files are absent and untracked.\",\n    \"That the recorded git HEAD 0836e800a4bf386e58ec1e9c02be5b7279497c9f is the current repository HEAD: current main is a247e75ab9e78cce7853e3f281b85459a4f25e7c; 0836e800 only survives as branch backup/pre-resource-bar-baseline.\",\n    \"That '15 tests passed / 0 failed' and 'Phase 1 Distiller PoC 已完成' constitute current validation: they are assistant-reported results from another checkout; they cannot be rerun here (no node/.runtime/node_modules/experiments content) and are not independent truth.\",\n    \"That the experiments can simply be re-run or that run-distiller.mjs / distiller.test.mjs paths are valid in the current workspace: the paths do not exist here.\",\n    \"That the continues 4.1.1 clone at .runtime/phase0-continues/upstream (commit e486cd22...) is available for reuse: it is outside this sandbox and .runtime is gitignored/absent.\",\n    \"That real local Codex session discovery can be repeated from this environment: ~/.codex/sessions (and the CODEX_HOME data the session relied on) is not accessible here.\",\n    \"That src/core/handoff in current main is byte-equivalent to the experimental code or already validated: test/handoff.test.js exists but no pass result is recorded in the input; the docs analysis even predates execution of the refactor.\",\n    \"That the user's full intent is fully represented by this session log: the log ends at task_complete for '完成剩余的工作'; no later instruction exists in the artifact, so any further step (e.g., the real continuation experiment) is inferred from the agent's own final recommendation, not from the user.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Validate and advance the Margin 'coding continuity / cross-agent handoff' pipeline for resuming real AI coding sessions. Within the recorded session this unfolded in two stages: (Phase 0, user msg at ordinal 8) verify yigitkonur/cli-continues ('continues' 4.1.1) as the base Session discovery/parsing layer on a real local Codex Session and emit baseline-session-info.md / baseline-continues-handoff.md / baseline-context.json; (Phase 1, user msgs at ordinals 271 and 436 '完成剩余的工作') build the Margin Distiller PoC in an isolated experiments directory: an Evidence Layer relating Tool Call <-> Tool Result from raw session evidence (Confirmed/Inferred/Uncertain), refresh real repo truth (branch/HEAD/SHA/file hashes) before each handoff, generate evidence-layer/repo-truth/distilled-state/margin-handoff/measurements artifacts plus an offline evaluation, keep everything in experiments/phase1-distiller, do not modify continues upstream or production Margin code, and preserve all pre-existing uncommitted changes. The agent's own stated next validation (not yet done) is a behavior-level Continuation-Quality experiment with a real new agent on an independent fail-fix-test session comparing Margin Handoff vs continues standard.",
+    "progress": "In the recorded session (cwd <repo>, branch main @ 0836e800a4bf386e58ec1e9c02be5b7279497c9f) the agent: (1) captured a git-before snapshot and cloned continues upstream into .runtime/phase0-continues/upstream (HEAD e486cd22a592d89d890cff056624647fbe9cbe80); (2) Phase 0 - confirmed the public ESM API path adapters.codex.parseSessions()/extractContext()/generateHandoffMarkdown(), installed continues 4.1.1 into experiments/phase0-continues, froze one real Codex session (191 raw records, 25 tool calls, 24 returns), generated output/discovery-initial.json, baseline-context.json, baseline-continues-handoff.md, baseline-session-info.md, and ran targeted checks (claimed 15 passed); findings included standard preset keeping only ~8 tool samples, empty filesModified/pendingTasks despite successful file patches, Windows cwd/path-normalization divergence, no local archived_sessions dir so archived handling unproven, and exec-wrapped tools being collapsed into generic summaries losing result/edit semantics. (3) Phase 1 - built experiments/phase1-distiller with package.json, run-distiller.mjs, evidence.mjs (acorn-based static extraction), distiller.mjs, distiller.test.mjs, README.md, evaluation.md; the pipeline statically splits the outer exec calls into 37 internal operations (Confirmed 18 / Failed 5 / Running 2 / Uncertain 12), pairs results by emission order handling Promise.all/allSettled, PTY write_stdin/wait session_ids, missing/duplicate/truncated outputs, and test recognition; generated output/evidence-layer.json, repo-truth.json, distilled-state.json, margin-handoff.md, measurements.json with measured offline-o200k tokens: Margin handoff 2,835 vs continues standard 1,893 vs raw session 387,346 (~0.73%); distilled-state summary showed Completed 5, Failed 5, OpenIssues 2, ChangedFiles 3, Tests 2, repo-truth stableDuringObservation true, 40/40 pre-existing Phase0 file hashes unchanged. Final report (ordinal 469-473) declared 'Phase 1 Distiller PoC 已完成', 15 tests passed / 0 failed in distiller.test.mjs, and task_complete. All of the above are historical transcripts from the original checkout; none of the experiment files exist in the frozen workspace.",
+    "pending": "No unexecuted user instruction remained in the captured transcript: the last user turn ('完成剩余的工作') was answered with a completion report and the turn ended task_complete. Open work is implied rather than instructed: the agent's recommended next experiment (real new-agent continuation-quality comparison on an independent fail-fix-test session vs continues standard) is not done and was explicitly labeled not yet validated; fidelity gaps were also noted as unresolved (Uncertain 12 / Running 2 of 37 ops, truncated-output and missing-result cases remain Uncertain, long-session and archived-session behavior unproven). Within the frozen workspace specifically, none of the experiments/phase0-continues or experiments/phase1-distiller artifacts are present (the directory is empty), so any continuation there must be re-scoped onto the current productized src/core/handoff code rather than the removed experiment scripts.",
+    "historicalValidation": "Transcript-reported validations (not independently reproducible here): Phase 0 '15 项定向校验通过' over the frozen baseline sample; Phase 1 distiller.test.mjs run twice (TAP subtests visible through 'ok 10', final answer claims '15 tests passed / 0 failed'); end-of-turn rerun of run-distiller.mjs plus measurements/evidence/repo-truth inspection (Coverage 24/25, Ops 37, Stable True); offline evaluation.md written as a self-review of continuation questions, explicitly not an independent judge, blind test, or real-agent continuation experiment. These were executed in the original <repo> checkout using the pinned .runtime node (v22.23.1) and local ~/.codex session data. Current-workspace validity is unknown: this sandbox has no node/npm/git/.runtime/node_modules and no experiments content, so nothing can be rerun; the present repo instead carries different, later tests (test/handoff.test.js, test/marginSessionDetail.test.js) whose pass state was never recorded in this input.",
+    "recommendedFollowUp": "First establish which context a successor is operating in, because they differ. (a) If continuing inside the recorded checkout (<repo> at main @ 0836e800 with experiments present): verify git state, re-run 'node experiments/phase1-distiller/run-distiller.mjs' and 'node --test experiments/phase1-distiller/distiller.test.mjs' to regenerate/confirm outputs, then design the stated real new-agent fail-fix-test continuation experiment against continues standard. (b) If continuing in this frozen/current repo (main @ a247e75ab9e78cce7853e3f281b85459a4f25e7c): treat the productized module src/core/handoff (session-source.js, evidence.js, distiller.js, exec.js, repo-truth.js, handoff.js, resume-summary.js, smartSelect.js, createMarginSurface.js, httpAdapter.js, index.js) with scripts/generate-handoff.js (--session/--list/--refresh) and test/handoff.test.js as the live equivalent of the deleted experiment; read docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md (the closest authoritative plan; it cites the removed experiments/phase1-distiller files and at its writing the refactor was 'not yet executed'), then install dependencies and run test/handoff.test.js before changing anything, and re-record git/workspace state first. If the goal is simply to continue the Margin roadmap, the single highest-value unvalidated question remains the agent-stated one: can a fresh agent continue more accurately/faster from the Margin Handoff than from continues standard without duplicating or misjudging work. Do not re-run or rely on experiments/phase0-continues or phase1-distiller scripts in this workspace; use input/session.jsonl as the only surviving evidence of those runs.",
+    "currentApplicability": "The frozen workspace is a later snapshot of the same Margin repository and has moved beyond the recorded session. Git: refs/heads/main points to a247e75ab9e78cce7853e3f281b85459a4f25e7c, while the session ran at 0836e800a4bf386e58ec1e9c02be5b7279497c9f which now survives only as refs/heads/backup/pre-resource-bar-baseline. The working tree contains productized, fixture-decoupled handoff code (src/core/handoff/* and scripts/generate-handoff.js, test/handoff.test.js, web session-list/detail components) that is plainly derived from the experiment work described in the session, and docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md explicitly references experiments/phase1-distiller/evidence.mjs and distiller.mjs as the foundation. workspace/experiments exists but is completely empty and nothing under it is in the git index; therefore every session-claimed artifact path (baseline outputs, discovery-initial.json, evidence-layer.json, repo-truth.json, distilled-state.json, margin-handoff.md, measurements.json, evaluation.md) is absent here. The pre-existing uncommitted changes recorded at session start (package.json, package-lock.json, src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js plus untracked src/runtime/claude, src/surfaces, scripts/*, .claude) are also not visible as a delta in this tree, so a successor must not assume they are still uncommitted or match the recorded hashes. No toolchain exists inside this sandbox to execute node/npm/git, and the real local Codex session files under ~/.codex/sessions are outside its reach, so current validation state is unknown rather than green.",
+    "unsafeAssumptions": [
+      "That the session-reported artifacts (experiments/phase0-continues/output/*, experiments/phase1-distiller/* and its output/*) still exist: in the frozen workspace experiments/ is empty and these files are absent and untracked.",
+      "That the recorded git HEAD 0836e800a4bf386e58ec1e9c02be5b7279497c9f is the current repository HEAD: current main is a247e75ab9e78cce7853e3f281b85459a4f25e7c; 0836e800 only survives as branch backup/pre-resource-bar-baseline.",
+      "That '15 tests passed / 0 failed' and 'Phase 1 Distiller PoC 已完成' constitute current validation: they are assistant-reported results from another checkout; they cannot be rerun here (no node/.runtime/node_modules/experiments content) and are not independent truth.",
+      "That the experiments can simply be re-run or that run-distiller.mjs / distiller.test.mjs paths are valid in the current workspace: the paths do not exist here.",
+      "That the continues 4.1.1 clone at .runtime/phase0-continues/upstream (commit e486cd22...) is available for reuse: it is outside this sandbox and .runtime is gitignored/absent.",
+      "That real local Codex session discovery can be repeated from this environment: ~/.codex/sessions (and the CODEX_HOME data the session relied on) is not accessible here.",
+      "That src/core/handoff in current main is byte-equivalent to the experimental code or already validated: test/handoff.test.js exists but no pass result is recorded in the input; the docs analysis even predates execution of the refactor.",
+      "That the user's full intent is fully represented by this session log: the log ends at task_complete for '完成剩余的工作'; no later instruction exists in the artifact, so any further step (e.g., the real continuation experiment) is inferred from the agent's own final recommendation, not from the user."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788778825551
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Mode,Length,LastWriteTime,Name | Format-Table -AutoSize\"}",
+      "tsMs": 1788778825552
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788778827524
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Force input | Select-Object FullName,Length,LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788778827524
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Force workspace | Select-Object FullName,Length,LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788778827533
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Force _tmp | Select-Object FullName,Length,LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788778827539
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git status; git log --oneline -20\"}",
+      "tsMs": 1788778843686
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 30\"}",
+      "tsMs": 1788778843694
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; \\\"total_lines=$($lines.Count)\\\"; $u=0;$a=0;$t=0;$other=0; foreach($l in $lines){ if($l -match '\\\"type\\\":\\\"response_item\\\"'){ if($l -match '\\\"role\\\":\\\"user\\\"'){$u++} elseif($l -match '\\\"role\\\":\\\"assistant\\\"'){$a++} elseif($l -match '\\\"type\\\":\\\"custom_tool_call\\\"'){$t++} else {$other++} } }; \\\"user_msgs=$u assistant_msgs=$a tool_calls=$t other_response=$other\\\"; $lines | Where-Object { $_ -match '\\\"type\\\":\\\"event_msg\\\"' -and $_ -match 'task_|session_meta|world_state' } | Select-Object -First 3 | ForEach-Object { $o = $_ | ConvertFrom-Json; \\\"$($o.ordinal) $($o.payload.type)\\\" }\"}",
+      "tsMs": 1788778859024
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Command git -ErrorAction SilentlyContinue | Select-Object Source; Test-Path .\\\\workspace\\\\.git; & 'D:\\\\Git\\\\cmd\\\\git.exe' --version 2>&1 | Select-Object -First 1\"}",
+      "tsMs": 1788778859037
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$ErrorActionPreference='SilentlyContinue'\\n$lines = Get-Content .\\\\input\\\\session.jsonl\\n$out = foreach($l in $lines){\\n  if($l -notmatch '\\\"type\\\":\\\"response_item\\\"'){continue}\\n  $o = $null\\n  try { $o = $l | ConvertFrom-Json } catch { }\\n  if(-not $o){continue}\\n  $p = $o.payload\\n  if($p.type -eq 'message'){\\n    if($p.role -eq 'assistant'){\\n      $txt = ($p.content | Where-Object { $_.type -eq 'output_text' } | ForEach-Object { $_.text }) -join ' '\\n      if($txt){ [pscustomobject]@{ord=$o.ordinal; role='A'; phase=$p.phase; len=$txt.Length; text=$txt.Substring(0,[Math]::Min(400,$txt.Length))} }\\n    } elseif($p.role -eq 'user'){\\n      $txt = ($p.content | Where-Object { $_.type -eq 'input_text' } | ForEach-Object { $_.text }) -join ' '\\n      if($txt -and $txt -notmatch '^<' -and $txt -notmatch 'recommended_plugins'){ [pscustomobject]@{ord=$o.ordinal; role='U'; phase=''; len=$txt.Length; text=$txt.Substring(0,[Math]::Min(2000,$txt.Length))} }\\n    }\\n  } elseif($p.type -eq 'custom_tool_call'){\\n    [pscustomobject]@{ord=$o.ordinal; role='TOOL'; phase=$p.name; len=0; text=(($p.input -replace '\\\\s+',' ').Substring(0,[Math]::Min(300,($p.input -replace '\\\\s+',' ').Length)))}\\n  } elseif($p.type -eq 'reasoning'){ }\\n}\\n$out | Sort-Object ord | Format-Table -Wrap -AutoSize | Out-String -Width 300\"}",
+      "tsMs": 1788778928577
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$ErrorActionPreference='SilentlyContinue'\\n$lines = Get-Content .\\\\input\\\\session.jsonl\\n\\\"line_count=$($lines.Count)\\\"\\n$maxOrd=-1; foreach($l in $lines){ if($l -match '\\\"ordinal\\\":(\\\\d+)'){ $v=[int]$Matches[1]; if($v -gt $maxOrd){$maxOrd=$v} } }\\n\\\"max_ordinal=$maxOrd\\\"\\n$out = foreach($l in $lines){\\n  $o = $null\\n  try { $o = $l | ConvertFrom-Json } catch { }\\n  if(-not $o){continue}\\n  $p = $o.payload\\n  $kind = $o.type\\n  if($kind -eq 'response_item'){\\n    if($p.type -eq 'message'){\\n      if($p.role -eq 'assistant'){\\n        $txt = ($p.content | Where-Object { $_.type -eq 'output_text' } | ForEach-Object { $_.text }) -join ' '\\n        if($txt){ [pscustomobject]@{ord=$o.ordinal; kind=\\\"A/$($p.phase)\\\"; len=$txt.Length; text=$txt.Substring(0,[Math]::Min(500,$txt.Length))} }\\n      } elseif($p.role -eq 'user'){\\n        $txt = ($p.content | Where-Object { $_.type -eq 'input_text' } | ForEach-Object { $_.text }) -join ' '\\n        if($txt -and $txt -notmatch '^<' -and $txt -notmatch 'recommended_plugins'){ [pscustomobject]@{ord=$o.ordinal; kind='USER'; len=$txt.Length; text=$txt.Substring(0,[Math]::Min(900,$txt.Length))} }\\n      }\\n    } elseif($p.type -eq 'custom_tool_call'){\\n      $name = $p.name; $status=$p.status; [pscustomobject]@{ord=$o.ordinal; kind=\\\"TOOL:$name:$status\\\"; len=0; text=''}\\n    } elseif($p.type -eq 'function_call'){\\n      [pscustomobject]@{ord=$o.ordinal; kind=\\\"FC:$($p.name)\\\"; len=0; text=''}\\n    }\\n  } elseif($kind -eq 'event_msg'){\\n    [pscustomobject]@{ord=$o.ordinal; kind=\\\"EV:$($p.type)\\\"; len=0; text=($p.message)} \\n  }\\n}\\n$out | Where-Object { $_.ord -ge 459 } | Sort-Object ord | Format-Table -Wrap -AutoSize | Out-String -Width 280\"}",
+      "tsMs": 1788778934838
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$ErrorActionPreference='SilentlyContinue'\\n$lines = Get-Content .\\\\input\\\\session.jsonl\\n$maxOrd=-1; foreach($l in $lines){ if($l -match '\\\"ordinal\\\":(\\\\d+)'){ $v=[int]$Matches[1]; if($v -gt $maxOrd){$maxOrd=$v} } }\\n\\\"max_ordinal=$maxOrd\\\"\\n$out = foreach($l in $lines){\\n  $o = $null\\n  try { $o = $l | ConvertFrom-Json } catch { }\\n  if(-not $o){continue}\\n  $p = $o.payload\\n  if($o.type -eq 'response_item'){\\n    if($p.type -eq 'message'){\\n      if($p.role -eq 'assistant'){\\n        $txt = ($p.content | Where-Object { $_.type -eq 'output_text' } | ForEach-Object { $_.text }) -join ' '\\n        if($txt){ [pscustomobject]@{ord=$o.ordinal; kind=('A/' + $p.phase); len=$txt.Length; text=$txt.Substring(0,[Math]::Min(500,$txt.Length))} }\\n      } elseif($p.role -eq 'user'){\\n        $txt = ($p.content | Where-Object { $_.type -eq 'input_text' } | ForEach-Object { $_.text }) -join ' '\\n        if($txt -and $txt -notmatch '^<' -and $txt -notmatch 'recommended_plugins'){ [pscustomobject]@{ord=$o.ordinal; kind='USER'; len=$txt.Length; text=$txt.Substring(0,[Math]::Min(1200,$txt.Length))} }\\n      }\\n    } elseif($p.type -eq 'custom_tool_call'){\\n      [pscustomobject]@{ord=$o.ordinal; kind=('TOOL:' + $p.name + ':' + $p.status); len=0; text=''}\\n    } elseif($p.type -eq 'function_call'){\\n      [pscustomobject]@{ord=$o.ordinal; kind=('FC:' + $p.name); len=0; text=''}\\n    }\\n  } elseif($o.type -eq 'event_msg'){\\n    [pscustomobject]@{ord=$o.ordinal; kind=('EV:' + $p.type); len=0; text=[string]$p.message}\\n  }\\n}\\n$out | Where-Object { $_.ord -ge 459 } | Sort-Object ord | Format-Table -Wrap -AutoSize | Out-String -Width 280\"}",
+      "tsMs": 1788778938851
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force .\\\\workspace | Select-Object Mode,Length,Name | Format-Table -AutoSize; \\\"\\\"; \\\"--- experiments ---\\\"; Get-ChildItem -Recurse -Force .\\\\workspace\\\\experiments -ErrorAction SilentlyContinue | Select-Object FullName,Length | Format-Table -AutoSize | Out-String -Width 240\"}",
+      "tsMs": 1788778947607
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force -Recurse .\\\\workspace\\\\experiments -ErrorAction SilentlyContinue | Select-Object FullName; \\\"--- search artifacts ---\\\"\\nrg --files -g '*.md' -g '*.json' -g '*.mjs' -g 'package.json' .\\\\workspace\\\\experiments .\\\\workspace\\\\evaluation 2>$null | Select-Object -First 100\\n\\\"--- grep for baseline/distiller filenames across workspace (excluding .git) ---\\\"\\ncmd /c \\\"dir /s /b /a-d .\\\\workspace 2>nul | findstr /i \\\\\\\"baseline phase1-distiller phase0-continues margin-handoff repo-truth evidence.mjs distiller\\\\\\\" 2>nul\\\"\"}",
+      "tsMs": 1788778956789
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$ErrorActionPreference='SilentlyContinue'\\n$lines = Get-Content .\\\\input\\\\session.jsonl\\nforeach($l in $lines){\\n  if($l -notmatch '\\\"type\\\":\\\"event_msg\\\"'){continue}\\n  $o = $null; try { $o = $l | ConvertFrom-Json } catch { }\\n  if(-not $o){continue}\\n  $p = $o.payload\\n  if($p.type -eq 'item_completed'){\\n    $it = $p.item\\n    if($it.type -eq 'CommandExecution'){\\n      \\\"ord=$($o.ordinal) item=CommandExecution status=$($it.status) exit=$($it.exit_code) cmd=$($it.command -join ' ')\\\"\\n    }\\n  }\\n}\"}",
+      "tsMs": 1788778971555
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\n\\\"total=$($lines.Count)\\\"\\n$idx=0\\nforeach($l in $lines){\\n  if($l -match '\\\"ordinal\\\":(46[0-9]|47[0-3])'){\\n    $snip = $l\\n    if($snip.Length -gt 2600){ $snip = $snip.Substring(0,2600) + ' ...<TRUNC> len=' + $l.Length }\\n    \\\"[$idx] $snip`n\\\"\\n  }\\n  $idx++\\n} | Out-String -Width 300\"}",
+      "tsMs": 1788778976455
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\n\\\"total=$($lines.Count)\\\"\\n$res = foreach($l in $lines){\\n  if($l -match '\\\"ordinal\\\":(46\\\\d|47[0-3])'){\\n    $snip = $l\\n    if($snip.Length -gt 3000){ $snip = $snip.Substring(0,3000) + ' ...<TRUNC total=' + $l.Length + '>' }\\n    \\\"[$($Matches[1])] $snip`n\\\"\\n  }\\n}\\n$res -join \\\"`n\\\" | Out-String -Width 320\"}",
+      "tsMs": 1788778979146
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\n$res = foreach($l in $lines){\\n  if($l -match '\\\"role\\\":\\\"user\\\"'){\\n    if($l -match '\\\"ordinal\\\":(\\\\d+)'){ $ord=[int]$Matches[1] } else { $ord=-1 }\\n    $txt=''\\n    $o=$null; try { $o=$l|ConvertFrom-Json } catch {}\\n    if($o){ $c=$o.payload.content; if($c){ $txt=(($c|Where-Object{$_.type -eq 'input_text'}|ForEach-Object{$_.text}) -join ' ') } }\\n    if($txt.Length -gt 160){ $txt=$txt.Substring(0,160) }\\n    \\\"ord=$ord len=$($txt.Length) text=$txt\\\"\\n  }\\n}\\n$res -join \\\"`n\\\"\"}",
+      "tsMs": 1788778986175
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"--- experiments full ---\\\"\\nGet-ChildItem -Force -Recurse .\\\\workspace\\\\experiments -ErrorAction SilentlyContinue | Measure-Object | Select-Object Count\\n\\\"--- check claimed untracked/modified files present ---\\\"\\n$paths = @('.\\\\workspace\\\\Margin_Phase0_PoC_Plan.md','.\\\\workspace\\\\.claude','.\\\\workspace\\\\src\\\\surfaces','.\\\\workspace\\\\src\\\\runtime\\\\claude','.\\\\workspace\\\\scripts\\\\run-feishu-surface.js','.\\\\workspace\\\\scripts\\\\schedule-setup.ps1','.\\\\workspace\\\\scripts\\\\setup-feishu-folders.js','.\\\\workspace\\\\src\\\\core\\\\persistentWorkRepository.js','.\\\\workspace\\\\src\\\\runtime\\\\pi\\\\marginPiAdapter.js','.\\\\workspace\\\\src\\\\runtime\\\\pi\\\\piTerminalPilotRuntime.js')\\nforeach($p in $paths){ \\\"$p => $(Test-Path $p)\\\" }\\n\\\"--- docs tail; check any baseline/phase artifacts anywhere (excluding .git) ---\\\"\\nGet-ChildItem -Recurse -File .\\\\workspace -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\' -and $_.Name -match 'baseline|handoff|distiller|evidence-layer|repo-truth|measurements|distilled-state|margin-handoff' } | Select-Object FullName,Length | Format-Table -AutoSize | Out-String -Width 220\"}",
+      "tsMs": 1788778998886
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"--- experiments entries ---\\\"\\nGet-ChildItem -Force -Recurse .\\\\workspace\\\\experiments -ErrorAction SilentlyContinue | Select-Object FullName\\n\\\"--- key files present? ---\\\"\\n$paths = @('Margin_Phase0_PoC_Plan.md','src\\\\surfaces','src\\\\runtime\\\\claude','scripts\\\\run-feishu-surface.js','scripts\\\\schedule-setup.ps1','scripts\\\\setup-feishu-folders.js','src\\\\core\\\\persistentWorkRepository.js','src\\\\runtime\\\\pi\\\\marginPiAdapter.js','src\\\\runtime\\\\pi\\\\piTerminalPilotRuntime.js')\\nforeach($p in $paths){ $f = Join-Path '.\\\\workspace' $p; \\\"$p => $(Test-Path $f)\\\" }\\n\\\"--- artifact search excluding .git ---\\\"\\nGet-ChildItem -Recurse -File .\\\\workspace -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\' -and ($_.Name -match 'baseline|handoff|distiller|evidence-layer|repo-truth|measurements|distilled-state|margin-handoff|discovery-initial') } | Select-Object FullName,Length | Format-Table -AutoSize | Out-String -Width 220\"}",
+      "tsMs": 1788779002607
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"--- HEAD ---\\\"; Get-Content .\\\\workspace\\\\.git\\\\HEAD\\n\\\"--- branches ---\\\"; Get-ChildItem .\\\\workspace\\\\.git\\\\refs\\\\heads -Recurse -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Substring($_.FullName.IndexOf('refs\\\\heads')) + ' -> ' + (Get-Content $_.FullName -Raw).Trim() }\\n\\\"--- packed-refs (head) ---\\\"; Get-Content .\\\\workspace\\\\.git\\\\packed-refs -ErrorAction SilentlyContinue | Select-Object -First 60\\n\\\"--- refs/codex ---\\\"; Get-ChildItem .\\\\workspace\\\\.git\\\\refs\\\\codex -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 20 | ForEach-Object { $_.FullName.Substring($_.FullName.IndexOf('refs\\\\codex')) }\"}",
+      "tsMs": 1788779015570
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"--- handoff dir files ---\\\"\\nGet-ChildItem .\\\\workspace\\\\src\\\\core\\\\handoff -Force | Select-Object Name,Length\\n\\\"--- head of distiller.js ---\\\"\\nGet-Content .\\\\workspace\\\\src\\\\core\\\\handoff\\\\distiller.js -TotalCount 60\\n\\\"--- head of generate-handoff.js ---\\\"\\nGet-Content .\\\\workspace\\\\scripts\\\\generate-handoff.js -TotalCount 40\\n\\\"--- grep phase1/margin-handoff references ---\\\"\\nGet-ChildItem -Recurse -File .\\\\workspace -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\|node_modules' } | Select-String -Pattern 'phase1-distiller|margin-handoff|evidence-layer|Margin Handoff|phase1-distiller|phase0-continues' -List -ErrorAction SilentlyContinue | Select-Object -First 40 Path | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788779031798
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"--- root .gitignore ---\\\"; Get-Content .\\\\workspace\\\\.gitignore\\n\\\"--- index contains experiments paths? ---\\\"\\n$idx = Get-Content .\\\\workspace\\\\.git\\\\index -Raw -ErrorAction SilentlyContinue\\nforeach($probe in @('experiments/phase1-distiller','experiments/phase0-continues','src/core/handoff/distiller.js','experiments/')){ \\\"$probe => $($idx.Contains($probe))\\\" }\\n\\\"--- docs analysis head ---\\\"\\nGet-Content .\\\\workspace\\\\docs\\\\architecture\\\\2026-09-05-coding-continuity-refactor-analysis.md -TotalCount 40 -ErrorAction SilentlyContinue\\n\\\"--- package.json scripts matching handoff ---\\\"\\n$pkg = Get-Content .\\\\workspace\\\\package.json -Raw | ConvertFrom-Json\\n$pkg.scripts.PSObject.Properties | Where-Object { $_.Name -match 'handoff|session|margin|distill' } | ForEach-Object { $_.Name + ' = ' + $_.Value }\"}",
+      "tsMs": 1788779045604
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\README.md -TotalCount 45 -ErrorAction SilentlyContinue\\n\\\"--- test/handoff.test.js head ---\\\"\\nGet-Content .\\\\workspace\\\\test\\\\handoff.test.js -TotalCount 30 -ErrorAction SilentlyContinue\\n\\\"--- margin docs validation listing ---\\\"\\nGet-ChildItem .\\\\workspace\\\\docs\\\\validation -File -ErrorAction SilentlyContinue | Select-Object Name,Length | Format-Table -AutoSize | Out-String -Width 160\"}",
+      "tsMs": 1788779088027
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\README.md -TotalCount 45 -ErrorAction SilentlyContinue\\n\\\"--- test/handoff.test.js head ---\\\"\\nGet-Content .\\\\workspace\\\\test\\\\handoff.test.js -TotalCount 25 -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788779090559
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-Command git -ErrorAction SilentlyContinue | Select-Object Source; Test-Path .\\workspace\\.git; & 'D:\\Git\\cmd\\git.exe' --version 2>&1 | Select-Object -First 1",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: d:\\git/cmd/git.exe"
+      ],
+      "tsMs": 1788778859037
+    },
+    {
+      "command": "\"--- experiments full ---\"\nGet-ChildItem -Force -Recurse .\\workspace\\experiments -ErrorAction SilentlyContinue | Measure-Object | Select-Object Count\n\"--- check claimed untracked/modified files present ---\"\n$paths = @('.\\workspace\\Margin_Phase0_PoC_Plan.md','.\\workspace\\.claude','.\\workspace\\src\\surfaces','.\\workspace\\src\\runtime\\claude','.\\workspace\\scripts\\run-feishu-surface.js','.\\workspace\\scripts\\schedule-setup.ps1','.\\workspace\\scripts\\setup-feishu-folders.js','.\\workspace\\src\\core\\persistentWorkRepository.js','.\\workspace\\src\\runtime\\pi\\marginPiAdapter.js','.\\workspace\\src\\runtime\\pi\\piTerminalPilotRuntime.js')\nforeach($p in $paths){ \"$p => $(Test-Path $p)\" }\n\"--- docs tail; check any baseline/phase artifacts anywhere (excluding .git) ---\"\nGet-ChildItem -Recurse -File .\\workspace -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\.git\\\\' -and $_.Name -match 'baseline|handoff|distiller|evidence-layer|repo-truth|measurements|distilled-state|margin-handoff' } | Select-Object FullName,Length | Format-Table -AutoSize | Out-String -Width 220",
+      "reasons": [
+        "protected path fragment is disabled: \\.claude"
+      ],
+      "tsMs": 1788778998887
+    },
+    {
+      "command": "Get-Content .\\workspace\\README.md -TotalCount 45 -ErrorAction SilentlyContinue\n\"--- test/handoff.test.js head ---\"\nGet-Content .\\workspace\\test\\handoff.test.js -TotalCount 30 -ErrorAction SilentlyContinue\n\"--- margin docs validation listing ---\"\nGet-ChildItem .\\workspace\\docs\\validation -File -ErrorAction SilentlyContinue | Select-Object Name,Length | Format-Table -AutoSize | Out-String -Width 160",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788779088027
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 301953,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-09",
+    "arm": "A",
+    "runId": "formal-case-09-A-2026-09-07T11-00-12-227Z",
+    "startMs": "2026-09-07T11:00:21.656Z",
+    "endMs": "2026-09-07T11:05:25.547Z",
+    "durationMs": 303891,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-09-A-2026-09-07T11-00-12-227Z status=ok durationMs=301953\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-09-A-2026-09-07T11-00-12-227Z.cert.json"
+  }
+}

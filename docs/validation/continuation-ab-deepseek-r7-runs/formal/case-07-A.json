@@ -1,0 +1,362 @@
+{
+  "runId": "formal-case-07-A-2026-09-07T10-36-11-475Z",
+  "caseId": "case-07",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T10:36:22.231Z",
+  "endTs": "2026-09-07T10:42:32.976Z",
+  "durationMs": 370745,
+  "modelPromptStartMs": 44,
+  "modelPromptEndMs": 370744,
+  "sessionId": "01a07b70-c180-7715-bfb0-e405f395d5c5",
+  "rawResponse": "Based on my complete analysis, here is the recovery state:\n\n```json\n{\n  \"goal\": \"Implement Margin 'Slice 3.2 – Resume-first Checkpoint Experience' as specified in the pasted-text brief read at the start of the captured session (session 01a074d4-…, 2026-09-06T03:48–03:52Z, cwd <repo>). Requirements: (A) a minimal, browser-safe DTO projection projectResumeSummary(state, truth?) built only from existing Distilled State / structured outputs (Goal, max ~3 decision-value Progress items, Current applicability, Current validation); (B) resume-first SessionDetail where selection still auto-generates fresh, and above-the-fold shows Goal/Progress/Current applicability/Current validation with full Markdown collapsed behind 'View full checkpoint'; (C) 'Copy checkpoint' as primary action (copies the FULL markdown, not the summary) and 'Save to workspace' as secondary (saves the same markdown to <workspace>/.margin/HANDOFF.md); HTTP POST /api/handoff/generate must return { session, markdown, resumeSummary } and never expose evidence/truth/operations/source paths; fresh generation, effect cancellation/reset, retry-on-error, copy/save failure feedback, loading wording 'Preparing fresh checkpoint…', and unknown-not-error handling must be preserved; focused Core/HTTP/SessionDetail tests required; explicitly out of scope: checkpoint lifecycle/status, native resume, launchers, caching, rerun-validation engine, new inference, Markdown parsing, and any Phase 2 semantics change. The brief ended with '完成后停止，不要自行开启 Slice 3.3'.\",\n  \"progress\": \"Transcript (historical, 2026-09-06): the assistant investigated the handoff modules and applied 4 apply_patch batches that (1) added src/core/handoff/resume-summary.js (v1), exported/wired projectResumeSummary in src/core/handoff/index.js, added resumeSummary to src/core/handoff/httpAdapter.js, converted web/src/margin/SessionDetail.js to the resume-first UI (summary sections, Copy checkpoint primary, Save to workspace secondary, View full checkpoint toggle, Retry, 'Preparing fresh checkpoint…'), and added the CSS classes; (2) added test/resumeSummary.test.js and modified test/marginSurfaceHttpAdapter.test.js + test/marginSessionDetail.test.js; (3) changed the saved-note text; (4) added the loading/fresh-generation and save-failure tests. Final assistant message reported completion with no blockers. Current repository truth (frozen workspace, snapshot later than the session, main @ a247e75 with commits through ~2026-09-07T01:44 +08:00): the Slice-3.2 artifacts all exist and evolved beyond the transcript — resume-summary.js has a later v2 projectApplicability, index.js/httpAdapter.js additionally carry later Slice-3.3/agent-source/resource features, and test/resumeSummary.test.js/marginSessionDetail.test.js contain the later tests. The repo has since moved to later slices/features (workspace overview / Slice 3.3, CLI 'margin', Electron, R2/R3 resource bar + SessionBoard). Note: current web/src/margin/margin.css no longer contains the resume-summary/action CSS classes and MarginApp.js no longer imports SessionDetail.js (live UI is UsageBar+SessionBoard), so the resume-first SessionDetail is no longer the active surface.\",\n  \"pending\": \"Unknown and context-dependent. No Slice-3.2 implementation is missing from the frozen workspace (all 8 files the transcript claimed to change exist, with later evolution). What is NOT independently established: (1) whether the current frozen snapshot passes the focused projection/HTTP/SessionDetail/handoff tests and build — no Node runtime (.runtime/node_modules/dist) exists in this sandbox and node/python/git are not on PATH, so I could not re-run anything; (2) the meaning/status of the newest uncommitted working-tree changes (src/core/handoff/evidence.js, exec.js, distiller.js, handoff.js, test/handoff.test.js, mtimes 2026-09-07T12:42–12:47, after the last HEAD commit) — these postdate the captured transcript, have no matching transcript, and may be an in-flight task of unknown goal; (3) the transcript's claimed real-UI Sample A/Sample B/time-to-resume acceptance was only reported (DTO-level tests), not evidenced with live UI artifacts; (4) whether the transcript's work was ever committed (later commits exist in reflog, but git is unavailable to attribute trees).\",\n  \"historicalValidation\": \"From the captured session only: the final focused run 'node --test test/resumeSummary.test.js test/marginSessionDetail.test.js test/marginSurfaceHttpAdapter.test.js test/handoff.test.js' reported 1..53, 53 pass / 0 fail (an earlier focused run after the first patches reported 52 pass / 0 fail), npm run build passed (vite production build completed), and git diff --check was clean per the final report with no diff-check warnings in the captured output. An earlier whole-suite 'npm test -- --test-name-pattern=…' run was truncated and is not a reliable standalone signal. These results are historical only; they were obtained against the 2026-09-06 repo state, before the later handoff-core modifications present in the frozen workspace.\",\n  \"recommendedFollowUp\": \"Do not re-implement Slice 3.2 — its artifacts already exist in the workspace and a historical run already went green; re-applying the transcript's patches would be wrong. First establish what the currently in-flight task actually is, because the most recent uncommitted workspace changes (handoff evidence/exec/distiller/handoff + handoff.test.js, ~2026-09-07T12:42–12:47) are unattributed to any captured transcript: run git status/diff against HEAD (git is unavailable in this sandbox) or ask the user which task to continue. Only if the intended continuation is Slice-3.2 acceptance should a fresh validation be run (focused tests + npm run build + git diff --check) under an available Node runtime against the CURRENT snapshot, and any result must supersede the historical 53-pass claim. Also reconcile that the current repo no longer wires SessionDetail.js into MarginApp.js and margin.css lacks the resume-summary classes before treating the 'resume-first SessionDetail' presentation as currently live.\",\n  \"currentApplicability\": \"The historical intent 'implement Slice 3.2' maps to 8 structured file targets that all currently exist in the frozen workspace (src/core/handoff/resume-summary.js, index.js, httpAdapter.js, web/src/margin/SessionDetail.js, margin.css, test/resumeSummary.test.js, test/marginSessionDetail.test.js, test/marginSurfaceHttpAdapter.test.js); no missing-file contradiction was found, so the historical edit set is present and no part of it is currently missing. However, presence alone is not current correctness: the file contents were later modified/superseded by subsequent slices (e.g., resume-summary.js v2 logic + matching extra tests; margin.css redesigned without the resume classes; SessionDetail.js no longer imported by MarginApp.js). Historical validation results were not rerun against this snapshot. Re-executing the historical Slice-3.2 changes is therefore not currently warranted; the current state is best described as 'already applied and further evolved' with the currency of the resume-first UI presentation now unknown.\",\n  \"unsafeAssumptions\": [\n    \"That the transcript's final '53 passed / build passed' validation still applies to the frozen workspace (handoff core files were modified afterward, on 2026-09-07T12:42–12:47).\",\n    \"That the transcript's task_complete message / 14-section completion report is independent proof that the current repository is complete and correct.\",\n    \"That the task is still 'implement Slice 3.2 from scratch' — the workspace already contains the implementation plus later evolution.\",\n    \"That the newest uncommitted handoff-core edits (evidence.js, exec.js, distiller.js, handoff.js, handoff.test.js) belong to Slice 3.2 or to any task described by the captured session.\",\n    \"That the absence of resume-summary CSS classes in the current margin.css, or SessionDetail.js not being imported by MarginApp.js, is a regression rather than an intentional later refactor (no supporting evidence either way).\",\n    \"That files existing with the expected names means their current behavior matches the Slice-3.2 semantics (no runtime exists here to verify).\",\n    \"That subsequent reflog commits such as 'feat: establish Margin handoff core and CLI V1' necessarily contain the transcript's Slice-3.2 changes (git is unavailable, so trees could not be inspected).\",\n    \"That the transcript window is the entire conversation thread — the session metadata indicates paginated history, so earlier user requests may exist outside this artifact.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Implement Margin 'Slice 3.2 – Resume-first Checkpoint Experience' as specified in the pasted-text brief read at the start of the captured session (session 01a074d4-…, 2026-09-06T03:48–03:52Z, cwd <repo>). Requirements: (A) a minimal, browser-safe DTO projection projectResumeSummary(state, truth?) built only from existing Distilled State / structured outputs (Goal, max ~3 decision-value Progress items, Current applicability, Current validation); (B) resume-first SessionDetail where selection still auto-generates fresh, and above-the-fold shows Goal/Progress/Current applicability/Current validation with full Markdown collapsed behind 'View full checkpoint'; (C) 'Copy checkpoint' as primary action (copies the FULL markdown, not the summary) and 'Save to workspace' as secondary (saves the same markdown to <workspace>/.margin/HANDOFF.md); HTTP POST /api/handoff/generate must return { session, markdown, resumeSummary } and never expose evidence/truth/operations/source paths; fresh generation, effect cancellation/reset, retry-on-error, copy/save failure feedback, loading wording 'Preparing fresh checkpoint…', and unknown-not-error handling must be preserved; focused Core/HTTP/SessionDetail tests required; explicitly out of scope: checkpoint lifecycle/status, native resume, launchers, caching, rerun-validation engine, new inference, Markdown parsing, and any Phase 2 semantics change. The brief ended with '完成后停止，不要自行开启 Slice 3.3'.",
+    "progress": "Transcript (historical, 2026-09-06): the assistant investigated the handoff modules and applied 4 apply_patch batches that (1) added src/core/handoff/resume-summary.js (v1), exported/wired projectResumeSummary in src/core/handoff/index.js, added resumeSummary to src/core/handoff/httpAdapter.js, converted web/src/margin/SessionDetail.js to the resume-first UI (summary sections, Copy checkpoint primary, Save to workspace secondary, View full checkpoint toggle, Retry, 'Preparing fresh checkpoint…'), and added the CSS classes; (2) added test/resumeSummary.test.js and modified test/marginSurfaceHttpAdapter.test.js + test/marginSessionDetail.test.js; (3) changed the saved-note text; (4) added the loading/fresh-generation and save-failure tests. Final assistant message reported completion with no blockers. Current repository truth (frozen workspace, snapshot later than the session, main @ a247e75 with commits through ~2026-09-07T01:44 +08:00): the Slice-3.2 artifacts all exist and evolved beyond the transcript — resume-summary.js has a later v2 projectApplicability, index.js/httpAdapter.js additionally carry later Slice-3.3/agent-source/resource features, and test/resumeSummary.test.js/marginSessionDetail.test.js contain the later tests. The repo has since moved to later slices/features (workspace overview / Slice 3.3, CLI 'margin', Electron, R2/R3 resource bar + SessionBoard). Note: current web/src/margin/margin.css no longer contains the resume-summary/action CSS classes and MarginApp.js no longer imports SessionDetail.js (live UI is UsageBar+SessionBoard), so the resume-first SessionDetail is no longer the active surface.",
+    "pending": "Unknown and context-dependent. No Slice-3.2 implementation is missing from the frozen workspace (all 8 files the transcript claimed to change exist, with later evolution). What is NOT independently established: (1) whether the current frozen snapshot passes the focused projection/HTTP/SessionDetail/handoff tests and build — no Node runtime (.runtime/node_modules/dist) exists in this sandbox and node/python/git are not on PATH, so I could not re-run anything; (2) the meaning/status of the newest uncommitted working-tree changes (src/core/handoff/evidence.js, exec.js, distiller.js, handoff.js, test/handoff.test.js, mtimes 2026-09-07T12:42–12:47, after the last HEAD commit) — these postdate the captured transcript, have no matching transcript, and may be an in-flight task of unknown goal; (3) the transcript's claimed real-UI Sample A/Sample B/time-to-resume acceptance was only reported (DTO-level tests), not evidenced with live UI artifacts; (4) whether the transcript's work was ever committed (later commits exist in reflog, but git is unavailable to attribute trees).",
+    "historicalValidation": "From the captured session only: the final focused run 'node --test test/resumeSummary.test.js test/marginSessionDetail.test.js test/marginSurfaceHttpAdapter.test.js test/handoff.test.js' reported 1..53, 53 pass / 0 fail (an earlier focused run after the first patches reported 52 pass / 0 fail), npm run build passed (vite production build completed), and git diff --check was clean per the final report with no diff-check warnings in the captured output. An earlier whole-suite 'npm test -- --test-name-pattern=…' run was truncated and is not a reliable standalone signal. These results are historical only; they were obtained against the 2026-09-06 repo state, before the later handoff-core modifications present in the frozen workspace.",
+    "recommendedFollowUp": "Do not re-implement Slice 3.2 — its artifacts already exist in the workspace and a historical run already went green; re-applying the transcript's patches would be wrong. First establish what the currently in-flight task actually is, because the most recent uncommitted workspace changes (handoff evidence/exec/distiller/handoff + handoff.test.js, ~2026-09-07T12:42–12:47) are unattributed to any captured transcript: run git status/diff against HEAD (git is unavailable in this sandbox) or ask the user which task to continue. Only if the intended continuation is Slice-3.2 acceptance should a fresh validation be run (focused tests + npm run build + git diff --check) under an available Node runtime against the CURRENT snapshot, and any result must supersede the historical 53-pass claim. Also reconcile that the current repo no longer wires SessionDetail.js into MarginApp.js and margin.css lacks the resume-summary classes before treating the 'resume-first SessionDetail' presentation as currently live.",
+    "currentApplicability": "The historical intent 'implement Slice 3.2' maps to 8 structured file targets that all currently exist in the frozen workspace (src/core/handoff/resume-summary.js, index.js, httpAdapter.js, web/src/margin/SessionDetail.js, margin.css, test/resumeSummary.test.js, test/marginSessionDetail.test.js, test/marginSurfaceHttpAdapter.test.js); no missing-file contradiction was found, so the historical edit set is present and no part of it is currently missing. However, presence alone is not current correctness: the file contents were later modified/superseded by subsequent slices (e.g., resume-summary.js v2 logic + matching extra tests; margin.css redesigned without the resume classes; SessionDetail.js no longer imported by MarginApp.js). Historical validation results were not rerun against this snapshot. Re-executing the historical Slice-3.2 changes is therefore not currently warranted; the current state is best described as 'already applied and further evolved' with the currency of the resume-first UI presentation now unknown.",
+    "unsafeAssumptions": [
+      "That the transcript's final '53 passed / build passed' validation still applies to the frozen workspace (handoff core files were modified afterward, on 2026-09-07T12:42–12:47).",
+      "That the transcript's task_complete message / 14-section completion report is independent proof that the current repository is complete and correct.",
+      "That the task is still 'implement Slice 3.2 from scratch' — the workspace already contains the implementation plus later evolution.",
+      "That the newest uncommitted handoff-core edits (evidence.js, exec.js, distiller.js, handoff.js, handoff.test.js) belong to Slice 3.2 or to any task described by the captured session.",
+      "That the absence of resume-summary CSS classes in the current margin.css, or SessionDetail.js not being imported by MarginApp.js, is a regression rather than an intentional later refactor (no supporting evidence either way).",
+      "That files existing with the expected names means their current behavior matches the Slice-3.2 semantics (no runtime exists here to verify).",
+      "That subsequent reflog commits such as 'feat: establish Margin handoff core and CLI V1' necessarily contain the transcript's Slice-3.2 changes (git is unavailable, so trees could not be inspected).",
+      "That the transcript window is the entire conversation thread — the session metadata indicates paginated history, so earlier user requests may exist outside this artifact."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788777383450
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Mode,Length,Name\"}",
+      "tsMs": 1788777383451
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788777384935
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788777384936
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788777384936
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788777384937
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Item .\\\\input\\\\session.jsonl | Select-Object Length; (Get-Content .\\\\input\\\\session.jsonl | Measure-Object -Line).Lines\"}",
+      "tsMs": 1788777386068
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers\"}",
+      "tsMs": 1788777386077
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 40\"}",
+      "tsMs": 1788777387057
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git log --oneline -20 2>&1; git status --short 2>&1 | Select-Object -First 40\"}",
+      "tsMs": 1788777394656
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788777394668
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers/sdd\"}",
+      "tsMs": 1788777394669
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Command git* -ErrorAction SilentlyContinue | Select-Object Name,Source; Test-Path 'C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe'; where.exe git 2>&1\"}",
+      "tsMs": 1788777399524
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl | Select-Object -First 8\"}",
+      "tsMs": 1788777399524
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$i=0; Get-Content .\\\\input\\\\session.jsonl | ForEach-Object {\\n  $i++\\n  try { $o = $_ | ConvertFrom-Json } catch { Write-Output (\\\"{0} UNPARSEABLE\\\" -f $i); return }\\n  $t = $o.type\\n  if ($t -eq 'response_item') {\\n    $p = $o.payload\\n    $pt = $p.type\\n    if ($pt -eq 'message') { Write-Output (\\\"{0} msg role={1} text={2}\\\" -f $i, $p.role, (($p.content | ForEach-Object { $_.text }) -join ' ').Substring(0, [Math]::Min(200, (($p.content | ForEach-Object { $_.text }) -join ' ').Length))) }\\n    elseif ($pt -eq 'custom_tool_call') { Write-Output (\\\"{0} CALL {1} input={2}\\\" -f $i, $p.name, $p.input.Substring(0, [Math]::Min(300, $p.input.Length))) }\\n    elseif ($pt -eq 'custom_tool_call_output') { Write-Output (\\\"{0} RESULT call={1} out={2}\\\" -f $i, $p.call_id, (($p.output | ForEach-Object { $_.text }) -join ' ').Substring(0, [Math]::Min(150, (($p.output | ForEach-Object { $_.text }) -join ' ').Length))) }\\n    elseif ($pt -eq 'reasoning') { Write-Output (\\\"{0} reasoning (encrypted/summary)\\\" -f $i) }\\n    else { Write-Output (\\\"{0} resp-item type={1}\\\" -f $i, $pt) }\\n  } elseif ($t -eq 'event_msg') {\\n    Write-Output (\\\"{0} event={1}\\\" -f $i, ($o.payload.type))\\n  } else { Write-Output (\\\"{0} line type={1}\\\" -f $i, $t) }\\n}\"}",
+      "tsMs": 1788777405891
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfor ($n=0; $n -lt $lines.Count; $n++) { Write-Output (\\\"{0}: len={1}\\\" -f ($n+1), $lines[$n].Length) }\"}",
+      "tsMs": 1788777418671
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"node --version 2>&1; python --version 2>&1; py --version 2>&1; Get-ChildItem .\\\\_tmp\\\\AppData -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object FullName -First 40\"}",
+      "tsMs": 1788777434469
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfor ($n=0; $n -lt $lines.Count; $n++) {\\n  $m = [regex]::Matches($lines[$n], '(Slice 3\\\\.2|Resume-first|你现在负责|已完整|handoff|R1|Phase 0 PoC|resumeSummary|Continue)')\\n  if ($m.Count -gt 0) { Write-Output (\\\"line {0}: hits {1}\\\" -f ($n+1), (($m | ForEach-Object Value) -join ',')) }\\n}\"}",
+      "tsMs": 1788777441827
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nforeach ($n in 8,9,10,11,12,13,14,15,16) { Write-Output (\\\"-----LINE {0}-----\\\" -f ($n+1)); Write-Output $lines[$n].Substring(0, [Math]::Min(1800, $lines[$n].Length)) }\"}",
+      "tsMs": 1788777446318
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\n$l = $lines[16]\\n$idx = $l.IndexOf('\\\"stdout\\\":')\\n$rest = $l.Substring($idx + 10)\\n$end = $rest.IndexOf('\\\",\\\"stderr\\\"')\\n$text = $rest.Substring(0, $end)\\n$text = $text -replace '\\\\\\\\r\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\\\\"', '\\\"'\\nWrite-Output $text\"}",
+      "tsMs": 1788777450035
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\src\\\\core\\\\handoff\\\\ | Select-Object Name,Length,LastWriteTime; Write-Output '---- tests ----'; Get-ChildItem .\\\\workspace\\\\test\\\\ | Where-Object { $_.Name -match 'handoff|resume|margin|session|distill|http' } | Select-Object Name,Length; Write-Output '---- web margin ----'; Get-ChildItem .\\\\workspace\\\\web\\\\src\\\\margin\\\\ -ErrorAction SilentlyContinue | Select-Object Name,Length\"}",
+      "tsMs": 1788777458288
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfunction Extract-Stdout($lineObj){\\n  $idx = $lineObj.IndexOf('\\\"stdout\\\":')\\n  if ($idx -lt 0) { return '' }\\n  $rest = $lineObj.Substring($idx + 9)\\n  $end = $rest.IndexOf('\\\",\\\"stderr\\\"')\\n  if ($end -lt 0) { return '' }\\n  $t = $rest.Substring(0, $end)\\n  return ($t -replace '\\\\\\\\r\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\\\\"', '\\\"' -replace '\\\\\\\\t', \\\"`t\\\")\\n}\\nWrite-Output '==== LINE 22 (CALL input) ===='; Write-Output $lines[21]\\nWrite-Output '==== LINE 25 stdout ===='; Write-Output (Extract-Stdout $lines[24]).Substring(0, 4000)\"}",
+      "tsMs": 1788777472173
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfunction Extract-ResultText($lineObj){\\n  $idx = $lineObj.IndexOf('\\\"output\\\":')\\n  $rest = $lineObj.Substring($idx + 9)\\n  $end = $rest.IndexOf('\\\"internal_chat_message_metadata_passthrough\\\"')\\n  if ($end -lt 0) { $end = $rest.Length }\\n  $t = $rest.Substring(0, $end)\\n  $t = ($t -replace '\\\\\\\\r\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\\\\"', '\\\"' -replace '\\\\\\\\t', \\\"`t\\\")\\n  # strip surrounding JSON array; crude cleanup\\n  return $t\\n}\\n$t = Extract-ResultText $lines[24]\\nWrite-Output $t.Substring(0, [Math]::Min(5000, $t.Length))\"}",
+      "tsMs": 1788777476192
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nforeach ($n in 53, 60, 83, 104) {\\n  Write-Output (\\\"===== LINE {0} (len {1}) =====\\\" -f ($n+1), $lines[$n].Length)\\n  Write-Output $lines[$n]\\n}\"}",
+      "tsMs": 1788777486348
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/resume-summary.js\"}",
+      "tsMs": 1788777497048
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/index.js\"}",
+      "tsMs": 1788777497049
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionDetail.js\"}",
+      "tsMs": 1788777497049
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nforeach ($n in 115,116,117,118,119,120,121,122) {\\n  $l = $lines[$n]\\n  $ts = ''\\n  if ($l -match '\\\"timestamp\\\":\\\"([^\\\"]+)\\\"') { $ts = $Matches[1] }\\n  Write-Output (\\\"--- line {0} ts={1} len={2} head={3}\\\" -f ($n+1), $ts, $l.Length, $l.Substring(0,[Math]::Min(160,$l.Length)))\\n}\"}",
+      "tsMs": 1788777525323
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nWrite-Output '===== LINE 120 full ====='; Write-Output $lines[119]\\nWrite-Output '===== LINE 123 full ====='; Write-Output $lines[122]\"}",
+      "tsMs": 1788777529169
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\HEAD -ErrorAction SilentlyContinue; Write-Output '--- config ---'; Get-Content .\\\\workspace\\\\.git\\\\config -ErrorAction SilentlyContinue; Write-Output '--- refs ---'; Get-ChildItem .\\\\workspace\\\\.git\\\\refs -Recurse -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '--- packed-refs ---'; Get-Content .\\\\workspace\\\\.git\\\\packed-refs -ErrorAction SilentlyContinue | Select-Object -First 20; Write-Output '--- margin handoff ---'; Get-ChildItem .\\\\workspace\\\\.margin -ErrorAction SilentlyContinue | Select-Object Name,Length\"}",
+      "tsMs": 1788777542037
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\HEAD\"}",
+      "tsMs": 1788777545003
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\.git -Force -ErrorAction SilentlyContinue | Select-Object Name,Mode; Write-Output '---'; Get-Content .\\\\workspace\\\\.git\\\\config -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788777545012
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\REBASE_HEAD; Write-Output '---ORIG---'; Get-Content .\\\\workspace\\\\.git\\\\ORIG_HEAD; Write-Output '---FETCH---'; Get-Content .\\\\workspace\\\\.git\\\\FETCH_HEAD; Write-Output '---EDITMSG---'; Get-Content .\\\\workspace\\\\.git\\\\COMMIT_EDITMSG; Write-Output '---branch main---'; Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue; Write-Output '---logs head---'; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -ErrorAction SilentlyContinue | Select-Object -Last 15\"}",
+      "tsMs": 1788777547972
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788777573904
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/resumeSummary.test.js\"}",
+      "tsMs": 1788777573904
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\.git\\\\\\\\' } | Sort-Object LastWriteTime -Descending | Select-Object -First 45 LastWriteTime, @{N='Path';E={$_.FullName.Replace((Resolve-Path .\\\\workspace).Path, '.')}}\"}",
+      "tsMs": 1788777586363
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfunction Get-ResultText($s) {\\n  # find output array text fields\\n  $matches2 = [regex]::Matches($s, '\\\"text\\\":\\\"((?:[^\\\"\\\\\\\\]|\\\\\\\\.)*)\\\"')\\n  $all = @()\\n  foreach ($m in $matches2) { $all += $m.Groups[1].Value -replace '\\\\\\\\r\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\\\\"', '\\\"' -replace '\\\\\\\\t', \\\"`t\\\" -replace '\\\\\\\\\\\\\\\\', '\\\\' }\\n  return ($all -join \\\"`n\\\")\\n}\\nforeach ($n in 70, 79, 93, 114) {\\n  Write-Output (\\\"=========== RESULT LINE {0} ===========\\\" -f ($n+1))\\n  $txt = Get-ResultText $lines[$n]\\n  Write-Output $txt.Substring(0, [Math]::Min(3500, $txt.Length))\\n}\"}",
+      "tsMs": 1788777610260
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfunction Get-ResultText($s) {\\n  $matches2 = [regex]::Matches($s, '\\\"text\\\":\\\"((?:[^\\\"\\\\\\\\]|\\\\\\\\.)*)\\\"')\\n  $all = @()\\n  foreach ($m in $matches2) { $all += $m.Groups[1].Value -replace '\\\\\\\\r\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\\\\"', '\\\"' -replace '\\\\\\\\t', \\\"`t\\\" -replace '\\\\\\\\\\\\\\\\', '\\\\' }\\n  return ($all -join \\\"`n\\\")\\n}\\nforeach ($n in 94, 115) {\\n  Write-Output (\\\"=========== RESULT LINE {0} TAIL ===========\\\" -f ($n+1))\\n  $txt = Get-ResultText $lines[$n]\\n  Write-Output $txt.Substring([Math]::Max(0, $txt.Length - 2600))\\n}\"}",
+      "tsMs": 1788777615264
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfunction Get-ResultText($s) {\\n  $matches2 = [regex]::Matches($s, '\\\"text\\\":\\\"((?:[^\\\"\\\\\\\\]|\\\\\\\\.)*)\\\"')\\n  $all = @()\\n  foreach ($m in $matches2) { $all += $m.Groups[1].Value -replace '\\\\\\\\r\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\n', \\\"`n\\\" -replace '\\\\\\\\\\\"', '\\\"' -replace '\\\\\\\\t', \\\"`t\\\" -replace '\\\\\\\\\\\\\\\\', '\\\\' }\\n  return ($all -join \\\"`n\\\")\\n}\\nforeach ($n in 93, 114) {\\n  Write-Output (\\\"=========== RESULT LINE {0} TAIL ===========\\\" -f ($n+1))\\n  $txt = Get-ResultText $lines[$n]\\n  Write-Output $txt.Substring([Math]::Max(0, $txt.Length - 3000))\\n}\"}",
+      "tsMs": 1788777620897
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\evaluation -Recurse -ErrorAction SilentlyContinue | Select-Object FullName -First 60; Write-Output '--- design-references ---'; Get-ChildItem .\\\\workspace\\\\design-references -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- docs top ---'; Get-ChildItem .\\\\workspace\\\\docs -ErrorAction SilentlyContinue | Select-Object Name,Mode; Write-Output '--- data top ---'; Get-ChildItem .\\\\workspace\\\\data -ErrorAction SilentlyContinue | Select-Object Name,Mode -First 20\"}",
+      "tsMs": 1788777638327
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"(Get-ChildItem .\\\\workspace\\\\docs -Directory | Select-Object -ExpandProperty Name) -join ', '; Write-Output '--- data ---'; (Get-ChildItem .\\\\workspace\\\\data -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name) -join ', '\"}",
+      "tsMs": 1788777641011
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs\\\\architecture, .\\\\workspace\\\\docs\\\\superpowers, .\\\\workspace\\\\docs\\\\evaluation, .\\\\workspace\\\\docs\\\\validation -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output '--- margin plan head ---'; Get-Content .\\\\workspace\\\\Margin_Phase0_PoC_Plan.md -TotalCount 60 -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788777642878
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs\\\\architecture -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output '--- superpowers ---'; Get-ChildItem .\\\\workspace\\\\docs\\\\superpowers -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output '--- evaluation ---'; Get-ChildItem .\\\\workspace\\\\docs\\\\evaluation -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name\"}",
+      "tsMs": 1788777645037
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"Slice 3\\\\.2|Resume-first|Slice 3\\\\.3|R3\\\\.|resumeSummary\",\"path\":\"workspace\",\"maxResults\":60}",
+      "tsMs": 1788777648115
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path .\\\\workspace\\\\.runtime; Test-Path .\\\\workspace\\\\node_modules; Test-Path .\\\\workspace\\\\dist; Get-ChildItem .\\\\workspace\\\\bin | Select-Object -ExpandProperty Name; Write-Output '--- package test script ---'; (Get-Content .\\\\workspace\\\\package.json -Raw | ConvertFrom-Json).scripts.test\"}",
+      "tsMs": 1788777670820
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":20,\"path\":\"workspace/web/src/margin/margin.css\",\"pattern\":\"margin-resume-summary|margin-primary-action|margin-summary-section|margin-link-button|margin-full-checkpoint\"}",
+      "tsMs": 1788777670829
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace/test/marginSessionDetail.test.js\",\"pattern\":\"^test\\\\(\"}",
+      "tsMs": 1788777670829
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/margin.css\"}",
+      "tsMs": 1788777674816
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginSessionDetail.test.js\"}",
+      "tsMs": 1788777674817
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/web/src/margin\",\"pattern\":\"SessionDetail|generateHandoff|saveToWorkspace|resumeSummary\"}",
+      "tsMs": 1788777691236
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace/web/src\",\"pattern\":\"import .*SessionDetail|from './SessionDetail|SessionDetail'\"}",
+      "tsMs": 1788777709603
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace/web/src/margin/MarginApp.js\",\"pattern\":\"import|SessionBoard|SessionDetail\"}",
+      "tsMs": 1788777709609
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/main.jsx\"}",
+      "tsMs": 1788777712529
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/web/src/margin/MarginApp.js\",\"pattern\":\"createElement|import\"}",
+      "tsMs": 1788777712530
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/MarginApp.js\"}",
+      "tsMs": 1788777714345
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\n# Show any user-role messages in the whole file (line numbers + snippet)\\nfor ($n=0; $n -lt $lines.Count; $n++) {\\n  if ($lines[$n] -match '\\\"role\\\":\\\"user\\\"') {\\n    $m = [regex]::Match($lines[$n], '\\\"text\\\":\\\"([^\\\"\\\\\\\\]{0,400})')\\n    Write-Output (\\\"line {0}: {1}\\\" -f ($n+1), $m.Groups[1].Value)\\n  }\\n}\"}",
+      "tsMs": 1788777735948
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-Command git* -ErrorAction SilentlyContinue | Select-Object Name,Source; Test-Path 'C:\\Program Files\\Git\\cmd\\git.exe'; where.exe git 2>&1",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: c:\\program"
+      ],
+      "tsMs": 1788777399524
+    },
+    {
+      "command": "Get-Content .\\workspace\\.git\\HEAD -ErrorAction SilentlyContinue; Write-Output '--- config ---'; Get-Content .\\workspace\\.git\\config -ErrorAction SilentlyContinue; Write-Output '--- refs ---'; Get-ChildItem .\\workspace\\.git\\refs -Recurse -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '--- packed-refs ---'; Get-Content .\\workspace\\.git\\packed-refs -ErrorAction SilentlyContinue | Select-Object -First 20; Write-Output '--- margin handoff ---'; Get-ChildItem .\\workspace\\.margin -ErrorAction SilentlyContinue | Select-Object Name,Length",
+      "reasons": [
+        "protected path fragment is disabled: \\.margin"
+      ],
+      "tsMs": 1788777542037
+    },
+    {
+      "command": "Get-ChildItem .\\workspace\\docs\\architecture, .\\workspace\\docs\\superpowers, .\\workspace\\docs\\evaluation, .\\workspace\\docs\\validation -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output '--- margin plan head ---'; Get-Content .\\workspace\\Margin_Phase0_PoC_Plan.md -TotalCount 60 -ErrorAction SilentlyContinue",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788777642878
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 370745,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-07",
+    "arm": "A",
+    "runId": "formal-case-07-A-2026-09-07T10-36-11-475Z",
+    "startMs": "2026-09-07T10:36:20.502Z",
+    "endMs": "2026-09-07T10:42:32.977Z",
+    "durationMs": 372475,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-07-A-2026-09-07T10-36-11-475Z status=ok durationMs=370745\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-07-A-2026-09-07T10-36-11-475Z.cert.json"
+  }
+}

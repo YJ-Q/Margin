@@ -1,0 +1,320 @@
+{
+  "runId": "formal-case-02-B-2026-09-07T09-44-53-082Z",
+  "caseId": "case-02",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T09:45:04.871Z",
+  "endTs": "2026-09-07T09:50:01.642Z",
+  "durationMs": 296771,
+  "modelPromptStartMs": 30,
+  "modelPromptEndMs": 296771,
+  "sessionId": "01a07b41-cc82-727d-a3fa-5c9d52896340",
+  "rawResponse": "",
+  "parsedRecovery": null,
+  "hasAllRequiredKeys": false,
+  "parseError": "no final assistant text",
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788774306204
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Mode, Length, LastWriteTime, Name | Format-Table -AutoSize\"}",
+      "tsMs": 1788774306205
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788774307633
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788774307634
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788774307634
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788774307634
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788774308602
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C workspace status && git -C workspace log --oneline -20\"}",
+      "tsMs": 1788774308603
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C workspace status\"}",
+      "tsMs": 1788774310317
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C workspace log --oneline -20\"}",
+      "tsMs": 1788774310325
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content -Path workspace\\\\.git\\\\HEAD -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788774316501
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\.git -Force | Select-Object Name, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788774316512
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace -Recurse -File -Filter *.md | Select-Object FullName -First 80 | Format-Table -AutoSize\"}",
+      "tsMs": 1788774316519
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788774321352
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\docs -Recurse -Directory | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788774321353
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\docs\\\\validation -Recurse | Select-Object FullName, Length | Format-Table -AutoSize\"}",
+      "tsMs": 1788774328645
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\.git\\\\refs -Recurse -Force | Select-Object FullName | Format-Table -AutoSize; Get-Content workspace\\\\.git\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788774328645
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"Slice 3\\\\.3|slice 3\\\\.3|slice-3\\\\.3\",\"path\":\"workspace\",\"maxResults\":100}",
+      "tsMs": 1788774336182
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content -Path workspace\\\\.git\\\\logs\\\\HEAD -Tail 25 -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788774336299
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":120,\"path\":\"workspace\",\"pattern\":\"overview|Workspace Overview|workspaceOverview\"}",
+      "tsMs": 1788774351512
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginSurfaceHttpAdapter.test.js\",\"limitChars\":20000}",
+      "tsMs": 1788774351602
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace -Recurse -File | Where-Object { $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\|\\\\\\\\node_modules\\\\\\\\|\\\\\\\\data\\\\\\\\|\\\\\\\\\\\\.margin\\\\\\\\' } | Sort-Object LastWriteTime -Descending | Select-Object -First 40 FullName, Length, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788774373885
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/workspace-overview.js\"}",
+      "tsMs": 1788774373885
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":80,\"path\":\"workspace/docs\",\"pattern\":\"workspace-overview|workspace overview|workspaceOverview\"}",
+      "tsMs": 1788774386620
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace -Recurse -File -Filter *.md | Where-Object { $_.FullName -match 'slice|sdd|spec|plan|architecture|adr' } | Select-Object FullName | Format-Table -AutoSize -Wrap\"}",
+      "tsMs": 1788774386632
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\src\\\\core\\\\handoff -File | Select-Object Name, LastWriteTime, Length | Sort-Object LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788774401763
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\test -File | Select-Object Name, LastWriteTime | Sort-Object LastWriteTime -Descending | Format-Table -AutoSize\"}",
+      "tsMs": 1788774401771
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\src\\\\core\\\\handoff -Directory | Select-Object Name | Format-Table -AutoSize\"}",
+      "tsMs": 1788774401777
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/Margin_Phase0_PoC_Plan.md\"}",
+      "tsMs": 1788774420979
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[DateTimeOffset]::FromUnixTimeSeconds(1788716676).ToOffset([TimeSpan]::FromHours(8)).ToString(\\\"yyyy-MM-dd HH:mm:ss zzz\\\"); [DateTimeOffset]::FromUnixTimeSeconds(1788716597).ToOffset([TimeSpan]::FromHours(8)).ToString(\\\"yyyy-MM-dd HH:mm:ss zzz\\\"); Get-Item workspace\\\\.git\\\\index | Select-Object LastWriteTime; Get-Item workspace\\\\src\\\\core\\\\handoff\\\\distiller.js | Select-Object LastWriteTime\"}",
+      "tsMs": 1788774420979
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\data -Force -ErrorAction SilentlyContinue | Select-Object Name, Mode | Format-Table -AutoSize\"}",
+      "tsMs": 1788774439007
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":100,\"path\":\"workspace/docs\",\"pattern\":\"Slice 3\\\\.2|Slice 3\\\\.3|phase 3|Phase 3|r3\\\\.3|R3\\\\.3|resumable\"}",
+      "tsMs": 1788774439015
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace\\\\.git\\\\logs\\\\HEAD | Select-Object -Last 60\"}",
+      "tsMs": 1788774439028
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation\"}",
+      "tsMs": 1788774446934
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/validation/v2_resource_bar_daily_use_baseline.md\"}",
+      "tsMs": 1788774446935
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/superpowers/plans\"}",
+      "tsMs": 1788774485170
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers/sdd\"}",
+      "tsMs": 1788774485171
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace -Directory | Select-Object Name | Format-Table -AutoSize; Get-ChildItem -Path workspace\\\\evaluation -Force -ErrorAction SilentlyContinue | Select-Object Name, Mode | Format-Table -AutoSize; Get-ChildItem -Path workspace\\\\experiments -Force -ErrorAction SilentlyContinue | Select-Object Name, Mode | Format-Table -AutoSize\"}",
+      "tsMs": 1788774485171
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\docs -Recurse -File | Where-Object { $_.LastWriteTime -gt (Get-Date '2026-09-01') } | Sort-Object LastWriteTime -Descending | Select-Object FullName, LastWriteTime | Format-Table -AutoSize -Wrap\"}",
+      "tsMs": 1788774489681
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":60,\"path\":\"workspace/docs\",\"pattern\":\"Slice 3|slice 3|workspace overview|Workspace Overview|r3\\\\.3|R3\\\\.3|round 3\"}",
+      "tsMs": 1788774508071
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md\"}",
+      "tsMs": 1788774508085
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788774525879
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginWorkspaceOverview.test.js\"}",
+      "tsMs": 1788774525880
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path workspace\\\\node_modules; Test-Path workspace\\\\package-lock.json; Get-Content workspace\\\\package.json | Select-String -Pattern '\\\"scripts\\\"' -Context 0,20\"}",
+      "tsMs": 1788774532643
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\src\\\\core\\\\handoff -Recurse -File | Select-Object Name, LastWriteTime | Sort-Object LastWriteTime; Get-ChildItem -Path workspace\\\\src\\\\agents -Recurse -File -ErrorAction SilentlyContinue | Select-Object Name, LastWriteTime | Sort-Object LastWriteTime\"}",
+      "tsMs": 1788774532651
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path workspace\\\\.runtime; Test-Path workspace\\\\.margin; Get-ChildItem -Path workspace -Force -File | Select-Object Name | Format-Table -AutoSize; (Get-Content workspace\\\\.git\\\\refs\\\\heads\\\\main).Trim()\"}",
+      "tsMs": 1788774557615
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/web\",\"pattern\":\"workspace-overview|workspaceKey|overview\"}",
+      "tsMs": 1788774557616
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path workspace\\\\.runtime; Test-Path workspace\\\\node_modules; Test-Path workspace\\\\web\\\\node_modules\"}",
+      "tsMs": 1788774572088
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace -Recurse -File | Where-Object { $_.LastWriteTime -gt [datetime]'2026-09-07T01:44:36' -and $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\' } | Select-Object -ExpandProperty FullName\"}",
+      "tsMs": 1788774572097
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\web\\\\src\\\\margin -File | Select-Object Name, LastWriteTime | Format-Table -AutoSize; Get-Content workspace\\\\.git\\\\logs\\\\HEAD -Tail 4 | ForEach-Object { ($_ -split ' ')[0..1] -join ' ' }\"}",
+      "tsMs": 1788774583962
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path workspace\\\\src -Directory | Select-Object Name | Format-Table -AutoSize; Get-ChildItem -Path workspace\\\\src\\\\cli -File -ErrorAction SilentlyContinue | Select-Object Name, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788774583969
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem -Path workspace\\docs\\validation -Recurse | Select-Object FullName, Length | Format-Table -AutoSize",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788774328645
+    },
+    {
+      "command": "Get-ChildItem -Path workspace -Recurse -File | Where-Object { $_.FullName -notmatch '\\\\\\.git\\\\|\\\\node_modules\\\\|\\\\data\\\\|\\\\\\.margin\\\\' } | Sort-Object LastWriteTime -Descending | Select-Object -First 40 FullName, Length, LastWriteTime | Format-Table -AutoSize",
+      "reasons": [
+        "protected path fragment is disabled: \\.margin"
+      ],
+      "tsMs": 1788774373885
+    },
+    {
+      "command": "Test-Path workspace\\.runtime; Test-Path workspace\\.margin; Get-ChildItem -Path workspace -Force -File | Select-Object Name | Format-Table -AutoSize; (Get-Content workspace\\.git\\refs\\heads\\main).Trim()",
+      "reasons": [
+        "protected path fragment is disabled: \\.margin"
+      ],
+      "tsMs": 1788774557616
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 296771,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-02",
+    "arm": "B",
+    "runId": "formal-case-02-B-2026-09-07T09-44-53-082Z",
+    "startMs": "2026-09-07T09:45:03.261Z",
+    "endMs": "2026-09-07T09:50:01.644Z",
+    "durationMs": 298383,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-02-B-2026-09-07T09-44-53-082Z status=ok durationMs=296771\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-02-B-2026-09-07T09-44-53-082Z.cert.json"
+  }
+}

@@ -1,0 +1,360 @@
+{
+  "runId": "formal-case-08-B-2026-09-07T07-24-28-334Z",
+  "caseId": "case-08",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T07:24:37.537Z",
+  "endTs": "2026-09-07T07:31:59.344Z",
+  "durationMs": 441807,
+  "modelPromptStartMs": 28,
+  "modelPromptEndMs": 441807,
+  "sessionId": "01a07ac1-353b-7342-b79f-e81981dd8d5d",
+  "rawResponse": "```json\n{\n  \"goal\": \"Historical (Inferred in the input HANDOFF.md, and the artifact itself says to reconfirm before continuing): 'Margin Repository Cleanup — Slice 1' — make the repo's default develop/build/run/package paths point only at the current Margin mainline (CLI V1 + src/core/handoff + Electron V2 + web/src/margin); keep old Workbench/Workstream/Run/Memory reachable only through explicit legacy entry points; delete the audit-confirmed 11 unreferenced old .jsx wrappers; clean generated artifacts (out*, out-electron*, .worktrees, handoff-output, temp Electron logs); extend Forge packaging ignores; validate (CLI runnable, Electron surface starts, build emits only margin.html, focused mainline tests pass, package has no .worktrees, git diff --check) and finish with a report and PASS/PARTIAL verdict; then STOP without further legacy deletion. Do-not-delete set: src/application, src/continuity, src/contracts, src/domain, src/http, src/runtime, src/pilot, migrations/data, Feishu, evaluation/docs.\",\n  \"progress\": \"Frozen repo snapshot is at 2026-09-07T04:47:58Z; refs/heads/main = a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches HANDOFF repo truth; no commits after it). By direct file inspection the cleanup edits all appear present and internally consistent: package.json start/dev/margin -> scripts/run-margin-surface.js with legacy:api and legacy:workbench retained; Dockerfile CMD and docker-compose.yml run run-margin-surface.js; run-margin-local.cmd -> run-margin-surface.js while run-echo-local.cmd is labeled [deprecated] and points at run-legacy-api.js; web/vite.config.js builds ONLY margin.html (single rollup input { margin }); web/index.html + web/src/main.jsx + web/src/App.jsx remain as the referenced legacy Workbench entry (index.html/main.jsx/App.jsx chain is still referenced; web/src/App.jsx is a one-line re-export of App.js); web/src/components now contains only .js files (no leftover component .jsx wrappers); forge.config.cjs sets outDir out2, asar:true, ignore for .worktrees/handoff-output/out<digits>/electron-*.log, extraResource:['web'], rebuildConfig force:false; .gitignore and .dockerignore updated (.worktrees/, out*/, electron-*.log, handoff-output/, .runtime/, web/dist/, design-references/ etc.); electron/ contains only current Electron V2 main.js + preload.cjs; bin/margin.js, scripts/run-margin-surface.js, src/core/handoff/*, web/margin.html + web/src/margin/* all present; protected legacy source dirs (src/application, continuity, contracts, domain, http, runtime, pilot) still exist; no out*/out-electron*/.worktrees/handoff-output directories exist in this copy. Static cleanup-assertion tests exist and their assertions match current file contents (test/apiOnlyRuntime.test.js, test/webWorkbenchComposition.test.js). NOTE: the last writes before the freeze (12:42–12:47 local, up to 11s before snapshot) were to src/core/handoff/{exec.js,handoff.js,evidence.js,distiller.js} and test/handoff.test.js — NOT cleanup-scope files; they end cleanly with no TODO/FIXME markers, but this shows the interrupted run was touching the Smart Handoff pipeline when it stopped.\",\n  \"pending\": \"Per HANDOFF (historical, not verified here): no current validation has been rerun on this tree; historical runs show one focused test command FAILED (exit_code=1) and another had no explicit final result; npm run electron:package failed ('Could not find any Python installation to use'); `$env:MARGIN_SURFACE_PORT='0'; npm start` exited -1. Historical verdict was PARTIAL — cleanup complete 'except for two externally locked historical app.asar files and installer creation blocked by missing host Python'. No in-repo cleanup report file with the 9 requested output sections + verdict is present in the snapshot (root has only the older unrelated task-8-report.md). Working tree is uncommitted at HEAD (HANDOFF reports 112 tracked-modified/untracked files). Legacy entries (legacy:workbench via scripts/run-web-workbench.js, legacy:api via scripts/run-legacy-api.js) exist. In this sandbox no Node runtime (.runtime/), node_modules/, git, Electron, or Python exists, so nothing executable can be rerun here.\",\n  \"historicalValidation\": \"From input HANDOFF.md only (historical, not current-truth): (1) a focused test command (npm test -- --test-name-pattern=\\\"^$\\\" plus an explicit node --test run over test/marginCli.test.js test/handoff.test.js test/marginSurfaceHttpAdapter.test.js test/m...) FAILED with exit_code=1; (2) the same-style focused command also has an entry with NO explicit success/failure (status unknown); (3) npm run electron:package failed with 'Could not find any Python installation to use'; (4) `$env:MARGIN_SURFACE_PORT='0'; npm start` exited -1; (5) several Get-Content batch reads failed exit_code=1 (paths included electron/preload.js, which currently exists only as electron/preload.cjs). Historical report: 'PARTIAL — cleanup is complete except for two externally locked historical app.asar files and installer creation blocked by missing host Python.' Nothing was rerun against this frozen snapshot, so current validation is unknown. The repo file task-8-report.md documents a DIFFERENT, older (2026-08-24) Phase 2B task and must not be treated as evidence for this cleanup.\",\n  \"recommendedFollowUp\": \"Conditional guidance only (not an executable action here): in the original repo (<repo>, origin of this copy) (1) reconfirm with the user that 'Repository Cleanup — Slice 1' is still the live request — HANDOFF labels the goal Inferred, warns it may need updating, and the actual final in-flight edits were in src/core/handoff + test/handoff.test.js rather than cleanup scope; (2) re-establish current validation by running the focused mainline/cleanup tests (e.g. test/marginCli.test.js, test/handoff.test.js, test/marginSurfaceHttpAdapter.test.js, test/apiOnlyRuntime.test.js, test/webWorkbenchComposition.test.js), `npm run build` (expect only margin.html output), a Margin CLI/surface/Electron smoke, and `git diff --check`; (3) inspect `git status`/`git diff` to enumerate the reported 112-file uncommitted delta and confirm which cleanup edits are already in the working tree/HEAD; (4) re-verify on the real host the two locked app.asar files and Python availability before any electron:package/make attempt; (5) then write the still-missing cleanup report (default-entry changes, deleted wrappers, generated cleanup, packaging ignores, retained legacy paths, tests/build, package-size comparison, remaining retire candidates, PASS/PARTIAL verdict) and stop without deleting more legacy stack.\",\n  \"currentApplicability\": \"The frozen workspace already contains, in its working tree, every code/config edit the Slice-1 cleanup called for, and static file content matches the in-repo cleanup-assertion tests — so a continuation may treat the code edits as 'in place but unvalidated'. It is NOT independently validated: no test/build/package/Electron run is possible in this sandbox (no .runtime Node, no node_modules, no git, no Python), and gitignored/generated content is absent from the copy, so the absence of out*/.worktrees/handoff-output/app.asar here proves nothing about the original host (which historically still had two locked app.asar files). Current validation status is therefore UNKNOWN. Also uncertain: whether the interrupted run was actually on the cleanup task or on the Smart Handoff pipeline files (evidence.js/distiller.js/handoff.js/exec.js + test/handoff.test.js) that were being edited in the final minute before the freeze; those modules' current pass/fail is unverified.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the absence of out*/out-electron*/.worktrees/handoff-output/app.asar directories in this frozen copy proves they were cleaned in the original repo; the copy likely excludes gitignored content, and the historical report said two app.asar files were still externally locked.\",\n    \"Assuming the cleanup edits are already committed; HEAD main=a247e75 with a HANDOFF-reported 112 tracked-modified/untracked files means the working tree carries uncommitted changes, and no git binary is available here to verify the diff.\",\n    \"Assuming the HANDOFF goal 'Margin Repository Cleanup — Slice 1' is still the live request; HANDOFF itself marks the goal Inferred and says to confirm whether it should be updated, and the final in-flight edits were in src/core/handoff rather than cleanup scope.\",\n    \"Assuming historical test results (one focused command failed exit 1, one unknown) describe the current tree; tests were never rerun against this snapshot, so current validation is unknown.\",\n    \"Assuming the historical PARTIAL verdict and the 'missing host Python' / locked-app.asar blockers still hold on the real host; all are historical and must be re-verified.\",\n    \"Assuming clean-looking static file tails / absence of TODO markers means the Smart Handoff modules parse and their tests pass; only static inspection was possible.\",\n    \"Assuming the earlier failed read of electron/preload.js implies a rename to electron/preload.cjs during this cleanup; the rename is unconfirmed.\",\n    \"Assuming no cleanup report exists because none is visible in this snapshot; it may live outside the copied tree (e.g., under the original repo's docs/validation, which is absent here).\",\n    \"Assuming the mojibake seen when reading UTF-8 handoff sources via the console indicates file corruption; it is a PowerShell console-encoding artifact.\"\n  ]\n}\n```",
+  "parsedRecovery": null,
+  "hasAllRequiredKeys": false,
+  "parseError": "no parseable JSON object in final text",
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788765878825
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C .\\\\workspace status 2>&1 | Out-String; Write-Output '---'; git -C .\\\\workspace log --oneline -10 2>&1 | Out-String\"}",
+      "tsMs": 1788765878825
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788765881710
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788765881711
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788765881711
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788765881711
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788765882884
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788765882885
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src\"}",
+      "tsMs": 1788765886344
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788765886344
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Command git -ErrorAction SilentlyContinue; Write-Output '---HEAD---'; Get-Content .\\\\workspace\\\\.git\\\\HEAD -ErrorAction SilentlyContinue; Write-Output '---'; Get-ChildItem .\\\\workspace\\\\.git -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788765888837
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\web -ErrorAction SilentlyContinue | Select-Object Name,Length; Write-Output '---SCRIPTS---'; Get-ChildItem .\\\\workspace\\\\scripts -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '---TEST---'; Get-ChildItem .\\\\workspace\\\\test -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788765888844
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '---refs/heads/main---'; Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue; Write-Output '---ORIG_HEAD---'; Get-Content .\\\\workspace\\\\.git\\\\ORIG_HEAD -ErrorAction SilentlyContinue; Write-Output '---REBASE_HEAD---'; Get-Content .\\\\workspace\\\\.git\\\\REBASE_HEAD -ErrorAction SilentlyContinue; Write-Output '---FETCH_HEAD---'; Get-Content .\\\\workspace\\\\.git\\\\FETCH_HEAD -ErrorAction SilentlyContinue; Write-Output '---logs/HEAD tail---'; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -ErrorAction SilentlyContinue | Select-Object -Last 20\"}",
+      "tsMs": 1788765896210
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Force | Select-Object Name,Mode,Length; Write-Output '---root out*/legacy dirs---'; Get-ChildItem .\\\\workspace -Force -Directory | Where-Object { $_.Name -match 'out|worktree|handoff|legacy|_tmp' } | Select-Object Name; Write-Output '---tmp dirs contents (root level dot entries)---'; Get-ChildItem .\\\\workspace\\\\.worktrees, .\\\\workspace\\\\out, .\\\\workspace\\\\out-electron -Force -ErrorAction SilentlyContinue | Select-Object FullName\"}",
+      "tsMs": 1788765896222
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path . -Recurse -Filter 'git.exe' -ErrorAction SilentlyContinue | Select-Object -First 5 FullName; Write-Output '---where---'; where.exe git 2>&1\"}",
+      "tsMs": 1788765901678
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/vite.config.js\"}",
+      "tsMs": 1788765901688
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/forge.config.cjs\"}",
+      "tsMs": 1788765901689
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/run-margin-local.cmd\"}",
+      "tsMs": 1788765901690
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Recurse -Filter '*.jsx' -File -ErrorAction SilentlyContinue | Select-Object FullName,Length\"}",
+      "tsMs": 1788765906870
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '---.gitignore---'; Get-Content .\\\\workspace\\\\.gitignore; Write-Output '---.dockerignore---'; Get-Content .\\\\workspace\\\\.dockerignore; Write-Output '---Dockerfile---'; Get-Content .\\\\workspace\\\\Dockerfile; Write-Output '---docker-compose.yml---'; Get-Content .\\\\workspace\\\\docker-compose.yml\"}",
+      "tsMs": 1788765906880
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\web\\\\src -Recurse -File | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788765908893
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/index.html\"}",
+      "tsMs": 1788765908904
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/margin.html\"}",
+      "tsMs": 1788765908904
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Force -Directory -Recurse -Depth 3 -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'git|\\\\.runtime' } | Select-Object FullName\"}",
+      "tsMs": 1788765917102
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\_tmp -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object -First 40 FullName\"}",
+      "tsMs": 1788765917113
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs -Recurse -Directory -ErrorAction SilentlyContinue | Select-Object FullName | Select-Object -First 60\"}",
+      "tsMs": 1788765921153
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\.superpowers -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 60 FullName\"}",
+      "tsMs": 1788765921164
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs\\\\validation -Recurse -File -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '---audit---'; Get-ChildItem .\\\\workspace\\\\docs\\\\audit -Recurse -File -ErrorAction SilentlyContinue | Select-Object FullName\"}",
+      "tsMs": 1788765923372
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"jsx wrapper|cleanup audit|Slice 1|11 个|\\\\.jsx\",\"path\":\"workspace/docs\"}",
+      "tsMs": 1788765923372
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"\\\\.jsx\",\"path\":\"workspace/test\"}",
+      "tsMs": 1788765932998
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"\\\\.jsx|src/main\\\\.jsx|index\\\\.html\",\"path\":\"workspace/src\"}",
+      "tsMs": 1788765933013
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"\\\\.jsx\",\"path\":\"workspace/electron\"}",
+      "tsMs": 1788765933035
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"index\\\\.html|main\\\\.jsx|vite\",\"path\":\"workspace/scripts\"}",
+      "tsMs": 1788765933036
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path .\\\\workspace\\\\.runtime; Test-Path .\\\\workspace\\\\node_modules; Get-ChildItem .\\\\workspace\\\\electron -Force | Select-Object Name; Write-Output '---out dirs anywhere---'; Get-ChildItem .\\\\workspace -Recurse -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -match '^out|^handoff-output|^\\\\.worktrees' } | Select-Object -First 40 FullName\"}",
+      "tsMs": 1788765939854
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/web/createWebWorkbench.js\"}",
+      "tsMs": 1788765939862
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/createMarginSurface.js\"}",
+      "tsMs": 1788765943780
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/scripts/run-margin-surface.js\"}",
+      "tsMs": 1788765943781
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/docs\",\"pattern\":\"cleanup|mainline|app\\\\.asar|worktrees|Slice 1|audit\"}",
+      "tsMs": 1788765946892
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\_tmp\\\\AppData\\\\Roaming -Force -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '---search git anywhere in _tmp---'; Get-ChildItem .\\\\_tmp -Recurse -Filter 'git.exe' -ErrorAction SilentlyContinue | Select-Object -First 3 FullName\"}",
+      "tsMs": 1788765946904
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Recurse -Filter '*.asar' -File -ErrorAction SilentlyContinue | Select-Object FullName,Length; Write-Output '---.git/worktrees---'; Get-ChildItem .\\\\workspace\\\\.git\\\\worktrees -Force -Recurse -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '---electron package dirs---'; Get-ChildItem .\\\\workspace\\\\electron -Recurse -Force -ErrorAction SilentlyContinue | Select-Object FullName\"}",
+      "tsMs": 1788765967334
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/main.js\"}",
+      "tsMs": 1788765967341
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/main.jsx\"}",
+      "tsMs": 1788765977168
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/main.jsx\"}",
+      "tsMs": 1788765977169
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/web\",\"pattern\":\"App\\\\.jsx|main\\\\.jsx|index\\\\.html|margin\\\\.html\"}",
+      "tsMs": 1788765977169
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"node --version 2>&1; Write-Output '---npm---'; npm --version 2>&1; Write-Output '---node in common paths---'; Get-ChildItem 'C:\\\\Program Files\\\\nodejs\\\\node.exe' -ErrorAction SilentlyContinue | Select-Object FullName; Get-ChildItem .\\\\workspace\\\\.runtime -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788765985192
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/scripts/run-web-workbench.js\"}",
+      "tsMs": 1788765985192
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/run-echo-local.cmd\"}",
+      "tsMs": 1788765996066
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\|\\\\\\\\node_modules\\\\\\\\|design-references\\\\\\\\huashu-design\\\\\\\\' } | Sort-Object LastWriteTime -Descending | Select-Object -First 80 LastWriteTime, FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788765996067
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/test\",\"pattern\":\"margin\\\\.html|run-margin-surface|legacy:workbench|legacy:api|\\\\.worktrees|out2|forge\"}",
+      "tsMs": 1788766098696
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\test\\\\helpers -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '---files modified after HEAD commit (~02:00 local 9/7) i.e. candidate interrupted-session changes---'; Get-ChildItem .\\\\workspace -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\|\\\\\\\\node_modules\\\\\\\\' -and $_.LastWriteTime -gt (Get-Date '2026-09-07T02:00:00') } | Sort-Object LastWriteTime | Select-Object LastWriteTime, FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788766098710
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\src\\\\core\\\\handoff -File | Select-Object Name,Length,LastWriteTime | Sort-Object LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788766230861
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\src\\\\cli\\\\margin, .\\\\workspace\\\\src\\\\cli -File -Recurse -ErrorAction SilentlyContinue | Select-Object FullName,LastWriteTime | Format-Table -AutoSize; Write-Output '---bin---'; Get-ChildItem .\\\\workspace\\\\bin -File -ErrorAction SilentlyContinue | Select-Object Name,LastWriteTime\"}",
+      "tsMs": 1788766230868
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/handoff.test.js\",\"limitChars\":6000}",
+      "tsMs": 1788766242302
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/index.js\"}",
+      "tsMs": 1788766242302
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/web\",\"pattern\":\"from '\\\\./(App|main)|require\\\\(.*App\"}",
+      "tsMs": 1788766255905
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\web\\\\src\\\\App.js -TotalCount 40; Write-Output '---App.jsx head---'; Get-Content .\\\\workspace\\\\web\\\\src\\\\App.jsx -TotalCount 40; Write-Output '---sizes---'; Get-ChildItem .\\\\workspace\\\\web\\\\src\\\\App.js, .\\\\workspace\\\\web\\\\src\\\\App.jsx, .\\\\workspace\\\\web\\\\src\\\\main.jsx | Select-Object Name,Length\"}",
+      "tsMs": 1788766255910
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\src\\\\core\\\\handoff\\\\distiller.js -Tail 15; Write-Output '===exec tail==='; Get-Content .\\\\workspace\\\\src\\\\core\\\\handoff\\\\exec.js -Tail 8; Write-Output '===evidence tail==='; Get-Content .\\\\workspace\\\\src\\\\core\\\\handoff\\\\evidence.js -Tail 8; Write-Output '===handoff.js tail==='; Get-Content .\\\\workspace\\\\src\\\\core\\\\handoff\\\\handoff.js -Tail 8; Write-Output '===test handoff tail==='; Get-Content .\\\\workspace\\\\test\\\\handoff.test.js -Tail 15\"}",
+      "tsMs": 1788766267436
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/src/core/handoff\",\"pattern\":\"TODO|FIXME|XXX|throw new Error\\\\('not implemented|unfinished\"}",
+      "tsMs": 1788766267444
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '---run-legacy-api head---'; Get-Content .\\\\workspace\\\\scripts\\\\run-legacy-api.js -TotalCount 20; Write-Output '---README default entry lines---'; Select-String -Path .\\\\workspace\\\\README.md -Pattern 'npm start|npm run build|legacy|margin.html|run-margin' | Select-Object -First 15 LineNumber,Line\"}",
+      "tsMs": 1788766300325
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem .\\workspace\\.superpowers -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 60 FullName",
+      "reasons": [
+        "protected path fragment is disabled: \\.superpowers"
+      ],
+      "tsMs": 1788765921164
+    },
+    {
+      "command": "Get-ChildItem .\\workspace\\docs\\validation -Recurse -File -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '---audit---'; Get-ChildItem .\\workspace\\docs\\audit -Recurse -File -ErrorAction SilentlyContinue | Select-Object FullName",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788765923372
+    },
+    {
+      "command": "node --version 2>&1; Write-Output '---npm---'; npm --version 2>&1; Write-Output '---node in common paths---'; Get-ChildItem 'C:\\Program Files\\nodejs\\node.exe' -ErrorAction SilentlyContinue | Select-Object FullName; Get-ChildItem .\\workspace\\.runtime -ErrorAction SilentlyContinue | Select-Object Name",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: c:\\program"
+      ],
+      "tsMs": 1788765985192
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 441807,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-08",
+    "arm": "B",
+    "runId": "formal-case-08-B-2026-09-07T07-24-28-334Z",
+    "startMs": "2026-09-07T07:24:36.153Z",
+    "endMs": "2026-09-07T07:31:59.345Z",
+    "durationMs": 443192,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-08-B-2026-09-07T07-24-28-334Z status=ok durationMs=441807\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-08-B-2026-09-07T07-24-28-334Z.cert.json"
+  }
+}

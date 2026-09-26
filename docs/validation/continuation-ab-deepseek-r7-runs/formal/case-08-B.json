@@ -1,0 +1,252 @@
+{
+  "runId": "formal-case-08-B-2026-09-07T10-42-33-005Z",
+  "caseId": "case-08",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T10:42:43.765Z",
+  "endTs": "2026-09-07T10:50:55.507Z",
+  "durationMs": 491742,
+  "modelPromptStartMs": 54,
+  "modelPromptEndMs": 491742,
+  "sessionId": "01a07b76-93e8-75ea-8456-a2b8bb1491ba",
+  "rawResponse": "Based on my inspection of the environment (`README-ENVIRONMENT.md`, `input/HANDOFF.md`, and the frozen repo in `./workspace`, including git object/index analysis done without git), here is the recovery state:\n\n```json\n{\n  \"goal\": \"Margin Repository Cleanup — Slice 1 (benchmark case-08, session 01a0763e): make the repository's default develop/build/run/package paths point only to the current Margin mainline (CLI V1 + src/core/handoff + Electron V2 + web/src/margin); keep the old Workbench/Workstream/Run/Memory stacks present but reachable only via explicit legacy entrypoints (e.g. legacy:workbench, legacy:api); delete the audit-confirmed 11 unused legacy .jsx wrapper files; clean generated artifacts (out*, out-electron*, .worktrees, handoff-output, temp Electron logs); extend Forge packaging ignores so .worktrees / old build output never re-enter the installer; do NOT delete src/application|continuity|contracts|domain|http|runtime|pilot, migrations/data, Feishu, evaluation, or docs (they are for later slices); validate (CLI runnable, Electron Margin Surface launch, build emits only the Margin web entry, focused current-mainline tests, package excludes .worktrees, git diff --check); and stop with verdict PASS or PARTIAL.\",\n  \"progress\": \"HISTORICAL (from input/HANDOFF.md, not independently re-verified): the prior run reported PARTIAL — cleanup essentially complete except for two externally locked historical app.asar files and installer creation blocked by a missing host Python; claimed default entries switched to Margin Surface, Vite builds only margin.html, Workbench retained only as legacy:workbench, 11 unused legacy wrappers removed, npm run build passes with margin-only output, npm start launches Margin Surface on loopback, focused current-mainline suite 76/76, Electron V2 host lifecycle test passes. CURRENT REPO TRUTH (measured in this frozen ./workspace): branch main, HEAD = a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches the HANDOFF's claimed HEAD). HEAD's committed tree (386 files) already contains the cleanup-oriented configuration: package.json scripts start/dev/legacy:api/legacy:workbench/margin:* pointing at scripts/run-margin-surface.js, scripts/run-legacy-api.js, scripts/run-web-workbench.js; run-margin-local.cmd, Dockerfile, docker-compose.yml; web/vite.config.js with rollup input = margin.html only; forge.config.cjs ignore rules for .worktrees, handoff-output, out\\\\d* and electron-*.log; .gitignore covering out*/, .worktrees/, handoff-output/, web/dist/, .runtime/. The legacy web-workbench surface is still physically present (web/index.html, web/src/App.jsx, web/src/main.jsx, web/src/components/*.js, scripts/run-web-workbench.js). Only 3 .jsx files are tracked (web/src/App.jsx, web/src/main.jsx, web/src/margin/main.jsx); the audit list naming the '11 jsx wrappers' is NOT in this snapshot, so that deletion cannot be confirmed or reproduced here. The git index equals HEAD plus 4 staged additions (src/services/llm/providers/{anthropic,local,openai,siliconflow}Provider.js) that are absent from HEAD. The working tree additionally differs from the index in 32 files (unstaged): 17 regenerated validation PNGs under docs/validation, bin/margin.js, and ~14 current-mainline source/test files (src/core/handoff/{distiller,evidence,exec,handoff,httpAdapter}.js, src/core/persistentWorkRepository.js, src/resources/agentResourceService.js + codexQuotaSource.js, src/runtime/pi/{marginPiAdapter,piTerminalPilotRuntime}.js, test/handoff.test.js, web/src/margin/{marginApiClient,MarginApp,SessionBoard}.js). Further non-committed files exist untracked (margin agent/Feishu surface sources e.g. src/agents/*, src/cli/agentSourceCli.js, src/runtime/claude/claudeAgentLoop.js, src/surfaces/feishu/*, scripts/run-feishu-surface.js, scripts/setup-feishu-folders.js, scripts/schedule-setup.ps1, test/agentSourceRegistry.test.js, Margin_Phase0_PoC_Plan.md; plus gitignored trees .superpowers/sdd/ and design-references/). This uncommitted WIP appears to predate / be unrelated to the case-08 cleanup and must be preserved. No out*, out2*, out-electron*, .worktrees, handoff-output, web/dist, .runtime, node_modules, *.asar, or generated report from case-08 exists in this snapshot. data/ contains only .gitkeep. Current validation is NOT runnable in this sandbox (no node, no .runtime, no node_modules, no git executable, no python).\",\n  \"pending\": \"HISTORICAL pending/blockers from the HANDOFF: (1) two externally locked historical app.asar files could not be removed; (2) electron packaging/maker (installer creation) blocked by missing host Python; (3) final verdict still to be recorded (reported as PARTIAL). Historical validation was mixed: one focused current-mainline test command failed (exit 1), one had no explicit terminal result, and $env:MARGIN_SURFACE_PORT='0'; npm start exited -1; npm run electron:package failed (no Python). UNRESOLVED IN THIS SNAPSHOT: none of these can be confirmed or re-run here; the 11-wrapper deletion target list is not present, and there is no post-cleanup report/artifact in the workspace to verify against.\",\n  \"historicalValidation\": \"Recorded in the HANDOFF as historical only: npm run build passed and emitted only margin.html + Margin JS/CSS; npm start launched the Margin Surface on loopback; focused current-mainline suite 76/76 passed; Electron V2 host lifecycle test passed; wrapper deletions and entrypoint changes were described as done. Also recorded: a focused test invocation failed (exit_code=1), one test invocation had no explicit pass/fail, npm run electron:package failed with 'Could not find any Python installation to use', and a MARGIN_SURFACE_PORT=0 npm start attempt exited -1. task-8-report.md in the repo is older evidence (Phase 2B workbench, 461/462 tests) and is not about this cleanup slice.\",\n  \"recommendedFollowUp\": \"Recommendation only, not a current-action assertion: continue on the real workspace (<repo>) with git + node + python available, because this frozen snapshot has no toolchain. First re-establish truth with `git status` / `git diff` and read the committed baseline vs the working tree (expect the unrelated uncommitted margin WIP, the 4 staged llm-provider files, and the ~32 modified mainline files to be preserved, not reset). Then re-run the case-08 Validate list against the current tree (CLI V1 run, Electron Margin Surface start, npm run build margin-only content check, focused current-mainline tests, packaged output excludes .worktrees/handoff-output, git diff --check), locate the cleanup-audit artifact that enumerates the 11 .jsx wrappers before deleting anything, and resolve the two locked app.asar + missing-Python installer blocker before writing the final PASS/PARTIAL report. In this snapshot the config-level cleanup items appear already satisfied by the committed baseline, so verify rather than re-apply.\",\n  \"currentApplicability\": \"Limited / partially stale. The historical 'cleanup is complete except app.asar + Python' claim is NOT current truth here: it was never independently validated in this snapshot and no session commits or post-cleanup artifacts exist in it. Static inspection does confirm that most config-level outputs of the cleanup are already present at committed HEAD a247e75a (margin-default scripts, margin-only Vite input, Forge/Docker/.gitignore ignores, retained legacy entrypoints), and that legacy web-workbench files still exist as intended. The historical Python/app.asar blocker cannot be assessed here (no python, no artifacts, no packaging). The 76/76 build/test numbers are historical reports only; no test or build was rerun, and none can be run in this environment. The working tree also carries pre-existing uncommitted current-mainline changes that are unrelated to (and must not be mistaken for) the case-08 cleanup output.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the HANDOFF's PARTIAL completion report reflects the current state of THIS repository snapshot — unsupported; this snapshot has no case-08 commits, no case-08 report, and differs from the handoff's '343 modified/untracked' description (measured here: index = HEAD + 4 staged provider files; working tree = index + 32 unstaged modified tracked files plus some untracked/ignored trees).\",\n    \"Assuming the 11 unused .jsx wrapper files still need deleting and can be identified from this snapshot — unknown; the audit list is absent and only 3 .jsx files are tracked (two of which support the retained legacy workbench entry).\",\n    \"Assuming web/src/App.jsx, web/src/main.jsx, web/index.html are safe deletion targets — unsafe; they back the intentionally retained legacy:workbench / legacy web-workbench path.\",\n    \"Assuming npm run build / npm test / npm start / electron packaging can be re-executed in this sandbox — false; no node, .runtime, node_modules, python, or git binary is present.\",\n    \"Assuming absence of out*, .worktrees, handoff-output, *.asar, web/dist proves the artifact cleanup happened — unsupported; the snapshot simply does not contain those (possibly excluded/ignored) files.\",\n    \"Assuming the uncommitted margin mainline changes (handoff core, margin web, agent/Feishu sources, staged llm providers) are case-08 work product — unsupported and likely wrong; they appear to be unrelated pre-existing work-in-progress that should be preserved.\",\n    \"Assuming HEAD (a247e75a) already equals the cleanup end-state — while the config items match, wrapper deletion and artifact/package verification were not observable, so the cleanup outcome is not established.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Margin Repository Cleanup — Slice 1 (benchmark case-08, session 01a0763e): make the repository's default develop/build/run/package paths point only to the current Margin mainline (CLI V1 + src/core/handoff + Electron V2 + web/src/margin); keep the old Workbench/Workstream/Run/Memory stacks present but reachable only via explicit legacy entrypoints (e.g. legacy:workbench, legacy:api); delete the audit-confirmed 11 unused legacy .jsx wrapper files; clean generated artifacts (out*, out-electron*, .worktrees, handoff-output, temp Electron logs); extend Forge packaging ignores so .worktrees / old build output never re-enter the installer; do NOT delete src/application|continuity|contracts|domain|http|runtime|pilot, migrations/data, Feishu, evaluation, or docs (they are for later slices); validate (CLI runnable, Electron Margin Surface launch, build emits only the Margin web entry, focused current-mainline tests, package excludes .worktrees, git diff --check); and stop with verdict PASS or PARTIAL.",
+    "progress": "HISTORICAL (from input/HANDOFF.md, not independently re-verified): the prior run reported PARTIAL — cleanup essentially complete except for two externally locked historical app.asar files and installer creation blocked by a missing host Python; claimed default entries switched to Margin Surface, Vite builds only margin.html, Workbench retained only as legacy:workbench, 11 unused legacy wrappers removed, npm run build passes with margin-only output, npm start launches Margin Surface on loopback, focused current-mainline suite 76/76, Electron V2 host lifecycle test passes. CURRENT REPO TRUTH (measured in this frozen ./workspace): branch main, HEAD = a247e75ab9e78cce7853e3f281b85459a4f25e7c (matches the HANDOFF's claimed HEAD). HEAD's committed tree (386 files) already contains the cleanup-oriented configuration: package.json scripts start/dev/legacy:api/legacy:workbench/margin:* pointing at scripts/run-margin-surface.js, scripts/run-legacy-api.js, scripts/run-web-workbench.js; run-margin-local.cmd, Dockerfile, docker-compose.yml; web/vite.config.js with rollup input = margin.html only; forge.config.cjs ignore rules for .worktrees, handoff-output, out\\d* and electron-*.log; .gitignore covering out*/, .worktrees/, handoff-output/, web/dist/, .runtime/. The legacy web-workbench surface is still physically present (web/index.html, web/src/App.jsx, web/src/main.jsx, web/src/components/*.js, scripts/run-web-workbench.js). Only 3 .jsx files are tracked (web/src/App.jsx, web/src/main.jsx, web/src/margin/main.jsx); the audit list naming the '11 jsx wrappers' is NOT in this snapshot, so that deletion cannot be confirmed or reproduced here. The git index equals HEAD plus 4 staged additions (src/services/llm/providers/{anthropic,local,openai,siliconflow}Provider.js) that are absent from HEAD. The working tree additionally differs from the index in 32 files (unstaged): 17 regenerated validation PNGs under docs/validation, bin/margin.js, and ~14 current-mainline source/test files (src/core/handoff/{distiller,evidence,exec,handoff,httpAdapter}.js, src/core/persistentWorkRepository.js, src/resources/agentResourceService.js + codexQuotaSource.js, src/runtime/pi/{marginPiAdapter,piTerminalPilotRuntime}.js, test/handoff.test.js, web/src/margin/{marginApiClient,MarginApp,SessionBoard}.js). Further non-committed files exist untracked (margin agent/Feishu surface sources e.g. src/agents/*, src/cli/agentSourceCli.js, src/runtime/claude/claudeAgentLoop.js, src/surfaces/feishu/*, scripts/run-feishu-surface.js, scripts/setup-feishu-folders.js, scripts/schedule-setup.ps1, test/agentSourceRegistry.test.js, Margin_Phase0_PoC_Plan.md; plus gitignored trees .superpowers/sdd/ and design-references/). This uncommitted WIP appears to predate / be unrelated to the case-08 cleanup and must be preserved. No out*, out2*, out-electron*, .worktrees, handoff-output, web/dist, .runtime, node_modules, *.asar, or generated report from case-08 exists in this snapshot. data/ contains only .gitkeep. Current validation is NOT runnable in this sandbox (no node, no .runtime, no node_modules, no git executable, no python).",
+    "pending": "HISTORICAL pending/blockers from the HANDOFF: (1) two externally locked historical app.asar files could not be removed; (2) electron packaging/maker (installer creation) blocked by missing host Python; (3) final verdict still to be recorded (reported as PARTIAL). Historical validation was mixed: one focused current-mainline test command failed (exit 1), one had no explicit terminal result, and $env:MARGIN_SURFACE_PORT='0'; npm start exited -1; npm run electron:package failed (no Python). UNRESOLVED IN THIS SNAPSHOT: none of these can be confirmed or re-run here; the 11-wrapper deletion target list is not present, and there is no post-cleanup report/artifact in the workspace to verify against.",
+    "historicalValidation": "Recorded in the HANDOFF as historical only: npm run build passed and emitted only margin.html + Margin JS/CSS; npm start launched the Margin Surface on loopback; focused current-mainline suite 76/76 passed; Electron V2 host lifecycle test passed; wrapper deletions and entrypoint changes were described as done. Also recorded: a focused test invocation failed (exit_code=1), one test invocation had no explicit pass/fail, npm run electron:package failed with 'Could not find any Python installation to use', and a MARGIN_SURFACE_PORT=0 npm start attempt exited -1. task-8-report.md in the repo is older evidence (Phase 2B workbench, 461/462 tests) and is not about this cleanup slice.",
+    "recommendedFollowUp": "Recommendation only, not a current-action assertion: continue on the real workspace (<repo>) with git + node + python available, because this frozen snapshot has no toolchain. First re-establish truth with `git status` / `git diff` and read the committed baseline vs the working tree (expect the unrelated uncommitted margin WIP, the 4 staged llm-provider files, and the ~32 modified mainline files to be preserved, not reset). Then re-run the case-08 Validate list against the current tree (CLI V1 run, Electron Margin Surface start, npm run build margin-only content check, focused current-mainline tests, packaged output excludes .worktrees/handoff-output, git diff --check), locate the cleanup-audit artifact that enumerates the 11 .jsx wrappers before deleting anything, and resolve the two locked app.asar + missing-Python installer blocker before writing the final PASS/PARTIAL report. In this snapshot the config-level cleanup items appear already satisfied by the committed baseline, so verify rather than re-apply.",
+    "currentApplicability": "Limited / partially stale. The historical 'cleanup is complete except app.asar + Python' claim is NOT current truth here: it was never independently validated in this snapshot and no session commits or post-cleanup artifacts exist in it. Static inspection does confirm that most config-level outputs of the cleanup are already present at committed HEAD a247e75a (margin-default scripts, margin-only Vite input, Forge/Docker/.gitignore ignores, retained legacy entrypoints), and that legacy web-workbench files still exist as intended. The historical Python/app.asar blocker cannot be assessed here (no python, no artifacts, no packaging). The 76/76 build/test numbers are historical reports only; no test or build was rerun, and none can be run in this environment. The working tree also carries pre-existing uncommitted current-mainline changes that are unrelated to (and must not be mistaken for) the case-08 cleanup output.",
+    "unsafeAssumptions": [
+      "Assuming the HANDOFF's PARTIAL completion report reflects the current state of THIS repository snapshot — unsupported; this snapshot has no case-08 commits, no case-08 report, and differs from the handoff's '343 modified/untracked' description (measured here: index = HEAD + 4 staged provider files; working tree = index + 32 unstaged modified tracked files plus some untracked/ignored trees).",
+      "Assuming the 11 unused .jsx wrapper files still need deleting and can be identified from this snapshot — unknown; the audit list is absent and only 3 .jsx files are tracked (two of which support the retained legacy workbench entry).",
+      "Assuming web/src/App.jsx, web/src/main.jsx, web/index.html are safe deletion targets — unsafe; they back the intentionally retained legacy:workbench / legacy web-workbench path.",
+      "Assuming npm run build / npm test / npm start / electron packaging can be re-executed in this sandbox — false; no node, .runtime, node_modules, python, or git binary is present.",
+      "Assuming absence of out*, .worktrees, handoff-output, *.asar, web/dist proves the artifact cleanup happened — unsupported; the snapshot simply does not contain those (possibly excluded/ignored) files.",
+      "Assuming the uncommitted margin mainline changes (handoff core, margin web, agent/Feishu sources, staged llm providers) are case-08 work product — unsupported and likely wrong; they appear to be unrelated pre-existing work-in-progress that should be preserved.",
+      "Assuming HEAD (a247e75a) already equals the cleanup end-state — while the config items match, wrapper deletion and artifact/package verification were not observable, so the cleanup outcome is not established."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788777765192
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C ./workspace status 2>&1 | Out-String; Write-Output \\\"----\\\"; git -C ./workspace log --oneline -20 2>&1 | Out-String\"}",
+      "tsMs": 1788777765193
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788777767954
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788777767954
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788777767955
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788777767955
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788777768868
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788777768869
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788777774248
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Get-ChildItem -Force | Select-Object Mode,LastWriteTime,Name | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788777774248
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== .git/HEAD ===\\\"; Get-Content .git/HEAD -ErrorAction SilentlyContinue; Write-Output \\\"=== .git refs ===\\\"; Get-ChildItem -Recurse .git/refs -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output \\\"=== git available? ===\\\"; (Get-Command git -ErrorAction SilentlyContinue).Source; Write-Output \\\"=== HEAD log? ===\\\"; Get-Content .git/logs/HEAD -ErrorAction SilentlyContinue -TotalCount 40\"}",
+      "tsMs": 1788777781093
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Get-ChildItem scripts | Sort-Object Name | Select-Object Name,LastWriteTime,Length | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788777781105
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== refs/heads/main ===\\\"; Get-Content .git/refs/heads/main; Write-Output \\\"=== refs/remotes/origin/main ===\\\"; Get-Content .git/refs/remotes/origin/main; Write-Output \\\"=== HEAD log tail (40) ===\\\"; Get-Content .git/logs/HEAD -Tail 40\"}",
+      "tsMs": 1788777794627
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== top-level dirs present ===\\\"; Get-ChildItem -Directory | Select-Object Name; Write-Output \\\"=== .runtime ? node_modules ? ===\\\"; Test-Path .runtime; Test-Path node_modules; Write-Output \\\"=== node on PATH ===\\\"; (Get-Command node -ErrorAction SilentlyContinue).Source; Write-Output \\\"=== artifacts out*/.worktrees/handoff-output ===\\\"; Get-ChildItem -Force -Recurse -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match '^(out|out-electron|\\\\.worktrees|handoff-output)' } | Select-Object FullName | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788777794639
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== .jsx files ===\\\"; Get-ChildItem -Recurse -Filter *.jsx -File -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize | Out-String -Width 250; Write-Output \\\"=== web dir ===\\\"; Get-ChildItem web -Recurse -File | Select-Object FullName | Format-Table -AutoSize | Out-String -Width 250\"}",
+      "tsMs": 1788777825165
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== web/vite.config.js ===\\\"; Get-Content web/vite.config.js -ErrorAction SilentlyContinue; Write-Output \\\"=== forge.config.cjs ===\\\"; Get-Content forge.config.cjs -ErrorAction SilentlyContinue; Write-Output \\\"=== run-margin-local.cmd ===\\\"; Get-Content run-margin-local.cmd -ErrorAction SilentlyContinue; Write-Output \\\"=== .gitignore ===\\\"; Get-Content .gitignore -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788777825178
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Directory _tmp -ErrorAction SilentlyContinue | Select-Object -First 40 FullName | Format-Table -AutoSize | Out-String -Width 200; Write-Output \\\"=== files in _tmp ===\\\"; Get-ChildItem -Recurse -File _tmp -ErrorAction SilentlyContinue | Select-Object -First 20 FullName,Length | Format-Table -AutoSize | Out-String -Width 200; Write-Output \\\"=== find node.exe anywhere ===\\\"; Get-ChildItem -Recurse -Filter node.exe -ErrorAction SilentlyContinue C:\\\\ -Depth 3 2>$null | Select-Object -First 5 FullName\"}",
+      "tsMs": 1788777848779
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== docs/validation dir ===\\\"; Get-ChildItem docs -Directory -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"=== search cleanup audit refs ===\\\"; Get-ChildItem docs -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'cleanup|audit|handoff' } | Select-Object FullName | Format-Table -AutoSize | Out-String -Width 220\"}",
+      "tsMs": 1788777848779
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Get-ChildItem docs/validation -Recurse -File -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize | Out-String -Width 220; Write-Output \\\"=== docs/audit ===\\\"; Get-ChildItem docs/audit -Recurse -File -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize | Out-String -Width 220\"}",
+      "tsMs": 1788777852345
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"jsx|wrapper|11\",\"path\":\"workspace/docs/audit\",\"maxResults\":80}",
+      "tsMs": 1788777852355
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== objects ===\\\"; Get-ChildItem .git/objects | Select-Object Name; Write-Output \\\"=== objects/pack ===\\\"; Get-ChildItem .git/objects/pack -ErrorAction SilentlyContinue | Select-Object Name,Length | Format-Table -AutoSize | Out-String -Width 200; Write-Output \\\"=== loose object dirs sample ===\\\"; Get-ChildItem .git/objects -Directory | Select-Object Name; Write-Output \\\"=== a2 dir? ===\\\"; Get-ChildItem .git/objects/a2 -ErrorAction SilentlyContinue | Select-Object Name,Length\"}",
+      "tsMs": 1788777861014
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== .git top-level ===\\\"; Get-ChildItem .git -Force | Select-Object Name,Length,LastWriteTime | Format-Table -AutoSize | Out-String -Width 200; Write-Output \\\"=== index mtime ===\\\"; (Get-Item .git/index -ErrorAction SilentlyContinue).LastWriteTime; Write-Output \\\"=== codex refs sample ===\\\"; Get-Content .git/refs/codex/snapshots/* -ErrorAction SilentlyContinue; Write-Output \\\"--- checkpoint ref count ---\\\"; (Get-ChildItem .git/refs/codex/turn-diffs/checkpoints -File).Count\"}",
+      "tsMs": 1788777875784
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\nAdd-Type -AssemblyName System.IO.Compression\\nfunction Read-ObjectText([string]$sha) {\\n  $p = Join-Path '.git\\\\objects' ($sha.Substring(0,2) + '\\\\' + $sha.Substring(2))\\n  if (-not (Test-Path $p)) { return \\\"<missing loose obj $sha>\\\" }\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream (,$bytes)\\n  $ms.Position = 2\\n  $ds = New-Object System.IO.Compression.DeflateStream ($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $sr = New-Object System.IO.StreamReader ($ds)\\n  $text = $sr.ReadToEnd()\\n  $sr.Dispose(); $ds.Dispose(); $ms.Dispose()\\n  return $text\\n}\\n$head = (Get-Content .git/HEAD).Trim() -replace '^ref: ','' \\n$sha = (Get-Content ('.git\\\\' + $head -replace '/','\\\\')).Trim()\\nWrite-Output \\\"HEAD sha: $sha\\\"\\n$commitText = Read-ObjectText $sha\\nWrite-Output \\\"=== commit head (first 600 chars) ===\\\"\\n$commitText.Substring(0, [Math]::Min(600, $commitText.Length))\\nWrite-Output \\\"=== index header ===\\\"\\n$ib = [System.IO.File]::ReadAllBytes((Resolve-Path '.git\\\\index'))\\n$sig = [System.Text.Encoding]::ASCII.GetString($ib,0,4)\\n$ver = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($ib,4))\\n$cnt = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($ib,8))\\nWrite-Output \\\"sig=$sig ver=$ver count=$cnt\\\"\\nWrite-Output \\\"index bytes=$($ib.Length)\\\"\"}",
+      "tsMs": 1788777897859
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== .git/config ===\\\"; Get-Content .git/config; Write-Output \\\"=== .gitattributes ===\\\"; Get-Content .gitattributes\"}",
+      "tsMs": 1788777907526
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\nAdd-Type -AssemblyName System.IO.Compression\\nfunction Read-ObjectBytes([string]$sha) {\\n  $p = Join-Path '.git\\\\objects' ($sha.Substring(0,2) + '\\\\' + $sha.Substring(2))\\n  $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $p))\\n  $ms = New-Object System.IO.MemoryStream (,$bytes)\\n  $ms.Position = 2\\n  $ds = New-Object System.IO.Compression.DeflateStream ($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n  $out = New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  $ds.Dispose(); $ms.Dispose()\\n  $raw = $out.ToArray()\\n  $out.Dispose()\\n  # find NUL to skip header\\n  $nul = [Array]::IndexOf($raw, [byte]0)\\n  $body = New-Object byte[] ($raw.Length - $nul - 1)\\n  [Array]::Copy($raw, $nul+1, $body, 0, $body.Length)\\n  return $body\\n}\\n$headSha = (Get-Content .git/refs/heads/main).Trim()\\n$commitBody = Read-ObjectBytes $headSha\\n$commitStr = [Text.Encoding]::ASCII.GetString($commitBody)\\n$treeSha = ($commitStr -split \\\"`n\\\" | Where-Object { $_ -like 'tree *' } | Select-Object -First 1) -replace '^tree ',''\\nWrite-Output \\\"tree=$treeSha\\\"\\n$g = @{}\\nfunction Walk-Tree([string]$sha, [string]$prefix) {\\n  $body = Read-ObjectBytes $sha\\n  $i = 0\\n  while ($i -lt $body.Length) {\\n    $sp = [Array]::IndexOf($body, [byte]0x20, $i)\\n    $mode = [Text.Encoding]::ASCII.GetString($body, $i, $sp - $i)\\n    $nul = [Array]::IndexOf($body, [byte]0, $sp+1)\\n    $name = [Text.Encoding]::ASCII.GetString($body, $sp+1, $nul - $sp - 1)\\n    $child = ([BitConverter]::ToString($body, $nul+1, 20)).Replace('-','').ToLower()\\n    if ($mode -eq '40000') {\\n      Walk-Tree $child ($prefix + $name + '/')\\n    } else {\\n      $g[$prefix + $name] = $child\\n    }\\n    $i = $nul + 21\\n  }\\n}\\nWalk-Tree $treeSha ''\\nWrite-Output \\\"HEAD tracked file count: $($g.Count)\\\"\\n# parse index\\n$ib = [System.IO.File]::ReadAllBytes((Resolve-Path '.git\\\\index'))\\n$cnt = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($ib,8))\\n$idx = @{}\\n$pos = 12\\nfo",
+      "tsMs": 1788777921618
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n$ib = [System.IO.File]::ReadAllBytes((Resolve-Path '.git\\\\index'))\\n$cnt = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($ib,8))\\n$idx = @{}\\n$pos = 12\\nfor ($e=0; $e -lt $cnt; $e++) {\\n  $start = $pos\\n  $shaHex = ([BitConverter]::ToString($ib, $pos+40, 20)).Replace('-','').ToLower()\\n  $flags = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt16($ib, $pos+60))\\n  $nameLen = $flags -band 0x0FFF\\n  $pathStart = $pos + 62\\n  if (($flags -band 0x4000) -ne 0) { $pathStart += 2 }\\n  if ($nameLen -eq 0x0FFF) { $end = [Array]::IndexOf($ib, [byte]0, $pathStart); $len = $end - $pathStart } else { $len = $nameLen }\\n  $pname = [Text.Encoding]::ASCII.GetString($ib, $pathStart, $len)\\n  $idx[$pname] = $shaHex\\n  $entryLen = $pathStart - $pos + $len + 1\\n  $pos = $start + ([Math]::Ceiling($entryLen / 8.0) * 8)\\n}\\n$sha1 = [System.Security.Cryptography.SHA1]::Create()\\n$changed = @(); $missing = @()\\nforeach ($k in $idx.Keys) {\\n  $full = Join-Path (Resolve-Path .).Path ($k -replace '/','\\\\')\\n  if (-not (Test-Path -LiteralPath $full)) { $missing += $k; continue }\\n  $fb = [System.IO.File]::ReadAllBytes($full)\\n  $prefix = [Text.Encoding]::ASCII.GetBytes(\\\"blob $($fb.Length)`0\\\")\\n  $ms = New-Object System.IO.MemoryStream\\n  $ms.Write($prefix,0,$prefix.Length); $ms.Write($fb,0,$fb.Length)\\n  $h = ([BitConverter]::ToString($sha1.ComputeHash($ms.ToArray()))).Replace('-','').ToLower()\\n  $ms.Dispose()\\n  if ($h -ne $idx[$k]) { $changed += $k }\\n}\\nWrite-Output \\\"total tracked (index)=$($idx.Count)\\\"\\nWrite-Output \\\"changed vs index=$($changed.Count)\\\"\\nWrite-Output \\\"missing vs index=$($missing.Count)\\\"\\nif ($changed.Count -gt 0) { Write-Output \\\"CHANGED:\\\"; $changed | Sort-Object }\\nif ($missing.Count -gt 0) { Write-Output \\\"MISSING:\\\"; $missing | Sort-Object }\\nWrite-Output \\\"===\\\"\"}",
+      "tsMs": 1788777937073
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n$full = (Resolve-Path 'package.json').Path\\n$fb = [System.IO.File]::ReadAllBytes($full)\\n$crlf = 0; $lf = 0\\nfor ($i=0; $i -lt $fb.Length-1; $i++) { if ($fb[$i] -eq 13 -and $fb[$i+1] -eq 10) { $crlf++ } }\\nfor ($i=0; $i -lt $fb.Length; $i++) { if ($fb[$i] -eq 10) { $lf++ } }\\nWrite-Output \\\"raw bytes len=$($fb.Length)  CRLF pairs=$crlf  LF total=$lf\\\"\\n$sha1 = [System.Security.Cryptography.SHA1]::Create()\\n$prefix = [Text.Encoding]::ASCII.GetBytes(\\\"blob $($fb.Length)`0\\\")\\n$ms = New-Object System.IO.MemoryStream; $ms.Write($prefix,0,$prefix.Length); $ms.Write($fb,0,$fb.Length)\\nWrite-Output \\\"raw sha = $(([BitConverter]::ToString($sha1.ComputeHash($ms.ToArray()))).Replace('-','').ToLower())\\\"\\n$ms.Dispose()\\n# normalize CRLF -> LF\\n$norm = New-Object System.Collections.Generic.List[byte]\\n$i2=0\\nwhile ($i2 -lt $fb.Length) {\\n  if ($i2 -lt $fb.Length-1 -and $fb[$i2] -eq 13 -and $fb[$i2+1] -eq 10) { $norm.Add([byte]10); $i2+=2 } else { $norm.Add($fb[$i2]); $i2++ }\\n}\\n$nb = $norm.ToArray()\\n$prefix2 = [Text.Encoding]::ASCII.GetBytes(\\\"blob $($nb.Length)`0\\\")\\n$ms2 = New-Object System.IO.MemoryStream; $ms2.Write($prefix2,0,$prefix2.Length); $ms2.Write($nb,0,$nb.Length)\\nWrite-Output \\\"lf-normalized sha = $(([BitConverter]::ToString($sha1.ComputeHash($ms2.ToArray()))).Replace('-','').ToLower())\\\"\\n$ms2.Dispose()\\nWrite-Output \\\"===\\\"\"}",
+      "tsMs": 1788777946438
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n$ib = [System.IO.File]::ReadAllBytes((Resolve-Path '.git\\\\index'))\\n$cnt = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($ib,8))\\n$idx = @{}\\n$pos = 12\\nfor ($e=0; $e -lt $cnt; $e++) {\\n  $start = $pos\\n  $shaHex = ([BitConverter]::ToString($ib, $pos+40, 20)).Replace('-','').ToLower()\\n  $flags = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt16($ib, $pos+60))\\n  $nameLen = $flags -band 0x0FFF\\n  $pathStart = $pos + 62\\n  if (($flags -band 0x4000) -ne 0) { $pathStart += 2 }\\n  if ($nameLen -eq 0x0FFF) { $end = [Array]::IndexOf($ib, [byte]0, $pathStart); $len = $end - $pathStart } else { $len = $nameLen }\\n  $pname = [Text.Encoding]::ASCII.GetString($ib, $pathStart, $len)\\n  $idx[$pname] = $shaHex\\n  $entryLen = $pathStart - $pos + $len + 1\\n  $pos = $start + ([Math]::Ceiling($entryLen / 8.0) * 8)\\n}\\nforeach ($p in @('package.json','web/vite.config.js','package-lock.json','README.md','src/core/handoff/handoff.js','web/index.html')) {\\n  if ($idx.ContainsKey($p)) { Write-Output \\\"$p index-sha=$($idx[$p])\\\" } else { Write-Output \\\"$p NOT-IN-INDEX\\\" }\\n}\\nWrite-Output \\\"=== HEAD-side check: compare index-vs-HEAD for package.json etc via pack? skip ===\\\"\"}",
+      "tsMs": 1788777950928
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n$ib = [System.IO.File]::ReadAllBytes((Resolve-Path '.git\\\\index'))\\n$cnt = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($ib,8))\\n$idx = @{}\\n$pos = 12\\nfor ($e=0; $e -lt $cnt; $e++) {\\n  $start = $pos\\n  $shaHex = ([BitConverter]::ToString($ib, $pos+40, 20)).Replace('-','').ToLower()\\n  $flags = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt16($ib, $pos+60))\\n  $nameLen = $flags -band 0x0FFF\\n  $pathStart = $pos + 62\\n  if (($flags -band 0x4000) -ne 0) { $pathStart += 2 }\\n  if ($nameLen -eq 0x0FFF) { $end = [Array]::IndexOf($ib, [byte]0, $pathStart); $len = $end - $pathStart } else { $len = $nameLen }\\n  $pname = [Text.Encoding]::ASCII.GetString($ib, $pathStart, $len)\\n  $idx[$pname] = $shaHex\\n  $entryLen = $pathStart - $pos + $len + 1\\n  $pos = $start + ([Math]::Ceiling($entryLen / 8.0) * 8)\\n}\\nfunction Hash-Normalized([byte[]]$fb) {\\n  $hasCrlf = $false\\n  for ($i=0; $i -lt $fb.Length-1; $i++) { if ($fb[$i] -eq 13 -and $fb[$i+1] -eq 10) { $hasCrlf = $true; break } }\\n  $sha1 = [System.Security.Cryptography.SHA1]::Create()\\n  if (-not $hasCrlf) {\\n    $prefix = [Text.Encoding]::ASCII.GetBytes(\\\"blob $($fb.Length)`0\\\")\\n    $ms = New-Object System.IO.MemoryStream; $ms.Write($prefix,0,$prefix.Length); $ms.Write($fb,0,$fb.Length)\\n    $h = ([BitConverter]::ToString($sha1.ComputeHash($ms.ToArray()))).Replace('-','').ToLower(); $ms.Dispose(); return $h\\n  }\\n  $norm = New-Object System.Collections.Generic.List[byte]\\n  $i=0\\n  while ($i -lt $fb.Length) {\\n    if ($i -lt $fb.Length-1 -and $fb[$i] -eq 13 -and $fb[$i+1] -eq 10) { $norm.Add([byte]10); $i+=2 } else { $norm.Add($fb[$i]); $i++ }\\n  }\\n  $nb = $norm.ToArray()\\n  $prefix = [Text.Encoding]::ASCII.GetBytes(\\\"blob $($nb.Length)`0\\\")\\n  $ms = New-Object System.IO.MemoryStream; $ms.Write($prefix,0,$prefix.Length); $ms.Write($nb,0,$nb.Length)\\n  $h = ([BitConverter]::ToString($sha1.ComputeHash($ms.ToArray()))).Replace('-','').ToLower(); $ms.Dispose",
+      "tsMs": 1788777958636
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"\\\\.jsx|wrapper\",\"path\":\"workspace/docs\",\"maxResults\":60}",
+      "tsMs": 1788777990866
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace; Write-Output \\\"=== electron dir ===\\\"; Get-ChildItem electron -Recurse -File | Select-Object FullName | Format-Table -AutoSize | Out-String -Width 250; Write-Output \\\"=== data dir top ===\\\"; Get-ChildItem data -Force | Select-Object Name,Length,LastWriteTime | Format-Table -AutoSize | Out-String -Width 200; Write-Output \\\"=== web dir top incl dist? ===\\\"; Get-ChildItem web -Force | Select-Object Name | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788777990879
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/audit/current_margin_status.md\"}",
+      "tsMs": 1788778003432
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n$targets = @('bin/margin.js','src/core/handoff/distiller.js','src/core/handoff/evidence.js','src/core/handoff/exec.js','src/core/handoff/handoff.js','src/core/handoff/httpAdapter.js','src/core/persistentWorkRepository.js','src/resources/agentResourceService.js','src/resources/codexQuotaSource.js','src/runtime/pi/marginPiAdapter.js','src/runtime/pi/piTerminalPilotRuntime.js','test/handoff.test.js','web/src/margin/marginApiClient.js','web/src/margin/MarginApp.js','web/src/margin/SessionBoard.js')\\nforeach ($t in $targets) { $f = Get-Item -LiteralPath $t; Write-Output (\\\"{0,-45} {1}\\\" -f $t, $f.LastWriteTime) }\\nWrite-Output \\\"=== all FS files mtime >= 2026-09-07 (excluding .git) ===\\\"\\nGet-ChildItem -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\' -and $_.LastWriteTime -ge [datetime]'2026-09-07T00:00:00' } | Sort-Object LastWriteTime | ForEach-Object { Write-Output (\\\"{0}  {1}\\\" -f $_.LastWriteTime, $_.FullName.Replace((Resolve-Path .).Path,'')) }\"}",
+      "tsMs": 1788778010964
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n$idxBytes = [System.IO.File]::ReadAllBytes((Resolve-Path '.git\\\\objects\\\\pack\\\\pack-b9523020afb736079d56456f65606c97435c0339.idx'))\\n$magic = [Text.Encoding]::ASCII.GetString($idxBytes,0,4)\\nWrite-Output \\\"magic=$magic\\\"\\n$ver = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($idxBytes,4))\\n$fan = New-Object int[] 256\\nfor ($i=0; $i -lt 256; $i++) { $fan[$i] = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($idxBytes, 8 + 4*$i)) }\\nWrite-Output \\\"ver=$ver fanout256=$($fan[255])\\\"\\n$N = $fan[255]\\n$shaTableStart = 8 + 1024\\nWrite-Output \\\"N=$N\\\"\\n# show first 3 and last sha\\nfunction ShaAt([int]$k) {\\n  $o = $shaTableStart + $k*20\\n  return ([BitConverter]::ToString($idxBytes,$o,20)).Replace('-','').ToLower()\\n}\\nWrite-Output (\\\"first3: {0} {1} {2}\\\" -f (ShaAt 0), (ShaAt 1), (ShaAt 2))\\nWrite-Output (\\\"last: {0}\\\" -f (ShaAt ($N-1)))\\nWrite-Output \\\"=== pack file size check ===\\\"\\n$packPath = (Resolve-Path '.git\\\\objects\\\\pack\\\\pack-b9523020afb736079d56456f65606c97435c0339.pack').Path\\n$pb = [System.IO.File]::ReadAllBytes($packPath)\\nWrite-Output \\\"pack bytes=$($pb.Length)\\\"\\n$hdr = [Text.Encoding]::ASCII.GetString($pb,0,4)\\n$pver = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($pb,4))\\n$pcnt = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($pb,8))\\nWrite-Output \\\"packhdr=$hdr ver=$pver count=$pcnt\\\"\"}",
+      "tsMs": 1788778048132
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n# ---------- pack loader ----------\\n$gitRoot = (Resolve-Path .).Path\\n$packDir = Join-Path $gitRoot '.git\\\\objects\\\\pack'\\n$packFile = Get-ChildItem $packDir -Filter *.pack | Select-Object -First 1\\n$idxFile = Get-ChildItem $packDir -Filter *.idx | Select-Object -First 1\\n$pb = [System.IO.File]::ReadAllBytes($packFile.FullName)\\n$idxBytes = [System.IO.File]::ReadAllBytes($idxFile.FullName)\\n$N = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($idxBytes, 8 + 1024))\\n$shaTableStart = 8 + 1024\\n$offTableStart = $shaTableStart + 20*$N + 4*$N\\n$offBySha = @{}\\nfor ($k=0; $k -lt $N; $k++) {\\n  $sha = ([BitConverter]::ToString($idxBytes, $shaTableStart + $k*20, 20)).Replace('-','').ToLower()\\n  $off = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($idxBytes, $offTableStart + $k*4))\\n  $offBySha[$sha] = $off\\n}\\nfunction Read-VarInt([byte[]]$data, [ref]$p) {\\n  $val = 0; $shift = 0\\n  while ($true) { $b = $data[$p.Value]; $p.Value++; $val = $val -bor (($b -band 0x7f) -shl $shift); if (($b -band 0x80) -eq 0) { break }; $shift += 7 }\\n  return $val\\n}\\n$memGetObj = @{}\\nfunction Get-Obj([string]$sha) {\\n  if ($memGetObj.ContainsKey($sha)) { return $memGetObj[$sha] }\\n  $p = Join-Path $gitRoot ('.git\\\\objects\\\\' + $sha.Substring(0,2) + '\\\\' + $sha.Substring(2))\\n  $body = $null\\n  if (Test-Path -LiteralPath $p) {\\n    $bytes = [System.IO.File]::ReadAllBytes($p)\\n    $ms = New-Object System.IO.MemoryStream (,$bytes); $ms.Position = 2\\n    $ds = New-Object System.IO.Compression.DeflateStream ($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n    $out = New-Object System.IO.MemoryStream; $ds.CopyTo($out)\\n    $raw = $out.ToArray()\\n    $nul = [Array]::IndexOf($raw, [byte]0)\\n    $body = New-Object byte[] ($raw.Length - $nul - 1)\\n    [Array]::Copy($raw, $nul+1, $body, 0, $body.Length)\\n    $ds.Dispose(); $ms.Dispose(); $out.Dispose()\\n  } else {\\n    $body = Read-PackObject ($offBySha[$sha])\\n  }\\n  $mem",
+      "tsMs": 1788778067446
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n$gitRoot = (Resolve-Path .).Path\\n$packFile = Get-ChildItem (Join-Path $gitRoot '.git\\\\objects\\\\pack') -Filter *.pack | Select-Object -First 1\\n$idxFile = Get-ChildItem (Join-Path $gitRoot '.git\\\\objects\\\\pack') -Filter *.idx | Select-Object -First 1\\n$pb = [System.IO.File]::ReadAllBytes($packFile.FullName)\\n$idxBytes = [System.IO.File]::ReadAllBytes($idxFile.FullName)\\n$N = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($idxBytes, 8 + 4*255))\\nWrite-Output \\\"pack object count N=$N idxBytes=$($idxBytes.Length)\\\"\\n$shaTableStart = 8 + 1024\\n$offTableStart = $shaTableStart + 20*$N + 4*$N\\n$offBySha = @{}\\nfor ($k=0; $k -lt $N; $k++) {\\n  $sha = ([BitConverter]::ToString($idxBytes, $shaTableStart + $k*20, 20)).Replace('-','').ToLower()\\n  $rawOff = [BitConverter]::ToInt32($idxBytes, $offTableStart + $k*4)\\n  $off = [System.Net.IPAddress]::NetworkToHostOrder($rawOff)\\n  $offBySha[$sha] = $off\\n}\\nWrite-Output \\\"loaded offsets count=$($offBySha.Count)\\\"\\n$memGetObj = @{}\\nfunction Get-Obj([string]$sha) {\\n  if ($memGetObj.ContainsKey($sha)) { return $memGetObj[$sha] }\\n  $p = Join-Path $gitRoot ('.git\\\\objects\\\\' + $sha.Substring(0,2) + '\\\\' + $sha.Substring(2))\\n  $body = $null\\n  if (Test-Path -LiteralPath $p) {\\n    $bytes = [System.IO.File]::ReadAllBytes($p)\\n    $ms = New-Object System.IO.MemoryStream (,$bytes); $ms.Position = 2\\n    $ds = New-Object System.IO.Compression.DeflateStream ($ms, [System.IO.Compression.CompressionMode]::Decompress)\\n    $out = New-Object System.IO.MemoryStream; $ds.CopyTo($out)\\n    $raw = $out.ToArray()\\n    $nul = [Array]::IndexOf($raw, [byte]0)\\n    $body = New-Object byte[] ($raw.Length - $nul - 1)\\n    [Array]::Copy($raw, $nul+1, $body, 0, $body.Length)\\n    $ds.Dispose(); $ms.Dispose(); $out.Dispose()\\n  } else { $body = Read-PackObject $offBySha[$sha] }\\n  $memGetObj[$sha] = $body\\n  return $body\\n}\\nfunction Read-VarIntB([byte[]]$d, [int]$st) {\\n  $val = 0; $shift = 0; $i=$st\\n  whi",
+      "tsMs": 1788778187342
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd ./workspace\\n$ib = [System.IO.File]::ReadAllBytes((Resolve-Path '.git\\\\index'))\\n$cnt = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($ib,8))\\n$idx = @{}\\n$pos2 = 12\\nfor ($e=0; $e -lt $cnt; $e++) {\\n  $start = $pos2\\n  $shaHex = ([BitConverter]::ToString($ib, $pos2+40, 20)).Replace('-','').ToLower()\\n  $flags = [System.Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt16($ib, $pos2+60))\\n  $nameLen = $flags -band 0x0FFF\\n  $pathStart = $pos2 + 62\\n  if (($flags -band 0x4000) -ne 0) { $pathStart += 2 }\\n  if ($nameLen -eq 0x0FFF) { $end = [Array]::IndexOf($ib, [byte]0, $pathStart); $len = $end - $pathStart } else { $len = $nameLen }\\n  $pname = [Text.Encoding]::ASCII.GetString($ib, $pathStart, $len)\\n  $idx[$pname] = $shaHex\\n  $entryLen = $pathStart - $pos2 + $len + 1\\n  $pos2 = $start + ([Math]::Ceiling($entryLen / 8.0) * 8)\\n}\\n$root = (Resolve-Path .).Path\\n$untracked = @()\\nGet-ChildItem -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\\\\\.git\\\\\\\\' } | ForEach-Object {\\n  $rel = $_.FullName.Substring($root.Length+1).Replace('\\\\','/')\\n  if (-not $idx.ContainsKey($rel)) { $untracked += $rel }\\n}\\nWrite-Output \\\"untracked (non-ignored-aware) FS files not in index: $($untracked.Count)\\\"\\n$untracked | Sort-Object\\nWrite-Output \\\"=== ignore dir patterns present on disk? ===\\\"\\nforeach ($d in @('out','out2','out-electron','.worktrees','handoff-output','web/dist','.runtime','node_modules')) { Write-Output (\\\"{0}: {1}\\\" -f $d, (Test-Path -LiteralPath $d)) }\\nWrite-Output \\\"=== check asar artifacts anywhere ===\\\"\\nGet-ChildItem -Recurse -File -Filter *.asar -ErrorAction SilentlyContinue | Select-Object FullName\\nWrite-Output \\\"=== python available? ===\\\"\\n(Get-Command python -ErrorAction SilentlyContinue).Source\\n(Get-Command python3 -ErrorAction SilentlyContinue).Source\\nWrite-Output \\\"DONE\\\"\"}",
+      "tsMs": 1788778204373
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem -Recurse -Directory _tmp -ErrorAction SilentlyContinue | Select-Object -First 40 FullName | Format-Table -AutoSize | Out-String -Width 200; Write-Output \"=== files in _tmp ===\"; Get-ChildItem -Recurse -File _tmp -ErrorAction SilentlyContinue | Select-Object -First 20 FullName,Length | Format-Table -AutoSize | Out-String -Width 200; Write-Output \"=== find node.exe anywhere ===\"; Get-ChildItem -Recurse -Filter node.exe -ErrorAction SilentlyContinue C:\\ -Depth 3 2>$null | Select-Object -First 5 FullName",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: c:\\"
+      ],
+      "tsMs": 1788777848779
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 491742,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-08",
+    "arm": "B",
+    "runId": "formal-case-08-B-2026-09-07T10-42-33-005Z",
+    "startMs": "2026-09-07T10:42:42.062Z",
+    "endMs": "2026-09-07T10:50:55.509Z",
+    "durationMs": 493447,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-08-B-2026-09-07T10-42-33-005Z status=ok durationMs=491742\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-08-B-2026-09-07T10-42-33-005Z.cert.json"
+  }
+}

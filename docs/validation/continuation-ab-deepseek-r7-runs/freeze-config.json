@@ -1,0 +1,170 @@
+{
+  "redaction": {
+    "appliedAt": "2026-09-26",
+    "scope": "machine paths in handoff outputs",
+    "note": "Handoff outputs were redacted before entering version control: home and repository paths were replaced with placeholders, and the hashes below attest the redacted artifacts. Source session inputs were not modified and are not tracked."
+  },
+  "benchmark": "margin_continuation_ab_deepseek_r7",
+  "phase": "pre-formal-start",
+  "frozenAt": "2026-09-07T09:34:50.518Z",
+  "model": {
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "thinking": "high"
+  },
+  "arms": {
+    "A": "direct recovery from raw historical Codex Session (input recovery-handoffs-postfix/session-*.jsonl)",
+    "B": "Margin R7 HANDOFF-assisted recovery (input recovery-handoffs-r7-full/case-*.md)"
+  },
+  "harness": {
+    "r7full-controller.mjs": "B55CD5238E47B9DB1C9237D483562CC43C72F758EF0258BA97E9C1454C253E45",
+    "worker.mjs": "6BB2E184DD4CEFB7891D6C4B36A73E369699C1C4EBA7BBFD3D29A48E9F60E24E",
+    "lib/pi-loader.mjs": "F6CF12BAED4244B2456B0260991E847E3B96AF7407991B6EB25E08D96F20D039",
+    "lib/sandbox-tools.mjs": "EE531C1C15833FF13640C1DFBEDF34C7D043DD89DA300B40B3B5D5B3BE52317C"
+  },
+  "promptFileSha256": "F93674E573FEBD83ABE5F19CF877EC55D2695DB0C01BA8F2037842C1C1E3D063",
+  "snapshot": {
+    "head": "a247e75ab9e78cce7853e3f281b85459a4f25e7c",
+    "dir": "<repo>-bench/ab-continuation/snapshot-repo",
+    "manifestSha256": "2A1F1909B7EE814A1F20F11CB5F53E838CC2434230DE1E80C0B6A1DC2D7A5B7C",
+    "workspaceFiles": 634
+  },
+  "groundTruthSha256": "8BFA7E421299E5432C55E6DD4A2FF71C1D6B44B940C356F0A453A3F5C5FBF8FB",
+  "A_inputs": [
+    {
+      "caseId": "case-01",
+      "sessionId": "01a077ec-bd2c-78a1-8581-c7440c9bda66",
+      "file": "recovery-handoffs-postfix/session-01a077ec-bd2c-78a1-8581-c7440c9bda66.jsonl",
+      "sha256": "E365D348363B592E9CDFE8507CD55978C69DAF62412B11C1D13C056306A6C26A"
+    },
+    {
+      "caseId": "case-02",
+      "sessionId": "01a074ec-9f30-7c62-bb5f-257091ef242a",
+      "file": "recovery-handoffs-postfix/session-01a074ec-9f30-7c62-bb5f-257091ef242a.jsonl",
+      "sha256": "CEE475775FDB647F3650306C43C12F7026721769B637B6F5651A2B5F0F386C96"
+    },
+    {
+      "caseId": "case-03",
+      "sessionId": "01a0755d-e84a-7980-afaa-f98246f9436c",
+      "file": "recovery-handoffs-postfix/session-01a0755d-e84a-7980-afaa-f98246f9436c.jsonl",
+      "sha256": "9C0511185B1D49A1B1894F14FF8219FD6864256534E4B10BBA94834F3EDB9B5D"
+    },
+    {
+      "caseId": "case-04",
+      "sessionId": "01a07639-d0ef-7452-a987-af0de51b29e3",
+      "file": "recovery-handoffs-postfix/session-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl",
+      "sha256": "A79DA02DA100EE86CA5D7C5B2E4834865F8F6BDA6B881D225354A112B36BE408"
+    },
+    {
+      "caseId": "case-05",
+      "sessionId": "01a07786-adf5-77a3-91ba-e4a75ceda7e7",
+      "file": "recovery-handoffs-postfix/session-01a07786-adf5-77a3-91ba-e4a75ceda7e7.jsonl",
+      "sha256": "0787744584FE6F29BC428A725D387D582EAA7297679D4D41CEB23754A24D9408"
+    },
+    {
+      "caseId": "case-06",
+      "sessionId": "01a07490-65fb-7643-9a8e-d1d7d69643be",
+      "file": "recovery-handoffs-postfix/session-01a07490-65fb-7643-9a8e-d1d7d69643be.jsonl",
+      "sha256": "6E18DEC92F65D5C36C0CC0CBBCF090688059E98FF34791907A34EA14E2CDD690"
+    },
+    {
+      "caseId": "case-07",
+      "sessionId": "01a074d4-f3b2-76e1-8411-9f93be0a91a2",
+      "file": "recovery-handoffs-postfix/session-01a074d4-f3b2-76e1-8411-9f93be0a91a2.jsonl",
+      "sha256": "E708E99EB83D59F8F321B45E40A6EDC0C2A9579FF221B856640FD3AE3E1AE690"
+    },
+    {
+      "caseId": "case-08",
+      "sessionId": "01a0763e-bfe9-77f1-b669-900b837d2754",
+      "file": "recovery-handoffs-postfix/session-01a0763e-bfe9-77f1-b669-900b837d2754.jsonl",
+      "sha256": "C1D19296DB2704A7F9E79B8D4CDE6CB06BED6F206FD41C6AB4E0E94C1F14C56F"
+    },
+    {
+      "caseId": "case-09",
+      "sessionId": "01a070e6-3bd9-7591-aa4e-31b364badda1",
+      "file": "recovery-handoffs-postfix/session-01a070e6-3bd9-7591-aa4e-31b364badda1.jsonl",
+      "sha256": "A4EA79ACAAB9FE222BF899D1ED90FCCEECA9441140953050ADA3804D6354EE89"
+    },
+    {
+      "caseId": "case-10",
+      "sessionId": "01a07564-99fa-72e0-b086-4a21e5011211",
+      "file": "recovery-handoffs-postfix/session-01a07564-99fa-72e0-b086-4a21e5011211.jsonl",
+      "sha256": "E67C3558CCFAF9199C5590612DBDE28938D38F7448A2AF614BFF9BF93A69080B"
+    },
+    {
+      "caseId": "case-11",
+      "sessionId": "01a076e8-fe17-7430-b1c4-b32715a65fe8",
+      "file": "recovery-handoffs-postfix/session-01a076e8-fe17-7430-b1c4-b32715a65fe8.jsonl",
+      "sha256": "63CDB8E06094BA0E4EE944988FE30A13A1303F8DD04C5C61B386DE6BDDA96EF3"
+    },
+    {
+      "caseId": "case-12",
+      "sessionId": "01a07770-d875-7b51-bd03-e154fe30c66c",
+      "file": "recovery-handoffs-postfix/session-01a07770-d875-7b51-bd03-e154fe30c66c.jsonl",
+      "sha256": "F289DDBDD0146CD09C5C2F63CEEBBA74392A52EC4295B1EB7C572B45AF162FB7"
+    }
+  ],
+  "B_inputs": [
+    {
+      "caseId": "case-01",
+      "file": "recovery-handoffs-r7-full/case-01.md",
+      "sha256": "B9640BB231255601035C6980B90D074243768EA264620EF4EABF27D147EF2CEC"
+    },
+    {
+      "caseId": "case-02",
+      "file": "recovery-handoffs-r7-full/case-02.md",
+      "sha256": "DE24377BF33D9A5AEACB53A54333B5F8D628ECE33B971B3A36717BFFEEA9E6B8"
+    },
+    {
+      "caseId": "case-03",
+      "file": "recovery-handoffs-r7-full/case-03.md",
+      "sha256": "D102AD9C530299F83D41D3D5B7F74ACDE68385992439C89EE6BDEA7FC42A03C1"
+    },
+    {
+      "caseId": "case-04",
+      "file": "recovery-handoffs-r7-full/case-04.md",
+      "sha256": "8ADFCB37DB359ACD10A5425A5EE2A14F02BE1F4DE273CD34B12FF8E72F70710D"
+    },
+    {
+      "caseId": "case-05",
+      "file": "recovery-handoffs-r7-full/case-05.md",
+      "sha256": "9C904AB309D687B09E10159BC976E86D60D484A52A8AC2A35C5702E0D889B478"
+    },
+    {
+      "caseId": "case-06",
+      "file": "recovery-handoffs-r7-full/case-06.md",
+      "sha256": "6019009AA11B4FAFB7BB74E37CA8C3935E3C9FD7953AC896E2723055AE116F5E"
+    },
+    {
+      "caseId": "case-07",
+      "file": "recovery-handoffs-r7-full/case-07.md",
+      "sha256": "92DFDE03B0C7D45186765D06779B4412B42C9FAB43D4648C20EAD2E551DFA843"
+    },
+    {
+      "caseId": "case-08",
+      "file": "recovery-handoffs-r7-full/case-08.md",
+      "sha256": "CE2491A275565E8A82942FE32ED4D9FD5FA811E4E709ACD40B29603636907FED"
+    },
+    {
+      "caseId": "case-09",
+      "file": "recovery-handoffs-r7-full/case-09.md",
+      "sha256": "FA8B896D9FF8802CCEFC840591D5268E95731ABBEB97FAABBB956D8C4FB7BB97"
+    },
+    {
+      "caseId": "case-10",
+      "file": "recovery-handoffs-r7-full/case-10.md",
+      "sha256": "896079F4BAF51B773F38E064997FE6998A2C8C7B915A43586BB618ED848967A3"
+    },
+    {
+      "caseId": "case-11",
+      "file": "recovery-handoffs-r7-full/case-11.md",
+      "sha256": "AB781A2AAD18CFBFC391D56AE49E9BE906C4BBD6864B1FCE04B318254EC5AC34"
+    },
+    {
+      "caseId": "case-12",
+      "file": "recovery-handoffs-r7-full/case-12.md",
+      "sha256": "D984BFE01B126357B512899DBD73243567A6B450330CE4BB40850C98A065FA31"
+    }
+  ],
+  "r7fullDatasetManifestSha256": "CF9A96D87F6A34776A795713078B342F144573AC657C783E69C9E3266D32BD1B"
+}

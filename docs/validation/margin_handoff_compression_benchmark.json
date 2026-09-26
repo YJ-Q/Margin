@@ -1,0 +1,38 @@
+{
+  "schema_version": 2,
+  "status": "complete",
+  "measurement": {
+    "unit": "filesystem bytes",
+    "method": "PowerShell Get-Item .Length; SHA-256 via Get-FileHash",
+    "formula": "reductionPct = 100 * (1 - handoffBytes / sourceBytes)",
+    "staging_root": "C:\\Temp\\margin-recovery-handoff-staging-20260907"
+  },
+  "integrity": {
+    "valid_cases": "12/12",
+    "source_mapping_checks": "12/12 capture sessionId, JSONL sessionId, capture byte count, and capture SHA-256 checks passed",
+    "handoff_mapping_checks": "12/12 header sessionId and manifest SHA-256 checks passed",
+    "frozen_handoffs_modified": false,
+    "ground_truth_modified": false,
+    "ground_truth_sha256_observed": "8bfa7e421299e5432c55e6dd4a2ff71c1d6b44b940c356f0a453a3f5c5fbf8fb",
+    "manifest_sha256_observed": "cba5ad4187d57143106ece543860c7ba200a656e19d73b83fd9b4c81c390910e",
+    "exclusions": "none"
+  },
+  "cases": [
+    {"case":"case-01","sessionId":"01a077ec-bd2c-78a1-8581-c7440c9bda66","sourceSnapshot":"01/session-01a077ec-bd2c-78a1-8581-c7440c9bda66.jsonl","sourceBytes":1438110,"handoff":"docs/validation/recovery-handoffs/case-01.md","handoffBytes":4783,"reductionPct":99.667411,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-02","sessionId":"01a074ec-9f30-7c62-bb5f-257091ef242a","sourceSnapshot":"02/session-01a074ec-9f30-7c62-bb5f-257091ef242a.jsonl","sourceBytes":899546,"handoff":"docs/validation/recovery-handoffs/case-02.md","handoffBytes":4927,"reductionPct":99.452279,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-03","sessionId":"01a0755d-e84a-7980-afaa-f98246f9436c","sourceSnapshot":"03/session-01a0755d-e84a-7980-afaa-f98246f9436c.jsonl","sourceBytes":687084,"handoff":"docs/validation/recovery-handoffs/case-03.md","handoffBytes":3747,"reductionPct":99.454652,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-04","sessionId":"01a07639-d0ef-7452-a987-af0de51b29e3","sourceSnapshot":"04/session-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl","sourceBytes":3271291,"handoff":"docs/validation/recovery-handoffs/case-04.md","handoffBytes":2586,"reductionPct":99.920949,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-05","sessionId":"01a07786-adf5-77a3-91ba-e4a75ceda7e7","sourceSnapshot":"05/session-01a07786-adf5-77a3-91ba-e4a75ceda7e7.jsonl","sourceBytes":3957580,"handoff":"docs/validation/recovery-handoffs/case-05.md","handoffBytes":4869,"reductionPct":99.876970,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-06","sessionId":"01a07490-65fb-7643-9a8e-d1d7d69643be","sourceSnapshot":"06/session-01a07490-65fb-7643-9a8e-d1d7d69643be.jsonl","sourceBytes":2763251,"handoff":"docs/validation/recovery-handoffs/case-06.md","handoffBytes":11390,"reductionPct":99.587804,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-07","sessionId":"01a074d4-f3b2-76e1-8411-9f93be0a91a2","sourceSnapshot":"07/session-01a074d4-f3b2-76e1-8411-9f93be0a91a2.jsonl","sourceBytes":1222548,"handoff":"docs/validation/recovery-handoffs/case-07.md","handoffBytes":20913,"reductionPct":98.289392,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-08","sessionId":"01a0763e-bfe9-77f1-b669-900b837d2754","sourceSnapshot":"08/session-01a0763e-bfe9-77f1-b669-900b837d2754.jsonl","sourceBytes":1799202,"handoff":"docs/validation/recovery-handoffs/case-08.md","handoffBytes":3982,"reductionPct":99.778680,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-09","sessionId":"01a070e6-3bd9-7591-aa4e-31b364badda1","sourceSnapshot":"09/session-01a070e6-3bd9-7591-aa4e-31b364badda1.jsonl","sourceBytes":2515611,"handoff":"docs/validation/recovery-handoffs/case-09.md","handoffBytes":11539,"reductionPct":99.541304,"semantic":["present","present","absent","present","absent"]},
+    {"case":"case-10","sessionId":"01a07564-99fa-72e0-b086-4a21e5011211","sourceSnapshot":"10/session-01a07564-99fa-72e0-b086-4a21e5011211.jsonl","sourceBytes":2336054,"handoff":"docs/validation/recovery-handoffs/case-10.md","handoffBytes":4796,"reductionPct":99.794697,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-11","sessionId":"01a076e8-fe17-7430-b1c4-b32715a65fe8","sourceSnapshot":"11/session-01a076e8-fe17-7430-b1c4-b32715a65fe8.jsonl","sourceBytes":2215417,"handoff":"docs/validation/recovery-handoffs/case-11.md","handoffBytes":4141,"reductionPct":99.813083,"semantic":["present","absent","absent","absent","absent"]},
+    {"case":"case-12","sessionId":"01a07770-d875-7b51-bd03-e154fe30c66c","sourceSnapshot":"12/session-01a07770-d875-7b51-bd03-e154fe30c66c.jsonl","sourceBytes":1658999,"handoff":"docs/validation/recovery-handoffs/case-12.md","handoffBytes":9222,"reductionPct":99.444123,"semantic":["present","absent","absent","absent","absent"]}
+  ],
+  "semantic_order": ["goal","progressCompleted","pending","validation","nextAction"],
+  "statistics": {"sourceBytes":{"median":2007309.5,"mean":2063724.416667},"handoffBytes":{"median":4832.5,"mean":7241.25},"reductionPct":{"median":99.627608,"mean":99.551779,"min":98.289392,"max":99.920949}},
+  "semanticPreservation":{"method":"Compared semantically with frozen ground truth; matching heading alone is insufficient.","goal":"12/12","progressCompleted":"1/12","pending":"0/12","validation":"1/12","nextAction":"0/12"},
+  "resumeSafeMetric":{"definition":"All five ground-truth semantic fields must be present.","result":"0/12 (0%)"}
+}

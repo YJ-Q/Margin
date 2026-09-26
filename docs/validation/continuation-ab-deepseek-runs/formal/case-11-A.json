@@ -1,0 +1,392 @@
+{
+  "runId": "formal-case-11-A-2026-09-07T07-59-45-852Z",
+  "caseId": "case-11",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T07:59:55.630Z",
+  "endTs": "2026-09-07T08:06:19.047Z",
+  "durationMs": 383417,
+  "modelPromptStartMs": 38,
+  "modelPromptEndMs": 383416,
+  "sessionId": "01a07ae1-8712-7225-8d7c-62909caa2de2",
+  "rawResponse": "Based on all evidence gathered, here is the recovery record.\n\n```json\n{\n  \"goal\": \"Margin V2 UI — R3 First Implementation (single user task in the recorded session at <repo>, base commit 0836e800): implement a first real floating-window UI from the confirmed R3 wireframes. Scope: (a) Usage Bar ~44px, no 'Margin' title, fixed left 'Today <tokens>', one-line horizontally scrollable per-model/agent token usage in the middle, fixed right expand/collapse toggle, click toggles the Session Board, no trend/Workspace/Session counts/usage detail; (b) Session Board with three mutually exclusive modes (Workspace = group by workspace, Agent = group by agent, Sessions = flat in source order), no search/filter/sort; (c) single-line ~36px session rows showing only status dot, agent (suppressed if the group already expresses it), session title (ellipsis, no wrap), workspace/context (suppressed when grouped), relative time; (d) hover-only Copy/Save row-end actions that run a real session Handoff (no Resume Summary/Goal/Progress/Validation expansion, no arrow, no third-level page); (e) minimal visual scope (spacing, typography, divider, hover, selected mode, overflow/scroll only). Validate in a real Electron floating window: collapsed bar, expand/collapse, model-token horizontal scroll, Workspace/Agent/Sessions modes, long-title ellipsis, hover Copy/Save, real handoff Copy, real handoff Save, board vertical overflow, resize, plus no regression for CLI V1 / existing Handoff Core. Output: implementation screenshots, changed-file list, interaction results, UX findings, tests/build, and a final verdict 'PASS — R3 first implementation ready for UX iteration' or 'PARTIAL — <blocker>', then stop (no further polishing/features).\",\n  \"progress\": \"HISTORICAL (recorded session, 2026-09-06 13:29–13:41 UTC, worktree on top of commit 0836e800 that was already heavily dirty with earlier uncommitted Margin/CLI/Electron/handoff work): the agent added web/src/margin/SessionBoard.js (mode grouping, single-row layout, relative time, hover Copy/Save using Core handoff, byte-based '~' token estimate), rewrote web/src/margin/MarginApp.js (old list+detail flow replaced by collapsed/expanded board), replaced web/src/margin/margin.css (44px bar, 36px rows, ellipsis, scroll), added a bytes field to the session DTO in src/core/handoff/httpAdapter.js, and added test/marginR3Board.test.js. It reached a passing `npm run build` (~built in 419ms) and a focused run of test/marginR3Board.test.js + marginSurfaceHttpAdapter.test.js + marginCli.test.js + handoff.test.js + electronHost.test.js with 62 passed / 0 failed, launched `npm run electron:start` in a real Electron window, and captured docs/validation/r3-electron-window.png. The agent ended with verdict 'PARTIAL — 真实 Electron 环境没有可用 Session 数据' (host exposed 0 resumable Codex sessions, so real-window data-state acceptance could not be executed; those interactions were covered only by component tests) and reported a UX caveat that no model-native token accounting exists so the usage readout was a clearly labelled bytes-based estimate. CURRENT REPO TRUTH (frozen workspace): the same repository has moved far past that state. Local main HEAD = a247e75a; .git reflog shows commits a5face246 ('feat: establish Margin handoff core and CLI V1'), 7fede273 ('feat: add Electron V2 floating session workspace'), a0334dd8 ('feat: add Codex agent resource status'), a247e75a ('docs: record V2 resource bar daily-use baseline') recorded ~2026-09-06 17:43–17:44 UTC, i.e. after the recorded session; a backup ref backup/pre-resource-bar-baseline = 0836e800 exists and origin/main = 49da495c is further ahead. On disk, SessionBoard.js/MarginApp.js/margin.css now implement a resource-quota UsageBar (Codex 5h/7d percent used, Claude unavailable), a window control dock (expand/collapse, Pin, Hide, Quit), a Settings panel (agent-source auto-detect/add/remove, display/window/feedback options), expanded SessionBoard refresh paths, and row hover time-fade with hover-revealed Copy/Save; httpAdapter.js no longer emits the bytes estimate field and adds /api/resources/status, /api/agent-sources*, /api/workspace-overview. test/marginR3Board.test.js now also covers R3.3 window controls and resource-bar behavior; docs/validation/r3.2/ and r3.3/ hold Electron screenshots, and docs/validation/v2_resource_bar_daily_use_baseline.md (committed in a247e75a, dated 2026-09-07) declares 'PASS — ready for continued daily-use evaluation' for CLI V1 + Electron frameless floating shell + Workspace/Agent/Sessions navigation + refresh + Copy/Save Handoff + Settings + Quit/Hide/Pin + Codex Agent Resource Status with a reported focused result of 111 passed / 0 failed and `npm run build` passed.\",\n  \"pending\": \"As recorded at session end: the R3 'first implementation' milestone was NOT formally accepted — verdict was PARTIAL. Remaining at that time were the real-Electron data-state acceptance items the agent could not execute (populated Workspace/Agent/Sessions content, long-title ellipsis, hover Copy/Save, real Copy and real Save of a real Core Handoff, board vertical overflow, resize without breakage), an uncompleted full-suite green confirmation (only focused 62-test subsets and build were green at the end; an earlier broad mid-session run failed the build and reported 8 failures in composition/development-route tests that depend on built assets, before later fixes), and the unresolved token-accounting limitation (usage shown as a '~' estimate derived from session bytes rather than real provider token numbers). As of the current frozen repo, the R3 domain appears to have been continued and iterated (R3.2/R3.3 slices, resource-status bar, settings/source management, window controls, and a daily-use baseline PASS note on 2026-09-07); I found no artifact in the workspace that records an explicit still-open R3-first-implementation acceptance defect. The documented current limitation is 'API-token/cost/model-breakdown resource reporting is not implemented' (plus Claude structured quota unavailable). Whether any formal PASS/PARTIAL status for the original R3-first-implementation acceptance exists in the current branch is unknown from available evidence.\",\n  \"historicalValidation\": \"All of the following are historical reports from the recorded session executed on the original <repo> tree (commit 0836e800 + large pre-existing dirty worktree) on 2026-09-06; they are not current validation and could not be re-run here because this isolated environment has no node_modules, no .runtime Node runtime, and no git binary. Reported in-session evidence: `npm run build` passed (~built in 419ms, dist/margin.html + JS/CSS assets); focused test run of test/marginR3Board.test.js, test/marginSurfaceHttpAdapter.test.js, test/marginCli.test.js, test/handoff.test.js, test/electronHost.test.js = 62 passed / 0 failed / exit 0 (TAP output in session ordinals ~104 and ~353); `npm run electron:start` launched a real Electron window and docs/validation/r3-electron-window.png was captured; earlier mid-session run (~ordinal 81) shows a transient 'Build failed in 41ms' followed by 602 matched tests with 594 pass / 8 fail, the failures (e.g. composition/development-route tests) being consistent with missing/stale built assets at that intermediate point, and this was superseded by later edits (a later run rebuilt successfully and passed 62/62). The session's final assistant message reports 'PARTIAL' because the host had 0 resumable Codex sessions for real-window data-state validation. No full-suite (all test files) green run is evidenced at session end.\",\n  \"recommendedFollowUp\": \"Do not promote any historical recommendation from the recorded session into a definite current action. The recorded patch/claims describe an earlier tree and the frozen repo has materially diverged, so re-applying the historical R3 change set blindly would be unsafe. Recommended recovery path (still to be independently confirmed before execution): (1) treat the recorded session strictly as history and treat the frozen workspace (main @ a247e75a, on-disk tree, plus newer refs like origin/main 49da495c) as the only current truth; (2) restore an executable toolchain in a real working environment (install dependencies and the pinned .runtime Node, since none exist here) and independently re-run `npm run build` and the relevant tests (at least test/marginR3Board.test.js, marginSurfaceHttpAdapter.test.js, marginCli.test.js, handoff.test.js, electronHost.test.js) to validate the current tree; (3) review docs/validation/r3.2/, r3.3/, docs/validation/v2_resource_bar_daily_use_baseline.md and the current SessionBoard.js/MarginApp.js/margin.css/httpAdapter.js as the authoritative state instead of the recorded file contents; (4) only then decide whether the recorded R3-first-implementation acceptance (12 real-window interactions, including 'Today <tokens>' readout and hover-only Copy/Save semantics) is still an open target or has been superseded by the later slices/baseline — that determination is not resolvable from this recovery environment alone.\",\n  \"currentApplicability\": \"Low for the recorded session's implementation detail; higher only at the level of 'same R3 domain, later evolution'. Concrete mismatches between the historical record and the current frozen repo: (a) session base: recorded session started at commit 0836e800, while local main HEAD is a247e75a and .git reflog/ORIG_HEAD/backup ref show the repo advanced past 0836e800 after the session (backup/pre-resource-bar-baseline = 0836e800; later commits a5face246/7fede273/a0334dd8/a247e75a recorded ~17:43–17:44 UTC on 2026-09-06; origin/main = 49da495c). (b) src/core/handoff/httpAdapter.js in the current tree no longer contains the recorded bytes field in sessionSummary and instead exposes /api/resources/status and /api/agent-sources routes plus a workspace-overview route. (c) web/src/margin/SessionBoard.js and MarginApp.js now implement a quota-percentage UsageBar (Codex 5h/7d used %, Claude unavailable; current test even asserts the text 'Today' is absent), a Pin/Hide/Quit control dock, Settings/agent-source management, and focus/interval refresh — none of which existed in the recorded R3-first-implementation. (d) test/marginR3Board.test.js grew R3.3/resource-bar tests; docs/validation/r3.2/ and r3.3/ screenshot sets and a 2026-09-07 'V2 Resource Bar daily-use baseline' PASS note exist. (e) Historical hover-Copy/Save and 44px/row-scroll CSS did survive into the current margin.css, so some R3 elements remain, but the overall recorded milestone description no longer matches the current UI. The r3-electron-window.png captured during the recorded session predates the current control dock/settings UI. Note: the local .git contains REBASE_HEAD/ORIG_HEAD files but no rebase-merge/rebase-apply directories, so these appear to be stale metadata rather than an in-progress operation; the working tree cleanliness of the frozen copy is unverifiable without git.\",\n  \"unsafeAssumptions\": [\n    \"The recorded session's '62/62 passed', 'npm run build passed', and Electron screenshot claims are still valid for the current workspace — they are historical reports from a different tree, and no toolchain exists in this environment to re-verify them.\",\n    \"The frozen workspace is the state immediately after the recorded session ended — it is not; local main and on-disk files reflect later commits and later R3.2/R3.3/resource-bar iterations made after the session (13:41 UTC) at ~17:43–17:44 UTC the same day and beyond.\",\n    \"The recorded R3-first-implementation feature set ('Today <tokens>', byte-based '~' token estimate, the bytes field in the HTTP session DTO) is still present/current — current code removed the bytes DTO field and replaced the usage readout with Codex quota percentages.\",\n    \"The recorded PARTIAL verdict means the R3 milestone is still pending in the current repo — the current repo contains later slices and a 2026-09-07 daily-use baseline declaring PASS for a superset of these features; no explicit open R3 acceptance item was found, and the current acceptance status is unknown.\",\n    \"Re-applying the recorded R3 patch set to the current workspace would be safe or idempotent — current httpAdapter.js/SessionBoard.js/MarginApp.js/margin.css/marginR3Board.test.js all differ from the historical versions, so direct reuse would likely conflict or regress newer behavior (settings, agent sources, window controls, resource status).\",\n    \"docs/validation/r3-electron-window.png depicts the current UI — it is a historical capture from the recorded session and predates later control-dock/settings UI changes.\",\n    \"The recorded session's UX finding that token usage must be a bytes-derived estimate still defines the current product decision — later work replaced it with Codex quota percent-used, while API-token/cost/model resource reporting remains documented as not implemented.\",\n    \"The .git REBASE_HEAD/ORIG_HEAD files indicate an interrupted git operation in the frozen copy — no rebase-merge/rebase-apply directories exist, so these appear to be stale metadata only.\",\n    \"Local main HEAD (a247e75a) means the on-disk working tree is committed and clean — git is unavailable here, so tracked/untracked/cleanliness of the frozen tree could not be verified, and newer refs (origin/main 49da495c) indicate the upstream history extends further.\",\n    \"The repo-level '111 passed / 0 failed' and PASS in docs/validation/v2_resource_bar_daily_use_baseline.md constitute current independent validation — they are historical claims in a doc from a different run/date and were not reproducible in this environment.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Margin V2 UI — R3 First Implementation (single user task in the recorded session at <repo>, base commit 0836e800): implement a first real floating-window UI from the confirmed R3 wireframes. Scope: (a) Usage Bar ~44px, no 'Margin' title, fixed left 'Today <tokens>', one-line horizontally scrollable per-model/agent token usage in the middle, fixed right expand/collapse toggle, click toggles the Session Board, no trend/Workspace/Session counts/usage detail; (b) Session Board with three mutually exclusive modes (Workspace = group by workspace, Agent = group by agent, Sessions = flat in source order), no search/filter/sort; (c) single-line ~36px session rows showing only status dot, agent (suppressed if the group already expresses it), session title (ellipsis, no wrap), workspace/context (suppressed when grouped), relative time; (d) hover-only Copy/Save row-end actions that run a real session Handoff (no Resume Summary/Goal/Progress/Validation expansion, no arrow, no third-level page); (e) minimal visual scope (spacing, typography, divider, hover, selected mode, overflow/scroll only). Validate in a real Electron floating window: collapsed bar, expand/collapse, model-token horizontal scroll, Workspace/Agent/Sessions modes, long-title ellipsis, hover Copy/Save, real handoff Copy, real handoff Save, board vertical overflow, resize, plus no regression for CLI V1 / existing Handoff Core. Output: implementation screenshots, changed-file list, interaction results, UX findings, tests/build, and a final verdict 'PASS — R3 first implementation ready for UX iteration' or 'PARTIAL — <blocker>', then stop (no further polishing/features).",
+    "progress": "HISTORICAL (recorded session, 2026-09-06 13:29–13:41 UTC, worktree on top of commit 0836e800 that was already heavily dirty with earlier uncommitted Margin/CLI/Electron/handoff work): the agent added web/src/margin/SessionBoard.js (mode grouping, single-row layout, relative time, hover Copy/Save using Core handoff, byte-based '~' token estimate), rewrote web/src/margin/MarginApp.js (old list+detail flow replaced by collapsed/expanded board), replaced web/src/margin/margin.css (44px bar, 36px rows, ellipsis, scroll), added a bytes field to the session DTO in src/core/handoff/httpAdapter.js, and added test/marginR3Board.test.js. It reached a passing `npm run build` (~built in 419ms) and a focused run of test/marginR3Board.test.js + marginSurfaceHttpAdapter.test.js + marginCli.test.js + handoff.test.js + electronHost.test.js with 62 passed / 0 failed, launched `npm run electron:start` in a real Electron window, and captured docs/validation/r3-electron-window.png. The agent ended with verdict 'PARTIAL — 真实 Electron 环境没有可用 Session 数据' (host exposed 0 resumable Codex sessions, so real-window data-state acceptance could not be executed; those interactions were covered only by component tests) and reported a UX caveat that no model-native token accounting exists so the usage readout was a clearly labelled bytes-based estimate. CURRENT REPO TRUTH (frozen workspace): the same repository has moved far past that state. Local main HEAD = a247e75a; .git reflog shows commits a5face246 ('feat: establish Margin handoff core and CLI V1'), 7fede273 ('feat: add Electron V2 floating session workspace'), a0334dd8 ('feat: add Codex agent resource status'), a247e75a ('docs: record V2 resource bar daily-use baseline') recorded ~2026-09-06 17:43–17:44 UTC, i.e. after the recorded session; a backup ref backup/pre-resource-bar-baseline = 0836e800 exists and origin/main = 49da495c is further ahead. On disk, SessionBoard.js/MarginApp.js/margin.css now implement a resource-quota UsageBar (Codex 5h/7d percent used, Claude unavailable), a window control dock (expand/collapse, Pin, Hide, Quit), a Settings panel (agent-source auto-detect/add/remove, display/window/feedback options), expanded SessionBoard refresh paths, and row hover time-fade with hover-revealed Copy/Save; httpAdapter.js no longer emits the bytes estimate field and adds /api/resources/status, /api/agent-sources*, /api/workspace-overview. test/marginR3Board.test.js now also covers R3.3 window controls and resource-bar behavior; docs/validation/r3.2/ and r3.3/ hold Electron screenshots, and docs/validation/v2_resource_bar_daily_use_baseline.md (committed in a247e75a, dated 2026-09-07) declares 'PASS — ready for continued daily-use evaluation' for CLI V1 + Electron frameless floating shell + Workspace/Agent/Sessions navigation + refresh + Copy/Save Handoff + Settings + Quit/Hide/Pin + Codex Agent Resource Status with a reported focused result of 111 passed / 0 failed and `npm run build` passed.",
+    "pending": "As recorded at session end: the R3 'first implementation' milestone was NOT formally accepted — verdict was PARTIAL. Remaining at that time were the real-Electron data-state acceptance items the agent could not execute (populated Workspace/Agent/Sessions content, long-title ellipsis, hover Copy/Save, real Copy and real Save of a real Core Handoff, board vertical overflow, resize without breakage), an uncompleted full-suite green confirmation (only focused 62-test subsets and build were green at the end; an earlier broad mid-session run failed the build and reported 8 failures in composition/development-route tests that depend on built assets, before later fixes), and the unresolved token-accounting limitation (usage shown as a '~' estimate derived from session bytes rather than real provider token numbers). As of the current frozen repo, the R3 domain appears to have been continued and iterated (R3.2/R3.3 slices, resource-status bar, settings/source management, window controls, and a daily-use baseline PASS note on 2026-09-07); I found no artifact in the workspace that records an explicit still-open R3-first-implementation acceptance defect. The documented current limitation is 'API-token/cost/model-breakdown resource reporting is not implemented' (plus Claude structured quota unavailable). Whether any formal PASS/PARTIAL status for the original R3-first-implementation acceptance exists in the current branch is unknown from available evidence.",
+    "historicalValidation": "All of the following are historical reports from the recorded session executed on the original <repo> tree (commit 0836e800 + large pre-existing dirty worktree) on 2026-09-06; they are not current validation and could not be re-run here because this isolated environment has no node_modules, no .runtime Node runtime, and no git binary. Reported in-session evidence: `npm run build` passed (~built in 419ms, dist/margin.html + JS/CSS assets); focused test run of test/marginR3Board.test.js, test/marginSurfaceHttpAdapter.test.js, test/marginCli.test.js, test/handoff.test.js, test/electronHost.test.js = 62 passed / 0 failed / exit 0 (TAP output in session ordinals ~104 and ~353); `npm run electron:start` launched a real Electron window and docs/validation/r3-electron-window.png was captured; earlier mid-session run (~ordinal 81) shows a transient 'Build failed in 41ms' followed by 602 matched tests with 594 pass / 8 fail, the failures (e.g. composition/development-route tests) being consistent with missing/stale built assets at that intermediate point, and this was superseded by later edits (a later run rebuilt successfully and passed 62/62). The session's final assistant message reports 'PARTIAL' because the host had 0 resumable Codex sessions for real-window data-state validation. No full-suite (all test files) green run is evidenced at session end.",
+    "recommendedFollowUp": "Do not promote any historical recommendation from the recorded session into a definite current action. The recorded patch/claims describe an earlier tree and the frozen repo has materially diverged, so re-applying the historical R3 change set blindly would be unsafe. Recommended recovery path (still to be independently confirmed before execution): (1) treat the recorded session strictly as history and treat the frozen workspace (main @ a247e75a, on-disk tree, plus newer refs like origin/main 49da495c) as the only current truth; (2) restore an executable toolchain in a real working environment (install dependencies and the pinned .runtime Node, since none exist here) and independently re-run `npm run build` and the relevant tests (at least test/marginR3Board.test.js, marginSurfaceHttpAdapter.test.js, marginCli.test.js, handoff.test.js, electronHost.test.js) to validate the current tree; (3) review docs/validation/r3.2/, r3.3/, docs/validation/v2_resource_bar_daily_use_baseline.md and the current SessionBoard.js/MarginApp.js/margin.css/httpAdapter.js as the authoritative state instead of the recorded file contents; (4) only then decide whether the recorded R3-first-implementation acceptance (12 real-window interactions, including 'Today <tokens>' readout and hover-only Copy/Save semantics) is still an open target or has been superseded by the later slices/baseline — that determination is not resolvable from this recovery environment alone.",
+    "currentApplicability": "Low for the recorded session's implementation detail; higher only at the level of 'same R3 domain, later evolution'. Concrete mismatches between the historical record and the current frozen repo: (a) session base: recorded session started at commit 0836e800, while local main HEAD is a247e75a and .git reflog/ORIG_HEAD/backup ref show the repo advanced past 0836e800 after the session (backup/pre-resource-bar-baseline = 0836e800; later commits a5face246/7fede273/a0334dd8/a247e75a recorded ~17:43–17:44 UTC on 2026-09-06; origin/main = 49da495c). (b) src/core/handoff/httpAdapter.js in the current tree no longer contains the recorded bytes field in sessionSummary and instead exposes /api/resources/status and /api/agent-sources routes plus a workspace-overview route. (c) web/src/margin/SessionBoard.js and MarginApp.js now implement a quota-percentage UsageBar (Codex 5h/7d used %, Claude unavailable; current test even asserts the text 'Today' is absent), a Pin/Hide/Quit control dock, Settings/agent-source management, and focus/interval refresh — none of which existed in the recorded R3-first-implementation. (d) test/marginR3Board.test.js grew R3.3/resource-bar tests; docs/validation/r3.2/ and r3.3/ screenshot sets and a 2026-09-07 'V2 Resource Bar daily-use baseline' PASS note exist. (e) Historical hover-Copy/Save and 44px/row-scroll CSS did survive into the current margin.css, so some R3 elements remain, but the overall recorded milestone description no longer matches the current UI. The r3-electron-window.png captured during the recorded session predates the current control dock/settings UI. Note: the local .git contains REBASE_HEAD/ORIG_HEAD files but no rebase-merge/rebase-apply directories, so these appear to be stale metadata rather than an in-progress operation; the working tree cleanliness of the frozen copy is unverifiable without git.",
+    "unsafeAssumptions": [
+      "The recorded session's '62/62 passed', 'npm run build passed', and Electron screenshot claims are still valid for the current workspace — they are historical reports from a different tree, and no toolchain exists in this environment to re-verify them.",
+      "The frozen workspace is the state immediately after the recorded session ended — it is not; local main and on-disk files reflect later commits and later R3.2/R3.3/resource-bar iterations made after the session (13:41 UTC) at ~17:43–17:44 UTC the same day and beyond.",
+      "The recorded R3-first-implementation feature set ('Today <tokens>', byte-based '~' token estimate, the bytes field in the HTTP session DTO) is still present/current — current code removed the bytes DTO field and replaced the usage readout with Codex quota percentages.",
+      "The recorded PARTIAL verdict means the R3 milestone is still pending in the current repo — the current repo contains later slices and a 2026-09-07 daily-use baseline declaring PASS for a superset of these features; no explicit open R3 acceptance item was found, and the current acceptance status is unknown.",
+      "Re-applying the recorded R3 patch set to the current workspace would be safe or idempotent — current httpAdapter.js/SessionBoard.js/MarginApp.js/margin.css/marginR3Board.test.js all differ from the historical versions, so direct reuse would likely conflict or regress newer behavior (settings, agent sources, window controls, resource status).",
+      "docs/validation/r3-electron-window.png depicts the current UI — it is a historical capture from the recorded session and predates later control-dock/settings UI changes.",
+      "The recorded session's UX finding that token usage must be a bytes-derived estimate still defines the current product decision — later work replaced it with Codex quota percent-used, while API-token/cost/model resource reporting remains documented as not implemented.",
+      "The .git REBASE_HEAD/ORIG_HEAD files indicate an interrupted git operation in the frozen copy — no rebase-merge/rebase-apply directories exist, so these appear to be stale metadata only.",
+      "Local main HEAD (a247e75a) means the on-disk working tree is committed and clean — git is unavailable here, so tracked/untracked/cleanliness of the frozen tree could not be verified, and newer refs (origin/main 49da495c) indicate the upstream history extends further.",
+      "The repo-level '111 passed / 0 failed' and PASS in docs/validation/v2_resource_bar_daily_use_baseline.md constitute current independent validation — they are historical claims in a doc from a different run/date and were not reproducible in this environment."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788767996920
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C . status 2>&1; Write-Output \\\"---\\\"; git -C . log --oneline -20 2>&1\"}",
+      "tsMs": 1788767996920
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788767999435
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788767999435
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788767999435
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788767999436
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 5\"}",
+      "tsMs": 1788768001003
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\\\\AppData\"}",
+      "tsMs": 1788768001010
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl; Write-Output (\\\"total lines: \\\" + $f.Count)\"}",
+      "tsMs": 1788768007286
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\\\\.git\"}",
+      "tsMs": 1788768007296
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\\\\.superpowers\"}",
+      "tsMs": 1788768007296
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\\\\AppData\\\\Roaming\"}",
+      "tsMs": 1788768007296
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\HEAD; Write-Output \\\"---REBASE---\\\"; Get-Content .\\\\workspace\\\\.git\\\\REBASE_HEAD -ErrorAction SilentlyContinue; Write-Output \\\"---ORIG---\\\"; Get-Content .\\\\workspace\\\\.git\\\\ORIG_HEAD -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788768009696
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl; $users = $f | Where-Object { $_ -match '\\\"role\\\":\\\"user\\\"' }; Write-Output (\\\"user msgs: \\\" + @($users).Count); $users | Select-Object -First 12\"}",
+      "tsMs": 1788768009707
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/README.md\"}",
+      "tsMs": 1788768015073
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788768015074
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl; $f | Select-Object -Last 15\"}",
+      "tsMs": 1788768019302
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/web/src/margin\"}",
+      "tsMs": 1788768035087
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src/core/handoff\"}",
+      "tsMs": 1788768035087
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation\"}",
+      "tsMs": 1788768035088
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue; Write-Output \\\"---HEAD-log---\\\"; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -ErrorAction SilentlyContinue | Select-Object -Last 20\"}",
+      "tsMs": 1788768035088
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs\"}",
+      "tsMs": 1788768068832
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers/sdd\"}",
+      "tsMs": 1788768068832
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/design-references\"}",
+      "tsMs": 1788768068832
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation/r3-electron\"}",
+      "tsMs": 1788768068832
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl; $hits = $f | Select-String -Pattern 'git commit|commit:|git -C|git add' -AllMatches; Write-Output (\\\"hits: \\\" + @($hits).Count); $hits | ForEach-Object { $_.Line.Substring(0, [Math]::Min($_.Line.Length, 400)) }\"}",
+      "tsMs": 1788768085499
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl; $hits = $f | Select-String -Pattern 'handoff core and CLI|floating session workspace|resource status|daily-use baseline' ; Write-Output (\\\"hits: \\\" + @($hits).Count)\"}",
+      "tsMs": 1788768085507
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl\\n$rows = foreach ($line in $f) { try { $o = $line | ConvertFrom-Json } catch { $null }; if ($o) { [pscustomobject]@{ ord=$o.ordinal; ts=$o.timestamp; type=$o.type; sub=if($o.payload.type){$o.payload.type}else{''}; role=if($o.payload.role){$o.payload.role}else{''}; name=if($o.payload.name){$o.payload.name}else{''} } } }\\n$rows | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788768095286
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl\\nforeach ($line in $f) {\\n  try { $o = $line | ConvertFrom-Json } catch { continue }\\n  $p = $o.payload\\n  if ($o.type -eq 'response_item' -and $p.type -eq 'custom_tool_call') {\\n    $in = $p.input\\n    if ($in -is [string]) { $txt = $in } else { $txt = ($in | ConvertTo-Json -Compress -Depth 6) }\\n    Write-Output (\\\"=== ord \\\" + $o.ordinal + \\\" call \\\" + $p.call_id + \\\" name=\\\" + $p.name + \\\" status=\\\" + $p.status)\\n    Write-Output ($txt.Substring(0, [Math]::Min($txt.Length, 1200)))\\n    Write-Output \\\"\\\"\\n  }\\n}\"}",
+      "tsMs": 1788768101044
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$vals = 1788701388,1788702081,1788716597,1788716676,1788282986\\nforeach ($v in $vals) { $d = [DateTimeOffset]::FromUnixTimeSeconds($v).ToUniversalTime(); Write-Output (\\\"$v -> \\\" + $d.ToString(\\\"yyyy-MM-dd HH:mm:ss\\\") + \\\" UTC\\\") }\"}",
+      "tsMs": 1788768110868
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\ORIG_HEAD; Write-Output \\\"---\\\"; Get-Content .\\\\workspace\\\\.git\\\\REBASE_HEAD -ErrorAction SilentlyContinue; Write-Output \\\"---MERGE_HEAD---\\\"; Get-Content .\\\\workspace\\\\.git\\\\MERGE_HEAD -ErrorAction SilentlyContinue; Write-Output \\\"---BISECT---\\\"; Get-Content .\\\\workspace\\\\.git\\\\BISECT_LOG -ErrorAction SilentlyContinue; Write-Output \\\"---refs---\\\"; Get-ChildItem .\\\\workspace\\\\.git\\\\refs -Recurse -File | ForEach-Object { $_.FullName + \\\" = \\\" + (Get-Content $_.FullName) }\"}",
+      "tsMs": 1788768110875
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\"}",
+      "tsMs": 1788768136674
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/MarginApp.js\"}",
+      "tsMs": 1788768136674
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/electron\"}",
+      "tsMs": 1788768136674
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/scripts\"}",
+      "tsMs": 1788768136675
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/test\"}",
+      "tsMs": 1788768155438
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation/r3.2\"}",
+      "tsMs": 1788768155439
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation/r3.3\"}",
+      "tsMs": 1788768155439
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/superpowers\"}",
+      "tsMs": 1788768155439
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/superpowers/specs\"}",
+      "tsMs": 1788768158261
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/superpowers/plans\"}",
+      "tsMs": 1788768158261
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/design-references/huashu-design\"}",
+      "tsMs": 1788768158261
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"R3|r3\",\"path\":\"workspace/docs\",\"maxResults\":100}",
+      "tsMs": 1788768158262
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/validation/v2_resource_bar_daily_use_baseline.md\"}",
+      "tsMs": 1788768162088
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":80,\"path\":\"workspace\",\"pattern\":\"PARTIAL|R3 first implementation|Session Board|marginR3Board\"}",
+      "tsMs": 1788768162089
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl\\n# capture custom_tool_call_output entries and summarize\\n$out = @()\\nfor ($i=0; $i -lt $f.Count; $i++) {\\n  $line = $f[$i]\\n  try { $o = $line | ConvertFrom-Json } catch { continue }\\n  if ($o.type -eq 'response_item' -and $o.payload.type -eq 'custom_tool_call_output') {\\n    $txt = ($o.payload.output | Out-String)\\n    # find preceding tool call id by scanning backwards for custom_tool_call with same call_id\\n    $cid = $o.payload.call_id\\n    for ($j=$i-1; $j -ge 0; $j--) {\\n      try { $q = $f[$j] | ConvertFrom-Json } catch { continue }\\n      if ($q.type -eq 'response_item' -and $q.payload.type -eq 'custom_tool_call' -and $q.payload.call_id -eq $cid) { break }\\n    }\\n    $out += [pscustomobject]@{ ord=$o.ordinal; call=$cid }\\n  }\\n}\\nWrite-Output (\\\"tool outputs: \\\" + $out.Count)\"}",
+      "tsMs": 1788768181928
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl\\n$f | Select-String -Pattern 'files changed|insertion|deletion|git diff --stat|# pass |# fail |# tests |build.*(complete|success|error)|PARTIAL|verdict|No Codex sessions|0 resumable' | ForEach-Object { $_.Line.Substring(0, [Math]::Min($_.Line.Length, 300)) }\"}",
+      "tsMs": 1788768181937
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl\\n$hits = $f | Select-String -Pattern 'MarginApp|marginApiClient|RecentSessions|SessionDetail|margin.css' \\nforeach ($h in $hits) {\\n  $ln = $h.Line\\n  $i = $ln.IndexOf('\\\"input\\\"')\\n  Write-Output (\\\"ord? line starts: \\\" + $ln.Substring(0, [Math]::Min($ln.Length, 600)))\\n  Write-Output \\\"----\\\"\\n}\"}",
+      "tsMs": 1788768197150
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788768218195
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginR3Board.test.js\"}",
+      "tsMs": 1788768218195
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl\\n$targets = @('call_Trz4h084DxYo35nkXVjcVpcK','call_N9wTIdjoqk0MkmUwN2osWW1B','call_kwPXmhdsAvi77SJiX5HrUfNI','call_t6wXiOXrCPrHoOdJUBYyEUXI')\\nforeach ($line in $f) {\\n  try { $o = $line | ConvertFrom-Json } catch { continue }\\n  if ($o.type -eq 'response_item' -and $o.payload.type -eq 'custom_tool_call_output' -and $targets -contains $o.payload.call_id) {\\n    Write-Output (\\\"########## call \\\" + $o.payload.call_id + \\\" ord \\\" + $o.ordinal)\\n    $all = ''\\n    foreach ($t in $o.payload.output) { if ($t.text) { $all += $t.text } }\\n    Write-Output (\\\"LEN=\\\" + $all.Length)\\n    if ($all.Length -gt 2600) { Write-Output ($all.Substring($all.Length-2600)) } else { Write-Output $all }\\n  }\\n}\"}",
+      "tsMs": 1788768237238
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$p = Get-Content .\\\\workspace\\\\package.json -Raw | ConvertFrom-Json; $p.scripts | Format-List; Write-Output (\\\"engines: \\\" + ($p.engines | Out-String)); Write-Output (\\\"main: \\\" + $p.main); Write-Output (\\\"name: \\\" + $p.name)\"}",
+      "tsMs": 1788768258287
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"node_modules exists:\\\"; Test-Path .\\\\workspace\\\\node_modules; Write-Output \\\".runtime exists:\\\"; Test-Path .\\\\workspace\\\\.runtime; Write-Output \\\"git dir contents:\\\"; Get-ChildItem .\\\\workspace\\\\.git -Force | Select-Object Name,Mode | Format-Table -AutoSize | Out-String; Write-Output \\\"rebase dirs:\\\"; Test-Path .\\\\workspace\\\\.git\\\\rebase-merge; Test-Path .\\\\workspace\\\\.git\\\\rebase-apply\"}",
+      "tsMs": 1788768258295
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl\\nforeach ($line in $f) {\\n  try { $o = $line | ConvertFrom-Json } catch { continue }\\n  if ($o.type -eq 'response_item' -and $o.payload.type -eq 'custom_tool_call_output' -and $o.payload.call_id -eq 'call_Trz4h084DxYo35nkXVjcVpcK') {\\n    $all = ''\\n    foreach ($t in $o.payload.output) { if ($t.text) { $all += $t.text } }\\n    $lines = $all -split \\\"`n\\\"\\n    Write-Output (\\\"lines: \\\" + $lines.Count)\\n    $lines | Select-String -Pattern 'not ok|✖|fail' | Select-Object -First 40\\n  }\\n}\"}",
+      "tsMs": 1788768272853
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/web/src/margin/margin.css\",\"pattern\":\"row-actions|hover|ellipsis|row-title|row-context|usage-bar|board-scroll|overflow\"}",
+      "tsMs": 1788768305241
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\scripts\\\\capture-r33-electron.cjs -TotalCount 60\"}",
+      "tsMs": 1788768305242
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\web\\\\src\\\\margin\\\\margin.css | Select-Object Name,Length; Write-Output \\\"----\\\"; Get-Content .\\\\workspace\\\\web\\\\src\\\\margin\\\\margin.css -TotalCount 120\"}",
+      "tsMs": 1788768308352
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$f = Get-Content .\\\\input\\\\session.jsonl\\nforeach ($line in $f) {\\n  try { $o = $line | ConvertFrom-Json } catch { continue }\\n  if ($o.type -eq 'response_item' -and $o.payload.type -eq 'custom_tool_call_output' -and $o.payload.call_id -eq 'call_N9wTIdjoqk0MkmUwN2osWW1B') {\\n    $all = ''\\n    foreach ($t in $o.payload.output) { if ($t.text) { $all += $t.text } }\\n    Write-Output ($all.Substring(0, [Math]::Min(2000, $all.Length)))\\n  }\\n}\"}",
+      "tsMs": 1788768332051
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\CHANGELOG.md -TotalCount 60 -ErrorAction SilentlyContinue; Write-Output \\\"====TAIL====\\\"; $c = Get-Content .\\\\workspace\\\\CHANGELOG.md; $c | Select-Object -Last 40\"}",
+      "tsMs": 1788768338568
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs\\\\validation\\\\r3-electron-window.png, .\\\\workspace\\\\docs\\\\validation\\\\r3.2, .\\\\workspace\\\\docs\\\\validation\\\\r3.3 -Recurse -File | Select-Object FullName,Length,LastWriteTime | Format-Table -AutoSize | Out-String\"}",
+      "tsMs": 1788768338575
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"== git binary available? ==\\\"; (Get-Command git -ErrorAction SilentlyContinue) -ne $null; Write-Output \\\"== origin/main ref ==\\\"; Get-Content .\\\\workspace\\\\.git\\\\refs\\\\remotes\\\\origin\\\\main; Write-Output \\\"== fetch head ==\\\"; Get-Content .\\\\workspace\\\\.git\\\\FETCH_HEAD -ErrorAction SilentlyContinue | Select-Object -First 5\"}",
+      "tsMs": 1788768349433
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"== recent web margin files ==\\\"; Get-ChildItem .\\\\workspace\\\\web\\\\src\\\\margin -File | Select-Object Name; Write-Output \\\"== docs validation listing ==\\\"; Get-ChildItem .\\\\workspace\\\\docs\\\\validation -Force | Select-Object Name\"}",
+      "tsMs": 1788768349440
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"check workspace tree no .git dir of huashu needed\\\"; Test-Path .\\\\workspace\\\\design-references\\\\huashu-design\\\\.git\"}",
+      "tsMs": 1788768354051
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem .\\workspace\\docs\\validation\\r3-electron-window.png, .\\workspace\\docs\\validation\\r3.2, .\\workspace\\docs\\validation\\r3.3 -Recurse -File | Select-Object FullName,Length,LastWriteTime | Format-Table -AutoSize | Out-String",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788768338575
+    },
+    {
+      "command": "Write-Output \"== recent web margin files ==\"; Get-ChildItem .\\workspace\\web\\src\\margin -File | Select-Object Name; Write-Output \"== docs validation listing ==\"; Get-ChildItem .\\workspace\\docs\\validation -Force | Select-Object Name",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788768349440
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 383417,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-11",
+    "arm": "A",
+    "runId": "formal-case-11-A-2026-09-07T07-59-45-852Z",
+    "startMs": "2026-09-07T07:59:54.258Z",
+    "endMs": "2026-09-07T08:06:19.048Z",
+    "durationMs": 384790,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-11-A-2026-09-07T07-59-45-852Z status=ok durationMs=383417\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-11-A-2026-09-07T07-59-45-852Z.cert.json"
+  }
+}

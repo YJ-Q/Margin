@@ -11,6 +11,10 @@ const EVENT_TYPE_BY_EVIDENCE = new Map([
   ['run|updated|run_pause', 'run.paused'],
   ['run|updated|run_resume', 'run.resumed'],
   ['run|updated|run_stop', 'run.stopped'],
+  // The Session ↔ Run bridge (ADR 003). Without an entry here the binding event is dropped from the
+  // activity stream silently: `eventTypeFor` returns null and the envelope is skipped, so a fact the
+  // user just created simply does not appear. A diagnostic counter is not a substitute for the entry.
+  ['run|updated|run_bind_session', 'run.session_bound'],
   ['run|completed|run_complete', 'run.completed'],
   ['run|failed|run_fail', 'run.failed'],
   ['artifact|created|artifact_create', 'artifact.created'],
@@ -53,6 +57,7 @@ const ACTIVITY_MESSAGES = Object.freeze({
   'run.paused': 'Run paused',
   'run.resumed': 'Run resumed',
   'run.stopped': 'Run stopped',
+  'run.session_bound': 'Agent session bound',
   'run.completed': 'Run completed',
   'run.failed': 'Run failed',
   'artifact.created': 'Artifact created',

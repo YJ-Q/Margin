@@ -1,0 +1,23 @@
+{
+  "runId": "preflight-case-01-B-2026-09-07T05-46-53-696Z",
+  "caseId": "case-01",
+  "arm": "B",
+  "phase": "preflight",
+  "sandboxDir": "<repo>-bench\\ab-continuation\\sandboxes\\preflight-case-01-B",
+  "workspaceVerification": {
+    "checkedFiles": 634,
+    "forbiddenNameHits": [],
+    "uuidHits": [],
+    "ok": true
+  },
+  "inputFolderEntries": [
+    "HANDOFF.md"
+  ],
+  "inputArtifact": {
+    "name": "HANDOFF.md",
+    "sha256": "7A01807BB5BCE066319B3A7865180DB9B06C430350E317A22EB73995D7086B34",
+    "source": "case-01.md"
+  },
+  "sandboxWideForbiddenHits": [],
+  "ok": true
+}

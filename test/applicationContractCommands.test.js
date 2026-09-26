@@ -4,6 +4,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { createMarginCore } from '../src/core/createMarginCore.js';
+import { CONTRACT_VERSION } from '../src/contracts/contractTypes.js';
 
 const runtimeControl = {
   calls: [],
@@ -59,7 +60,7 @@ test('all command routes return frozen stable envelopes and NeedsOwner resolve c
     assert.equal(response.ok, true);
     assert.equal(response.meta.requestId, 'call-w');
     assert.equal(response.meta.correlationId, 'correlation-1');
-    assert.equal(response.meta.contractVersion, '1.1');
+    assert.equal(response.meta.contractVersion, CONTRACT_VERSION);
     assert.equal(Object.isFrozen(response), true);
     const workstream = response.data;
 

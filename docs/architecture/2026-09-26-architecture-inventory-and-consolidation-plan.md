@@ -154,7 +154,7 @@ ADR 002（已接受，2026-08-24）原文：
 
 **守卫漏洞（已修）**：`test/repositoryPrivacy.test.js` 原来只匹配单反斜杠/斜杠形态，而机器生成的证据是 JSON，路径写作 `C:\\Users\\<user>`（分隔符全部转义）。该形态**两个模式都不命中**，于是一个含真实用户名的文件可以**通过守卫并被提交** —— 假绿，比没有守卫更糟，因为它被信任。
 
-证据：`docs/validation/recovery-handoffs-r7-full/manifest.json` 既含 `C:\\Users\\<真实用户名>\\.codex\\...`，旧规则命中 **0 次**，转义形态命中 **12 次**。
+证据：`docs/validation/recovery-handoffs-r7-full/manifest.json` 既含 `C:\\Users\\<user>\\.codex\\...`，旧规则命中 **0 次**，转义形态命中 **12 次**。
 
 已修：新增解码投影后再扫一遍，并把捕获段收紧为像账号名的字符集（否则会误报 `electron/main.js` 里给用户输出做脱敏的正则）。修复后立刻暴露 2 处真实泄漏：`forge.config.cjs` 注释、以及已提交的 `experiments/**`（10 个文件）—— 两处已处理。
 

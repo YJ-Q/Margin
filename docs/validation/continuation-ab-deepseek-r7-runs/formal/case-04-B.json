@@ -1,0 +1,280 @@
+{
+  "runId": "formal-case-04-B-2026-09-07T10-09-23-430Z",
+  "caseId": "case-04",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T10:09:34.328Z",
+  "endTs": "2026-09-07T10:12:21.455Z",
+  "durationMs": 167127,
+  "modelPromptStartMs": 39,
+  "modelPromptEndMs": 167127,
+  "sessionId": "01a07b58-389d-753a-88d3-aecb79efe1ff",
+  "rawResponse": "Based on my inspection of the recovery artifact and the frozen repository snapshot, I have enough evidence to produce the recovery state.\n\nKey facts verified in this environment:\n- `./workspace` is a frozen copy of the Margin repo; `refs/heads/main` = `a247e75ab9e78cce7853e3f281b85459a4f25e7c`, matching the HEAD recorded in `input/HANDOFF.md` (origin/main is a different commit, `49da495…`).\n- The snapshot's product structure matches the audit's described mainline (electron/main.js → `createMarginSurface`; `src/core/handoff/`; `web/margin.html` → `web/src/margin/main.jsx`; Vite builds `margin.html` only; `start/dev/margin:*` scripts run `scripts/run-margin-surface.js`).\n- No audit-deliverable report file and no session-evidence JSONL (`session-01a07639-*.jsonl`) exist inside the snapshot; `input/HANDOFF.md` is the only record of the interrupted session.\n- No `.runtime`/`node_modules` in the snapshot, so tests/builds cannot be re-run here; current validation is unverifiable in this environment.\n\n```json\n{\n  \"goal\": \"Historical task (recorded only in input/HANDOFF.md, labeled Inferred and explicitly 'confirm before taking over'): perform a read-only cleanup audit of the Margin repo (live repo <repo>; frozen copy here at ./workspace). Treat the current product mainline as CLI V1 + src/core/handoff + Electron V2 + the Margin React Surface. Scan imports, exports, package scripts, tests, and runtime entry points; classify paths as KEEP / RETIRE / GENERATED / DEFER; focus on the old Workstream/Run/Memory/Pilot/Application/Workbench paths to determine which are fully disconnected from the current mainline. For each deletable directory/file, list reference evidence, affected tests/scripts, deletion risk, and produce a minimal cleanup plan. Do NOT actually delete files; do NOT mark DELETE CANDIDATE merely because a path 'looks old' - only when no current-mainline dependency is confirmed. The actual benchmark/continuing-task brief is not present in this environment, so this goal must be re-confirmed before resumption.\",\n  \"progress\": \"Snapshot truth: ./workspace is a frozen repo whose refs/heads/main == a247e75ab9e78cce7853e3f281b85459a4f25e7c, identical to the HEAD recorded in HANDOFF.md 'Repo Truth' (2026-09-07T09:27:27Z); remote origin/main points to a different commit (49da495c...), so local main is a divergent/integrated line. The current-tree structure is consistent with the audit's stated mainline: electron/main.js creates createMarginSurface and nothing else; src/core/handoff/createMarginSurface.js declares independence from SQLite/Application Contract/Workstream/Run/Memory; web/margin.html loads web/src/margin/main.jsx (MarginApp.js, SessionBoard.js, SessionDetail.js, RecentSessionsList.js, marginApiClient.js); web/vite.config.js has margin.html as the sole build input; package.json start/dev/margin/margin:dev run scripts/run-margin-surface.js; bin/margin.js exists. Worktree file mtimes extend past the HEAD commit date, consistent with HANDOFF's note of 331 tracked-modified/untracked files in the live repo. Historical (from HANDOFF only, not independently re-verifiable): assistant reported the audit 'complete with no file modifications', a KEEP/RETIRE/GENERATED/DEFER classification, 'directed mainline tests 88/88 passed', and a minimal 4-step cleanup plan (1: switch default start/dev, Docker, run-margin-local.cmd to run-margin-surface and build only margin.html - which the snapshot shows already largely in place; 2: delete 11 unreferenced .jsx wrapper files then build+test; 3: move Workbench + persistent Workstream/Run/Memory stack to a legacy package/archive branch and drop related scripts/tests; 4: handle legacy Express, data-export tools and migrations only after DB export/migration-validation). The excerpt ends mid-sentence. No audit-report deliverable file exists anywhere in this snapshot (docs/audit newest entries are dated 2026-08-24), and the session-evidence JSONL referenced in HANDOFF Evidence Pointers is NOT present in the snapshot.\",\n  \"pending\": \"Unknown but bounded: the actual outstanding deliverable of the interrupted task. Per HANDOFF.md it is a completed audit write-up plus minimal cleanup plan with per-path evidence (deliverable not found in this snapshot - it was either never written to the repo or was only in the interrupted chat answer). Open items recorded historically: (1) one focused node --test command had no explicit final result and 13 internal operations had no explicit terminal state; (2) two audit evidence-gathering commands failed with exit 1 (a src/core/marginCoreStore.js imports-tree scan and a web/src/components *.jsx scan) leaving their coverage unfulfilled; (3) the truncated 4th step of the cleanup plan (legacy Express / data-export tools / migrations ordering, DB-export and migration-validation precondition) was not fully reported; (4) current validation is unknown because historical tests were never re-run against the observed repo state. Claims such as '11 unreferenced .jsx wrapper files' and '88/88 mainline tests' could not be confirmed against this snapshot: it contains only three app .jsx entry wrappers (web/src/App.jsx, web/src/main.jsx, web/src/margin/main.jsx) plus vendor design-reference .jsx files; web/src/components contains eleven .js files (old Workbench components).\",\n  \"historicalValidation\": \"HANDOFF.md records, as Confirmed-Historical: one focused test command (node --test test/handoff.test.js test/marginCli.test.js test/marginSurfaceHttpAdapter.test.js test/marginRecentSessionsList.test.js test/m...) exited 0. As Uncertain-Historical: another invocation of that same (or a similar truncated) command had no explicit final result. As Inferred-Historical terminal assistant report: 'directed mainline tests 88/88 passed'. These are historical reports only. Current validation is explicitly marked unknown in HANDOFF.md, and it cannot be executed in this environment because ./workspace contains no .runtime node binary and no node_modules. Assistant-reported completion ('audit complete, no files modified') is not independent current truth.\",\n  \"recommendedFollowUp\": \"Do not treat HANDOFF.md excerpts or the truncated assistant report as current fact. In the live repo (<repo>, branch main @ a247e75), first re-confirm the actual task brief since HANDOFF's Goal is Inferred and self-flagged for confirmation. Then read the session evidence JSONL at the path HANDOFF gives (docs/validation/recovery-handoffs-r7-full/session-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl) instead of re-executing historical code snippets; that file is absent from this snapshot. Re-verify the repo's git state (HANDOFF reports 331 tracked-modified/untracked files - check which are uncommitted and never attribute dirty state to the prior session). Re-run the focused mainline tests and npm run build against the live tree to establish current validation (88/88 is unproven). Re-derive and re-check every classification and deletion candidate (old Workbench, Workstream/Run/Memory, Pilot, Application Contract, legacy Express, Feishu, data-export tools, migrations) with current import/export/script/test evidence before finalizing; mark DELETE CANDIDATE only on confirmed mainline independence; keep the task read-only (no deletions). Deliver the completed audit report + minimal cleanup plan. If continuation instead targets a different updated goal, ignore the stale audit framing.\",\n  \"currentApplicability\": \"Partially applicable. The frozen workspace is internally consistent with the HANDOFF checkpoint (HEAD hash matches exactly, and the file layout/mtimes match the 2026-09-07 mainline state), and the audit's description of the current product mainline (Electron V2/CLI V1 -> src/core/handoff -> handoff HTTP adapter -> margin.html -> web/src/margin) is corroborated by the snapshot contents. However, every audit conclusion - the classification table, '11 unreferenced .jsx wrapper files', '88/88 tests', and the 4-step cleanup plan - exists only as a truncated historical excerpt in HANDOFF.md and is NOT independently confirmed; several specifics do not match the snapshot as-is (only 3 .jsx entry wrappers exist; components are .js files), so either the excerpt is imprecise or it referred to a slightly different moment. Test/build state cannot be validated here (no runtime/deps). Whether the audit report or the 4-step plan applies to the live repo at resume time is unknown until re-verified there; the live repo may have moved beyond this snapshot.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the truncated historical assistant report (ends mid-sentence) is complete and accurate enough to continue from; it is the only record of the audit in this environment.\",\n    \"Assuming 'directed mainline tests 88/88 passed' and 'focused test command exit 0' still hold for the current tree; both are historical and current validation is unknown.\",\n    \"Assuming the audit's '11 unreferenced .jsx wrapper files' exist as such in the current tree; the snapshot shows only three app .jsx wrappers and .js (not .jsx) files in web/src/components.\",\n    \"Assuming the HANDOFF Evidence-Pointers session JSONL is readable at the stated path; it is not present anywhere in this snapshot.\",\n    \"Assuming ./workspace working tree is identical to the live <repo> state at resume time; only the frozen snapshot was inspected and the live repo may have advanced.\",\n    \"Assuming the goal recorded in HANDOFF.md is the actual continuing task; HANDOFF labels it Inferred and instructs that it be confirmed before taking over.\",\n    \"Assuming the prior audit session really modified no files; that is an assistant-reported claim, the repo was already dirty (331 modified/untracked files) with many uncommitted changes, and 13 operations had no explicit terminal state.\",\n    \"Assuming the four-step cleanup plan can be treated as an executable current action list; it is a historical recommendation (partially already reflected in the tree, e.g., start/dev already target run-margin-surface) and was not validated in this environment.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Historical task (recorded only in input/HANDOFF.md, labeled Inferred and explicitly 'confirm before taking over'): perform a read-only cleanup audit of the Margin repo (live repo <repo>; frozen copy here at ./workspace). Treat the current product mainline as CLI V1 + src/core/handoff + Electron V2 + the Margin React Surface. Scan imports, exports, package scripts, tests, and runtime entry points; classify paths as KEEP / RETIRE / GENERATED / DEFER; focus on the old Workstream/Run/Memory/Pilot/Application/Workbench paths to determine which are fully disconnected from the current mainline. For each deletable directory/file, list reference evidence, affected tests/scripts, deletion risk, and produce a minimal cleanup plan. Do NOT actually delete files; do NOT mark DELETE CANDIDATE merely because a path 'looks old' - only when no current-mainline dependency is confirmed. The actual benchmark/continuing-task brief is not present in this environment, so this goal must be re-confirmed before resumption.",
+    "progress": "Snapshot truth: ./workspace is a frozen repo whose refs/heads/main == a247e75ab9e78cce7853e3f281b85459a4f25e7c, identical to the HEAD recorded in HANDOFF.md 'Repo Truth' (2026-09-07T09:27:27Z); remote origin/main points to a different commit (49da495c...), so local main is a divergent/integrated line. The current-tree structure is consistent with the audit's stated mainline: electron/main.js creates createMarginSurface and nothing else; src/core/handoff/createMarginSurface.js declares independence from SQLite/Application Contract/Workstream/Run/Memory; web/margin.html loads web/src/margin/main.jsx (MarginApp.js, SessionBoard.js, SessionDetail.js, RecentSessionsList.js, marginApiClient.js); web/vite.config.js has margin.html as the sole build input; package.json start/dev/margin/margin:dev run scripts/run-margin-surface.js; bin/margin.js exists. Worktree file mtimes extend past the HEAD commit date, consistent with HANDOFF's note of 331 tracked-modified/untracked files in the live repo. Historical (from HANDOFF only, not independently re-verifiable): assistant reported the audit 'complete with no file modifications', a KEEP/RETIRE/GENERATED/DEFER classification, 'directed mainline tests 88/88 passed', and a minimal 4-step cleanup plan (1: switch default start/dev, Docker, run-margin-local.cmd to run-margin-surface and build only margin.html - which the snapshot shows already largely in place; 2: delete 11 unreferenced .jsx wrapper files then build+test; 3: move Workbench + persistent Workstream/Run/Memory stack to a legacy package/archive branch and drop related scripts/tests; 4: handle legacy Express, data-export tools and migrations only after DB export/migration-validation). The excerpt ends mid-sentence. No audit-report deliverable file exists anywhere in this snapshot (docs/audit newest entries are dated 2026-08-24), and the session-evidence JSONL referenced in HANDOFF Evidence Pointers is NOT present in the snapshot.",
+    "pending": "Unknown but bounded: the actual outstanding deliverable of the interrupted task. Per HANDOFF.md it is a completed audit write-up plus minimal cleanup plan with per-path evidence (deliverable not found in this snapshot - it was either never written to the repo or was only in the interrupted chat answer). Open items recorded historically: (1) one focused node --test command had no explicit final result and 13 internal operations had no explicit terminal state; (2) two audit evidence-gathering commands failed with exit 1 (a src/core/marginCoreStore.js imports-tree scan and a web/src/components *.jsx scan) leaving their coverage unfulfilled; (3) the truncated 4th step of the cleanup plan (legacy Express / data-export tools / migrations ordering, DB-export and migration-validation precondition) was not fully reported; (4) current validation is unknown because historical tests were never re-run against the observed repo state. Claims such as '11 unreferenced .jsx wrapper files' and '88/88 mainline tests' could not be confirmed against this snapshot: it contains only three app .jsx entry wrappers (web/src/App.jsx, web/src/main.jsx, web/src/margin/main.jsx) plus vendor design-reference .jsx files; web/src/components contains eleven .js files (old Workbench components).",
+    "historicalValidation": "HANDOFF.md records, as Confirmed-Historical: one focused test command (node --test test/handoff.test.js test/marginCli.test.js test/marginSurfaceHttpAdapter.test.js test/marginRecentSessionsList.test.js test/m...) exited 0. As Uncertain-Historical: another invocation of that same (or a similar truncated) command had no explicit final result. As Inferred-Historical terminal assistant report: 'directed mainline tests 88/88 passed'. These are historical reports only. Current validation is explicitly marked unknown in HANDOFF.md, and it cannot be executed in this environment because ./workspace contains no .runtime node binary and no node_modules. Assistant-reported completion ('audit complete, no files modified') is not independent current truth.",
+    "recommendedFollowUp": "Do not treat HANDOFF.md excerpts or the truncated assistant report as current fact. In the live repo (<repo>, branch main @ a247e75), first re-confirm the actual task brief since HANDOFF's Goal is Inferred and self-flagged for confirmation. Then read the session evidence JSONL at the path HANDOFF gives (docs/validation/recovery-handoffs-r7-full/session-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl) instead of re-executing historical code snippets; that file is absent from this snapshot. Re-verify the repo's git state (HANDOFF reports 331 tracked-modified/untracked files - check which are uncommitted and never attribute dirty state to the prior session). Re-run the focused mainline tests and npm run build against the live tree to establish current validation (88/88 is unproven). Re-derive and re-check every classification and deletion candidate (old Workbench, Workstream/Run/Memory, Pilot, Application Contract, legacy Express, Feishu, data-export tools, migrations) with current import/export/script/test evidence before finalizing; mark DELETE CANDIDATE only on confirmed mainline independence; keep the task read-only (no deletions). Deliver the completed audit report + minimal cleanup plan. If continuation instead targets a different updated goal, ignore the stale audit framing.",
+    "currentApplicability": "Partially applicable. The frozen workspace is internally consistent with the HANDOFF checkpoint (HEAD hash matches exactly, and the file layout/mtimes match the 2026-09-07 mainline state), and the audit's description of the current product mainline (Electron V2/CLI V1 -> src/core/handoff -> handoff HTTP adapter -> margin.html -> web/src/margin) is corroborated by the snapshot contents. However, every audit conclusion - the classification table, '11 unreferenced .jsx wrapper files', '88/88 tests', and the 4-step cleanup plan - exists only as a truncated historical excerpt in HANDOFF.md and is NOT independently confirmed; several specifics do not match the snapshot as-is (only 3 .jsx entry wrappers exist; components are .js files), so either the excerpt is imprecise or it referred to a slightly different moment. Test/build state cannot be validated here (no runtime/deps). Whether the audit report or the 4-step plan applies to the live repo at resume time is unknown until re-verified there; the live repo may have moved beyond this snapshot.",
+    "unsafeAssumptions": [
+      "Assuming the truncated historical assistant report (ends mid-sentence) is complete and accurate enough to continue from; it is the only record of the audit in this environment.",
+      "Assuming 'directed mainline tests 88/88 passed' and 'focused test command exit 0' still hold for the current tree; both are historical and current validation is unknown.",
+      "Assuming the audit's '11 unreferenced .jsx wrapper files' exist as such in the current tree; the snapshot shows only three app .jsx wrappers and .js (not .jsx) files in web/src/components.",
+      "Assuming the HANDOFF Evidence-Pointers session JSONL is readable at the stated path; it is not present anywhere in this snapshot.",
+      "Assuming ./workspace working tree is identical to the live <repo> state at resume time; only the frozen snapshot was inspected and the live repo may have advanced.",
+      "Assuming the goal recorded in HANDOFF.md is the actual continuing task; HANDOFF labels it Inferred and instructs that it be confirmed before taking over.",
+      "Assuming the prior audit session really modified no files; that is an assistant-reported claim, the repo was already dirty (331 modified/untracked files) with many uncommitted changes, and 13 operations had no explicit terminal state.",
+      "Assuming the four-step cleanup plan can be treated as an executable current action list; it is a historical recommendation (partially already reflected in the tree, e.g., start/dev already target run-margin-surface) and was not validated in this environment."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788775775414
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Mode, Length, LastWriteTime, Name | Format-Table -AutoSize\"}",
+      "tsMs": 1788775775415
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788775776842
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788775776843
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788775776843
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788775776843
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788775777620
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git status; Write-Output '---LOG---'; git log --oneline -10\"}",
+      "tsMs": 1788775779694
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788775779702
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force workspace\\\\.git | Select-Object Name; Write-Output '---'; Test-Path workspace\\\\.git\\\\HEAD; Get-Content workspace\\\\.git\\\\HEAD\"}",
+      "tsMs": 1788775784544
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Force -Recurse -Depth 1 | Where-Object { $_.Name -notlike '.git' } | Select-Object FullName | Format-Table -AutoSize -Wrap\"}",
+      "tsMs": 1788775784551
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace\\\\.git\\\\HEAD; Write-Output '---refs---'; Get-ChildItem -Recurse workspace\\\\.git\\\\refs | Select-Object FullName; Write-Output '---FETCH_HEAD---'; Get-Content workspace\\\\.git\\\\FETCH_HEAD -ErrorAction SilentlyContinue; Write-Output '---REBASE_HEAD---'; Get-Content workspace\\\\.git\\\\REBASE_HEAD -ErrorAction SilentlyContinue; Write-Output '---ORIG_HEAD---'; Get-Content workspace\\\\.git\\\\ORIG_HEAD -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788775787880
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace\\\\.git\\\\config; Write-Output '---logs/HEAD tail---'; Get-Content workspace\\\\.git\\\\logs\\\\HEAD -Tail 15 -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788775787892
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace\\\\.git\\\\refs\\\\heads\\\\main; Write-Output '---origin/main---'; Get-Content workspace\\\\.git\\\\refs\\\\remotes\\\\origin\\\\main; Write-Output '---branches codex/agent---'; Get-Content workspace\\\\.git\\\\refs\\\\heads\\\\agent; Get-Content workspace\\\\.git\\\\refs\\\\heads\\\\backup; Get-Content workspace\\\\.git\\\\refs\\\\heads\\\\codex\"}",
+      "tsMs": 1788775793340
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/audit\"}",
+      "tsMs": 1788775793352
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation\"}",
+      "tsMs": 1788775793352
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse -Directory workspace | Where-Object { $_.Name -match 'recovery|handoff|r7' } | Select-Object FullName; Write-Output '---files matching---'; Get-ChildItem -Recurse -File workspace | Where-Object { $_.Name -match 'handoff|recovery' } | Select-Object FullName\"}",
+      "tsMs": 1788775798945
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"cleanup|DELETE CANDIDATE|retire|retirement\",\"path\":\"workspace/docs\"}",
+      "tsMs": 1788775798957
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse workspace\\\\.superpowers | Select-Object FullName, Length | Format-Table -AutoSize\"}",
+      "tsMs": 1788775805812
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\docs\\\\audit | Select-Object Name, Length, LastWriteTime | Format-Table -AutoSize; Write-Output '---'; Get-ChildItem workspace\\\\docs\\\\validation -Recurse -File | Select-Object FullName, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788775805812
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers/sdd\"}",
+      "tsMs": 1788775807373
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation\"}",
+      "tsMs": 1788775807373
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Force -File | Select-Object Name, LastWriteTime | Sort-Object LastWriteTime -Descending | Format-Table -AutoSize; Write-Output '---recent files anywhere (top 30 by LastWriteTime)---'; Get-ChildItem workspace -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\.git\\\\\\\\' } | Sort-Object LastWriteTime -Descending | Select-Object -First 30 FullName, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788775825226
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\docs\\\\audit -File | Select-Object Name, LastWriteTime | Sort-Object LastWriteTime -Descending | Format-Table -AutoSize; Write-Output '---architecture---'; Get-ChildItem workspace\\\\docs\\\\architecture -File | Select-Object Name, LastWriteTime | Sort-Object LastWriteTime -Descending | Format-Table -AutoSize; Write-Output '---docs top recent---'; Get-ChildItem workspace\\\\docs -File | Select-Object Name, LastWriteTime | Sort-Object LastWriteTime -Descending | Format-Table -AutoSize\"}",
+      "tsMs": 1788775829223
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\src\\\\core\\\\handoff -File | Select-Object Name, LastWriteTime | Format-Table -AutoSize; Write-Output '---web src---'; Get-ChildItem workspace\\\\web\\\\src -Recurse -File | Select-Object FullName, LastWriteTime | Format-Table -AutoSize; Write-Output '---electron---'; Get-ChildItem workspace\\\\electron -File | Select-Object Name, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788775829231
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse _tmp -Depth 4 -ErrorAction SilentlyContinue | Select-Object FullName | Select-Object -First 100\"}",
+      "tsMs": 1788775839423
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force _tmp\\\\AppData -ErrorAction SilentlyContinue | Select-Object Name; Get-ChildItem -Recurse _tmp\\\\AppData -Depth 2 -ErrorAction SilentlyContinue | Select-Object FullName | Select-Object -First 80\"}",
+      "tsMs": 1788775839432
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\web\\\\src -Recurse -Filter *.jsx -File | Select-Object FullName | Format-Table -AutoSize; Write-Output '---all jsx in web---'; Get-ChildItem workspace\\\\web -Recurse -Filter *.jsx -File | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788775843933
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\web -Force | Select-Object Name, LastWriteTime, Length | Format-Table -AutoSize; Write-Output '---package.json scripts---'; Get-Content workspace\\\\package.json\"}",
+      "tsMs": 1788775843942
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/main.js\"}",
+      "tsMs": 1788775864488
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/vite.config.js\"}",
+      "tsMs": 1788775864488
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/index.js\"}",
+      "tsMs": 1788775864489
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/createMarginSurface.js\"}",
+      "tsMs": 1788775864489
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path workspace\\\\.runtime; Test-Path workspace\\\\node_modules; Get-ChildItem workspace -Force -Directory | Where-Object { $_.Name -match 'runtime|node_modules' } | Select-Object Name; Write-Output '---all jsx across repo---'; Get-ChildItem workspace -Recurse -Filter *.jsx -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\.git\\\\\\\\' } | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788775877209
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '---margin.html---'; Get-Content workspace\\\\web\\\\margin.html; Write-Output '---index.html---'; Get-Content workspace\\\\web\\\\index.html; Write-Output '---margin main.jsx---'; Get-Content workspace\\\\web\\\\src\\\\margin\\\\main.jsx\"}",
+      "tsMs": 1788775877218
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\src\\\\core -Recurse -File | Select-Object FullName | Format-Table -AutoSize; Write-Output '---src top---'; Get-ChildItem workspace\\\\src -File | Select-Object Name | Format-Table -AutoSize; Write-Output '---core dirs---'; Get-ChildItem workspace\\\\src\\\\core -Directory | Select-Object Name\"}",
+      "tsMs": 1788775885447
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md\"}",
+      "tsMs": 1788775885455
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"DELETE CANDIDATE|RETIRE|KEEP|GENERATED|DEFER\",\"path\":\"workspace/docs/audit\"}",
+      "tsMs": 1788775892199
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\src\\\\cli -File | Select-Object Name, LastWriteTime | Format-Table -AutoSize; Write-Output '---margin test files---'; Get-ChildItem workspace\\\\test -Filter '*margin*' -File | Select-Object Name, Length | Format-Table -AutoSize; Write-Output '---recent dirs by write time in src and test---'; Get-ChildItem workspace\\\\test -File | Sort-Object LastWriteTime -Descending | Select-Object -First 25 Name, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788775892201
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -like '*01a07639*' -or $_.Name -like '*session-*jsonl*' -or $_.Name -match 'r7' } | Select-Object FullName | Format-Table -AutoSize; Write-Output '---done---'\"}",
+      "tsMs": 1788775895628
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace\\\\test -Filter 'handoff*.js' -File | Select-Object Name; Get-Content workspace\\\\test\\\\handoff.test.js -TotalCount 40\"}",
+      "tsMs": 1788775895635
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem -Recurse workspace\\.superpowers | Select-Object FullName, Length | Format-Table -AutoSize",
+      "reasons": [
+        "protected path fragment is disabled: \\.superpowers"
+      ],
+      "tsMs": 1788775805812
+    },
+    {
+      "command": "Get-ChildItem workspace\\docs\\audit | Select-Object Name, Length, LastWriteTime | Format-Table -AutoSize; Write-Output '---'; Get-ChildItem workspace\\docs\\validation -Recurse -File | Select-Object FullName, LastWriteTime | Format-Table -AutoSize",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788775805812
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 167127,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-04",
+    "arm": "B",
+    "runId": "formal-case-04-B-2026-09-07T10-09-23-430Z",
+    "startMs": "2026-09-07T10:09:32.531Z",
+    "endMs": "2026-09-07T10:12:21.457Z",
+    "durationMs": 168926,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-04-B-2026-09-07T10-09-23-430Z status=ok durationMs=167127\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-04-B-2026-09-07T10-09-23-430Z.cert.json"
+  }
+}

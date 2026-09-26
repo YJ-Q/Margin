@@ -1,0 +1,179 @@
+{
+  "runId": "formal-case-04-A-2026-09-07T06-35-02-760Z",
+  "caseId": "case-04",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T06:35:11.076Z",
+  "endTs": "2026-09-07T06:41:58.434Z",
+  "durationMs": 407358,
+  "modelPromptStartMs": 39,
+  "modelPromptEndMs": 407357,
+  "sessionId": "01a07a93-f189-7248-95a6-8e5d54c43bf6",
+  "rawResponse": "Based on all the evidence gathered, here is the recovered state.\n\n{\n  \"goal\": \"Perform a read-only cleanup audit of the Margin repo (no file modifications), treating 'CLI V1 + src/core/handoff + Electron V2 + current Margin React Surface' as the current product mainline. Scan imports/exports/package scripts/tests/runtime entries, classify code as KEEP/RETIRE/GENERATED/DEFER, focus on legacy Workstream/Run/Memory/Pilot/Application/Workbench paths, and for each deletable item provide reference evidence, affected tests/scripts and deletion risk, then produce a minimal cleanup plan. Only mark items as DELETE CANDIDATE when confirmed to have no current-mainline dependency; never delete merely because they 'look old'.\",\n  \"progress\": \"The provided session transcript (input/session.jsonl, single turn, task_started at ordinal 1, task_complete at ordinal 113) shows the audit was completed historically: the agent delivered a full final answer classifying KEEP (bin/margin.js, src/cli/margin/, src/core/handoff/, electron/, web/margin.html, web/src/margin/, scripts/run-margin-surface.js), RETIRE (old Workbench UI web/index.html + src/main.jsx + App* + components/*.js + apiClient/useWorkbenchData/useEventPolling/workbenchState/styles.css; Workstream/Run/Memory app stack src/application,continuity,contracts,domain,http,web,pilot,runtime/pi and persistent-core files under src/core outside handoff/; legacy Express src/app.js,server.js,routes,services,storage,config), DEFER (src/core/migrations, backup/import/inventory/export data scripts + data/, Feishu + src/runtime/claude, evaluation/experiments/historical docs), GENERATED (dist/out*/electron-*.log/handoff-output/.worktrees/.runtime/node_modules/runtime data/*). It identified exactly 11 thin wrapper files web/src/components/{ActivityPanel,ArtifactPanel,ConflictConfirmationPanel,ConversationPanel,CreateWorkstreamForm,MemoryPanel,NeedsOwnerPanel,ResumeBriefPanel,RunControls,WorkstreamDetail,WorkstreamList}.jsx as the only DELETE CANDIDATEs, and gave a 5-step cleanup plan. It claimed targeted mainline tests 88/88 and about 37 boundary tests. The transcript reports no file modifications (consistent with the user's read-only request).\",\n  \"pending\": \"Within the audited task itself: nothing remains unfinished - the transcript reached task_complete and the deliverable was the chat final answer (no report file was written into the repo; the only matching doc, docs/audit/legacy_data_disposition.md, predates this audit). Within the broader cleanup trajectory implied by the audit's plan, unexecuted work visible in the current frozen tree is: retiring/archiving the old Workbench UI files (web/index.html, web/src/main.jsx, web/src/App.jsx, web/src/App.js, web/src/components/*.js, apiClient.js, useWorkbenchData.js, useEventPolling.js, workbenchState.js, styles.css) plus scripts/run-web-workbench.js (package script 'legacy:workbench') and the src/web/createWebWorkbench.js composition root; retiring the Workstream/Run/Memory stack and legacy Express (src/application, continuity, contracts, domain, http, pilot, runtime/pi, core persistent files, app.js, server.js, routes, services, storage, config) with their tests/scripts; and the audit's later steps (data-export/migration handling, generated-artifact cleanup). None of this was authorized by the original read-only audit request.\",\n  \"historicalValidation\": \"Session-reported test results (88/88 targeted mainline tests, ~37 boundary tests) and the claimed existence of 11 components/*.jsx wrappers could not be reproduced in this environment: there is no node binary on PATH and the frozen workspace contains no .runtime/ or node_modules/, so tests cannot be run. The frozen workspace has 95 test/*.test.js files. File-level claims partially re-verified against the current tree: electron/main.js does import createMarginSurface from src/core/handoff/createMarginSurface.js; src/core/marginCoreStore.js and src/core/migrations/001-margin-core.js contain MARGIN_CORE_MIGRATIONS; createMarginSurface.js's header states deliberate independence from createWebWorkbench/SQLite/Application Contract/Workstream/Run/Memory. But several audit evidence claims are stale relative to the current tree (see currentApplicability). The transcript's repo pointer (session meta commit 0836e800a4bf386e58ec1e9c02be5b7279497c9f) is not the frozen workspace HEAD (a247e75ab9e78cce7853e3f281b85459a4f25e7c on main), so the audited state and the inspected state differ.\",\n  \"recommendedFollowUp\": \"Suggested, not yet executable as a definite action: (1) reconcile the audit report with the current tree, since the report exists only as a chat answer and the repository has since moved past it; (2) re-run the reference scans in the current workspace to rebuild the DELETE CANDIDATE list, because the previously unique candidates (11 components/*.jsx wrappers) are not present in the current tree while the legacy Workbench UI and stack files remain; (3) validate build (`npm run build`) and tests in an environment that has the bundled node runtime/node_modules before any deletion, treating the prior '88/88' claim as unverified; (4) confirm with the user whether implementation of the audit's cleanup plan (beyond the read-only audit) is actually desired and scoped. Recommended follow-ups should be re-derived from the current workspace state rather than copied from the historical report.\",\n  \"currentApplicability\": \"The audit's structural premise still matches the frozen workspace: the current mainline (electron/main.js -> createMarginSurface -> handoff HTTP adapter -> web/margin.html -> web/src/margin/, plus bin/margin.js and src/cli/margin) is present and wired as described. However, several concrete audit statements are stale in the current tree and must not drive actions: web/vite.config.js now declares margin.html as the only build input (audit claimed index.html and margin.html were both inputs); package.json start/dev now run scripts/run-margin-surface.js and the workbench entry was renamed to 'legacy:workbench' -> scripts/run-web-workbench.js (audit claimed start/dev/workbench all still launched the old Workbench); Dockerfile CMD and run-margin-local.cmd now run scripts/run-margin-surface.js, and run-echo-local.cmd is marked deprecated for the legacy API; and the 11 web/src/components/*.jsx wrappers do not exist (only the real .js components remain; the sole .jsx UI chain is web/src/main.jsx -> web/src/App.jsx -> web/src/App.js). The audit's DELETE CANDIDATE set is therefore not present to delete, while the old Workbench files and legacy backend stacks it classified as RETIRE/DEFER are still physically present and are the natural focus for any continuation.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the 11 web/src/components/*.jsx thin-wrapper files still exist as the sole safe DELETE CANDIDATEs: they are absent from the current frozen workspace, so any deletion based on that list would target files that are not there.\",\n    \"Assuming the frozen workspace equals the repo state the audit examined: workspace main HEAD a247e75 differs from the session-meta commit 0836e800, and the current tree already reflects post-audit changes (vite single input, start/dev/Docker/.cmd switched to run-margin-surface, workbench renamed legacy:workbench).\",\n    \"Assuming the historical 'targeted mainline tests 88/88' result applies to the current tree: no node runtime, .runtime/, or node_modules/ exists in this environment, so the claim is unverified current truth.\",\n    \"Assuming the audited repo at HEAD 0836e800 is exactly reconstructable from this environment: git binary is unavailable and only the frozen tree at a247e75 plus the transcript exist.\",\n    \"Assuming the audit report was persisted to the repository: no audit-report file matching this task was found in the workspace; the deliverable exists only as the transcript's final chat answer.\",\n    \"Assuming deletion/cleanup implementation is an authorized next action: the original request was explicitly read-only ('do not actually delete files'), and the transcript made no repo modifications.\",\n    \"Assuming the audit's evidence about default entry points and Vite inputs (index.html + margin.html dual input; start/dev/workbench and Docker launching the old Workbench) is still true: the current tree contradicts those statements.\"\n  ]\n}",
+  "parsedRecovery": {
+    "goal": "Perform a read-only cleanup audit of the Margin repo (no file modifications), treating 'CLI V1 + src/core/handoff + Electron V2 + current Margin React Surface' as the current product mainline. Scan imports/exports/package scripts/tests/runtime entries, classify code as KEEP/RETIRE/GENERATED/DEFER, focus on legacy Workstream/Run/Memory/Pilot/Application/Workbench paths, and for each deletable item provide reference evidence, affected tests/scripts and deletion risk, then produce a minimal cleanup plan. Only mark items as DELETE CANDIDATE when confirmed to have no current-mainline dependency; never delete merely because they 'look old'.",
+    "progress": "The provided session transcript (input/session.jsonl, single turn, task_started at ordinal 1, task_complete at ordinal 113) shows the audit was completed historically: the agent delivered a full final answer classifying KEEP (bin/margin.js, src/cli/margin/, src/core/handoff/, electron/, web/margin.html, web/src/margin/, scripts/run-margin-surface.js), RETIRE (old Workbench UI web/index.html + src/main.jsx + App* + components/*.js + apiClient/useWorkbenchData/useEventPolling/workbenchState/styles.css; Workstream/Run/Memory app stack src/application,continuity,contracts,domain,http,web,pilot,runtime/pi and persistent-core files under src/core outside handoff/; legacy Express src/app.js,server.js,routes,services,storage,config), DEFER (src/core/migrations, backup/import/inventory/export data scripts + data/, Feishu + src/runtime/claude, evaluation/experiments/historical docs), GENERATED (dist/out*/electron-*.log/handoff-output/.worktrees/.runtime/node_modules/runtime data/*). It identified exactly 11 thin wrapper files web/src/components/{ActivityPanel,ArtifactPanel,ConflictConfirmationPanel,ConversationPanel,CreateWorkstreamForm,MemoryPanel,NeedsOwnerPanel,ResumeBriefPanel,RunControls,WorkstreamDetail,WorkstreamList}.jsx as the only DELETE CANDIDATEs, and gave a 5-step cleanup plan. It claimed targeted mainline tests 88/88 and about 37 boundary tests. The transcript reports no file modifications (consistent with the user's read-only request).",
+    "pending": "Within the audited task itself: nothing remains unfinished - the transcript reached task_complete and the deliverable was the chat final answer (no report file was written into the repo; the only matching doc, docs/audit/legacy_data_disposition.md, predates this audit). Within the broader cleanup trajectory implied by the audit's plan, unexecuted work visible in the current frozen tree is: retiring/archiving the old Workbench UI files (web/index.html, web/src/main.jsx, web/src/App.jsx, web/src/App.js, web/src/components/*.js, apiClient.js, useWorkbenchData.js, useEventPolling.js, workbenchState.js, styles.css) plus scripts/run-web-workbench.js (package script 'legacy:workbench') and the src/web/createWebWorkbench.js composition root; retiring the Workstream/Run/Memory stack and legacy Express (src/application, continuity, contracts, domain, http, pilot, runtime/pi, core persistent files, app.js, server.js, routes, services, storage, config) with their tests/scripts; and the audit's later steps (data-export/migration handling, generated-artifact cleanup). None of this was authorized by the original read-only audit request.",
+    "historicalValidation": "Session-reported test results (88/88 targeted mainline tests, ~37 boundary tests) and the claimed existence of 11 components/*.jsx wrappers could not be reproduced in this environment: there is no node binary on PATH and the frozen workspace contains no .runtime/ or node_modules/, so tests cannot be run. The frozen workspace has 95 test/*.test.js files. File-level claims partially re-verified against the current tree: electron/main.js does import createMarginSurface from src/core/handoff/createMarginSurface.js; src/core/marginCoreStore.js and src/core/migrations/001-margin-core.js contain MARGIN_CORE_MIGRATIONS; createMarginSurface.js's header states deliberate independence from createWebWorkbench/SQLite/Application Contract/Workstream/Run/Memory. But several audit evidence claims are stale relative to the current tree (see currentApplicability). The transcript's repo pointer (session meta commit 0836e800a4bf386e58ec1e9c02be5b7279497c9f) is not the frozen workspace HEAD (a247e75ab9e78cce7853e3f281b85459a4f25e7c on main), so the audited state and the inspected state differ.",
+    "recommendedFollowUp": "Suggested, not yet executable as a definite action: (1) reconcile the audit report with the current tree, since the report exists only as a chat answer and the repository has since moved past it; (2) re-run the reference scans in the current workspace to rebuild the DELETE CANDIDATE list, because the previously unique candidates (11 components/*.jsx wrappers) are not present in the current tree while the legacy Workbench UI and stack files remain; (3) validate build (`npm run build`) and tests in an environment that has the bundled node runtime/node_modules before any deletion, treating the prior '88/88' claim as unverified; (4) confirm with the user whether implementation of the audit's cleanup plan (beyond the read-only audit) is actually desired and scoped. Recommended follow-ups should be re-derived from the current workspace state rather than copied from the historical report.",
+    "currentApplicability": "The audit's structural premise still matches the frozen workspace: the current mainline (electron/main.js -> createMarginSurface -> handoff HTTP adapter -> web/margin.html -> web/src/margin/, plus bin/margin.js and src/cli/margin) is present and wired as described. However, several concrete audit statements are stale in the current tree and must not drive actions: web/vite.config.js now declares margin.html as the only build input (audit claimed index.html and margin.html were both inputs); package.json start/dev now run scripts/run-margin-surface.js and the workbench entry was renamed to 'legacy:workbench' -> scripts/run-web-workbench.js (audit claimed start/dev/workbench all still launched the old Workbench); Dockerfile CMD and run-margin-local.cmd now run scripts/run-margin-surface.js, and run-echo-local.cmd is marked deprecated for the legacy API; and the 11 web/src/components/*.jsx wrappers do not exist (only the real .js components remain; the sole .jsx UI chain is web/src/main.jsx -> web/src/App.jsx -> web/src/App.js). The audit's DELETE CANDIDATE set is therefore not present to delete, while the old Workbench files and legacy backend stacks it classified as RETIRE/DEFER are still physically present and are the natural focus for any continuation.",
+    "unsafeAssumptions": [
+      "Assuming the 11 web/src/components/*.jsx thin-wrapper files still exist as the sole safe DELETE CANDIDATEs: they are absent from the current frozen workspace, so any deletion based on that list would target files that are not there.",
+      "Assuming the frozen workspace equals the repo state the audit examined: workspace main HEAD a247e75 differs from the session-meta commit 0836e800, and the current tree already reflects post-audit changes (vite single input, start/dev/Docker/.cmd switched to run-margin-surface, workbench renamed legacy:workbench).",
+      "Assuming the historical 'targeted mainline tests 88/88' result applies to the current tree: no node runtime, .runtime/, or node_modules/ exists in this environment, so the claim is unverified current truth.",
+      "Assuming the audited repo at HEAD 0836e800 is exactly reconstructable from this environment: git binary is unavailable and only the frozen tree at a247e75 plus the transcript exist.",
+      "Assuming the audit report was persisted to the repository: no audit-report file matching this task was found in the workspace; the deliverable exists only as the transcript's final chat answer.",
+      "Assuming deletion/cleanup implementation is an authorized next action: the original request was explicitly read-only ('do not actually delete files'), and the transcript made no repo modifications.",
+      "Assuming the audit's evidence about default entry points and Vite inputs (index.html + margin.html dual input; start/dev/workbench and Docker launching the old Workbench) is still true: the current tree contradicts those statements."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788762912702
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force -Recurse -Depth 2 | Select-Object FullName, Length, LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788762912702
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788762914661
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 5\"}",
+      "tsMs": 1788762914662
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"(Get-Content .\\\\input\\\\session.jsonl | Measure-Object -Line).Lines\"}",
+      "tsMs": 1788762916782
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl | Select-String '\\\"role\\\":\\\"user\\\"' | Select-Object -First 5 | ForEach-Object { $_.Line.Substring(0, [Math]::Min(2000, $_.Line.Length)) }\"}",
+      "tsMs": 1788762916789
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nforeach ($l in $lines) {\\n  $j = $l | ConvertFrom-Json\\n  $t = $j.type\\n  if ($j.payload.type) { $t = $t + '/' + $j.payload.type }\\n  $role = ''\\n  if ($j.payload.role) { $role = $j.payload.role }\\n  $snippet = ''\\n  if ($j.payload.text) { $snippet = ($j.payload.text -join ' ') }\\n  elseif ($j.payload.name) { $snippet = $j.payload.name }\\n  elseif ($j.payload.output) { $snippet = $j.payload.output }\\n  elseif ($j.payload.summary) { $snippet = $j.payload.summary }\\n  if ($snippet.Length -gt 200) { $snippet = $snippet.Substring(0,200) + '...' }\\n  \\\"$($j.ordinal)`t$t`trole=$role`t$snippet\\\"\\n}\"}",
+      "tsMs": 1788762922285
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"node --version 2>$null; where.exe node 2>$null | Select-Object -First 3\"}",
+      "tsMs": 1788763018585
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl | Select-Object -Last 6 | ForEach-Object { $_.Substring(0, [Math]::Min(1200, $_.Length)) }\"}",
+      "tsMs": 1788763018596
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\n$lines = Get-Content .\\\\input\\\\session.jsonl\\n$target = $lines | Where-Object { $_ -match '\\\"ordinal\\\":110' }\\n$target\"}",
+      "tsMs": 1788763149711
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\ngit -C .\\\\workspace log --oneline -15\\nWrite-Output '--- STATUS ---'\\ngit -C .\\\\workspace status --short --branch\\nWrite-Output '--- HEAD ---'\\ngit -C .\\\\workspace rev-parse HEAD\"}",
+      "tsMs": 1788763159602
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\nGet-ChildItem .\\\\workspace\\\\web\\\\src -Recurse -File | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\\nWrite-Output '--- components dir ---'\\nGet-ChildItem .\\\\workspace\\\\web\\\\src\\\\components -File -ErrorAction SilentlyContinue | ForEach-Object { $_.Name }\"}",
+      "tsMs": 1788763159613
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\nWrite-Output '--- HEAD file ---'; Get-Content .\\\\workspace\\\\.git\\\\HEAD\\nWrite-Output '--- packed-refs ---'; Get-Content .\\\\workspace\\\\.git\\\\packed-refs -ErrorAction SilentlyContinue\\nWrite-Output '--- refs heads ---'; Get-ChildItem .\\\\workspace\\\\.git\\\\refs\\\\heads -ErrorAction SilentlyContinue | ForEach-Object { $_.Name + ' ' + (Get-Content $_.FullName) }\\nWrite-Output '--- log HEAD (top 20) ---'; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -ErrorAction SilentlyContinue | Select-Object -Last 20\"}",
+      "tsMs": 1788763176888
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\nWrite-Output '--- session meta commit ---'\\nGet-Content .\\\\input\\\\session.jsonl -TotalCount 1 | Select-String -Pattern 'commit_hash' | ForEach-Object { $_.Matches.Value }\"}",
+      "tsMs": 1788763176899
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/main.js\"}",
+      "tsMs": 1788763209291
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/vite.config.js\"}",
+      "tsMs": 1788763209292
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/main.jsx\"}",
+      "tsMs": 1788763209292
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788763209292
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\n$content = [System.IO.File]::ReadAllText('<repo>-bench\\\\ab-continuation\\\\sandboxes\\\\formal-case-04-A\\\\input\\\\session.jsonl')\\n$marker = '\\\"ordinal\\\":110'\\n$idx = $content.IndexOf($marker)\\nWrite-Output \\\"index=$idx\\\"\\n$content.Substring($idx, [Math]::Min(16000, $content.Length - $idx))\"}",
+      "tsMs": 1788763225597
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\nWrite-Output '--- all .jsx files ---'\\nGet-ChildItem .\\\\workspace -Recurse -Filter *.jsx -File | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\\nWrite-Output '--- App.jsx imports (first 30 lines) ---'\\nGet-Content .\\\\workspace\\\\web\\\\src\\\\App.jsx -TotalCount 30\\nWrite-Output '--- components .js sample (ActivityPanel.js head) ---'\\nGet-Content .\\\\workspace\\\\web\\\\src\\\\components\\\\ActivityPanel.js -TotalCount 3\"}",
+      "tsMs": 1788763254427
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\nWrite-Output '--- Dockerfile ---'\\nGet-Content .\\\\workspace\\\\Dockerfile\\nWrite-Output '--- run-margin-local.cmd ---'\\nGet-Content .\\\\workspace\\\\run-margin-local.cmd\\nWrite-Output '--- run-echo-local.cmd ---'\\nGet-Content .\\\\workspace\\\\run-echo-local.cmd\\nWrite-Output '--- .gitignore ---'\\nGet-Content .\\\\workspace\\\\.gitignore\"}",
+      "tsMs": 1788763254434
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\nWrite-Output '--- references to components .jsx across repo ---'\\nGet-ChildItem .\\\\workspace -Recurse -Include *.js,*.jsx,*.cjs,*.mjs,*.html,*.json,*.md -File | Where-Object { $_.FullName -notmatch 'design-references|node_modules|\\\\.git' } | Select-String -Pattern \\\"components/[A-Za-z]+\\\\.jsx|\\\\.jsx'\\\" -List | ForEach-Object { $_.Path.Replace((Get-Location).Path + '\\\\workspace\\\\','') + ':' + $_.LineNumber + ': ' + $_.Line.Trim() }\\nWrite-Output '--- legacy entry files exist? ---'\\nTest-Path .\\\\workspace\\\\web\\\\index.html\\nTest-Path .\\\\workspace\\\\scripts\\\\run-web-workbench.js\\nTest-Path .\\\\workspace\\\\src\\\\web\\\\createWebWorkbench.js\\nTest-Path .\\\\workspace\\\\src\\\\core\\\\handoff\\\\createMarginSurface.js\\nTest-Path .\\\\workspace\\\\bin\\\\margin.js\\nTest-Path .\\\\workspace\\\\.runtime\\nTest-Path .\\\\workspace\\\\node_modules\"}",
+      "tsMs": 1788763269726
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\nWrite-Output '--- src/core top-level files ---'\\nGet-ChildItem .\\\\workspace\\\\src\\\\core -File | ForEach-Object { $_.Name }\\nWrite-Output '--- createMarginSurface.js head ---'\\nGet-Content .\\\\workspace\\\\src\\\\core\\\\handoff\\\\createMarginSurface.js -TotalCount 40\\nWrite-Output '--- MARGIN_CORE_MIGRATIONS refs ---'\\nGet-ChildItem .\\\\workspace\\\\src -Recurse -File | Select-String -Pattern 'MARGIN_CORE_MIGRATIONS' -List | ForEach-Object { $_.Path.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\\nWrite-Output '--- test file count ---'\\n(Get-ChildItem .\\\\workspace\\\\test -Filter *.test.js -File).Count\\nWrite-Output '--- session start epoch / commit epochs ---'\\n[DateTimeOffset]::FromUnixTimeSeconds(1788689897).ToString('u')\\n[DateTimeOffset]::FromUnixTimeSeconds(1788716676).ToString('u')\"}",
+      "tsMs": 1788763281541
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\\nWrite-Output '--- any file mentioning DELETE CANDIDATE / cleanup audit ---'\\nGet-ChildItem .\\\\workspace -Recurse -Include *.md,*.txt,*.json -File | Where-Object { $_.FullName -notmatch '\\\\.git|node_modules|design-references' } | Select-String -Pattern 'DELETE CANDIDATE|cleanup audit|11 个|薄包装' -List | ForEach-Object { $_.Path.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\\nWrite-Output '--- input dir ---'\\nGet-ChildItem .\\\\input | Select-Object Name, Length\\nWrite-Output '--- _tmp dir ---'\\nGet-ChildItem .\\\\_tmp -Recurse -Depth 3 | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788763300222
+    }
+  ],
+  "deniedToolCalls": [],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 407358,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-04",
+    "arm": "A",
+    "runId": "formal-case-04-A-2026-09-07T06-35-02-760Z",
+    "startMs": "2026-09-07T06:35:09.808Z",
+    "endMs": "2026-09-07T06:41:58.434Z",
+    "durationMs": 408626,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-04-A-2026-09-07T06-35-02-760Z status=ok durationMs=407358\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-04-A-2026-09-07T06-35-02-760Z.cert.json"
+  }
+}

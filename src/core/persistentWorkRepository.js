@@ -568,17 +568,12 @@ export function createPersistentWorkRepository(store) {
          FROM margin_event_cursors c JOIN margin_events e ON e.id=c.event_id
          LEFT JOIN margin_audit_log a ON a.id=(CASE WHEN json_valid(e.payload) THEN json_extract(e.payload,'$.auditId') END)
            AND a.result_code='allowed' AND a.entity_type=e.entity_type AND a.entity_id=e.entity_id AND a.project_id IS e.project_id
-           AND a.operation=(CASE WHEN json_valid(e.payload) THEN CASE json_extract(e.payload,'$.command')
-             WHEN 'workstream_create' THEN 'workstream_create' WHEN 'workstream_update' THEN 'workstream_update'
-             WHEN 'run_create' THEN 'run_create' WHEN 'run_start' THEN 'run_start' WHEN 'run_progress' THEN 'run_progress'
-             WHEN 'run_pause' THEN 'run_pause' WHEN 'run_resume' THEN 'run_resume' WHEN 'run_stop' THEN 'run_stop'
-             WHEN 'run_bind_session' THEN 'run_bind_session'
-             WHEN 'run_complete' THEN 'run_complete' WHEN 'run_fail' THEN 'run_fail'
-             WHEN 'artifact_create' THEN 'artifact_create' WHEN 'checkpoint_create' THEN 'checkpoint_create'
-             WHEN 'decision_create' THEN 'decision_create' WHEN 'decision_supersede' THEN 'decision_supersede'
-             WHEN 'decision_revoke' THEN 'decision_revoke' WHEN 'needs_owner_create' THEN 'needs_owner_create'
-             WHEN 'needs_owner_resolve' THEN 'needs_owner_resolve' WHEN 'needs_owner_cancel' THEN 'needs_owner_cancel'
-           END END)
+           -- The audit operation IS the recorded command, so it is read directly. This used to be a
+           -- hand-maintained CASE listing every command by name; a command missing from that list made
+           -- the join silently fail (the row kept its event but lost its audit columns) instead of
+           -- raising anything. Every branch mapped a value to itself, so removing the list is exactly
+           -- equivalent for the commands it covered and correct for any command added later.
+           AND a.operation=(CASE WHEN json_valid(e.payload) THEN json_extract(e.payload,'$.command') END)
          WHERE ${filters.join(' AND ')} ORDER BY c.sequence ASC LIMIT ?`,
         ...values, limit + 1
       );

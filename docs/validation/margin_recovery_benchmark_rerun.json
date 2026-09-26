@@ -1,0 +1,26 @@
+{
+  "schema_version": 3,
+  "status": "partial",
+  "ground_truth": {"path":"docs/validation/recovery-benchmark-ground-truth.json","sha256":"8BFA7E421299E5432C55E6DD4A2FF71C1D6B44B940C356F0A453A3F5C5FBF8FB","verified_unchanged_before_execution":true},
+  "handoffs": {"manifest":"docs/validation/recovery-handoffs/manifest.json","generation":"current Margin Handoff Core","frozen_before_execution":true,"identity_check":"12/12 case-to-session-to-artifact headers and hashes verified"},
+  "randomization": {
+    "algorithm":"SHA-256-seeded Fisher-Yates; seed label margin-recovery-final-rerun-2026-09-07; first six shuffled cases A-to-B, last six B-to-A",
+    "frozen_before_execution":true,
+    "sequence":[
+      {"case_id":"case-06","order":["A","B"]},{"case_id":"case-03","order":["A","B"]},{"case_id":"case-04","order":["A","B"]},{"case_id":"case-10","order":["A","B"]},{"case_id":"case-11","order":["A","B"]},{"case_id":"case-01","order":["A","B"]},
+      {"case_id":"case-07","order":["B","A"]},{"case_id":"case-05","order":["B","A"]},{"case_id":"case-09","order":["B","A"]},{"case_id":"case-08","order":["B","A"]},{"case_id":"case-12","order":["B","A"]},{"case_id":"case-02","order":["B","A"]}
+    ],
+    "counts":{"A_to_B":6,"B_to_A":6}
+  },
+  "execution": {
+    "valid_clean_runs":[],
+    "invalid_or_historical_runs":"All prior recovery attempts are excluded and not used.",
+    "not_started_reason":[
+      "The available task-creation/read APIs do not expose provider input-token counts, so the required non-estimated token measure cannot be captured.",
+      "The available task execution environment cannot enforce a per-run filesystem allowlist that exposes only the assigned case handoff while preventing reads of the other handoffs and frozen ground truth."
+    ]
+  },
+  "blind_scoring":{"status":"not started","reason":"requires 24 valid clean runs"},
+  "metrics":null,
+  "integrity":{"ground_truth_unchanged":true,"handoff_hashes_unchanged_since_freeze":true,"correct_B_handoff_usage":"not applicable; no B run was launched","valid_clean_runs":"0/24","balanced_order":true,"cases_deleted":false,"workspace_handoff_restored":true}
+}

@@ -1,0 +1,353 @@
+{
+  "runId": "formal-case-09-B-2026-09-07T10-55-20-528Z",
+  "caseId": "case-09",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T10:55:31.620Z",
+  "endTs": "2026-09-07T11:00:12.201Z",
+  "durationMs": 280581,
+  "modelPromptStartMs": 47,
+  "modelPromptEndMs": 280581,
+  "sessionId": "01a07b82-4b50-7294-b4d5-6f79e9786369",
+  "rawResponse": "Based on my investigation, here is the recovered development state.\n\nKey verified facts:\n- `input/HANDOFF.md` is the sole recovery artifact — a distilled smart-handoff for session `01a070e6-3bd9-7591-aa4e-31b364badda1` (repo `<repo>`, checkpoint 2026-09-07T09:27:28Z, repo-truth 09:27:29Z).\n- `workspace/.git` HEAD = `refs/heads/main` → `a247e75ab9e78cce7853e3f281b85459a4f25e7c`, matching the handoff's reported repo-truth commit.\n- `workspace/experiments/` is **empty** — the uncommitted Phase 0/1 deliverables (`phase0-continues`, `phase1-distiller`), the `.runtime` Node runtime, `node_modules`, and the referenced evidence snapshot (`docs/validation/recovery-handoffs-r7-full/...`) are all absent from this frozen snapshot.\n- Committed formal code `src/core/handoff/*` (evidence/exec/distiller/repo-truth/session-source/handoff), `bin/margin.js` CLI, and `test/handoff.test.js` do exist.\n- No git/node/npm executable is runnable in this sandbox; `docs/validation` and `.superpowers` paths are protected.\n\n{\n  \"goal\": \"Interrupted task is the Margin project's 'Phase 1: Margin Distiller PoC' (per the sole artifact input/HANDOFF.md). Product hypothesis to prove: Margin can accurately recover enough development state from a real Codex Session + Tool Call/Result + Git/Workspace facts, in far less context than the full session, so the next coding agent can continue without repeating completed work, re-trying failed paths, or missing the next step. Priorities: (1) Continuation Quality, (2) information truthfulness, (3) token efficiency. Phase 0 (baseline using 'continues 4.1.1' for Session Discovery/parsing) is reported complete; Phase 1 is the Distiller PoC whose artifacts were placed under experiments/phase1-distiller (plus phase0-continues baseline tooling). The product-roadmap next stage is a real cross-agent continuation-quality experiment, but that is only a historical recommendation.\",\n  \"progress\": \"Historical (HANDOFF, checkpoint 2026-09-07T09:27:28.711Z, repo-truth 09:27:29.051Z): Phase 1 Distiller PoC reported complete in experiments/phase1-distiller: an Evidence Layer associating User requirement / Assistant claim / Tool Call->Result / Shell / File edit / Test execution-result / Git / Workspace state, static parsing inside 'exec' without executing history, repo-truth refresh, distillation into Confirmed/Inferred/Uncertain facts, and Smart-handoff rendering; 13 structured files reported currently existing; real sample stats reported as 191 raw records, 7 normalized conversations, 25 tool calls, 24 tool returns; main information loss located inside 'exec' wrappers. Current repo truth (verified here): ./workspace is the same repo on main at a247e75ab9e78cce7853e3f281b85459a4f25e7c, matching the reported HEAD. It contains committed formal code (src/core/handoff/* incl. evidence.js, exec.js, repo-truth.js, distiller.js, handoff.js; bin/margin.js; src/cli/margin; src/agents/sourceRegistry; Electron V2; ~90 test files incl. test/handoff.test.js). However, workspace/experiments is empty: the uncommitted PoC deliverables, .runtime node runtime, node_modules, .env, and the referenced evidence snapshot are NOT present in this frozen environment, and no git/node/npm is runnable here.\",\n  \"pending\": \"What the successor must concretely deliver next is indeterminate from available evidence (unknown). Historical recommendation (stale, not current validation): run an independent 'fail-fix-test' development session comparing 'continues standard' vs the Margin Handoff to measure reduced repeated edits, wrong test judgments, and missed next steps. Practical gaps that currently block any execution: (1) decide whether the required deliverable is the experiments/phase1-distiller PoC (absent here -> must be restored/reproduced or its claims re-derived from the committed src/core/handoff pipeline, which mirrors the PoC architecture and explicitly removed the phase0Evidence coupling), or the next product stage; (2) provision the pinned Node runtime (package.json engines node>=22.19; scripts call .runtime/node-v22.23.1-win-x64/node.exe) and install dependencies (no node_modules present, network disabled); (3) establish current validation by running targeted tests (e.g., test/handoff.test.js) before trusting historical test claims.\",\n  \"historicalValidation\": \"Historical only, not reproducible here: 15 tests passed / 0 failed for experiments/phase1-distiller/distiller.test.mjs; 10 focused test-command invocations reported exit_code=0 (8 direct runs, 2 with Tee-Object to experiments/phase1-distiller/output/targeted-tests.tap); a repo-truth scan at 09:27:29Z reported 13/13 structured targets currently existing; 17 edit operations had no explicit historical result and 28 internal operations had no explicit terminal state (marked Uncertain, non-blocking). Current validation in this environment is unknown/impossible: the PoC artifacts, .runtime Node, node_modules, git binary, and evidence snapshot are all absent, so nothing has been or can currently be rerun.\",\n  \"recommendedFollowUp\": \"1) Treat all HANDOFF.md claims as historical and re-verify against the repository before acting. 2) Note the verified discrepancy: HEAD==main==a247e75 matches the handoff, but experiments/phase0-continues, experiments/phase1-distiller, .runtime, node_modules, and the session snapshot under docs/validation/recovery-handoffs-r7-full are absent here; do not claim the Phase-1 PoC exists in this workspace. 3) Select the continuation target from the actual task definition / session evidence (not available inside this sandbox; HANDOFF gives an Evidence Pointer that is inaccessible/protected here): baseline options are the committed formal src/core/handoff pipeline + test/handoff.test.js, or reconstruction of the experiments PoC from the original repo/session snapshot. 4) Before executing anything, obtain a Node >= 22.19 runtime and install pinned dependencies, then run targeted tests to obtain current validation. 5) Only after that, re-evaluate the historical next-step recommendation (fail-fix-test continuation-quality comparison) as a candidate, not as a confirmed executable action.\",\n  \"currentApplicability\": \"The HANDOFF describes repo <repo> at 2026-09-07T09:27Z with HEAD a247e75; the frozen workspace matches that repo identity and commit (verified via .git refs/reflog). But the snapshot contains only committed content, so the historical 'Confirmed' file-existence and test-success statements are not verifiable or reproducible in this environment and must not be treated as current validation. The committed formal src/core/handoff pipeline IS currently present and is the direct, committed descendant of the described PoC; whether the successor must reproduce the experiments PoC, continue/validate the formal pipeline, or advance to the next product stage cannot be determined from the available evidence (unknown). Execution capability in this sandbox is currently nil (no runnable node/npm/git, no dependencies, no network, and protected paths docs/validation and .superpowers).\",\n  \"unsafeAssumptions\": [\n    \"Assuming the Phase 1 Distiller PoC code (experiments/phase0-continues, experiments/phase1-distiller) exists and is runnable in this workspace -- it does not exist here (experiments/ is empty).\",\n    \"Assuming the historically reported '15 tests passed / exit 0' constitutes current validation -- tests have not been and cannot currently be rerun in this environment.\",\n    \"Assuming the handoff's '13/13 structured historical targets currently exist' still holds here -- it does not (experiments and referenced outputs are absent).\",\n    \"Assuming the 346 changed/untracked files reported at the historical checkpoint are present in this snapshot -- only committed HEAD content is present.\",\n    \"Assuming the referenced evidence snapshot docs/validation/recovery-handoffs-r7-full/session-01a070e6-...jsonl is accessible here for re-derivation -- it is not present and docs/validation is partially protected.\",\n    \"Assuming the 'continues 4.1.1' / acorn pinned dependencies are installed and the pinned .runtime node exists -- no node_modules and no .runtime are present.\",\n    \"Assuming A's historical recommendation (run a fail-fix-test continuation-quality comparison) is a definitely executable current next step -- it depends on artifacts and tooling that are absent, and on a task definition not present in this environment.\",\n    \"Assuming this frozen workspace is byte-identical to the live repo <repo> at the checkpoint (including uncommitted work) -- only committed content is present, so the working trees differ.\"\n  ]\n}",
+  "parsedRecovery": null,
+  "hasAllRequiredKeys": false,
+  "parseError": "no parseable JSON object in final text",
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788778532715
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Mode,Length,LastWriteTime,Name | Format-Table -AutoSize\"}",
+      "tsMs": 1788778532716
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788778534136
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788778534136
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788778534137
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788778534137
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788778535072
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git status; git log --oneline -15\"}",
+      "tsMs": 1788778535073
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force .\\\\workspace\\\\.git | Select-Object Name,Length,LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788778540307
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path .\\\\workspace\\\\experiments\\\\phase1-distiller; Test-Path .\\\\workspace\\\\experiments\\\\phase0-continues; Test-Path .\\\\workspace\\\\.runtime\"}",
+      "tsMs": 1788778540316
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\experiments -Force -ErrorAction SilentlyContinue | Select-Object Name,LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788778540324
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Location; Write-Output \\\"---\\\"; Get-ChildItem -Force | Select-Object Name | Format-Table -AutoSize; Write-Output \\\"---experiments---\\\"; Get-ChildItem -Force .\\\\experiments -ErrorAction SilentlyContinue | Select-Object Name,LastWriteTime,Mode | Format-Table -AutoSize\"}",
+      "tsMs": 1788778545774
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/experiments\"}",
+      "tsMs": 1788778550911
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path .\\\\workspace\\\\experiments; (Get-Item .\\\\workspace\\\\experiments -ErrorAction SilentlyContinue) | Select-Object FullName,Attributes; Write-Output \\\"---contents---\\\"; cmd /c dir /a /b .\\\\workspace\\\\experiments 2>&1\"}",
+      "tsMs": 1788778550911
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Force | Select-Object Mode,Name,LastWriteTime | Format-Table -AutoSize; Write-Output \\\"===git HEAD===\\\"; Get-Content .\\\\workspace\\\\.git\\\\HEAD; Write-Output \\\"===config===\\\"; Get-Content .\\\\workspace\\\\.git\\\\config; Write-Output \\\"===logs===\\\"; Get-ChildItem .\\\\workspace\\\\.git\\\\logs -Recurse | Select-Object FullName,Length | Format-Table -AutoSize\"}",
+      "tsMs": 1788778557881
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===refs/heads/main===\\\"; Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main; Write-Output \\\"===HEAD reflog (tail 30)===\\\"; Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD | Select-Object -Last 30\"}",
+      "tsMs": 1788778573024
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===package.json (head)===\\\"; Get-Content .\\\\workspace\\\\package.json -TotalCount 40; Write-Output \\\"===node_modules?===\\\"; Test-Path .\\\\workspace\\\\node_modules; Write-Output \\\"===.superpowers===\\\"; Get-ChildItem .\\\\workspace\\\\.superpowers -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788778573037
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===experiments via .NET===\\\"; [System.IO.Directory]::GetFileSystemEntries((Join-Path (Get-Location) 'workspace\\\\experiments')) | Select-Object -First 20; Write-Output \\\"===count===\\\"; ([System.IO.Directory]::GetFileSystemEntries((Join-Path (Get-Location) 'workspace\\\\experiments'))).Count; Write-Output \\\"===tmp tree===\\\"; Get-ChildItem .\\\\_tmp -Recurse -Depth 3 -Force -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788778588310
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===node?===\\\"; Get-Command node,npm -ErrorAction SilentlyContinue | Select-Object Name,Source; Write-Output \\\"===git anywhere?===\\\"; Get-ChildItem .\\\\workspace\\\\bin -Recurse -Depth 1 -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"===.runtime search===\\\"; Get-ChildItem . -Recurse -Directory -Filter \\\"*.runtime*\\\" -ErrorAction SilentlyContinue | Select-Object FullName; Get-ChildItem .\\\\workspace -Recurse -Directory -Filter \\\"node-v22*\\\" -ErrorAction SilentlyContinue | Select-Object FullName\"}",
+      "tsMs": 1788778588322
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"phase1-distiller|phase0-continues\",\"path\":\"workspace\"}",
+      "tsMs": 1788778599693
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"recovery-handoffs-r7-full|01a070e6-3bd9-7591-aa4e-31b364badda1\",\"path\":\"workspace\"}",
+      "tsMs": 1788778599826
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs -Recurse -Depth 2 -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'validation|recovery|handoff' } | Select-Object FullName | Format-Table -AutoSize\"}",
+      "tsMs": 1788778599916
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md\"}",
+      "tsMs": 1788778602901
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\docs\\\\validation -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object FullName,Length,LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788778602902
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$epoch = [DateTimeOffset]::FromUnixTimeSeconds(1788716676); Write-Output \\\"a247e75 commit epoch 1788716676 = $($epoch.ToString('u'))\\\"; $epoch2 = [DateTimeOffset]::FromUnixTimeSeconds(1788626351); Write-Output \\\"reset epoch 1788626351 = $($epoch2.ToString('u'))\\\"; Write-Output \\\"sandbox index/data mtime 2026/9/7 13:42:32 local = UTC 05:42:32\\\"\"}",
+      "tsMs": 1788778622471
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===committed docs listing (mtime order)===\\\"; Get-ChildItem .\\\\workspace\\\\docs -Recurse -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 15 FullName,LastWriteTime | Format-Table -AutoSize; Write-Output \\\"===is arch doc tracked? check .git grep in index===\\\"; Select-String -Path .\\\\workspace\\\\.git\\\\index -Pattern \\\"2026-09-05-coding-continuity\\\" -SimpleMatch -ErrorAction SilentlyContinue | Select-Object -First 3\"}",
+      "tsMs": 1788778622479
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===workspace top-level tree depth2===\\\"; Get-ChildItem .\\\\workspace -Recurse -Depth 1 -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\.git\\\\\\\\|node_modules|\\\\.superpowers' } | Select-Object FullName | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') } | Format-Table -AutoSize\"}",
+      "tsMs": 1788778637390
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===workspace tree (depth 2, excluding protected/git)===\\\"; Get-ChildItem .\\\\workspace -Recurse -Depth 1 -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\.git(\\\\\\\\|$)' -and $_.FullName -notmatch 'node_modules' -and $_.FullName -notmatch '\\\\.superpowers' -and $_.FullName -notmatch '\\\\\\\\.runtime' } | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\"}",
+      "tsMs": 1788778639273
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$root = (Get-Location).Path + '\\\\workspace'; $skip = '\\\\.superpowers','\\\\.git','node_modules'; Get-ChildItem $root -Force -Directory | Where-Object { $_.Name -ne '.git' -and $_.Name -ne '.superpowers' } | ForEach-Object { Write-Output ('== ' + $_.Name + ' =='); Get-ChildItem $_.FullName -Depth 0 -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.Name } }\"}",
+      "tsMs": 1788778642069
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$dirs = 'bin','data','docs','electron','evaluation','experiments','scripts','src','test','web','design-references'; foreach ($d in $dirs) { Write-Output ('== ' + $d + ' =='); $p = Join-Path (Join-Path (Get-Location) 'workspace') $d; Get-ChildItem $p -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name }\"}",
+      "tsMs": 1788778644503
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===package.json===\\\"; Get-Content .\\\\workspace\\\\package.json; Write-Output \\\"===bin/margin.js (head 30)===\\\"; Get-Content .\\\\workspace\\\\bin\\\\margin.js -TotalCount 30\"}",
+      "tsMs": 1788778660918
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===src/core===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\core -Recurse -File | Select-Object -ExpandProperty Name; Write-Output \\\"===src/continuity===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\continuity -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output \\\"===src/cli===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\cli -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output \\\"===src/application (handoff related)===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\application -File | Where-Object { $_.Name -match 'handoff|resume|continu' } | Select-Object -ExpandProperty Name; Write-Output \\\"===node version check===\\\"; Get-Command node -ErrorAction SilentlyContinue; Test-Path 'C:\\\\Program Files\\\\nodejs\\\\node.exe'\"}",
+      "tsMs": 1788778660927
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===src/core===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\core -Recurse -File | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace((Get-Location).Path + '\\\\workspace\\\\','') }; Write-Output \\\"===src/continuity===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\continuity -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace((Get-Location).Path + '\\\\workspace\\\\','') }; Write-Output \\\"===src/cli===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\cli -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\"}",
+      "tsMs": 1788778664540
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===docs top===\\\"; Get-ChildItem .\\\\workspace\\\\docs\\\\architecture -File | Select-Object -ExpandProperty Name; Write-Output \\\"===docs/validation top===\\\"; Get-ChildItem .\\\\workspace\\\\docs\\\\validation -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output \\\"===src/agents===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\agents -Recurse -File | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\"}",
+      "tsMs": 1788778664550
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===node===\\\"; try { node --version } catch { Write-Output \\\"node not runnable: $_\\\" }; Write-Output \\\"===npm===\\\"; try { npm --version } catch { Write-Output \\\"npm not runnable: $_\\\" }; Write-Output \\\"===where node===\\\"; where.exe node 2>&1\"}",
+      "tsMs": 1788778673222
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===docs/architecture files===\\\"; Get-ChildItem .\\\\workspace\\\\docs\\\\architecture -Recurse -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') }; Write-Output \\\"===docs/superpowers?===\\\"; Get-ChildItem .\\\\workspace\\\\docs -Directory | Select-Object -ExpandProperty Name\"}",
+      "tsMs": 1788778673230
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===docs/superpowers===\\\"; Get-ChildItem .\\\\workspace\\\\docs\\\\superpowers -Recurse -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') }; Write-Output \\\"===docs/evaluation===\\\"; Get-ChildItem .\\\\workspace\\\\docs\\\\evaluation -Recurse -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') }; Write-Output \\\"===docs/audit===\\\"; Get-ChildItem .\\\\workspace\\\\docs\\\\audit -Recurse -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\"}",
+      "tsMs": 1788778682065
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/Margin_Phase0_PoC_Plan.md\"}",
+      "tsMs": 1788778682074
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/audit/current_margin_status.md\"}",
+      "tsMs": 1788778693909
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788778697731
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/README.md\",\"limitChars\":4000}",
+      "tsMs": 1788778697732
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===index contains phase1-distiller?===\\\"; Select-String -Path .\\\\workspace\\\\.git\\\\index -Pattern 'phase1-distiller','phase0-continues' -SimpleMatch -ErrorAction SilentlyContinue | Select-Object -First 5; Write-Output \\\"===done===\\\"\"}",
+      "tsMs": 1788778707346
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace\",\"pattern\":\"fail.?fix.?test|Continuation Quality|ContinuationQuality|r7-full|阶段.*实验|Experiment\",\"maxResults\":40}",
+      "tsMs": 1788778707354
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===files newer than 2026-09-07 00:00 in workspace (excluding .git)===\\\"; Get-ChildItem .\\\\workspace -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\.git(\\\\\\\\|$)' -and $_.LastWriteTime -ge [datetime]'2026-09-07' } | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') + '  ' + $_.LastWriteTime.ToString('s') }; Write-Output \\\"===_tmp Roaming depth===\\\"; Get-ChildItem .\\\\_tmp -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Replace((Get-Location).Path,'') }\"}",
+      "tsMs": 1788778713545
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===branches===\\\"; Get-ChildItem .\\\\workspace\\\\.git\\\\refs\\\\heads -Recurse | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\.git\\\\refs\\\\heads\\\\','') }; Write-Output \\\"===reflog grep phase1/phase0/distiller/experiments===\\\"; Get-ChildItem .\\\\workspace\\\\.git\\\\logs\\\\refs -Recurse | Select-String -Pattern 'phase1|phase0|distiller|experiments' -SimpleMatch -ErrorAction SilentlyContinue | Select-Object -First 10\"}",
+      "tsMs": 1788778738787
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/index.js\"}",
+      "tsMs": 1788778738796
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/handoff.test.js\",\"limitChars\":3000}",
+      "tsMs": 1788778748574
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===src/core/handoff files sizes===\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\core\\\\handoff -File | Select-Object Name,Length | Format-Table -AutoSize; Write-Output \\\"===evaluation dir===\\\"; Get-ChildItem .\\\\workspace\\\\evaluation -Recurse -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\\\workspace\\\\','') }\"}",
+      "tsMs": 1788778748575
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs/validation\"}",
+      "tsMs": 1788778764330
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"===git objects===\\\"; Get-ChildItem .\\\\workspace\\\\.git\\\\objects -Force | Select-Object Name,Length; Write-Output \\\"===input===\\\"; Get-ChildItem .\\\\input | Select-Object Name,Length; Write-Output \\\"===dotfiles at root===\\\"; Get-ChildItem . -Force | Select-Object Name; Write-Output \\\"===env example present?===\\\"; Get-ChildItem .\\\\workspace\\\\.env* -Force -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788778764331
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/distiller.js\",\"limitChars\":1500}",
+      "tsMs": 1788778781663
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/evidence.js\",\"limitChars\":1200}",
+      "tsMs": 1788778781664
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Write-Output \"===package.json (head)===\"; Get-Content .\\workspace\\package.json -TotalCount 40; Write-Output \"===node_modules?===\"; Test-Path .\\workspace\\node_modules; Write-Output \"===.superpowers===\"; Get-ChildItem .\\workspace\\.superpowers -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize",
+      "reasons": [
+        "protected path fragment is disabled: \\.superpowers"
+      ],
+      "tsMs": 1788778573037
+    },
+    {
+      "command": "Get-ChildItem .\\workspace\\docs\\validation -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object FullName,Length,LastWriteTime | Format-Table -AutoSize",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788778602902
+    },
+    {
+      "command": "Write-Output \"===workspace top-level tree depth2===\"; Get-ChildItem .\\workspace -Recurse -Depth 1 -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\.git\\\\|node_modules|\\.superpowers' } | Select-Object FullName | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\workspace\\','') } | Format-Table -AutoSize",
+      "reasons": [
+        "protected path fragment is disabled: \\.superpowers"
+      ],
+      "tsMs": 1788778637390
+    },
+    {
+      "command": "Write-Output \"===workspace tree (depth 2, excluding protected/git)===\"; Get-ChildItem .\\workspace -Recurse -Depth 1 -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\.git(\\\\|$)' -and $_.FullName -notmatch 'node_modules' -and $_.FullName -notmatch '\\.superpowers' -and $_.FullName -notmatch '\\\\.runtime' } | ForEach-Object { $_.FullName.Replace((Get-Location).Path + '\\workspace\\','') }",
+      "reasons": [
+        "protected path fragment is disabled: \\.superpowers"
+      ],
+      "tsMs": 1788778639273
+    },
+    {
+      "command": "$root = (Get-Location).Path + '\\workspace'; $skip = '\\.superpowers','\\.git','node_modules'; Get-ChildItem $root -Force -Directory | Where-Object { $_.Name -ne '.git' -and $_.Name -ne '.superpowers' } | ForEach-Object { Write-Output ('== ' + $_.Name + ' =='); Get-ChildItem $_.FullName -Depth 0 -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.Name } }",
+      "reasons": [
+        "protected path fragment is disabled: \\.superpowers"
+      ],
+      "tsMs": 1788778642069
+    },
+    {
+      "command": "Write-Output \"===src/core===\"; Get-ChildItem .\\workspace\\src\\core -Recurse -File | Select-Object -ExpandProperty Name; Write-Output \"===src/continuity===\"; Get-ChildItem .\\workspace\\src\\continuity -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output \"===src/cli===\"; Get-ChildItem .\\workspace\\src\\cli -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output \"===src/application (handoff related)===\"; Get-ChildItem .\\workspace\\src\\application -File | Where-Object { $_.Name -match 'handoff|resume|continu' } | Select-Object -ExpandProperty Name; Write-Output \"===node version check===\"; Get-Command node -ErrorAction SilentlyContinue; Test-Path 'C:\\Program Files\\nodejs\\node.exe'",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: c:\\program"
+      ],
+      "tsMs": 1788778660927
+    },
+    {
+      "command": "Write-Output \"===docs top===\"; Get-ChildItem .\\workspace\\docs\\architecture -File | Select-Object -ExpandProperty Name; Write-Output \"===docs/validation top===\"; Get-ChildItem .\\workspace\\docs\\validation -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name; Write-Output \"===src/agents===\"; Get-ChildItem .\\workspace\\src\\agents -Recurse -File | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace((Get-Location).Path + '\\workspace\\','') }",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788778664550
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 280581,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-09",
+    "arm": "B",
+    "runId": "formal-case-09-B-2026-09-07T10-55-20-528Z",
+    "startMs": "2026-09-07T10:55:29.807Z",
+    "endMs": "2026-09-07T11:00:12.202Z",
+    "durationMs": 282395,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-09-B-2026-09-07T10-55-20-528Z status=ok durationMs=280581\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-09-B-2026-09-07T10-55-20-528Z.cert.json"
+  }
+}

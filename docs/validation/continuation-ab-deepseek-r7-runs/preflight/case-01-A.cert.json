@@ -1,0 +1,23 @@
+{
+  "runId": "preflight-case-01-A-2026-09-07T09-28-19-989Z",
+  "caseId": "case-01",
+  "arm": "A",
+  "phase": "preflight",
+  "sandboxDir": "<repo>-bench\\ab-continuation\\sandboxes-r7full\\preflight-case-01-A",
+  "workspaceVerification": {
+    "checkedFiles": 634,
+    "forbiddenNameHits": [],
+    "uuidHits": [],
+    "ok": true
+  },
+  "inputFolderEntries": [
+    "session.jsonl"
+  ],
+  "inputArtifact": {
+    "name": "session.jsonl",
+    "sha256": "E365D348363B592E9CDFE8507CD55978C69DAF62412B11C1D13C056306A6C26A",
+    "source": "session-01a077ec-bd2c-78a1-8581-c7440c9bda66.jsonl"
+  },
+  "sandboxWideForbiddenHits": [],
+  "ok": true
+}

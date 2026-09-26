@@ -1,0 +1,85 @@
+{
+  "redaction": {
+    "appliedAt": "2026-09-26",
+    "scope": "machine paths in handoff outputs",
+    "note": "Handoff outputs were redacted before entering version control: home and repository paths were replaced with placeholders, and the hashes below attest the redacted artifacts. Source session inputs were not modified and are not tracked."
+  },
+  "schema_version": 1,
+  "frozen_at": "2026-09-07T10:52:00+08:00",
+  "generator": "current Margin Handoff Core via scripts/generate-handoff.js",
+  "workspace_repo": "<repo>",
+  "artifacts": [
+    {
+      "case_id": "case-01",
+      "session_id": "01a077ec-bd2c-78a1-8581-c7440c9bda66",
+      "path": "docs/validation/recovery-handoffs/case-01.md",
+      "sha256": "B0EEFC3BC88ECA3380E8F058B0D11D631AFF60361F7D00EEAE49CC8B808FCEED"
+    },
+    {
+      "case_id": "case-02",
+      "session_id": "01a074ec-9f30-7c62-bb5f-257091ef242a",
+      "path": "docs/validation/recovery-handoffs/case-02.md",
+      "sha256": "7C2988D423B0CE1EB7CABE32DD139B7356247F2C21E08959F3B4BF572EA45523"
+    },
+    {
+      "case_id": "case-03",
+      "session_id": "01a0755d-e84a-7980-afaa-f98246f9436c",
+      "path": "docs/validation/recovery-handoffs/case-03.md",
+      "sha256": "6B4638B20695ACE9B5BBCA32FDF9ACB4A9398E06551957B4E616D328AE23D4BA"
+    },
+    {
+      "case_id": "case-04",
+      "session_id": "01a07639-d0ef-7452-a987-af0de51b29e3",
+      "path": "docs/validation/recovery-handoffs/case-04.md",
+      "sha256": "E67AEB1555F6B2ACE43D199FAA6B652ECFB4C2E78769026790B19E6A02FD2486"
+    },
+    {
+      "case_id": "case-05",
+      "session_id": "01a07786-adf5-77a3-91ba-e4a75ceda7e7",
+      "path": "docs/validation/recovery-handoffs/case-05.md",
+      "sha256": "83C0D89EDAF3B1FE9784E3C15FD88D66BC695682F6C0FC2005A2F676048AF12C"
+    },
+    {
+      "case_id": "case-06",
+      "session_id": "01a07490-65fb-7643-9a8e-d1d7d69643be",
+      "path": "docs/validation/recovery-handoffs/case-06.md",
+      "sha256": "A9E3049DDCC35E775859C563366F5F74284412CCE109EA1853BDC451DFDDF453"
+    },
+    {
+      "case_id": "case-07",
+      "session_id": "01a074d4-f3b2-76e1-8411-9f93be0a91a2",
+      "path": "docs/validation/recovery-handoffs/case-07.md",
+      "sha256": "72C361ED7674886AACBC47867AC4B22BBFA8456D2ACBCDEEFE6ABA45F048928C"
+    },
+    {
+      "case_id": "case-08",
+      "session_id": "01a0763e-bfe9-77f1-b669-900b837d2754",
+      "path": "docs/validation/recovery-handoffs/case-08.md",
+      "sha256": "9996A11626218A2A4973D2B9F17B09E6556A3B40D0FFC7980F112B178970843A"
+    },
+    {
+      "case_id": "case-09",
+      "session_id": "01a070e6-3bd9-7591-aa4e-31b364badda1",
+      "path": "docs/validation/recovery-handoffs/case-09.md",
+      "sha256": "FEC43FC216CF0A59B51DAD8C66B8FACB7BD39F2136765293FD41847B508D20E0"
+    },
+    {
+      "case_id": "case-10",
+      "session_id": "01a07564-99fa-72e0-b086-4a21e5011211",
+      "path": "docs/validation/recovery-handoffs/case-10.md",
+      "sha256": "8AEEBC463617806849942684EC86A79F17070CA4F08B7C7679B96A544DB46A0D"
+    },
+    {
+      "case_id": "case-11",
+      "session_id": "01a076e8-fe17-7430-b1c4-b32715a65fe8",
+      "path": "docs/validation/recovery-handoffs/case-11.md",
+      "sha256": "67929263A4B673E900824139AE225D3DF3B76F2723DFC9AFDDB008BB6084B4DE"
+    },
+    {
+      "case_id": "case-12",
+      "session_id": "01a07770-d875-7b51-bd03-e154fe30c66c",
+      "path": "docs/validation/recovery-handoffs/case-12.md",
+      "sha256": "A2A5F8A7A1D50D363B2AB00043B880A3935149C8EDBAA2E22F3AC4961A981B6D"
+    }
+  ]
+}

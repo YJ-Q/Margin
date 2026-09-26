@@ -1,0 +1,11 @@
+{
+  "runId": "preflight-case-01-A-2026-09-07T05-43-24-196Z",
+  "caseId": "case-01",
+  "arm": "A",
+  "phase": "preflight",
+  "sandboxRoot": "<repo>-bench\\ab-continuation\\sandboxes\\preflight-case-01-A",
+  "promptFile": "<repo>-bench\\ab-continuation\\prompt.txt",
+  "providerId": "deepseek",
+  "modelId": "deepseek-v4-flash",
+  "thinking": "high"
+}

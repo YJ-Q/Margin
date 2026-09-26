@@ -1,0 +1,432 @@
+{
+  "runId": "formal-case-07-B-2026-09-07T10-29-35-385Z",
+  "caseId": "case-07",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T10:29:46.006Z",
+  "endTs": "2026-09-07T10:36:11.447Z",
+  "durationMs": 385441,
+  "modelPromptStartMs": 45,
+  "modelPromptEndMs": 385440,
+  "sessionId": "01a07b6a-b5c0-73ae-be06-9843fbb69477",
+  "rawResponse": "{\n  \"goal\": \"Implement Margin Slice 3.2 'Resume-first Checkpoint Experience' on repo <repo> (branch main, HEAD a247e75 at checkpoint): add a minimal browser-safe `resumeSummary` DTO projection over the existing Distilled State (no new inference), return `{session, markdown, resumeSummary}` from POST /api/handoff/generate while never exposing evidence/truth/operations/source paths, present Resume Summary (Goal, Progress, Current applicability, Current validation) above the fold in a resume-first SessionDetail with `Copy checkpoint` primary (copies the FULL Markdown) and `Save to workspace` secondary, full checkpoint collapsed behind `View full checkpoint`, keep Select -> one automatic fresh generate -> Copy at <=2 main interactions, no Resume button / no checkpoint lifecycle / no auto-copy, plus focused DTO/HTTP/SessionDetail tests and Sample A/B real-UI, time-to-resume and semantic-safety validation (spec sections 1-39). Goal currency should be re-confirmed with the user before continuing.\",\n  \"progress\": \"Current repo truth (verified in this frozen workspace, not from the handoff): the Slice 3.2 implementation exists and, for every inspected slice file, the working-tree content is byte-identical to committed HEAD a247e75 (tree f08f297a, verified by decompressing git objects): src/core/handoff/resume-summary.js (projectResumeSummary + PROGRESS_LIMIT=3, priority-ordered progress selection, Unknown/empty-safe), src/core/handoff/index.js (generateHandoff now returns resumeSummary), src/core/handoff/workspace-overview.js, src/core/handoff/httpAdapter.js (POST /api/handoff/generate returns {markdown, resumeSummary, session}; POST /api/handoff/save writes <repo>/.margin/HANDOFF.md with read-back verification; no raw evidence/truth leak), web/src/margin/SessionDetail.js (resume-first component: loading 'Preparing fresh checkpoint…', four summary sections, collapsed 'View full checkpoint', 'Copy checkpoint' primary copies full markdown, 'Save to workspace' secondary, Retry, copy/save feedback), web/src/margin/marginApiClient.js (generateHandoff/saveToWorkspace), CLI src/cli/margin/runMarginCli.js + render.js (renderResumeSummary), and tests test/resumeSummary.test.js, test/marginSessionDetail.test.js, test/marginSurfaceHttpAdapter.test.js (plus existing test/handoff.test.js and test/marginCli.test.js). Only two inspected files carry uncommitted worktree edits on top of HEAD: httpAdapter.js and marginApiClient.js, and those edits are agent-source registry / active-source / resource-status capabilities that appear to be later-slice work (HEAD already exposes resumeSummary on generate). Observed gaps/uncertainties: margin.css only styles UsageBar/SessionBoard; SessionDetail.js and RecentSessionsList.js are imported only by tests and are NOT mounted by the wired margin surface (MarginApp -> SessionBoard, which offers per-row Copy/Save only), and none of the resume-summary/session-detail/handoff CSS classes exist. Full repo delta could not be enumerated (no git binary): working tree has 634 files vs 390 git-index entries. Historical (handoff only, not re-verified): assistant reported a final combined run of the four focused test files with '53 passed', and reported no deviations/blockers, but Sample A/B validation was described as DTO-level only.\",\n  \"pending\": \"(1) Current validation cannot be executed in this sandbox: no Node runtime is present (workspace/.runtime/node-v22.23.1-win-x64 is not shipped, no node.exe or git.exe anywhere), and web/dist is not built; rerun tests/build in a real checkout. (2) Re-confirm goal currency and resolve the live-surface question: the resume-first SessionDetail flow is implemented and tested but not wired into MarginApp/SessionBoard and lacks margin.css rules - determine the intended composition and add any needed styles. (3) Execute the not-yet-evidenced spec items: real-UI validation with research-only Sample A and implementation-heavy Sample B, time-to-resume (<=2 main interactions, <=30s, no mandatory full-checkpoint read), semantic-safety checks (no historical->current, assistant-report->fact, applicability Unknown->Ready, or Historical Intent->Next Step), and Select->generate->Copy/Save regression. (4) Triage the uncommitted agent-source/resource-status deltas in httpAdapter.js and marginApiClient.js (appears outside Slice 3.2 scope) plus any other uncommitted/untracked files, then commit. (5) Produce/refresh the section-39 completion report after real validation.\",\n  \"historicalValidation\": \"Historical only (from HANDOFF; not reproducible here): one combined run of `node --test test/resumeSummary.test.js test/marginSessionDetail.test.js test/marginSurfaceHttpAdapter.test.js test/handoff.test.js` was reported as succeeded (exit_code=0, '53 passed'); two other focused runs of the same file set were reported failed (exit_code=1); one `npm test -- --test-name-pattern=\\\"(resumeSummary|SessionDetail|handoff/generate|research-only progress|implementation progress)\\\"` run was reported failed (exit_code=1); several additional runs had no explicit final result. Historical exit-0 is not current validation. No test has been rerun against this frozen snapshot, so current pass/fail status is UNKNOWN.\",\n  \"recommendedFollowUp\": \"In the real <repo> checkout where the Node 22 runtime and git exist (this sandbox has neither): (1) run `git status` and `git diff` to enumerate the true uncommitted/untracked delta (this snapshot shows 634 worktree files vs 390 index entries; object-store comparison of inspected slice files found only httpAdapter.js and marginApiClient.js differing from HEAD); (2) rerun the focused four-file test command plus `npm run build` and `git diff --check`; (3) ask the user to confirm whether the resume-first SessionDetail should be mounted in the current margin surface (MarginApp currently renders only SessionBoard with per-row Copy/Save) and add the corresponding margin.css rules; (4) only after those confirmations, redo Sample A/B real-UI, time-to-resume, and semantic-safety acceptance and finalize the section-39 completion report. This is a conditional recommendation, not a confirmed current action - verify goal currency first.\",\n  \"currentApplicability\": \"The historical Slice 3.2 goal still applies to this repository, but in a shifted form: all inspected Slice 3.2 Core/HTTP/Web/CLI/test artifacts are already committed at HEAD a247e75 with content identical to the working tree, so the remaining work is verification/integration/acceptance rather than new slice code. Execution (tests, build, live UI) is impossible inside this read-only sandbox because the runtime and git are absent. The uncommitted agent-source/resource-status edits in httpAdapter.js/marginApiClient.js are outside the Slice 3.2 boundary and should be triaged separately. Whether the resume-first SessionDetail UI is reachable in the live product is currently UNKNOWN/unverified because it is only referenced by tests.\",\n  \"unsafeAssumptions\": [\n    \"Assumed 'slice files are committed at HEAD and unchanged in the working tree' - verified only for the specific files inspected by decompressing the HEAD tree (f08f297a) and comparing blob SHAs with worktree content, not via `git status`; additional modified tracked files may exist beyond the two detected (httpAdapter.js, marginApiClient.js).\",\n    \"Assumed the workspace is the repo-truth referenced by the HANDOFF because branch main and HEAD sha a247e75 match; not independently verifiable against the live repository.\",\n    \"Assumed 'tests cannot currently be run' is true here - based on node.exe/git.exe being absent and .runtime not shipped in this sandbox; this is environment evidence only and says nothing about the real repo.\",\n    \"Assumed SessionDetail.js/RecentSessionsList.js are not part of the live surface - based on a static import-graph search (MarginApp imports only SessionBoard/UsageBar); not validated against built bundles (web/dist absent) or runtime behavior.\",\n    \"Assumed margin.css has no resume-summary/session-detail/handoff styles - based on reading the single CSS file imported by margin/main.jsx; no other stylesheet was found for that entrypoint.\",\n    \"Historical exit codes and the '53 passed' report are treated as historical and non-current; I did not promote them into current validation.\",\n    \"The full uncommitted/untracked delta is UNKNOWN - only inferred from 634 worktree files vs 390 index entries and from HEAD-blob comparisons of the inspected slice files.\"\n  ]\n}",
+  "parsedRecovery": {
+    "goal": "Implement Margin Slice 3.2 'Resume-first Checkpoint Experience' on repo <repo> (branch main, HEAD a247e75 at checkpoint): add a minimal browser-safe `resumeSummary` DTO projection over the existing Distilled State (no new inference), return `{session, markdown, resumeSummary}` from POST /api/handoff/generate while never exposing evidence/truth/operations/source paths, present Resume Summary (Goal, Progress, Current applicability, Current validation) above the fold in a resume-first SessionDetail with `Copy checkpoint` primary (copies the FULL Markdown) and `Save to workspace` secondary, full checkpoint collapsed behind `View full checkpoint`, keep Select -> one automatic fresh generate -> Copy at <=2 main interactions, no Resume button / no checkpoint lifecycle / no auto-copy, plus focused DTO/HTTP/SessionDetail tests and Sample A/B real-UI, time-to-resume and semantic-safety validation (spec sections 1-39). Goal currency should be re-confirmed with the user before continuing.",
+    "progress": "Current repo truth (verified in this frozen workspace, not from the handoff): the Slice 3.2 implementation exists and, for every inspected slice file, the working-tree content is byte-identical to committed HEAD a247e75 (tree f08f297a, verified by decompressing git objects): src/core/handoff/resume-summary.js (projectResumeSummary + PROGRESS_LIMIT=3, priority-ordered progress selection, Unknown/empty-safe), src/core/handoff/index.js (generateHandoff now returns resumeSummary), src/core/handoff/workspace-overview.js, src/core/handoff/httpAdapter.js (POST /api/handoff/generate returns {markdown, resumeSummary, session}; POST /api/handoff/save writes <repo>/.margin/HANDOFF.md with read-back verification; no raw evidence/truth leak), web/src/margin/SessionDetail.js (resume-first component: loading 'Preparing fresh checkpoint…', four summary sections, collapsed 'View full checkpoint', 'Copy checkpoint' primary copies full markdown, 'Save to workspace' secondary, Retry, copy/save feedback), web/src/margin/marginApiClient.js (generateHandoff/saveToWorkspace), CLI src/cli/margin/runMarginCli.js + render.js (renderResumeSummary), and tests test/resumeSummary.test.js, test/marginSessionDetail.test.js, test/marginSurfaceHttpAdapter.test.js (plus existing test/handoff.test.js and test/marginCli.test.js). Only two inspected files carry uncommitted worktree edits on top of HEAD: httpAdapter.js and marginApiClient.js, and those edits are agent-source registry / active-source / resource-status capabilities that appear to be later-slice work (HEAD already exposes resumeSummary on generate). Observed gaps/uncertainties: margin.css only styles UsageBar/SessionBoard; SessionDetail.js and RecentSessionsList.js are imported only by tests and are NOT mounted by the wired margin surface (MarginApp -> SessionBoard, which offers per-row Copy/Save only), and none of the resume-summary/session-detail/handoff CSS classes exist. Full repo delta could not be enumerated (no git binary): working tree has 634 files vs 390 git-index entries. Historical (handoff only, not re-verified): assistant reported a final combined run of the four focused test files with '53 passed', and reported no deviations/blockers, but Sample A/B validation was described as DTO-level only.",
+    "pending": "(1) Current validation cannot be executed in this sandbox: no Node runtime is present (workspace/.runtime/node-v22.23.1-win-x64 is not shipped, no node.exe or git.exe anywhere), and web/dist is not built; rerun tests/build in a real checkout. (2) Re-confirm goal currency and resolve the live-surface question: the resume-first SessionDetail flow is implemented and tested but not wired into MarginApp/SessionBoard and lacks margin.css rules - determine the intended composition and add any needed styles. (3) Execute the not-yet-evidenced spec items: real-UI validation with research-only Sample A and implementation-heavy Sample B, time-to-resume (<=2 main interactions, <=30s, no mandatory full-checkpoint read), semantic-safety checks (no historical->current, assistant-report->fact, applicability Unknown->Ready, or Historical Intent->Next Step), and Select->generate->Copy/Save regression. (4) Triage the uncommitted agent-source/resource-status deltas in httpAdapter.js and marginApiClient.js (appears outside Slice 3.2 scope) plus any other uncommitted/untracked files, then commit. (5) Produce/refresh the section-39 completion report after real validation.",
+    "historicalValidation": "Historical only (from HANDOFF; not reproducible here): one combined run of `node --test test/resumeSummary.test.js test/marginSessionDetail.test.js test/marginSurfaceHttpAdapter.test.js test/handoff.test.js` was reported as succeeded (exit_code=0, '53 passed'); two other focused runs of the same file set were reported failed (exit_code=1); one `npm test -- --test-name-pattern=\"(resumeSummary|SessionDetail|handoff/generate|research-only progress|implementation progress)\"` run was reported failed (exit_code=1); several additional runs had no explicit final result. Historical exit-0 is not current validation. No test has been rerun against this frozen snapshot, so current pass/fail status is UNKNOWN.",
+    "recommendedFollowUp": "In the real <repo> checkout where the Node 22 runtime and git exist (this sandbox has neither): (1) run `git status` and `git diff` to enumerate the true uncommitted/untracked delta (this snapshot shows 634 worktree files vs 390 index entries; object-store comparison of inspected slice files found only httpAdapter.js and marginApiClient.js differing from HEAD); (2) rerun the focused four-file test command plus `npm run build` and `git diff --check`; (3) ask the user to confirm whether the resume-first SessionDetail should be mounted in the current margin surface (MarginApp currently renders only SessionBoard with per-row Copy/Save) and add the corresponding margin.css rules; (4) only after those confirmations, redo Sample A/B real-UI, time-to-resume, and semantic-safety acceptance and finalize the section-39 completion report. This is a conditional recommendation, not a confirmed current action - verify goal currency first.",
+    "currentApplicability": "The historical Slice 3.2 goal still applies to this repository, but in a shifted form: all inspected Slice 3.2 Core/HTTP/Web/CLI/test artifacts are already committed at HEAD a247e75 with content identical to the working tree, so the remaining work is verification/integration/acceptance rather than new slice code. Execution (tests, build, live UI) is impossible inside this read-only sandbox because the runtime and git are absent. The uncommitted agent-source/resource-status edits in httpAdapter.js/marginApiClient.js are outside the Slice 3.2 boundary and should be triaged separately. Whether the resume-first SessionDetail UI is reachable in the live product is currently UNKNOWN/unverified because it is only referenced by tests.",
+    "unsafeAssumptions": [
+      "Assumed 'slice files are committed at HEAD and unchanged in the working tree' - verified only for the specific files inspected by decompressing the HEAD tree (f08f297a) and comparing blob SHAs with worktree content, not via `git status`; additional modified tracked files may exist beyond the two detected (httpAdapter.js, marginApiClient.js).",
+      "Assumed the workspace is the repo-truth referenced by the HANDOFF because branch main and HEAD sha a247e75 match; not independently verifiable against the live repository.",
+      "Assumed 'tests cannot currently be run' is true here - based on node.exe/git.exe being absent and .runtime not shipped in this sandbox; this is environment evidence only and says nothing about the real repo.",
+      "Assumed SessionDetail.js/RecentSessionsList.js are not part of the live surface - based on a static import-graph search (MarginApp imports only SessionBoard/UsageBar); not validated against built bundles (web/dist absent) or runtime behavior.",
+      "Assumed margin.css has no resume-summary/session-detail/handoff styles - based on reading the single CSS file imported by margin/main.jsx; no other stylesheet was found for that entrypoint.",
+      "Historical exit codes and the '53 passed' report are treated as historical and non-current; I did not promote them into current validation.",
+      "The full uncommitted/untracked delta is UNKNOWN - only inferred from 634 worktree files vs 390 index entries and from HEAD-blob comparisons of the inspected slice files."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788776987353
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C . status; echo \\\"---\\\"; git -C . log --oneline -20\"}",
+      "tsMs": 1788776987354
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788776990611
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788776990612
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788776990612
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788776990612
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788776991798
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.git\"}",
+      "tsMs": 1788776991798
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/.git/HEAD\"}",
+      "tsMs": 1788776994368
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue; echo \\\"---\\\"; Get-Content .\\\\workspace\\\\.git\\\\ORIG_HEAD -ErrorAction SilentlyContinue; echo \\\"---\\\"; Get-Content .\\\\workspace\\\\.git\\\\REBASE_HEAD -ErrorAction SilentlyContinue; echo \\\"---FETCH\\\"; Get-Content .\\\\workspace\\\\.git\\\\FETCH_HEAD -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788776994369
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src\"}",
+      "tsMs": 1788776994382
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -Tail 30\"}",
+      "tsMs": 1788776996987
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"resumeSummary|projectResumeSummary|resume-summary|Resume Summary|Copy checkpoint|View full checkpoint\",\"path\":\"workspace\",\"maxResults\":100}",
+      "tsMs": 1788776996999
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp/AppData\"}",
+      "tsMs": 1788777013354
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788777013355
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src/core/handoff\"}",
+      "tsMs": 1788777013355
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.runtime\"}",
+      "tsMs": 1788777019482
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/resume-summary.js\"}",
+      "tsMs": 1788777019482
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/index.js\"}",
+      "tsMs": 1788777019482
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Path . -Recurse -Filter \\\"node.exe\\\" -ErrorAction SilentlyContinue | Select-Object -First 5 FullName; echo \\\"---git---\\\"; Get-ChildItem -Path . -Recurse -Filter \\\"git.exe\\\" -ErrorAction SilentlyContinue | Select-Object -First 5 FullName; echo \\\"---where node---\\\"; (Get-Command node -ErrorAction SilentlyContinue).Source; echo \\\"---where git---\\\"; (Get-Command git -ErrorAction SilentlyContinue).Source\"}",
+      "tsMs": 1788777022842
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788777022851
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788777029199
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionDetail.js\"}",
+      "tsMs": 1788777029200
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\.git\\\\objects -Recurse -ErrorAction SilentlyContinue | Select-Object -First 20 FullName; echo \\\"---pack---\\\"; Get-ChildItem .\\\\workspace\\\\.git\\\\objects\\\\pack -ErrorAction SilentlyContinue | Select-Object FullName, Length\"}",
+      "tsMs": 1788777038733
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/marginApiClient.js\"}",
+      "tsMs": 1788777038743
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$bytes = [System.IO.File]::ReadAllBytes('<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\index');\\n$sig = [System.Text.Encoding]::ASCII.GetString($bytes,0,4);\\n$ver = [BitConverter]::ToUInt32([byte[]]@($bytes[4],$bytes[5],$bytes[6],$bytes[7]),0)  # little-endian\\n$count = [BitConverter]::ToUInt32([byte[]]@($bytes[8],$bytes[9],$bytes[10],$bytes[11]),0)\\nWrite-Output \\\"sig=$sig ver=$ver count=$count totalLen=$($bytes.Length)\\\"\\n$pos = 12\\nfor ($i=0; $i -lt $count; $i++) {\\n  if ($pos + 62 -gt $bytes.Length) { Write-Output \\\"overflow at entry $i\\\"; break }\\n  $flags = [int]$bytes[$pos+60]*256 + [int]$bytes[$pos+61]\\n  $nameLen = $flags -band 0x0FFF\\n  $ext = ($flags -band 0x4000) -ne 0\\n  $nameStart = $pos + 62\\n  if ($ext) { $nameStart = $pos + 62 } # extended flag: entry has extra 2-byte fields, but we just parse path by NUL\\n  # find NUL terminator from nameStart\\n  $end = $nameStart\\n  while ($end -lt $bytes.Length -and $bytes[$end] -ne 0) { $end++ }\\n  $name = [System.Text.Encoding]::UTF8.GetString($bytes, $nameStart, $end - $nameStart)\\n  $entryLen = $nameStart - $pos + $nameLen\\n  # actual on-disk entry size rounded to multiple of 8, based on name length not counting NUL... easier: advance past entry\\n  # entry total = 62 + nameLen + padding to multiple of 8 (if not ext) OR name is nul-terminated with ext\\n  # Standard: size = (62 + nameLen + 8) & ~7 for v2/v3? Let's compute skip: next entry aligned to 8.\\n  $pos = $pos + 62 + $nameLen\\n  $pos = ($pos + 7) -band -8\\n  if ($name -match 'handoff|SessionDetail|margin|resume') { Write-Output \\\"$i $name\\\" }\\n}\"}",
+      "tsMs": 1788777048903
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$path='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\index';\\n$b=[System.IO.File]::ReadAllBytes($path);\\nfunction BE32($o){ return ([int]$b[$o] -shl 24) -bor ([int]$b[$o+1] -shl 16) -bor ([int]$b[$o+2] -shl 8) -bor [int]$b[$o+3]; }\\nfunction BE16($o){ return ([int]$b[$o] -shl 8) -bor [int]$b[$o+1]; }\\n$ver=BE32 4; $count=BE32 8;\\nWrite-Output \\\"ver=$ver count=$count total=$($b.Length)\\\";\\n$pos=12; $found=0;\\nfor($i=0;$i -lt $count;$i++){\\n  if($pos+62 -gt $b.Length){Write-Output \\\"overflow $i\\\";break}\\n  $flags=BE16 ($pos+60)\\n  $nameLen=$flags -band 0xFFF\\n  $ext=(($flags -band 0x4000) -ne 0)\\n  $nameStart=$pos+62\\n  $end=$nameStart\\n  while($end -lt $b.Length -and $b[$end] -ne 0){$end++}\\n  $name=[System.Text.Encoding]::UTF8.GetString($b,$nameStart,$end-$nameStart)\\n  # advance: entry size is 62 + pathname length (up to NUL, and if ext there are 2 extra bytes before path? Actually ext flag adds 2 bytes after flags). Handle ext:\\n  $skip=$pos+62\\n  if($ext){$skip=$pos+64}\\n  $skip=$skip+$nameLen\\n  $skip=($skip+7) -band -8\\n  if($skip -le $pos){$skip=$pos+62+$nameLen+8}\\n  $pos=$skip\\n  if($name -match 'handoff|SessionDetail|margin|resume|cli'){Write-Output \\\"$i  $name\\\"; $found++}\\n}\\nWrite-Output \\\"matched=$found  endPos=$pos\\\"\"}",
+      "tsMs": 1788777055268
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$path='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\index';\\n$b=[System.IO.File]::ReadAllBytes($path);\\nfunction BE16($o){ return ([int]$b[$o] -shl 8) -bor [int]$b[$o+1]; }\\nfunction BE32($o){ return ([int]$b[$o] -shl 24) -bor ([int]$b[$o+1] -shl 16) -bor ([int]$b[$o+2] -shl 8) -bor [int]$b[$o+3]; }\\n$count=BE32 8;\\n$pos=12;\\nfor($i=0;$i -lt [Math]::Min(6,$count);$i++){\\n  $flags=BE16 ($pos+60); $nameLen=$flags -band 0xFFF; $ext=(($flags -band 0x4000) -ne 0)\\n  $fixedEnd=$pos+62; if($ext){$fixedEnd=$pos+64}\\n  $name=[System.Text.Encoding]::UTF8.GetString($b,$fixedEnd,$nameLen)\\n  $size=$fixedEnd-$pos+$nameLen\\n  $size=(($size+7) -band -8)\\n  Write-Output \\\"i=$i flags=0x$('{0:x4}' -f $flags) nameLen=$nameLen ext=$ext entrySize=$size name=$name\\\"\\n  $pos=$pos+$size\\n}\"}",
+      "tsMs": 1788777060988
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$path='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\index';\\n$b=[System.IO.File]::ReadAllBytes($path);\\n$txt=[System.Text.Encoding]::UTF8.GetString($b);\\nforeach($s in @('resume-summary.js','resumeSummary.test.js','SessionDetail.js','marginSessionDetail.test.js','marginSurfaceHttpAdapter.test.js','marginCli.test.js','cli/margin','workspace-overview.js','src/core/handoff')){\\n  $idx=$txt.IndexOf($s)\\n  Write-Output \\\"$s -> index=$idx\\\"\\n}\"}",
+      "tsMs": 1788777091460
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/resumeSummary.test.js\"}",
+      "tsMs": 1788777100197
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginSessionDetail.test.js\"}",
+      "tsMs": 1788777100198
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/web\"}",
+      "tsMs": 1788777100198
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/web/src/margin\"}",
+      "tsMs": 1788777100198
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginSurfaceHttpAdapter.test.js\"}",
+      "tsMs": 1788777103778
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/MarginApp.js\"}",
+      "tsMs": 1788777103778
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"SessionDetail|RecentSessionsList|createMarginApiClient|saveToWorkspace|generateHandoff\",\"path\":\"workspace/web/src\",\"maxResults\":80}",
+      "tsMs": 1788777106473
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\"}",
+      "tsMs": 1788777106479
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":60,\"path\":\"workspace\",\"pattern\":\"from ['\\\"].*SessionDetail['\\\"]|import\\\\(['\\\"].*SessionDetail|SessionDetail[,}]\"}",
+      "tsMs": 1788777110255
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/RecentSessionsList.js\"}",
+      "tsMs": 1788777110374
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":60,\"path\":\"workspace/web\",\"pattern\":\"RecentSessionsList|marginShell|createRoot|margin.html|index.html\"}",
+      "tsMs": 1788777112846
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/main.jsx\"}",
+      "tsMs": 1788777112852
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":60,\"path\":\"workspace\",\"pattern\":\"RecentSessionsList|\\\\.margin-session-card|SessionBoard'|main\\\\.jsx|margin/main\"}",
+      "tsMs": 1788777114710
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/margin.html\"}",
+      "tsMs": 1788777114818
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/index.html\"}",
+      "tsMs": 1788777114818
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/test\"}",
+      "tsMs": 1788777126761
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/cli/margin/runMarginCli.js\"}",
+      "tsMs": 1788777126762
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/cli/margin/render.js\"}",
+      "tsMs": 1788777126762
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":80,\"path\":\"workspace/src\",\"pattern\":\"SessionDetail|RecentSessionsList|margin\\\\.html|SessionBoard|generateHandoff|resumeSummary\"}",
+      "tsMs": 1788777131211
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src/web\"}",
+      "tsMs": 1788777131237
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/electron\"}",
+      "tsMs": 1788777131237
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$path='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\index';\\n$b=[System.IO.File]::ReadAllBytes($path);\\n$txt=[System.Text.Encoding]::UTF8.GetString($b);\\nfunction sha1hex($data){\\n  $sha=[System.Security.Cryptography.SHA1]::Create()\\n  $h=$sha.ComputeHash($data)\\n  return (($h | ForEach-Object { $_.ToString('x2') }) -join '')\\n}\\nfunction blobSha($file){\\n  $content=[System.IO.File]::ReadAllBytes($file)\\n  $header=[System.Text.Encoding]::ASCII.GetBytes(\\\"blob $($content.Length)`0\\\")\\n  $all=New-Object byte[] ($header.Length + $content.Length)\\n  [Array]::Copy($header,0,$all,0,$header.Length); [Array]::Copy($content,0,$all,$header.Length,$content.Length)\\n  return sha1hex $all\\n}\\nforeach($p in @('src/core/handoff/resume-summary.js','src/core/handoff/index.js','src/core/handoff/httpAdapter.js','web/src/margin/SessionDetail.js','web/src/margin/marginApiClient.js','test/resumeSummary.test.js','test/marginSessionDetail.test.js','test/marginSurfaceHttpAdapter.test.js')){\\n  $pos=$txt.IndexOf($p)\\n  if($pos -lt 0){ Write-Output \\\"$p NOT IN INDEX\\\"; continue }\\n  $entryStart=$pos-$p.Length\\n  $idxSha=($b[$entryStart+40..($entryStart+59)] | ForEach-Object { $_.ToString('x2') }) -join ''\\n  $work=\\\"<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\$($p -replace '/','\\\\')\\\"\\n  $workSha=blobSha $work\\n  $match= if($idxSha -eq $workSha){'MATCH'}else{'DIFFERS'}\\n  Write-Output \\\"$p indexSha=$idxSha\\\"\\n  Write-Output \\\"     workSha =$workSha  $match\\\"\\n}\"}",
+      "tsMs": 1788777137942
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$path='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\index';\\n$b=[System.IO.File]::ReadAllBytes($path);\\n$txt=[System.Text.Encoding]::UTF8.GetString($b);\\nfunction sha1hex($data){ $sha=[System.Security.Cryptography.SHA1]::Create(); $h=$sha.ComputeHash($data); return (($h | ForEach-Object { $_.ToString('x2') }) -join '') }\\nfunction blobSha($file){\\n  $content=[System.IO.File]::ReadAllBytes($file)\\n  $header=[System.Text.Encoding]::ASCII.GetBytes(\\\"blob $($content.Length)`0\\\")\\n  $all=New-Object byte[] ($header.Length + $content.Length)\\n  [Array]::Copy($header,0,$all,0,$header.Length); [Array]::Copy($content,0,$all,$header.Length,$content.Length)\\n  return sha1hex $all\\n}\\nforeach($p in @('src/core/handoff/resume-summary.js','src/core/handoff/index.js','src/core/handoff/httpAdapter.js','web/src/margin/SessionDetail.js','web/src/margin/marginApiClient.js','test/resumeSummary.test.js','test/marginSessionDetail.test.js','test/marginSurfaceHttpAdapter.test.js','src/core/handoff/workspace-overview.js','src/cli/margin/runMarginCli.js')){\\n  $pos=$txt.IndexOf($p)\\n  if($pos -lt 0){ Write-Output \\\"$p NOT IN INDEX\\\"; continue }\\n  $entryStart=$pos-$p.Length\\n  $o1=$entryStart+40; $o2=$entryStart+59\\n  $bytes=New-Object byte[] 20\\n  [Array]::Copy($b,$o1,$bytes,0,20)\\n  $idxSha=(($bytes | ForEach-Object { $_.ToString('x2') }) -join '')\\n  $work=\\\"<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\$($p -replace '/','\\\\')\\\"\\n  $workSha=blobSha $work\\n  $match= if($idxSha -eq $workSha){'MATCH(worktree==index)'}else{'DIFFERS(worktree!=index)'}\\n  Write-Output \\\"$p  $match\\\"\\n  Write-Output \\\"   index=$idxSha\\\"\\n  Write-Output \\\"   work =$workSha\\\"\\n}\"}",
+      "tsMs": 1788777146809
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$root='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\objects';\\n$hash='a247e75ab9e78cce7853e3f281b85459a4f25e7c';\\n$loose=Join-Path $root ($hash.Substring(0,2)+'\\\\'+$hash.Substring(2))\\nWrite-Output \\\"looseExists=$(Test-Path $loose)\\\"\\n$hash2='7e11e05db64f16f9613e7ef168475b6903d77596'\\n$loose2=Join-Path $root ($hash2.Substring(0,2)+'\\\\'+$hash2.Substring(2))\\nWrite-Output \\\"blobLooseExists=$(Test-Path $loose2)\\\"\\nGet-ChildItem (Join-Path $root 'a2') -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788777164081
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/docs\",\"pattern\":\"Slice 3\\\\.2|Resume-first|resume-first|3\\\\.2 —\"}",
+      "tsMs": 1788777175560
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/.superpowers\",\"pattern\":\"Slice 3\\\\.2|Resume-first|3\\\\.2\"}",
+      "tsMs": 1788777175572
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/scripts/run-margin-surface.js\"}",
+      "tsMs": 1788777175583
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace/web/src/margin/margin.css\",\"pattern\":\"margin-resume-summary|margin-summary-section|margin-handoff|margin-primary-action|margin-full-checkpoint|margin-link-button|Preparing fresh\"}",
+      "tsMs": 1788777178367
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace/electron\",\"pattern\":\"margin|loadFile|loadURL|web/\"}",
+      "tsMs": 1788777178367
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse .\\\\workspace\\\\web\\\\src -File | Select-Object -ExpandProperty FullName; echo \\\"---css classes---\\\"; Select-String -Path .\\\\workspace\\\\web\\\\src\\\\margin\\\\margin.css -Pattern 'summary|handoff|checkpoint' | Select-Object -First 30 LineNumber, Line\"}",
+      "tsMs": 1788777185190
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace\",\"pattern\":\"selectedId|onSelect\"}",
+      "tsMs": 1788777185197
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/distiller.js\",\"limitChars\":30000}",
+      "tsMs": 1788777201937
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/marginR3Board.test.js\",\"limitChars\":4000}",
+      "tsMs": 1788777216681
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/createMarginSurface.js\"}",
+      "tsMs": 1788777216681
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$root='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\objects';\\nfunction Read-Object($hash){\\n  $p=Join-Path $root ($hash.Substring(0,2)+'\\\\'+$hash.Substring(2))\\n  $raw=[System.IO.File]::ReadAllBytes($p)\\n  # git loose objects: zlib stream. skip 2-byte header; inflate rest (ignore adler32)\\n  $ms=New-Object System.IO.MemoryStream(,$raw[2..($raw.Length-1)])\\n  $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress)\\n  $sr=New-Object System.IO.StreamReader($ds)\\n  $text=$sr.ReadToEnd()\\n  $sr.Close(); $ds.Close(); $ms.Close()\\n  return $text\\n}\\n$commit=Read-Object 'a247e75ab9e78cce7853e3f281b85459a4f25e7c'\\nWrite-Output $commit\"}",
+      "tsMs": 1788777233347
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$root='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\objects';\\nfunction Read-Object($hash){\\n  $p=Join-Path $root ($hash.Substring(0,2)+'\\\\'+$hash.Substring(2))\\n  if(-not (Test-Path $p)){ return $null }\\n  $raw=[System.IO.File]::ReadAllBytes($p)\\n  $ms=New-Object System.IO.MemoryStream(,$raw[2..($raw.Length-1)])\\n  $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress)\\n  $out=New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  $bytes=$out.ToArray()\\n  $ds.Close(); $ms.Close(); $out.Close()\\n  # find NUL (header end)\\n  $nul=-1; for($i=0;$i -lt $bytes.Length;$i++){ if($bytes[$i] -eq 0){$nul=$i;break} }\\n  $header=[System.Text.Encoding]::ASCII.GetString($bytes,0,$nul)\\n  $body=New-Object byte[] ($bytes.Length-$nul-1)\\n  [Array]::Copy($bytes,$nul+1,$body,0,$body.Length)\\n  return @{ header=$header; body=$body }\\n}\\nfunction WalkTree($treeHash,$prefix,$targetParts,$depth){\\n  $o=Read-Object $treeHash\\n  if($null -eq $o){ return \\\"PACKED:$treeHash\\\" }\\n  $body=$o.body\\n  $entries=@()\\n  $i=0\\n  while($i -lt $body.Length){\\n    $sp=-1; for($j=$i;$j -lt $body.Length;$j++){ if($body[$j] -eq 32){$sp=$j;break} }\\n    if($sp -lt 0){break}\\n    $mode=[System.Text.Encoding]::ASCII.GetString($body,$i,$sp-$i)\\n    $nul=-1; for($j=$sp+1;$j -lt $body.Length;$j++){ if($body[$j] -eq 0){$nul=$j;break} }\\n    $name=[System.Text.Encoding]::UTF8.GetString($body,$sp+1,$nul-$sp-1)\\n    $shaBytes=New-Object byte[] 20\\n    [Array]::Copy($body,$nul+1,$shaBytes,0,20)\\n    $sha=(($shaBytes|ForEach-Object{$_.ToString('x2')}) -join '')\\n    $entries += [pscustomobject]@{mode=$mode;name=$name;sha=$sha}\\n    $i=$nul+21\\n  }\\n  $part=$targetParts[$depth]\\n  $found=$entries | Where-Object { $_.name -eq $part }\\n  if(-not $found){ return \\\"ABSENT:$prefix$part\\\" }\\n  if($depth -eq $targetParts.Length-1){ return \\\"PRESENT@HEAD:$prefix$part mode=$($found.mode)\\\" }\\n  $nextPrefix=\\\"$pref",
+      "tsMs": 1788777240943
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$root='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\objects';\\nfunction Read-Object($hash){\\n  $p=Join-Path $root ($hash.Substring(0,2)+'\\\\'+$hash.Substring(2))\\n  if(-not (Test-Path $p)){ return $null }\\n  $raw=[System.IO.File]::ReadAllBytes($p)\\n  $ms=New-Object System.IO.MemoryStream(,$raw[2..($raw.Length-1)])\\n  $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress)\\n  $out=New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  $bytes=$out.ToArray()\\n  $ds.Close(); $ms.Close(); $out.Close()\\n  $nul=-1; for($i=0;$i -lt $bytes.Length;$i++){ if($bytes[$i] -eq 0){$nul=$i;break} }\\n  $header=[System.Text.Encoding]::ASCII.GetString($bytes,0,$nul)\\n  $body=New-Object byte[] ($bytes.Length-$nul-1)\\n  [Array]::Copy($bytes,$nul+1,$body,0,$body.Length)\\n  return @{ header=$header; body=$body }\\n}\\nfunction FindEntry($treeHash,$name){\\n  $o=Read-Object $treeHash\\n  if($null -eq $o){ return $null }\\n  $body=$o.body; $i=0\\n  while($i -lt $body.Length){\\n    $sp=-1; for($j=$i;$j -lt $body.Length;$j++){ if($body[$j] -eq 32){$sp=$j;break} }\\n    if($sp -lt 0){break}\\n    $mode=[System.Text.Encoding]::ASCII.GetString($body,$i,$sp-$i)\\n    $nul=-1; for($j=$sp+1;$j -lt $body.Length;$j++){ if($body[$j] -eq 0){$nul=$j;break} }\\n    $entryName=[System.Text.Encoding]::UTF8.GetString($body,$sp+1,$nul-$sp-1)\\n    $shaBytes=New-Object byte[] 20\\n    [Array]::Copy($body,$nul+1,$shaBytes,0,20)\\n    $sha=(($shaBytes|ForEach-Object{$_.ToString('x2')}) -join '')\\n    if($entryName -eq $name){ return @{mode=$mode;sha=$sha} }\\n    $i=$nul+21\\n  }\\n  return $null\\n}\\nfunction BlobAtHead($pathParts){\\n  $tree='f08f297a426fd51ea9bf21c89ac88822fb84bd7d'\\n  for($d=0;$d -lt $pathParts.Length;$d++){\\n    $e=FindEntry $tree $pathParts[$d]\\n    if($null -eq $e){ return '?not-found' }\\n    if($d -eq $pathParts.Length-1){ return $e.sha }\\n    $tree=$e.sha\\n  }\\n}\\n$map=@{\\n 'src/core/handoff/",
+      "tsMs": 1788777253643
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$root='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\objects';\\nfunction Read-Blob($hash){\\n  $p=Join-Path $root ($hash.Substring(0,2)+'\\\\'+$hash.Substring(2))\\n  if(-not (Test-Path $p)){ return \\\"(packed $hash)\\\" }\\n  $raw=[System.IO.File]::ReadAllBytes($p)\\n  $ms=New-Object System.IO.MemoryStream(,$raw[2..($raw.Length-1)])\\n  $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress)\\n  $out=New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  $bytes=$out.ToArray()\\n  $ds.Close(); $ms.Close(); $out.Close()\\n  $nul=-1; for($i=0;$i -lt $bytes.Length;$i++){ if($bytes[$i] -eq 0){$nul=$i;break} }\\n  return [System.Text.Encoding]::UTF8.GetString($bytes,$nul+1,$bytes.Length-$nul-1)\\n}\\n$headHttp=Read-Blob '3fb6864c54afc1001f87630599eb87db117e34a9'\\n$workHttp=Get-Content -Raw '<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\src\\\\core\\\\handoff\\\\httpAdapter.js'\\n# unified-ish: find lines involving resumeSummary / handoff/save / MAX_MARKDOWN\\nWrite-Output \\\"=== HEAD httpAdapter: generate/save region ===\\\"\\n($headHttp -split \\\"`n\\\") | Select-String -Pattern 'resumeSummary|handoff/generate|handoff/save|MAX_MARKDOWN|markdown, resumeSummary|ok\\\\(\\\\{ markdown' | ForEach-Object { $_.Line }\\nWrite-Output \\\"=== lines only in worktree or differing (simple diff via Compare) ===\\\"\\n$hLines = ($headHttp -split \\\"`n\\\")\\n$wLines = ($workHttp -split \\\"`n\\\")\\nWrite-Output \\\"HEAD len=$($hLines.Length) WORK len=$($wLines.Length)\\\"\"}",
+      "tsMs": 1788777259743
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$root='<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\.git\\\\objects';\\nfunction Read-Blob($hash){\\n  $p=Join-Path $root ($hash.Substring(0,2)+'\\\\'+$hash.Substring(2))\\n  $raw=[System.IO.File]::ReadAllBytes($p)\\n  $ms=New-Object System.IO.MemoryStream(,$raw[2..($raw.Length-1)])\\n  $ds=New-Object System.IO.Compression.DeflateStream($ms,[System.IO.Compression.CompressionMode]::Decompress)\\n  $out=New-Object System.IO.MemoryStream\\n  $ds.CopyTo($out)\\n  $bytes=$out.ToArray()\\n  $ds.Close(); $ms.Close(); $out.Close()\\n  $nul=-1; for($i=0;$i -lt $bytes.Length;$i++){ if($bytes[$i] -eq 0){$nul=$i;break} }\\n  return [System.Text.Encoding]::UTF8.GetString($bytes,$nul+1,$bytes.Length-$nul-1)\\n}\\n$h=(Read-Blob '3fb6864c54afc1001f87630599eb87db117e34a9') -split \\\"`n\\\"\\n$w=(Get-Content -Raw '<repo>-bench\\\\ab-continuation\\\\sandboxes-r7full\\\\formal-case-07-B\\\\workspace\\\\src\\\\core\\\\handoff\\\\httpAdapter.js') -split \\\"`n\\\"\\nWrite-Output \\\"===== DIFF (worktree vs HEAD); lines prefixed < are HEAD-only, > are worktree-added =====\\\"\\nCompare-Object -ReferenceObject $h -DifferenceObject $w -PassThru | Select-Object -First 120 | ForEach-Object { $side = if ($_.SideIndicator -eq '=>'){'> '}else{'< '}; Write-Output ($side + $_) }\"}",
+      "tsMs": 1788777264869
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/margin.css\"}",
+      "tsMs": 1788777284978
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Recurse .\\\\workspace\\\\docs\\\\validation -ErrorAction SilentlyContinue | Select-Object -First 40 FullName; echo \\\"---\\\"; Get-ChildItem .\\\\workspace\\\\data -Recurse -ErrorAction SilentlyContinue | Select-Object -First 20 FullName\"}",
+      "tsMs": 1788777295042
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$all = Get-ChildItem -Path .\\\\workspace -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\\\\\.git\\\\\\\\' }\\nWrite-Output \\\"worktreeFiles=$($all.Count)\\\"\\n$dirs = Get-ChildItem -Path .\\\\workspace -Directory -Force -ErrorAction SilentlyContinue\\nWrite-Output \\\"topDirs:\\\"; $dirs | ForEach-Object { $_.Name }\\n# check a few common untracked-candidate locations\\nforeach($d in @('web\\\\dist','data','docs\\\\validation','handoff-output')){ Write-Output \\\"$d exists=$(Test-Path (Join-Path '.\\\\workspace' $d))\\\" }\"}",
+      "tsMs": 1788777309151
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":30,\"path\":\"workspace/test/handoff.test.js\",\"pattern\":\"resumeSummary|projectResumeSummary|resume\"}",
+      "tsMs": 1788777344671
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/cli/margin/index.js\"}",
+      "tsMs": 1788777344671
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Get-ChildItem -Recurse .\\workspace\\docs\\validation -ErrorAction SilentlyContinue | Select-Object -First 40 FullName; echo \"---\"; Get-ChildItem .\\workspace\\data -Recurse -ErrorAction SilentlyContinue | Select-Object -First 20 FullName",
+      "reasons": [
+        "protected path fragment is disabled: \\docs\\validation"
+      ],
+      "tsMs": 1788777295042
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 385441,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-07",
+    "arm": "B",
+    "runId": "formal-case-07-B-2026-09-07T10-29-35-385Z",
+    "startMs": "2026-09-07T10:29:44.268Z",
+    "endMs": "2026-09-07T10:36:11.449Z",
+    "durationMs": 387181,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-07-B-2026-09-07T10-29-35-385Z status=ok durationMs=385441\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-07-B-2026-09-07T10-29-35-385Z.cert.json"
+  }
+}

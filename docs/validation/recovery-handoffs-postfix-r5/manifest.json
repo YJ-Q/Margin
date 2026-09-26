@@ -1,0 +1,90 @@
+{
+  "redaction": {
+    "appliedAt": "2026-09-26",
+    "scope": "machine paths in handoff outputs",
+    "note": "Handoff outputs were redacted before entering version control: home and repository paths were replaced with placeholders, and the hashes below attest the redacted artifacts. Source session inputs were not modified and are not tracked."
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "method": "Postfix outputs were generated through capture → evidence → repo truth → distill → handoff from retained native sessions. Semantic comparison remains a human review against the frozen ground truth; no benchmark-specific extraction rules are used.",
+  "frozenInputs": {
+    "baselineManifest": "docs/validation/recovery-handoffs/manifest.json",
+    "groundTruth": "docs/validation/recovery-benchmark-ground-truth.json",
+    "groundTruthSha256": "5485df6544dc6544b9cb3348b1cedfd65b67e497b394b35b6ed03d6de178d328",
+    "baselineCaseCount": 12,
+    "groundTruthCaseCount": 12
+  },
+  "cases": [
+    {
+      "case": "case-02",
+      "sessionId": "01a074ec-9f30-7c62-bb5f-257091ef242a",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T12-14-19-01a074ec-9f30-7c62-bb5f-257091ef242a.jsonl",
+      "sourceBytes": 899546,
+      "sourceSha256": "cee475775fdb647f3650306c43c12f7026721769b637b6f5651a2b5f0f386c96",
+      "handoff": "docs/validation/recovery-handoffs-postfix-r5/case-02.md",
+      "handoffBytes": 6904,
+      "handoffSha256": "67b8a68e95fd5fa548a8af15e115925229fafdb0a2b8368d63e19bfe93c15cea",
+      "reductionPct": 99.23250172864978
+    },
+    {
+      "case": "case-04",
+      "sessionId": "01a07639-d0ef-7452-a987-af0de51b29e3",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T18-18-15-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl",
+      "sourceBytes": 3271291,
+      "sourceSha256": "a79da02da100ee86ca5d7c5b2e4834865f8f6bda6b881d225354a112b36be408",
+      "handoff": "docs/validation/recovery-handoffs-postfix-r5/case-04.md",
+      "handoffBytes": 5145,
+      "handoffSha256": "abcf9dbf89e0c8890b97cafe68686a00fed9e0028312e9f76d584daa0f9d14eb",
+      "reductionPct": 99.84272264375134
+    },
+    {
+      "case": "case-05",
+      "sessionId": "01a07786-adf5-77a3-91ba-e4a75ceda7e7",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-07T00-21-50-01a07786-adf5-77a3-91ba-e4a75ceda7e7.jsonl",
+      "sourceBytes": 3957580,
+      "sourceSha256": "0787744584fe6f29bc428a725d387d582eaa7297679d4d41ceb23754a24d9408",
+      "handoff": "docs/validation/recovery-handoffs-postfix-r5/case-05.md",
+      "handoffBytes": 6787,
+      "handoffSha256": "8519134f4c840a4edd7a0f079e8ee8bb00b19790f88b1b751c511bcb0f445524",
+      "reductionPct": 99.8285063094113
+    },
+    {
+      "case": "case-08",
+      "sessionId": "01a0763e-bfe9-77f1-b669-900b837d2754",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T18-23-39-01a0763e-bfe9-77f1-b669-900b837d2754.jsonl",
+      "sourceBytes": 1799202,
+      "sourceSha256": "c1d19296db2704a7f9e79b8d4cde6cb06bed6f206fd41c6ab4e0e94c1f14c56f",
+      "handoff": "docs/validation/recovery-handoffs-postfix-r5/case-08.md",
+      "handoffBytes": 6382,
+      "handoffSha256": "d90cbb43ec537fc0517ed703e74c7b4092fb5a527c746389bcc4c11a27f58a25",
+      "reductionPct": 99.64528718843133
+    },
+    {
+      "case": "case-11",
+      "sessionId": "01a076e8-fe17-7430-b1c4-b32715a65fe8",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T21-29-36-01a076e8-fe17-7430-b1c4-b32715a65fe8.jsonl",
+      "sourceBytes": 2215417,
+      "sourceSha256": "63cdb8e06094ba0e4ee944988fe30a13a1303f8dd04c5c61b386de6bdda96ef3",
+      "handoff": "docs/validation/recovery-handoffs-postfix-r5/case-11.md",
+      "handoffBytes": 6768,
+      "handoffSha256": "135917530e0570fde0c0accc210f965522a34b9f73980b92ad94170a394495f2",
+      "reductionPct": 99.69450446575068
+    }
+  ],
+  "statistics": {
+    "sourceBytes": {
+      "median": 2215417,
+      "mean": 2428607.2
+    },
+    "handoffBytes": {
+      "median": 6768,
+      "mean": 6397.2
+    },
+    "reductionPct": {
+      "median": 99.69450446575068,
+      "mean": 99.64870446719888,
+      "min": 99.23250172864978,
+      "max": 99.84272264375134
+    }
+  }
+}

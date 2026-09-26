@@ -1,0 +1,269 @@
+{
+  "runId": "formal-case-12-A-2026-09-07T11-30-48-279Z",
+  "caseId": "case-12",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T11:30:59.443Z",
+  "endTs": "2026-09-07T11:37:31.098Z",
+  "durationMs": 391655,
+  "modelPromptStartMs": 56,
+  "modelPromptEndMs": 391654,
+  "sessionId": "01a07ba2-c329-762d-ab3e-916ff2eb88dc",
+  "rawResponse": "Based on my investigation, here is the recovered development-state summary.\n\n```json\n{\n  \"goal\": \"Margin V2 UI R3.3 (from the sole user brief in the recovery artifact, session.jsonl line 8): stabilize the Electron floating window (<repo>, mirrored by this workspace) so it keeps a single-row responsive layout at different widths and add: (1) right-side window controls (Quit/Hide/Pin with tooltips, always-on-top sync with the Tray), (2) refresh so newly opened real Codex sessions appear (expand refresh, window-focus refresh, ~30s refresh only while expanded), (3) Save-path feedback with real filesystem verification (must confirm the exact .margin/HANDOFF.md write before reporting success), (4) a first minimal in-board Settings view (Display workspace/session summary toggle default OFF; Window always-on-top synced with Pin; Feedback Save confirmation Full path vs Compact), persisted with lightweight localStorage only, (5) responsive single-line Session rows (fixed right slot, time always right, hover Copy/Save overlay without layout shift, title ellipsis, mode-specific context), and (6) a window-level global toast (single slot, replaces previous content, ellipsis-safe, not clipped/overlapping). Explicitly out of scope: real Token Usage source (continue 'Today —'/'Codex —' unavailable states), search, tags, Live Agent Monitor, complex settings, and new visual rework. Required output was a PASS/PARTIAL statement, before/after screenshots, real-Electron validation, tests/build, remaining-issues list, files changed; the run ended with 'PASS - R3.3 ready for continued daily-use.' and task_complete.\",\n  \"progress\": \"HISTORICAL (session.jsonl, 2026-09-06 15:58:13Z-16:12:40Z): the agent implemented the full R3.3 scope and self-reported PASS: responsive usage bar/control dock in web/src/margin/SessionBoard.js+margin.css; Quit/Hide/Pin IPC in electron/main.js and electron/preload.cjs; Settings view + localStorage persistence (key margin.r3.settings, defaults {showSummary:false, saveConfirmation:'full'}) in MarginApp.js/SessionBoard.js; save route verification in src/core/handoff/httpAdapter.js (POST /api/handoff/save now re-reads the written file); single-row session rows with fixed right slot; window-level toast; new scripts/capture-r33-electron.cjs with docs/validation/r3.3/*.png (01-collapsed..08-narrow, all present); test/electronHost.test.js extended. CURRENT REPO TRUTH (this workspace, directly inspected; git/node are NOT available in this sandbox): HEAD is a247e75a 'docs: record V2 resource bar daily-use baseline' (reflog timestamp 2026-09-06 ~17:44Z). The working tree contains the R3.3 artifacts listed above, BUT file mtimes show the tree was modified substantially AFTER the transcript ended (e.g., margin.css ~17:15Z, MarginApp.js/marginApiClient.js/httpAdapter.js ~18:16Z, SessionBoard.js ~18:18Z on 09-06; distiller/handoff/evidence/exec.js ~09-07 04:42-04:47Z; .git and data/ ~09-07 05:42Z). The current tree therefore includes LATER work not in the transcript: httpAdapter.js gained GET /api/resources/status and /api/agent-sources CRUD/detect routes; marginApiClient.js gained getResourceStatus/listAgentSources/detect/add/remove; SessionBoard Settings now includes an 'Agent Sources' management section and an EmptySources flow; UsageBar now renders real Codex/Claude resource usage (fetched /api/resources/status) instead of the R3.3 'Today -/Codex -' text and does not visibly use the showSummary setting; tests agentSourceRegistry.test.js and agentResourceQuota.test.js exist; the handoff core (evidence.js, distiller.js, handoff.js, repo-truth.js, exec.js) evolved into the full generateHandoff pipeline exported by src/core/handoff/index.js. So the tree is NOT a faithful R3.3 end-state snapshot; it reflects one or more later slices.\",\n  \"pending\": \"Within the R3.3 scope there is no documented outstanding item: the historical run's final message states no remaining UX issues within R3.3 scope and the artifact ends with task_complete. Items R3.3 explicitly deferred (real usage-source research, search, tags, Live Agent Monitor, complex settings) were not to be done in that round. In the current repo the real usage/agent-source/resource-status and handoff-core work already present on disk suggests later slices were started/completed, but NO transcript, user instruction, or HANDOFF for those later slices is included in this environment, so what (if anything) is currently unfinished is UNKNOWN from this artifact. Note also: web/dist, node_modules, .runtime (the pinned node used by package.json scripts) and the real-repo smoke artifact .margin/HANDOFF.md are absent from this sandbox.\",\n  \"historicalValidation\": \"Historical only, from the transcript (not reproducible here; no node_modules/.runtime/node or git in the sandbox, and the current tree differs from the session's files): final focused run '.\\\\\\\\.runtime\\\\\\\\node-v22.23.1-win-x64\\\\\\\\node.exe --test test/marginR3Board.test.js test/electronHost.test.js test/marginSurfaceHttpAdapter.test.js' reported tests 15 / pass 15 / fail 0; final CLI/discovery run (marginCli.test.js + marginDiscoveryParity.test.js) reported tests 13 / pass 13 / fail 0; 'npm run build' reported Vite 'built in 435ms'; 'git diff --check' passed; a real Electron smoke (scripts/validate-r33-electron.cjs, created then deleted) exercised expand/Pin/Hide/Show, responsive captures, and an actual save writing <repo>\\\\.margin\\\\HANDOFF.md (9,223 bytes) for session 01a07770.... IMPORTANT: an intermediate state in the same session (~16:05Z) had a broad 'npm test' showing 597 pass / 8 fail AND a Vite build parse error in SessionBoard.js; those were subsequently fixed within the session and the focused re-runs above passed. None of these numbers is independent current validation, and the transcript itself documents no final full-suite green run.\",\n  \"recommendedFollowUp\": \"Do not treat any single transcript claim as a current action. First re-establish ground truth in the target repo (the sandbox cannot do this: git, node, npm-run are unavailable and dependencies are absent): run git status/diff/log to map HEAD a247e75a against the working tree, since on-disk files (agent-sources, /api/resources/status, handoff-core pipeline) appear to postdate the R3.3 transcript and the commit baseline; confirm whether the R3.3 changes and later changes are committed or dirty. Then, against the repo's pinned runtime (.\\\\\\\\.runtime\\\\\\\\node-v22.23.1-win-x64\\\\\\\\node.exe), run the focused margin tests (marginR3Board/electronHost/marginSurfaceHttpAdapter, marginCli/marginDiscoveryParity, plus the later agentResourceQuota/agentSourceRegistry/handoff tests), npm run build, and git diff --check. Only after that, decide which slice is actually current: if the intended task is R3.3 it is already implemented and needs verification/commit rather than re-implementation; if the current work is the later usage-source/agent-sources/handoff slice (implied by files newer than the transcript), obtain its own brief/transcript because none is present here. No further action should be taken in this frozen, inspect-only sandbox.\",\n  \"currentApplicability\": \"Low as an executable spec. The R3.3 brief and the transcript's PASS apply to the milestone state as of 2026-09-06 16:12Z, but the current repository is not that state: files were modified for ~13 further hours (through ~09-07 05:42Z local) adding agent-source registry/management, a real resource-status endpoint/UI, and handoff-core pipeline changes that supersede parts of R3.3 (the 'no extra settings' and 'token usage stays unavailable' constraints no longer describe the current tree; UsageBar no longer implements the R3.3 'Today --'/summary display). Therefore 'continue R3.3' guidance and the final R3.3 report are stale for the on-disk code, and any assumption that current code == R3.3 final snapshot would mislead continuation. The only firmly current facts are the inspected file contents, git refs (HEAD a247e75a), and the transcript's historical content.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the workspace working tree equals the R3.3 session's final state - FALSE by file mtimes (post-session edits through 09-07 ~05:42Z) and by content (agent-sources/resources-status/UsageBar redesign not in the transcript's final state).\",\n    \"Assuming the historical '15 passed'/'13 passed'/'build passed' counts are current validation - not reproducible here and the tree has since changed.\",\n    \"Assuming the transcript's final 'PASS - no remaining UX issues' implies no further work exists - the repo demonstrably continued development after the transcript; what that later task was is unknown from this artifact.\",\n    \"Assuming git HEAD a247e75a cleanly represents the R3.3 baseline or that margin V2/R3.x work is committed - at R3.3 start the transcript's own 'git status --short' showed electron/, src/core/handoff/, src/cli/, web/src/margin/ etc. as untracked ('??') and legacy web/src/components/*.jsx as deleted, and git itself is unavailable in this sandbox to verify current commit-vs-working-tree state.\",\n    \"Assuming the environment's file mtimes are trustworthy modification times rather than artifacts of the copy process.\",\n    \"Assuming real Electron behavior (Pin/Tray sync, 30s refresh, toast, actual save) still works in the current tree - only the historical session exercised it.\",\n    \"Inferring that the next slice is 'implement real token usage source' merely because R3.3 deferred it; no user instruction for that slice exists in this artifact even though /api/resources/status now exists in the tree.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Margin V2 UI R3.3 (from the sole user brief in the recovery artifact, session.jsonl line 8): stabilize the Electron floating window (<repo>, mirrored by this workspace) so it keeps a single-row responsive layout at different widths and add: (1) right-side window controls (Quit/Hide/Pin with tooltips, always-on-top sync with the Tray), (2) refresh so newly opened real Codex sessions appear (expand refresh, window-focus refresh, ~30s refresh only while expanded), (3) Save-path feedback with real filesystem verification (must confirm the exact .margin/HANDOFF.md write before reporting success), (4) a first minimal in-board Settings view (Display workspace/session summary toggle default OFF; Window always-on-top synced with Pin; Feedback Save confirmation Full path vs Compact), persisted with lightweight localStorage only, (5) responsive single-line Session rows (fixed right slot, time always right, hover Copy/Save overlay without layout shift, title ellipsis, mode-specific context), and (6) a window-level global toast (single slot, replaces previous content, ellipsis-safe, not clipped/overlapping). Explicitly out of scope: real Token Usage source (continue 'Today —'/'Codex —' unavailable states), search, tags, Live Agent Monitor, complex settings, and new visual rework. Required output was a PASS/PARTIAL statement, before/after screenshots, real-Electron validation, tests/build, remaining-issues list, files changed; the run ended with 'PASS - R3.3 ready for continued daily-use.' and task_complete.",
+    "progress": "HISTORICAL (session.jsonl, 2026-09-06 15:58:13Z-16:12:40Z): the agent implemented the full R3.3 scope and self-reported PASS: responsive usage bar/control dock in web/src/margin/SessionBoard.js+margin.css; Quit/Hide/Pin IPC in electron/main.js and electron/preload.cjs; Settings view + localStorage persistence (key margin.r3.settings, defaults {showSummary:false, saveConfirmation:'full'}) in MarginApp.js/SessionBoard.js; save route verification in src/core/handoff/httpAdapter.js (POST /api/handoff/save now re-reads the written file); single-row session rows with fixed right slot; window-level toast; new scripts/capture-r33-electron.cjs with docs/validation/r3.3/*.png (01-collapsed..08-narrow, all present); test/electronHost.test.js extended. CURRENT REPO TRUTH (this workspace, directly inspected; git/node are NOT available in this sandbox): HEAD is a247e75a 'docs: record V2 resource bar daily-use baseline' (reflog timestamp 2026-09-06 ~17:44Z). The working tree contains the R3.3 artifacts listed above, BUT file mtimes show the tree was modified substantially AFTER the transcript ended (e.g., margin.css ~17:15Z, MarginApp.js/marginApiClient.js/httpAdapter.js ~18:16Z, SessionBoard.js ~18:18Z on 09-06; distiller/handoff/evidence/exec.js ~09-07 04:42-04:47Z; .git and data/ ~09-07 05:42Z). The current tree therefore includes LATER work not in the transcript: httpAdapter.js gained GET /api/resources/status and /api/agent-sources CRUD/detect routes; marginApiClient.js gained getResourceStatus/listAgentSources/detect/add/remove; SessionBoard Settings now includes an 'Agent Sources' management section and an EmptySources flow; UsageBar now renders real Codex/Claude resource usage (fetched /api/resources/status) instead of the R3.3 'Today -/Codex -' text and does not visibly use the showSummary setting; tests agentSourceRegistry.test.js and agentResourceQuota.test.js exist; the handoff core (evidence.js, distiller.js, handoff.js, repo-truth.js, exec.js) evolved into the full generateHandoff pipeline exported by src/core/handoff/index.js. So the tree is NOT a faithful R3.3 end-state snapshot; it reflects one or more later slices.",
+    "pending": "Within the R3.3 scope there is no documented outstanding item: the historical run's final message states no remaining UX issues within R3.3 scope and the artifact ends with task_complete. Items R3.3 explicitly deferred (real usage-source research, search, tags, Live Agent Monitor, complex settings) were not to be done in that round. In the current repo the real usage/agent-source/resource-status and handoff-core work already present on disk suggests later slices were started/completed, but NO transcript, user instruction, or HANDOFF for those later slices is included in this environment, so what (if anything) is currently unfinished is UNKNOWN from this artifact. Note also: web/dist, node_modules, .runtime (the pinned node used by package.json scripts) and the real-repo smoke artifact .margin/HANDOFF.md are absent from this sandbox.",
+    "historicalValidation": "Historical only, from the transcript (not reproducible here; no node_modules/.runtime/node or git in the sandbox, and the current tree differs from the session's files): final focused run '.\\\\.runtime\\\\node-v22.23.1-win-x64\\\\node.exe --test test/marginR3Board.test.js test/electronHost.test.js test/marginSurfaceHttpAdapter.test.js' reported tests 15 / pass 15 / fail 0; final CLI/discovery run (marginCli.test.js + marginDiscoveryParity.test.js) reported tests 13 / pass 13 / fail 0; 'npm run build' reported Vite 'built in 435ms'; 'git diff --check' passed; a real Electron smoke (scripts/validate-r33-electron.cjs, created then deleted) exercised expand/Pin/Hide/Show, responsive captures, and an actual save writing <repo>\\.margin\\HANDOFF.md (9,223 bytes) for session 01a07770.... IMPORTANT: an intermediate state in the same session (~16:05Z) had a broad 'npm test' showing 597 pass / 8 fail AND a Vite build parse error in SessionBoard.js; those were subsequently fixed within the session and the focused re-runs above passed. None of these numbers is independent current validation, and the transcript itself documents no final full-suite green run.",
+    "recommendedFollowUp": "Do not treat any single transcript claim as a current action. First re-establish ground truth in the target repo (the sandbox cannot do this: git, node, npm-run are unavailable and dependencies are absent): run git status/diff/log to map HEAD a247e75a against the working tree, since on-disk files (agent-sources, /api/resources/status, handoff-core pipeline) appear to postdate the R3.3 transcript and the commit baseline; confirm whether the R3.3 changes and later changes are committed or dirty. Then, against the repo's pinned runtime (.\\\\.runtime\\\\node-v22.23.1-win-x64\\\\node.exe), run the focused margin tests (marginR3Board/electronHost/marginSurfaceHttpAdapter, marginCli/marginDiscoveryParity, plus the later agentResourceQuota/agentSourceRegistry/handoff tests), npm run build, and git diff --check. Only after that, decide which slice is actually current: if the intended task is R3.3 it is already implemented and needs verification/commit rather than re-implementation; if the current work is the later usage-source/agent-sources/handoff slice (implied by files newer than the transcript), obtain its own brief/transcript because none is present here. No further action should be taken in this frozen, inspect-only sandbox.",
+    "currentApplicability": "Low as an executable spec. The R3.3 brief and the transcript's PASS apply to the milestone state as of 2026-09-06 16:12Z, but the current repository is not that state: files were modified for ~13 further hours (through ~09-07 05:42Z local) adding agent-source registry/management, a real resource-status endpoint/UI, and handoff-core pipeline changes that supersede parts of R3.3 (the 'no extra settings' and 'token usage stays unavailable' constraints no longer describe the current tree; UsageBar no longer implements the R3.3 'Today --'/summary display). Therefore 'continue R3.3' guidance and the final R3.3 report are stale for the on-disk code, and any assumption that current code == R3.3 final snapshot would mislead continuation. The only firmly current facts are the inspected file contents, git refs (HEAD a247e75a), and the transcript's historical content.",
+    "unsafeAssumptions": [
+      "Assuming the workspace working tree equals the R3.3 session's final state - FALSE by file mtimes (post-session edits through 09-07 ~05:42Z) and by content (agent-sources/resources-status/UsageBar redesign not in the transcript's final state).",
+      "Assuming the historical '15 passed'/'13 passed'/'build passed' counts are current validation - not reproducible here and the tree has since changed.",
+      "Assuming the transcript's final 'PASS - no remaining UX issues' implies no further work exists - the repo demonstrably continued development after the transcript; what that later task was is unknown from this artifact.",
+      "Assuming git HEAD a247e75a cleanly represents the R3.3 baseline or that margin V2/R3.x work is committed - at R3.3 start the transcript's own 'git status --short' showed electron/, src/core/handoff/, src/cli/, web/src/margin/ etc. as untracked ('??') and legacy web/src/components/*.jsx as deleted, and git itself is unavailable in this sandbox to verify current commit-vs-working-tree state.",
+      "Assuming the environment's file mtimes are trustworthy modification times rather than artifacts of the copy process.",
+      "Assuming real Electron behavior (Pin/Tray sync, 30s refresh, toast, actual save) still works in the current tree - only the historical session exercised it.",
+      "Inferring that the next slice is 'implement real token usage source' merely because R3.3 deferred it; no user instruction for that slice exists in this artifact even though /api/resources/status now exists in the tree."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788780660773
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Mode, Length, Name\"}",
+      "tsMs": 1788780660774
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788780662425
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788780662426
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788780662427
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788780662427
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Item .\\\\input\\\\session.jsonl | Select-Object Length; (Get-Content .\\\\input\\\\session.jsonl | Measure-Object -Line).Lines\"}",
+      "tsMs": 1788780663705
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp/AppData\"}",
+      "tsMs": 1788780663716
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 40\"}",
+      "tsMs": 1788780665183
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfor ($i=0; $i -lt $lines.Count; $i++) {\\n  $line = $lines[$i]\\n  try { $o = $line | ConvertFrom-Json } catch { Write-Output (\\\"{0}: UNPARSEABLE\\\" -f $i); continue }\\n  $t = $o.timestamp\\n  $type = $o.type\\n  $desc = \\\"\\\"\\n  if ($o.payload) {\\n    $p = $o.payload\\n    if ($p.type) { $desc += \\\"payload.type=\\\" + $p.type }\\n    if ($p.name) { $desc += \\\" name=\\\" + $p.name }\\n    if ($p.info -and $p.info.total_token_usage) { $desc += \\\" tokens=\\\" + $p.info.total_token_usage.total_tokens }\\n    if ($p.usage -and $p.usage.usage) { $desc += \\\" usage=\\\" + $p.usage.usage.total_tokens }\\n  }\\n  Write-Output (\\\"{0} [{1}] {2} :: {3}\\\" -f $i, $type, $t, $desc)\\n}\"}",
+      "tsMs": 1788780672667
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfor ($i=0; $i -lt $lines.Count; $i++) {\\n  $line = $lines[$i]\\n  if ($line.Length -gt 600000) { Write-Output (\\\"{0}: SKIPPED len={1}\\\" -f $i, $line.Length); continue }\\n  try { $o = $line | ConvertFrom-Json } catch { continue }\\n  if ($o.type -eq 'response_item' -and $o.payload.type -eq 'message') {\\n    $role = $o.payload.role\\n    $texts = @()\\n    foreach ($c in $o.payload.content) {\\n      if ($c.type -eq 'input_text' -or $c.type -eq 'output_text') { $texts += $c.text }\\n      elseif ($c.text) { $texts += $c.text }\\n    }\\n    $joined = ($texts -join \\\"`n\\\")\\n    if ($joined.Length -gt 3000) { $joined = $joined.Substring(0,3000) + \\\" ...[TRUNC len=\\\" + (($texts -join \\\"`n\\\").Length) + \\\"]\\\" }\\n    Write-Output (\\\"--- line {0} role={1} ---\\\" -f $i, $role)\\n    Write-Output $joined\\n    Write-Output \\\"\\\"\\n  }\\n}\"}",
+      "tsMs": 1788780680179
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\ngit status\\nWrite-Output \\\"===== BRANCH/HEAD =====\\\"\\ngit branch -a\\ngit log --oneline -15\"}",
+      "tsMs": 1788780694981
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nGet-ChildItem -Force .git -ErrorAction SilentlyContinue | Select-Object -First 20 Name\\nWrite-Output \\\"===== task-8-report.md head =====\\\"\\nGet-Content task-8-report.md -TotalCount 60 -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788780694994
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force . -Directory -Recurse -Depth 1 -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'git|runtime' } | Select-Object FullName\\nWrite-Output \\\"=====\\\"\\nGet-Content .\\\\workspace\\\\.git\\\\HEAD\\nWrite-Output \\\"===== config =====\\\"\\nGet-Content .\\\\workspace\\\\.git\\\\config\\nWrite-Output \\\"===== FETCH_HEAD =====\\\"\\nGet-Content .\\\\workspace\\\\.git\\\\FETCH_HEAD -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788780701807
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace -Force -Recurse -Depth 2 -Directory | Where-Object { $_.Name -eq 'node_modules' -or $_.Name -eq '.runtime' -or $_.Name -like '*git*' } | Select-Object FullName\"}",
+      "tsMs": 1788780701819
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"===== web/src/margin =====\\\"\\nGet-ChildItem web/src/margin | Select-Object Name, Length\\nWrite-Output \\\"===== docs/validation =====\\\"\\nGet-ChildItem docs/validation -ErrorAction SilentlyContinue | Select-Object Name\\nWrite-Output \\\"===== scripts (capture*) =====\\\"\\nGet-ChildItem scripts -Filter '*capture*' | Select-Object Name, LastWriteTime\\nWrite-Output \\\"===== test margin-related =====\\\"\\nGet-ChildItem test -Filter '*margin*' | Select-Object Name, LastWriteTime\\nWrite-Output \\\"===== electron =====\\\"\\nGet-ChildItem electron | Select-Object Name, LastWriteTime\"}",
+      "tsMs": 1788780711753
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"===== grep for Settings/Toast/Pin in web/src/margin =====\\\"\\nSelect-String -Path web/src/margin/*.js -Pattern 'Settings|Toast|Pin|quit|hide|setExpanded' | Select-Object -First 40 Filename, LineNumber, Line\"}",
+      "tsMs": 1788780711766
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== top-level node_modules/.runtime? ===\\\"\\nTest-Path node_modules; Test-Path .runtime\\nWrite-Output \\\"=== package.json scripts ===\\\"\\nGet-Content package.json -TotalCount 80\"}",
+      "tsMs": 1788780725722
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"===== MarginApp.js =====\\\"\\nGet-Content web/src/margin/MarginApp.js\"}",
+      "tsMs": 1788780725734
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== .margin dir ===\\\"\\nGet-ChildItem -Force .margin -ErrorAction SilentlyContinue | Select-Object Name, Length, LastWriteTime\\nWrite-Output \\\"=== web/dist ===\\\"\\nTest-Path web/dist\\nGet-ChildItem web/dist -ErrorAction SilentlyContinue | Select-Object Name, Length\\nWrite-Output \\\"=== docs/validation/r3.3 ===\\\"\\nGet-ChildItem docs/validation/r3.3 -ErrorAction SilentlyContinue | Select-Object Name, Length\\nWrite-Output \\\"=== untracked-ish root files ===\\\"\\nGet-ChildItem -Force | Select-Object Name, Length, LastWriteTime\"}",
+      "tsMs": 1788780739838
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== electron/main.js greps ===\\\"\\nSelect-String -Path electron/main.js -Pattern 'quit|hide|toggleAlwaysOnTop|alwaysOnTop|ipcMain|getAlwaysOnTop' | Select-Object -First 30 LineNumber, Line\\nWrite-Output \\\"=== preload.cjs ===\\\"\\nGet-Content electron/preload.cjs\\nWrite-Output \\\"=== httpAdapter save route ===\\\"\\nSelect-String -Path src/core/handoff/httpAdapter.js -Pattern 'handoff/save|written|readFileSync|verify' -Context 0,3 | Select-Object -First 30\"}",
+      "tsMs": 1788780739847
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd .\\n$patterns = 'git commit','git add','git diff --check','npm run build','node --test','npm test','git status','git log','git stash','git push','capture-r33','run-margin-surface','margin:cli'\\nforeach ($p in $patterns) {\\n  $found = Select-String -Path .\\\\input\\\\session.jsonl -Pattern ([regex]::Escape($p)) -AllMatches\\n  Write-Output (\\\"### pattern: {0} -> {1} matches\\\" -f $p, $found.Count)\\n}\\nWrite-Output \\\"=== count of lines containing 'vite build' or 'web/dist' ===\\\"\\n(Select-String -Path .\\\\input\\\\session.jsonl -Pattern 'vite build' -AllMatches).Count\"}",
+      "tsMs": 1788780752829
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -ErrorAction SilentlyContinue | Select-Object -Last 40\"}",
+      "tsMs": 1788780752838
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$epochs = 1788710305, 1788716597, 1788716676, 1788626351\\nforeach ($e in $epochs) {\\n  $utc = [DateTimeOffset]::FromUnixTimeSeconds($e).UtcDateTime\\n  Write-Output (\\\"{0} -> UTC {1}  +0800 {2}\\\" -f $e, $utc.ToString('yyyy-MM-dd HH:mm:ss'), $utc.ToOffset([TimeSpan]::FromHours(8)).ToString('yyyy-MM-dd HH:mm:ss'))\\n}\\nWrite-Output \\\"---- .git/refs/heads/main ----\\\"\\nGet-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main\\nWrite-Output \\\"---- reflog last entries full ----\\\"\\nGet-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD | Select-Object -Last 12\"}",
+      "tsMs": 1788780766287
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$epochs = 1788710305, 1788716597, 1788716676\\nforeach ($e in $epochs) {\\n  $utc = [DateTimeOffset]::FromUnixTimeSeconds($e).UtcDateTime\\n  $cst = $utc.AddHours(8)\\n  Write-Output (\\\"{0} -> UTC {1:u}  +0800 {2:yyyy-MM-dd HH:mm:ss}\\\" -f $e, $utc, $cst)\\n}\"}",
+      "tsMs": 1788780770481
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD | Select-Object -First 25\"}",
+      "tsMs": 1788780770490
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfor ($i=0; $i -lt $lines.Count; $i++) {\\n  $line = $lines[$i]\\n  try { $o = $line | ConvertFrom-Json } catch { continue }\\n  if ($o.type -eq 'response_item' -and $o.payload.type -eq 'custom_tool_call') {\\n    $in = $o.payload.input\\n    $short = $in\\n    if ($short.Length -gt 700) { $short = $short.Substring(0,700) + \\\" ...[+\\\" + ($in.Length-700) + \\\" chars]\\\" }\\n    Write-Output (\\\"### line {0} call_id={1} status={2}\\\" -f $i, $o.payload.call_id, $o.payload.status)\\n    Write-Output $short\\n    Write-Output \\\"\\\"\\n  }\\n}\"}",
+      "tsMs": 1788780794692
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\n$line = $lines[8]\\n$o = $line | ConvertFrom-Json\\n$texts = @()\\nforeach ($c in $o.payload.content) {\\n  if ($c.text) { $texts += $c.text }\\n  elseif ($c.type -eq 'input_text') { $texts += $c.text }\\n}\\n$joined = $texts -join \\\"`n\\\"\\nWrite-Output (\\\"TOTAL LEN: \\\" + $joined.Length)\\nWrite-Output $joined\"}",
+      "tsMs": 1788780813920
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfunction Get-OutputText($idx) {\\n  $line = $lines[$idx]\\n  try { $o = $line | ConvertFrom-Json } catch { return @() }\\n  if ($o.type -ne 'response_item') { return @() }\\n  $p = $o.payload\\n  if ($p.type -ne 'custom_tool_call_output') { return @() }\\n  $parts = @()\\n  foreach ($it in $p.output) { if ($it.text) { $parts += $it.text } }\\n  return $parts\\n}\\nWrite-Output \\\"######## OUTPUT for line 21 call (git status at start) - line 24 ########\\\"\\n$txt = (Get-OutputText 24) -join \\\"`n\\\"\\n$txt = $txt -replace \\\"`r\\\", \\\"\\\"\\n$txtLines = $txt -split \\\"`n\\\"\\n$txtLines | Select-String -Pattern '^(\\\\?\\\\?|[ MADRCU]{1,2})\\\\s' | Select-Object -First 60 | ForEach-Object { $_.Line }\"}",
+      "tsMs": 1788780837659
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfunction Get-OutputText($idx) {\\n  $line = $lines[$idx]\\n  try { $o = $line | ConvertFrom-Json } catch { return @() }\\n  if ($o.type -ne 'response_item') { return @() }\\n  $p = $o.payload\\n  if ($p.type -ne 'custom_tool_call_output') { return @() }\\n  $parts = @()\\n  foreach ($it in $p.output) { if ($it.text) { $parts += $it.text } }\\n  return $parts\\n}\\nWrite-Output \\\"######## OUTPUT for line 182 call - at line 185 ########\\\"\\n$txt = (Get-OutputText 185) -join \\\"`n\\\"\\n$txt = $txt -replace \\\"`r\\\", \\\"\\\"\\n$txtLines = $txt -split \\\"`n\\\"\\n$txtLines | Select-String -Pattern '^(\\\\?\\\\?|[ MADRCU]{1,2})\\\\s' | Select-Object -First 120 | ForEach-Object { $_.Line }\"}",
+      "tsMs": 1788780837668
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nfunction Get-OutputText($idx) {\\n  try { $o = $lines[$idx] | ConvertFrom-Json } catch { return @() }\\n  if ($o.type -ne 'response_item') { return @() }\\n  $p = $o.payload\\n  if ($p.type -ne 'custom_tool_call_output') { return @() }\\n  $parts = @()\\n  foreach ($it in $p.output) { if ($it.text) { $parts += $it.text } }\\n  return ($parts -join \\\"`n\\\")\\n}\\nforeach ($pair in @(@(105,108), @(126,129), @(210,213), @(240,243))) {\\n  $callIdx = $pair[0]; $outIdx = $pair[1]\\n  Write-Output (\\\"############ call at line {0} -> output at line {1} ############\\\" -f $callIdx, $outIdx)\\n  $txt = Get-OutputText $outIdx\\n  $txt = $txt -replace \\\"`r\\\",\\\"\\\"\\n  $all = $txt -split \\\"`n\\\"\\n  # Print lines that look like test summary/result markers\\n  $all | Select-String -Pattern 'tests |pass |fail |ok |not ok|duration|built|exit code|error|Error|PASS|build complete|vite v|✓|done|# ' | Select-Object -Last 40 | ForEach-Object { $_.Line }\\n}\"}",
+      "tsMs": 1788780855666
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== scripts listing ===\\\"\\nGet-ChildItem scripts | Select-Object Name\\nWrite-Output \\\"=== validate-r33 present? ===\\\"\\nTest-Path scripts/validate-r33-electron.cjs\\nWrite-Output \\\"=== electronHost.test.js: tray sync assertion? ===\\\"\\nSelect-String -Path test/electronHost.test.js -Pattern 'rebuilt from the same|surface-side state' | Select-Object LineNumber, Line\\nWrite-Output \\\"=== marginApiClient.js ===\\\"\\nGet-Content web/src/margin/marginApiClient.js\\nWrite-Output \\\"=== CSS feature classes ===\\\"\\nSelect-String -Path web/src/margin/margin.css -Pattern 'margin-toast|margin-settings|margin-window-control|margin-usage-viewport|margin-edge|is-danger|is-active' | Select-Object LineNumber, Line\"}",
+      "tsMs": 1788780868846
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== SessionBoard.js (full) ===\\\"\\nGet-Content web/src/margin/SessionBoard.js\"}",
+      "tsMs": 1788780868856
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== httpAdapter routes ===\\\"\\nSelect-String -Path src/core/handoff/httpAdapter.js -Pattern \\\"app\\\\.(get|post|put|delete)\\\\(\\\" | Select-Object LineNumber, Line\\nWrite-Output \\\"=== httpAdapter full size ===\\\"\\n(Get-Content src/core/handoff/httpAdapter.js | Measure-Object -Line).Lines\\nWrite-Output \\\"=== grep agent-sources/resources in src ===\\\"\\nSelect-String -Path src/core/handoff/*.js -Pattern 'agent-sources|agentSources|resources/status|resource-status|agent-sources/detect' | Select-Object -First 20 Filename, LineNumber, Line\\nWrite-Output \\\"=== SessionDetail.js check ===\\\"\\nGet-Content web/src/margin/SessionDetail.js -TotalCount 20\"}",
+      "tsMs": 1788780886112
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== margin.css head/tail overview ===\\\"\\nGet-Content web/src/margin/margin.css\\n\"}",
+      "tsMs": 1788780886121
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nGet-ChildItem web/src/margin/*, electron/*, src/core/handoff/*, src/cli/margin/* -ErrorAction SilentlyContinue | Select-Object @{n='Path';e={$_.FullName.Replace((Get-Location).Path,'.')}}, Length, LastWriteTime | Sort-Object LastWriteTime | Format-Table -AutoSize | Out-String -Width 250\"}",
+      "tsMs": 1788780932010
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== mtimes of docs/validation ===\\\"\\nGet-ChildItem docs/validation -Recurse -File | Select-Object @{n='Path';e={$_.FullName.Replace((Get-Location).Path,'.')}}, Length, LastWriteTime | Sort-Object LastWriteTime | Format-Table -AutoSize | Out-String -Width 250\\nWrite-Output \\\"=== top-level mtimes ===\\\"\\nGet-ChildItem -Force | Select-Object Name, LastWriteTime | Sort-Object LastWriteTime | Format-Table -AutoSize | Out-String -Width 200\"}",
+      "tsMs": 1788780932020
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== CHANGELOG head ===\\\"\\nGet-Content CHANGELOG.md -TotalCount 40\\nWrite-Output \\\"=== search docs for R3.4/R3.5/R4/Slice headings ===\\\"\\nGet-ChildItem docs -Recurse -File -Filter *.md | Select-String -Pattern 'R3\\\\.4|R3\\\\.5|R4\\\\.|Slice 3\\\\.4|Slice 4' | Select-Object -First 30 Path, LineNumber, Line\"}",
+      "tsMs": 1788780953343
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== .superpowers listing ===\\\"\\nGet-ChildItem -Force .superpowers -Recurse -Depth 2 | Select-Object FullName | Select-Object -First 60\\nWrite-Output \\\"=== recent md files across repo (by mtime) ===\\\"\\nGet-ChildItem -Recurse -File -Filter *.md | Where-Object { $_.FullName -notmatch 'node_modules|\\\\.git\\\\\\\\' } | Sort-Object LastWriteTime -Descending | Select-Object -First 20 @{n='Path';e={$_.FullName.Replace((Get-Location).Path,'.')}}, LastWriteTime | Format-Table -AutoSize | Out-String -Width 250\"}",
+      "tsMs": 1788780953351
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Command node, npm, npx, git -ErrorAction SilentlyContinue | Select-Object Name, Source\\nWrite-Output \\\"=== .runtime inside repo? ===\\\"\\nTest-Path .\\\\workspace\\\\.runtime\\nWrite-Output \\\"=== test dir margin mtimes ===\\\"\\nGet-ChildItem .\\\\workspace\\\\test -Filter '*.test.js' | Sort-Object LastWriteTime -Descending | Select-Object -First 25 Name, LastWriteTime | Format-Table -AutoSize | Out-String -Width 150\"}",
+      "tsMs": 1788780989692
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace\\nWrite-Output \\\"=== src/core/handoff index.js exports ===\\\"\\nGet-Content src/core/handoff/index.js\\nWrite-Output \\\"=== which tests reference agent-sources/resources/status ===\\\"\\nGet-ChildItem test -Filter '*.test.js' | Select-String -Pattern 'agent-sources|/api/resources|getResourceStatus|listAgentSources' -List | Select-Object Filename\\nWrite-Output \\\"=== docs/architecture newest doc ===\\\"\\nGet-Content docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md -TotalCount 30\"}",
+      "tsMs": 1788780989701
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl\\nforeach ($i in 0,1,42) {\\n  Write-Output (\\\"### line {0} ###\\\" -f $i)\\n  try { $o = $lines[$i] | ConvertFrom-Json } catch { Write-Output \\\"UNPARSEABLE\\\"; continue }\\n  $json = $o | ConvertTo-Json -Depth 6 -Compress\\n  if ($json.Length -gt 4000) { $json = $json.Substring(0,4000) + \\\"...[+\\\" + ($json.Length-4000) + \\\" chars]\\\" }\\n  Write-Output $json\\n  Write-Output \\\"\\\"\\n}\"}",
+      "tsMs": 1788781017838
+    }
+  ],
+  "deniedToolCalls": [],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 391655,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-12",
+    "arm": "A",
+    "runId": "formal-case-12-A-2026-09-07T11-30-48-279Z",
+    "startMs": "2026-09-07T11:30:57.653Z",
+    "endMs": "2026-09-07T11:37:31.099Z",
+    "durationMs": 393446,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-12-A-2026-09-07T11-30-48-279Z status=ok durationMs=391655\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records-r7full\\formal-case-12-A-2026-09-07T11-30-48-279Z.cert.json"
+  }
+}

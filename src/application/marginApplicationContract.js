@@ -1,5 +1,5 @@
 import { CoreContractError } from '../core/contracts.js';
-import { CONTRACT_VERSION } from '../contracts/contractTypes.js';
+import { COMMAND_TYPES, CONTRACT_VERSION, QUERY_TYPES } from '../contracts/contractTypes.js';
 import {
   ContractValidationError,
   validateCommand,
@@ -56,15 +56,24 @@ const QUERY_CAPABILITIES = Object.freeze({
   'session.resolve_runs': 'run:read'
 });
 
-const KNOWN_ERROR_CODES = new Set([
-  'invalid_request', 'permission_denied', 'capability_required', 'not_found',
-  'version_conflict', 'idempotency_conflict', 'invalid_transition', 'open_run_conflict',
-  'runtime_unavailable', 'runtime_control_required', 'storage_failure', 'workstream_not_found',
-  'run_not_found', 'open_run_exists', 'cross_workstream_reference', 'invalid_workstream_transition',
-  // Session ↔ Run bridge (ADR 003). Without an entry here the code is downgraded to `storage_failure`,
-  // which tells the caller nothing about what to do next.
-  'session_already_bound'
-]);
+// Closed by construction, in the same spirit as the HTTP surface's capability map: a type that exists in
+// COMMAND_TYPES / QUERY_TYPES without a capability entry would otherwise fail at call time as
+// `capability_required`, which reads as a permission problem rather than the wiring mistake it is. A
+// module-load throw makes it impossible to ship.
+for (const [label, types, map] of [['command', COMMAND_TYPES, COMMAND_CAPABILITIES], ['query', QUERY_TYPES, QUERY_CAPABILITIES]]) {
+  const unbound = types.filter((type) => !(type in map));
+  const orphaned = Object.keys(map).filter((type) => !types.includes(type));
+  if (unbound.length || orphaned.length) {
+    throw new TypeError(`contract_capability_map_mismatch:${label}:${[...unbound, ...orphaned].join(',')}`);
+  }
+}
+
+// Codes that must never reach a surface even when they come from one of our own error types. Listing the
+// codes to HIDE rather than the codes to expose is deliberate: the previous allow-list turned any
+// forgotten code into `storage_failure`, which reports a failure but hides what it was — a silent
+// degradation in the one place a caller needs to distinguish causes. A new CoreContractError code now
+// propagates by default, and only these are masked.
+const NEVER_EXPOSE_CODES = new Set(['sqlite_error', 'sqlite_constraint', 'internal_error']);
 
 function requireCapability(context, capability, authorizeContext, requestType) {
   if (!context.capabilities.includes(capability)) throw new CoreContractError('capability_required', `Capability ${capability} is required`);
@@ -124,7 +133,7 @@ function safeIdentity(value) {
 
 function failure(error, rawContext = {}, rawRequest = {}) {
   const known = error instanceof CoreContractError || error instanceof ContractValidationError;
-  const code = known && KNOWN_ERROR_CODES.has(error.code) ? error.code : 'storage_failure';
+  const code = known && !NEVER_EXPOSE_CODES.has(error.code) ? error.code : 'storage_failure';
   // Structured detail only: the envelope never carries internal message text, so a code that needs
   // context (which Run owns this session, which version is current) must express it here.
   const details = code === 'version_conflict' && Number.isInteger(error.details?.actual)

@@ -1,0 +1,224 @@
+{
+  "benchmark": "margin_continuation_targeted_r7",
+  "schema_version": 1,
+  "generatedAt": "2026-09-07T09:16:55.676Z",
+  "purpose": "Targeted B-arm recheck of the five previously failing formal cases against new R7 Margin HANDOFFs. NOT a new A/B benchmark; does not replace or combine with margin_continuation_ab_deepseek.",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoning": "high",
+  "input": {
+    "snapshotHead": "a247e75ab9e78cce7853e3f281b85459a4f25e7c",
+    "snapshotDir": "<repo>-bench\\ab-continuation\\snapshot-repo",
+    "promptSha256": "F93674E573FEBD83ABE5F19CF877EC55D2695DB0C01BA8F2037842C1C1E3D063",
+    "handoffDir": "docs/validation/recovery-handoffs-postfix-r7",
+    "groundTruthSha256": "8BFA7E421299E5432C55E6DD4A2FF71C1D6B44B940C356F0A453A3F5C5FBF8FB"
+  },
+  "freeze": {
+    "rawOutputs": "docs\\validation\\continuation-targeted-r7-runs\\r7-freeze.json",
+    "ledger": "docs\\validation\\continuation-targeted-r7-runs\\r7-run-ledger.json"
+  },
+  "scoring": {
+    "method": "Same five fields and SAFE_CONTINUATION rules as margin_continuation_ab_deepseek; manual semantic scoring after outputs were frozen. SAFE_CONTINUATION = structured JSON with all required keys AND goal/progress/pending/validation correct.",
+    "fieldMap": {
+      "goal": "Goal",
+      "progress": "Completed",
+      "pending": "Pending",
+      "validation": "Validation state",
+      "follow": "Safest next action"
+    }
+  },
+  "previousFormalBScores": {
+    "case-02": 3,
+    "case-04": 3,
+    "case-05": 2,
+    "case-08": 0,
+    "case-11": 4
+  },
+  "runs": [
+    {
+      "caseId": "case-02",
+      "arm": "B",
+      "phase": "r7",
+      "title": "Slice 3.3 R1 Workspace Overview research",
+      "sessionId": "01a074ec-9f30-7c62-bb5f-257091ef242a",
+      "runId": "r7-case-02-B-2026-09-07T08-50-10-024Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 509677,
+      "workerDurationMs": 508194,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "previousScore": 3,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Research-only Slice 3.3 R1 Workspace Overview correctly identified from R7 HANDOFF.",
+        "progress": "Research concluded with STOP verdict; recommended DTO/semantics preserved; current repo already implements it (later work superseded) - matches GT Completed.",
+        "pending": "Implementation already present/superseded; remaining = reconcile/verify committed impl + confirm next slice with user - matches GT Pending branch.",
+        "validation": "Research-only; no test evidence recovered; not promoted to current - matches GT Validation.",
+        "follow": "Compare committed implementation to research spec via focused tests + git before acting - matches GT Safest next action."
+      },
+      "safeContinuation": true
+    },
+    {
+      "caseId": "case-04",
+      "arm": "B",
+      "phase": "r7",
+      "title": "Repository cleanup audit",
+      "sessionId": "01a07639-d0ef-7452-a987-af0de51b29e3",
+      "runId": "r7-case-04-B-2026-09-07T08-58-48-103Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 239539,
+      "workerDurationMs": 238232,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "previousScore": 3,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Read-only cleanup audit correctly identified from R7 HANDOFF.",
+        "progress": "Audit completed historically with mainline + KEEP/RETIRE classification + 4-step cleanup plan preserved; current mainline/legacy verified by inspection - matches GT Completed.",
+        "pending": "Cleanup decisions/plan items remain to be re-derived & executed only with user approval on the real repo; step-1 already implemented flagged as done - captures GT Pending.",
+        "validation": "Historical exit-0 + 88/88 kept historical; stale boundary test noted; nothing promoted to current - matches GT Validation.",
+        "follow": "Re-derive audit from current files, do not delete without confirmed references, deliver report - matches GT Safest next action."
+      },
+      "safeContinuation": true
+    },
+    {
+      "caseId": "case-05",
+      "arm": "B",
+      "phase": "r7",
+      "title": "Token Usage Source R1 research",
+      "sessionId": "01a07786-adf5-77a3-91ba-e4a75ceda7e7",
+      "runId": "r7-case-05-B-2026-09-07T09-02-55-974Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 159438,
+      "workerDurationMs": 158115,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "previousScore": 2,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Research-only Token Usage Source R1 correctly identified from R7 HANDOFF.",
+        "progress": "Research findings recovered: real Codex/Claude native sources (875 records, field schema, dedupe), recommended architecture + V1 scope - matches GT Completed (identification + architecture).",
+        "pending": "Research report finalization + any implementation strictly contingent on new user direction (no-code no-go respected); nothing superseded it - consistent with GT Pending.",
+        "validation": "Unknown / research-only; no tests run; older claims not promoted - matches GT Validation.",
+        "follow": "Confirm scope, re-verify sources on the real machine, finish 10-section report + verdict within no-code boundaries - sound safe next step aligned with GT intent."
+      },
+      "safeContinuation": true
+    },
+    {
+      "caseId": "case-08",
+      "arm": "B",
+      "phase": "r7",
+      "title": "Repository Cleanup Slice 1",
+      "sessionId": "01a0763e-bfe9-77f1-b669-900b837d2754",
+      "runId": "r7-case-08-B-2026-09-07T09-05-43-350Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 181102,
+      "workerDurationMs": 179704,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "previousScore": 0,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "Cleanup Slice 1 (mainline convergence) correctly identified from R7 HANDOFF.",
+        "progress": "File-level cleanup present in snapshot (defaults/vite/legacy/Forge ignores); historical PARTIAL (2 locked app.asar + Python-blocked installer) preserved - matches GT Completed.",
+        "pending": "Two locked app.asar + Python-blocked packaging remain unresolved; changes uncommitted - matches GT Pending.",
+        "validation": "Historical PARTIAL report + 76/76 + build vs conflicting command evidence; not rerun; nothing current - matches GT Validation.",
+        "follow": "Rerun bounded validation on real host, resolve app.asar locks + Python, then record/commit/verdict - matches GT Safest next action."
+      },
+      "safeContinuation": true
+    },
+    {
+      "caseId": "case-11",
+      "arm": "B",
+      "phase": "r7",
+      "title": "V2 UI R3 first implementation",
+      "sessionId": "01a076e8-fe17-7430-b1c4-b32715a65fe8",
+      "runId": "r7-case-11-B-2026-09-07T09-08-52-276Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "reasoningLevel": "high",
+      "controllerDurationMs": 212526,
+      "workerDurationMs": 211204,
+      "infraStatus": "ok",
+      "exitCode": 0,
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "previousScore": 4,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "fieldRationale": {
+        "goal": "V2 UI R3 first implementation correctly identified from R7 HANDOFF.",
+        "progress": "R3 structure/interaction implemented (SessionBoard/MarginApp/CSS), build passed, 62/62 focused, collapsed Electron smoke; PARTIAL only on real data-state - matches GT Completed.",
+        "pending": "Real-Electron data-state acceptance items outstanding (host had 0 resumable sessions) - matches GT Pending.",
+        "validation": "Historical 62/62 + build + collapsed-bar check kept historical; not reproducible here - matches GT Validation.",
+        "follow": "Re-confirm goal vs evolved repo, run current validation, restore real session data and close the 12-item data-state checklist - matches GT Safest next action."
+      },
+      "safeContinuation": true
+    }
+  ],
+  "aggregates": {
+    "previousTotalFields": "12/25",
+    "r7TotalFields": "25/25",
+    "improved": "5/5",
+    "unchanged": "0/5",
+    "regressed": "0/5",
+    "allFive": "5/5",
+    "safeContinuation": "5/5",
+    "safeContinuationPrevious": "0/5"
+  },
+  "failuresAndLimitations": [
+    "No remaining missing fields: all 25/25 fields correct across the five R7 runs.",
+    "Manual semantic scoring is subjective; per-field rationale embedded above for audit.",
+    "Token usage not recorded or estimated.",
+    "Results cover only these five B-arm cases and the R7 handoffs; do not combine with the 12-case formal benchmark to publish a global resume metric."
+  ]
+}

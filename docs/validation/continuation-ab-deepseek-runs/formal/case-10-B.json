@@ -1,0 +1,219 @@
+{
+  "runId": "formal-case-10-B-2026-09-07T07-46-00-398Z",
+  "caseId": "case-10",
+  "arm": "B",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T07:46:09.648Z",
+  "endTs": "2026-09-07T07:48:22.416Z",
+  "durationMs": 132768,
+  "modelPromptStartMs": 41,
+  "modelPromptEndMs": 132767,
+  "sessionId": "01a07ad4-ec97-7096-a9b2-a115c3212570",
+  "rawResponse": "Based on my investigation of this isolated environment, here is the recovery state:\n\n**What I verified:** `./input/HANDOFF.md` (the single recovery artifact); repo truth at `workspace/` — git metadata (`refs/heads/main` = `a247e75ab…`, HEAD log, ORIG_HEAD), current file contents of `electron/main.js`, `electron/preload.cjs`, `forge.config.cjs`, `package.json`, `test/electronHost.test.js`, `src/core/handoff/*`, `web/` sources, `docs/validation/*`, and the absence of runnable tooling/artifacts. No Node, npm, git binary, `node_modules/`, `.runtime/`, `web/dist/`, or packaged `out*` outputs exist here, so **no current execution/validation is possible**.\n\n```json\n{\n  \"goal\": \"Margin V2.1 — Electron Floating Host: deliver the first Floating Window vertical slice. Keep the existing Margin Browser Surface unchanged; run it inside Electron as Margin Core → CLI V1 / Electron V2 → existing createMarginSurface({host:'127.0.0.1', port:0}) localhost HTTP Surface → existing React UI (web/margin.html). Requirements: single instance (re-launch only focuses existing window, no second HTTP surface); floating resizable window with min size, not always-on-top by default; tray Show/Hide / Always-on-top / Quit; Close→hide, Quit→close window+HTTP surface+process; real Workspace Overview / Recent Sessions / Resume Summary / Copy checkpoint / Save .margin/HANDOFF.md flow. Electron Forge Windows x64 package/make that does not depend on Vite dev server, shell cwd, or global Node, finds packaged web/dist, uses ephemeral port, and does not break startup on the better-sqlite3 native ABI. Must validate the real packaged app (not dev mode), keep CLI V1 unregressed, then finish with a verdict: 'PASS — V2.1 Electron Host complete' or 'PARTIAL — <specific blocker>'. Do not start V2.2.\",\n  \"progress\": \"Current repo truth (frozen copy): git branch main points to a247e75ab9e78cce7853e3f281b85459a4f25e7c ('docs: record V2 resource bar daily-use baseline'), matching the HANDOFF's stated HEAD; no later commits exist. Recent committed history on main is the V2 slice: 'feat: establish Margin handoff core and CLI V1', 'feat: add Electron V2 floating session workspace', 'feat: add Codex agent resource status', 'docs: record V2 resource bar daily-use baseline'. Current files confirm the host/packaging implementation exists and is internally consistent: electron/main.js (createElectronHost: requestSingleInstanceLock + second-instance focus, 560x44 frameless collapsed bar expandable to 620/max 720 via margin-shell IPC, min/max sizing with work-area clamping, close→hide, tray menu, setAlwaysOnTop, gracefulQuit that destroys tray/window and awaits surface.close(), packaged detection via app.isPackaged/.asar, packaged staticDir=process.resourcesPath/web/dist, packaged runtimeRoot=userData/margin-runtime, nodeIntegration:false, contextIsolation:true), electron/preload.cjs (contextBridge marginShell), forge.config.cjs (outDir 'out2', asar, extraResource web, rebuildConfig.force:false, auto-unpack-natives, Squirrel+zip makers), package.json (main electron/main.js, devDeps electron ^40.4.1 + @electron-forge/* ^7.11.1, scripts electron:start/package/make, build=vite), test/electronHost.test.js (2 fake-Electron tests asserting exactly this lifecycle), plus src/core/handoff/* (createMarginSurface, httpAdapter, workspace-overview, smartSelect, resume-summary, repo-truth, etc.), CLI bin/scripts, and the React margin UI. No final V2.1 report or PASS/PARTIAL verdict document exists in docs/validation (only phase_2a/2b reports and v2_resource_bar_daily_use_baseline.md with R2/R3 screenshots). Absent here: node_modules, .runtime, web/dist (gitignored; createMarginSurface's non-dev path throws 'margin_surface_assets_missing' without it), out*/packaged artifacts, electron logs, .margin.\",\n  \"pending\": \"Historical (not independently re-verified): the interrupted session ended PARTIAL — Forge make was blocked by Electron-header download ECONNRESET while rebuilding better-sqlite3, with the host implementation and a real packaged-app functional smoke reported as passed. Failure evidence in the HANDOFF includes npm install errors (Electron failed to install correctly), electron-v40.10.6-win32-x64.zip download/Expand-Archive failures, npm ls ELSPROBLEMS, an 'app.asar: file size can not be larger than 4.2GB' Forge error, missing python for node-gyp rebuild, and repeated failed electron:package/make runs. Therefore the open work is: (1) obtain/install dependencies and restore a build environment, (2) run npm run build to produce web/dist, (3) get forge package/make over the better-sqlite3 native-ABI / Electron-download blocker (and the observed 4.2GB asar error), (4) run the required packaged-app validations (start, real sessions/workspaces, Generate/Copy/Save, .margin/HANDOFF.md write, Close→hide, tray show/hide, always-on-top, second-launch single-instance, quit tears down listener+process, CLI V1 regression, focused tests, git diff --check), and (5) write Output items 1-11 with a PASS or PARTIAL verdict. Whether 112 tracked-modification/untracked files exist on top of a247e75 (HANDOFF claim) cannot be checked here because no git binary is available.\",\n  \"historicalValidation\": \"HANDOFF-recorded and therefore historical only, not current: (a) three focused test invocations of '.\\\\runtime\\\\node-v22.23.1-win-x64\\\\node.exe --test test/electronHost.test.js test/marginSurfaceHttpAdapter.test.js test/marginWorkspaceOverview.test.js test/marginCli.test.js' exited 0 (three confirmations; three further runs had no explicit final result); (b) the assistant-reported historical report says the host implementation and a real packaged-app functional smoke passed and only Forge make was blocked. docs/validation/v2_resource_bar_daily_use_baseline.md (committed 2026-09-07) reports an earlier 111 passed / 0 failed focused suite and passing npm run build for the committed V2 baseline. None of this is current validation: nothing can be executed in this environment (no node/npm/git, no node_modules, no web/dist).\",\n  \"recommendedFollowUp\": \"Not currently executable — this sandbox is source-only and network/execution are unavailable. On resumption in the real <repo> workspace: re-derive truth from the live repo before acting (git status vs a247e75, confirm the 112-file claim and which files are uncommitted), then reinstall dependencies (note historical npm install failures around the Electron binary), run npm run build, and retry electron:package / electron:make, focusing first on the two documented packaging blockers: the ECONNRESET Electron-header download during better-sqlite3 rebuild (config already sets rebuildConfig.force:false to prefer prebuilds) and the app.asar >4.2GB error seen with out2; then run focused tests + packaged-app smoke + CLI regression and produce the required 11-item report with a final PASS/PARTIAL verdict. Treat all historical outcomes as unverified until rerun.\",\n  \"currentApplicability\": \"The repository content in this environment (files under workspace/) is the last-known working-tree state of <repo> at the checkpoint (main@a247e75 plus the post-commit changes the interrupted session left in the tree). The Electron V2 host, preload, Forge configuration, package scripts, and their unit tests are present as readable current truth and are mutually consistent on inspection, so a continuation agent can rely on these file contents. Everything else is unavailable: node/npm/git binaries, node_modules, .runtime Node, web/dist build output, packaged artifacts, and the ability to run any test or build, so no current validation result can be asserted. The HANDOFF's goal text ('initial ~460x680 resizable window') does not match the implemented/committed host in the current tree (560x44 collapsed frameless shell expandable to 620, max 720, resource-bar oriented, per electron/main.js and electronHost.test.js) — the goal may be stale relative to the tree's evolved V2 resource-bar design; this must be reconciled against the live brief before treating the goal text as the acceptance contract.\",\n  \"unsafeAssumptions\": [\n    \"That the historically recorded test pass (exit 0) or the 'real packaged-app functional smoke passed' proves the current tree passes or packages — unverifiable here; no node/npm/web/dist exist in this environment and those claims are historical/assistant-reported.\",\n    \"That Forge packaging/electron distribution is installable and the better-sqlite3 native-ABI / ECONNRESET / asar-4.2GB blockers are resolved — the HANDOFF evidence shows repeated packaging failures and no successful make output artifact.\",\n    \"That the HANDOFF's stated HEAD (a247e75) plus '112 modified/untracked files' describes exactly this snapshot's tree — HEAD is confirmed via refs, but the 112-file worktree delta cannot be confirmed without a git binary; do not assume which current files are committed vs uncommitted.\",\n    \"That the current electron/main.js and forge.config.cjs are the final intended production configuration — they reflect last-known content including possible packaging-attempt tweaks, and web/dist (required by createMarginSurface in non-dev mode) is absent.\",\n    \"That the historical goal's 'initial ~460x680 resizable window' matches the acceptance criteria of the current implementation — the committed/tested host is a 560x44 collapsed frameless shell expandable to 620/max 720; dimension semantics may have drifted.\",\n    \"That no V2.1 final report/verdict exists because the task is unstarted — absence of a report document only means none was committed/preserved in docs/validation, not that the work was never reported elsewhere.\",\n    \"That better-sqlite3 'prebuilds' or any downloaded Electron artifact are available offline — network access is disabled here and no such cached artifacts are present in the snapshot.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Margin V2.1 — Electron Floating Host: deliver the first Floating Window vertical slice. Keep the existing Margin Browser Surface unchanged; run it inside Electron as Margin Core → CLI V1 / Electron V2 → existing createMarginSurface({host:'127.0.0.1', port:0}) localhost HTTP Surface → existing React UI (web/margin.html). Requirements: single instance (re-launch only focuses existing window, no second HTTP surface); floating resizable window with min size, not always-on-top by default; tray Show/Hide / Always-on-top / Quit; Close→hide, Quit→close window+HTTP surface+process; real Workspace Overview / Recent Sessions / Resume Summary / Copy checkpoint / Save .margin/HANDOFF.md flow. Electron Forge Windows x64 package/make that does not depend on Vite dev server, shell cwd, or global Node, finds packaged web/dist, uses ephemeral port, and does not break startup on the better-sqlite3 native ABI. Must validate the real packaged app (not dev mode), keep CLI V1 unregressed, then finish with a verdict: 'PASS — V2.1 Electron Host complete' or 'PARTIAL — <specific blocker>'. Do not start V2.2.",
+    "progress": "Current repo truth (frozen copy): git branch main points to a247e75ab9e78cce7853e3f281b85459a4f25e7c ('docs: record V2 resource bar daily-use baseline'), matching the HANDOFF's stated HEAD; no later commits exist. Recent committed history on main is the V2 slice: 'feat: establish Margin handoff core and CLI V1', 'feat: add Electron V2 floating session workspace', 'feat: add Codex agent resource status', 'docs: record V2 resource bar daily-use baseline'. Current files confirm the host/packaging implementation exists and is internally consistent: electron/main.js (createElectronHost: requestSingleInstanceLock + second-instance focus, 560x44 frameless collapsed bar expandable to 620/max 720 via margin-shell IPC, min/max sizing with work-area clamping, close→hide, tray menu, setAlwaysOnTop, gracefulQuit that destroys tray/window and awaits surface.close(), packaged detection via app.isPackaged/.asar, packaged staticDir=process.resourcesPath/web/dist, packaged runtimeRoot=userData/margin-runtime, nodeIntegration:false, contextIsolation:true), electron/preload.cjs (contextBridge marginShell), forge.config.cjs (outDir 'out2', asar, extraResource web, rebuildConfig.force:false, auto-unpack-natives, Squirrel+zip makers), package.json (main electron/main.js, devDeps electron ^40.4.1 + @electron-forge/* ^7.11.1, scripts electron:start/package/make, build=vite), test/electronHost.test.js (2 fake-Electron tests asserting exactly this lifecycle), plus src/core/handoff/* (createMarginSurface, httpAdapter, workspace-overview, smartSelect, resume-summary, repo-truth, etc.), CLI bin/scripts, and the React margin UI. No final V2.1 report or PASS/PARTIAL verdict document exists in docs/validation (only phase_2a/2b reports and v2_resource_bar_daily_use_baseline.md with R2/R3 screenshots). Absent here: node_modules, .runtime, web/dist (gitignored; createMarginSurface's non-dev path throws 'margin_surface_assets_missing' without it), out*/packaged artifacts, electron logs, .margin.",
+    "pending": "Historical (not independently re-verified): the interrupted session ended PARTIAL — Forge make was blocked by Electron-header download ECONNRESET while rebuilding better-sqlite3, with the host implementation and a real packaged-app functional smoke reported as passed. Failure evidence in the HANDOFF includes npm install errors (Electron failed to install correctly), electron-v40.10.6-win32-x64.zip download/Expand-Archive failures, npm ls ELSPROBLEMS, an 'app.asar: file size can not be larger than 4.2GB' Forge error, missing python for node-gyp rebuild, and repeated failed electron:package/make runs. Therefore the open work is: (1) obtain/install dependencies and restore a build environment, (2) run npm run build to produce web/dist, (3) get forge package/make over the better-sqlite3 native-ABI / Electron-download blocker (and the observed 4.2GB asar error), (4) run the required packaged-app validations (start, real sessions/workspaces, Generate/Copy/Save, .margin/HANDOFF.md write, Close→hide, tray show/hide, always-on-top, second-launch single-instance, quit tears down listener+process, CLI V1 regression, focused tests, git diff --check), and (5) write Output items 1-11 with a PASS or PARTIAL verdict. Whether 112 tracked-modification/untracked files exist on top of a247e75 (HANDOFF claim) cannot be checked here because no git binary is available.",
+    "historicalValidation": "HANDOFF-recorded and therefore historical only, not current: (a) three focused test invocations of '.\\runtime\\node-v22.23.1-win-x64\\node.exe --test test/electronHost.test.js test/marginSurfaceHttpAdapter.test.js test/marginWorkspaceOverview.test.js test/marginCli.test.js' exited 0 (three confirmations; three further runs had no explicit final result); (b) the assistant-reported historical report says the host implementation and a real packaged-app functional smoke passed and only Forge make was blocked. docs/validation/v2_resource_bar_daily_use_baseline.md (committed 2026-09-07) reports an earlier 111 passed / 0 failed focused suite and passing npm run build for the committed V2 baseline. None of this is current validation: nothing can be executed in this environment (no node/npm/git, no node_modules, no web/dist).",
+    "recommendedFollowUp": "Not currently executable — this sandbox is source-only and network/execution are unavailable. On resumption in the real <repo> workspace: re-derive truth from the live repo before acting (git status vs a247e75, confirm the 112-file claim and which files are uncommitted), then reinstall dependencies (note historical npm install failures around the Electron binary), run npm run build, and retry electron:package / electron:make, focusing first on the two documented packaging blockers: the ECONNRESET Electron-header download during better-sqlite3 rebuild (config already sets rebuildConfig.force:false to prefer prebuilds) and the app.asar >4.2GB error seen with out2; then run focused tests + packaged-app smoke + CLI regression and produce the required 11-item report with a final PASS/PARTIAL verdict. Treat all historical outcomes as unverified until rerun.",
+    "currentApplicability": "The repository content in this environment (files under workspace/) is the last-known working-tree state of <repo> at the checkpoint (main@a247e75 plus the post-commit changes the interrupted session left in the tree). The Electron V2 host, preload, Forge configuration, package scripts, and their unit tests are present as readable current truth and are mutually consistent on inspection, so a continuation agent can rely on these file contents. Everything else is unavailable: node/npm/git binaries, node_modules, .runtime Node, web/dist build output, packaged artifacts, and the ability to run any test or build, so no current validation result can be asserted. The HANDOFF's goal text ('initial ~460x680 resizable window') does not match the implemented/committed host in the current tree (560x44 collapsed frameless shell expandable to 620, max 720, resource-bar oriented, per electron/main.js and electronHost.test.js) — the goal may be stale relative to the tree's evolved V2 resource-bar design; this must be reconciled against the live brief before treating the goal text as the acceptance contract.",
+    "unsafeAssumptions": [
+      "That the historically recorded test pass (exit 0) or the 'real packaged-app functional smoke passed' proves the current tree passes or packages — unverifiable here; no node/npm/web/dist exist in this environment and those claims are historical/assistant-reported.",
+      "That Forge packaging/electron distribution is installable and the better-sqlite3 native-ABI / ECONNRESET / asar-4.2GB blockers are resolved — the HANDOFF evidence shows repeated packaging failures and no successful make output artifact.",
+      "That the HANDOFF's stated HEAD (a247e75) plus '112 modified/untracked files' describes exactly this snapshot's tree — HEAD is confirmed via refs, but the 112-file worktree delta cannot be confirmed without a git binary; do not assume which current files are committed vs uncommitted.",
+      "That the current electron/main.js and forge.config.cjs are the final intended production configuration — they reflect last-known content including possible packaging-attempt tweaks, and web/dist (required by createMarginSurface in non-dev mode) is absent.",
+      "That the historical goal's 'initial ~460x680 resizable window' matches the acceptance criteria of the current implementation — the committed/tested host is a 560x44 collapsed frameless shell expandable to 620/max 720; dimension semantics may have drifted.",
+      "That no V2.1 final report/verdict exists because the task is unstarted — absence of a report document only means none was committed/preserved in docs/validation, not that the work was never reported elsewhere.",
+      "That better-sqlite3 'prebuilds' or any downloaded Electron artifact are available offline — network access is disabled here and no such cached artifacts are present in the snapshot."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788767170896
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"./workspace\"}",
+      "tsMs": 1788767170896
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"./input\"}",
+      "tsMs": 1788767172332
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788767172332
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"cd workspace; git status; git log --oneline -20\"}",
+      "tsMs": 1788767172333
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"input/HANDOFF.md\"}",
+      "tsMs": 1788767174646
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/.superpowers\"}",
+      "tsMs": 1788767174647
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788767176847
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788767176848
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/electron\"}",
+      "tsMs": 1788767178071
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/forge.config.cjs\"}",
+      "tsMs": 1788767178071
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/test\"}",
+      "tsMs": 1788767178072
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/main.js\"}",
+      "tsMs": 1788767179227
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/electron/preload.cjs\"}",
+      "tsMs": 1788767179227
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/electronHost.test.js\"}",
+      "tsMs": 1788767181535
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/docs\"}",
+      "tsMs": 1788767181536
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"electron|V2\\\\.1|floating host|Floating\",\"path\":\"workspace/docs\"}",
+      "tsMs": 1788767183959
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"electron\",\"path\":\"workspace/.superpowers\"}",
+      "tsMs": 1788767183972
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Force | Select-Object Name; Write-Output '--- out dirs ---'; Get-ChildItem workspace -Directory -Force | Where-Object { $_.Name -like 'out*' } | Select-Object Name,LastWriteTime; Write-Output '--- node_modules electron ---'; Test-Path workspace/node_modules/electron/dist/electron.exe; Test-Path workspace/node_modules/electron; Write-Output '--- logs ---'; Get-ChildItem workspace -Force -File -Filter '*.log' -ErrorAction SilentlyContinue | Select-Object Name,Length,LastWriteTime\"}",
+      "tsMs": 1788767183981
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/docs/validation/v2_resource_bar_daily_use_baseline.md\"}",
+      "tsMs": 1788767187514
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem . -Force -Directory | Select-Object Name; Write-Output '--- runtime? ---'; Test-Path .runtime; Get-ChildItem . -Force | Where-Object { $_.Name -like '*.runtime*' -or $_.Name -eq '.runtime' } | Select-Object Name; Write-Output '--- git dir ---'; Get-ChildItem workspace/.git -Force -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788767187514
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content workspace/.git/HEAD; Write-Output '--- packed refs ---'; Get-Content workspace/.git/packed-refs -ErrorAction SilentlyContinue | Select-Object -First 5; Write-Output '--- HEAD log (last 30) ---'; Get-Content workspace/.git/logs/HEAD -ErrorAction SilentlyContinue | Select-Object -Last 30\"}",
+      "tsMs": 1788767190671
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/createMarginSurface.js\"}",
+      "tsMs": 1788767190681
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/docs\",\"pattern\":\"V2\\\\.1|Floating Window|floating host|vertical slice\",\"maxResults\":80}",
+      "tsMs": 1788767197964
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace/docs/validation -File | Select-Object Name,LastWriteTime; Write-Output '--- sdd dirs ---'; Get-ChildItem workspace/.superpowers/sdd -Directory -ErrorAction SilentlyContinue | Select-Object Name\"}",
+      "tsMs": 1788767197975
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":60,\"pattern\":\"margin_surface_assets_missing|createElectronHost|single.?instance|requestSingleInstanceLock\",\"path\":\"workspace\"}",
+      "tsMs": 1788767201203
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem workspace -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -gt (Get-Date '2026-09-01') } | Select-Object FullName,LastWriteTime,Length | Sort-Object LastWriteTime | Format-Table -AutoSize\"}",
+      "tsMs": 1788767201303
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '--- refs/heads/main ---'; Get-Content workspace/.git/refs/heads/main; Write-Output '--- logs/refs/heads/main tail ---'; Get-Content workspace/.git/logs/refs/heads/main -ErrorAction SilentlyContinue | Select-Object -Last 8; Write-Output '--- ORIG_HEAD ---'; Get-Content workspace/.git/ORIG_HEAD -ErrorAction SilentlyContinue; Write-Output '--- REBASE_HEAD ---'; Get-Content workspace/.git/REBASE_HEAD -ErrorAction SilentlyContinue; Write-Output '--- COMMIT_EDITMSG ---'; Get-Content workspace/.git/COMMIT_EDITMSG -ErrorAction SilentlyContinue; Write-Output '--- worktrees ---'; Get-ChildItem workspace/.git/worktrees -Recurse -Depth 1 -ErrorAction SilentlyContinue | Select-Object FullName; Write-Output '--- backup ref ---'; Get-Content workspace/.git/refs/heads/backup/pre-resource-bar-baseline -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788767223553
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '--- .gitignore ---'; Get-Content workspace/.gitignore; Write-Output '--- web dir ---'; Get-ChildItem workspace/web -Force | Select-Object Name; Write-Output '--- web/dist? ---'; Test-Path workspace/web/dist; Write-Output '--- architecture dir ---'; Get-ChildItem workspace/docs/architecture -File | Select-Object Name; Write-Output '--- data dir top ---'; Get-ChildItem workspace/data -Force | Select-Object Name | Select-Object -First 30\"}",
+      "tsMs": 1788767231243
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '--- design-references ---'; Get-ChildItem workspace/design-references -Force -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- experiments ---'; Get-ChildItem workspace/experiments -Force -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- evaluation ---'; Get-ChildItem workspace/evaluation -Force -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- docs/validation subdirs ---'; Get-ChildItem workspace/docs/validation -Directory -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- data .margin ---'; Get-ChildItem workspace -Force -Directory -Filter '.margin' -ErrorAction SilentlyContinue | Select-Object Name; Write-Output '--- electron log files at root? ---'; Get-ChildItem workspace -File -Filter 'electron*' -Force | Select-Object Name\"}",
+      "tsMs": 1788767267776
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/scripts/run-margin-surface.js\"}",
+      "tsMs": 1788767275599
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output '--- src/core/handoff files ---'; Get-ChildItem workspace/src/core/handoff -File | Select-Object Name; Write-Output '--- margin web files ---'; Get-ChildItem workspace/web/src/margin -File | Select-Object Name; Write-Output '--- key src check ---'; Test-Path workspace/src/core/handoff/httpAdapter.js; Test-Path workspace/web/margin.html; Test-Path workspace/web/src/margin/MarginApp.js; Test-Path workspace/electron/main.js; Test-Path workspace/test/electronHost.test.js; Test-Path workspace/test/marginCli.test.js; Write-Output '--- docs validation md files ---'; Get-ChildItem workspace/docs/validation -Filter '*.md' | Select-Object Name\"}",
+      "tsMs": 1788767275599
+    }
+  ],
+  "deniedToolCalls": [],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 132768,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-10",
+    "arm": "B",
+    "runId": "formal-case-10-B-2026-09-07T07-46-00-398Z",
+    "startMs": "2026-09-07T07:46:08.303Z",
+    "endMs": "2026-09-07T07:48:22.418Z",
+    "durationMs": 134115,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-10-B-2026-09-07T07-46-00-398Z status=ok durationMs=132768\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-10-B-2026-09-07T07-46-00-398Z.cert.json"
+  }
+}

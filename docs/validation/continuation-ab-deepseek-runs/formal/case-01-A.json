@@ -1,0 +1,324 @@
+{
+  "runId": "formal-case-01-A-2026-09-07T06-03-24-378Z",
+  "caseId": "case-01",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T06:03:31.965Z",
+  "endTs": "2026-09-07T06:07:50.660Z",
+  "durationMs": 258695,
+  "modelPromptStartMs": 36,
+  "modelPromptEndMs": 258695,
+  "sessionId": "01a07a76-f71d-7328-922e-e215667559e1",
+  "rawResponse": "Based on my investigation of the transcript and the frozen workspace, here is the recovery state.\n\n```json\n{\n  \"goal\": \"Margin V2.2 'Agent Source Management' slice on the <repo> repo (git a247e75, remote YJ-Q/Echo): build one profile-scoped Agent Source Registry shared by CLI and Electron, with Auto Detect + Manual Register + minimal adapters (detect / validateSource / discoverSessions). Add CLI commands `margin agent list|detect|add <type> --path <path>|remove <id>`; add Electron Settings 'Agent Sources' (Auto Detect, Add Source, Change path, Remove manual source) and a Board prompt 'No supported Agent sources found' when no supported agent exists; unsupported Pi/DeepSeek/Custom sources may register but must never fabricate sessions ('Registered · Adapter required'); Claude shows Partial (no quota); Codex keeps full discovery plus 5h/7d Resource Status; Resource Bar must read quota from the active Codex source (shared manual/env path precedence); CLI and Electron must see the same registry and active source. No credentials/tokens/sessions stored. Validate with focused tests + build + Forge make + fresh-install smoke; deliver a PASS or PARTIAL report and stop development after PASS.\",\n  \"progress\": \"The frozen workspace already contains the V2.2 implementation left by the original session, and it is internally consistent. New files present: src/agents/sourceRegistry.js (type allowlist codex/claude/pi/deepseek/custom; supportLevel Full/Partial/'Registered · Adapter required'; registry at ~/.margin/agent-sources.json keyed off USERPROFILE/HOME/homedir; normalize/read/write/register/remove/validate/detect; resolveActiveSource precedence = last manual source → env-path match (CODEX_HOME/CLAUDE_HOME) → last auto source; stores only id/type/name/path/origin/enabled/supportLevel), src/agents/adapters.js (codex discoverSessions delegates to session-source.discoverSessions(source.path); claude discoverSessions → []; other types adapterFor→null), src/cli/agentSourceCli.js, and test/agentSourceRegistry.test.js (3 tests). Modified files in workspace: bin/margin.js (dispatches `margin agent`), src/core/handoff/httpAdapter.js (startup convenience detect+persist that preserves manual sources; GET/POST/DELETE /api/agent-sources; POST /api/agent-sources/detect; discovery and /api/resources/status both resolve the active Codex source), web/src/margin/MarginApp.js, web/src/margin/SessionBoard.js (Settings panel 'Agent Sources' with Auto Detect/Add Source/Change path/Remove for manual; EmptySources 'No supported Agent sources found'), web/src/margin/marginApiClient.js, src/resources/codexQuotaSource.js and src/resources/agentResourceService.js (quota reads active source path via shared resolveCodexHome). Git HEAD is still a247e75 (the commit recorded at session start); all V2.2 changes and the new untracked files were never committed. The frozen working tree also carries other dirty/untracked items (e.g. src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js, Margin_Phase0_PoC_Plan.md, experiments/, scripts/run-feishu-surface.js etc., src/runtime/claude/, src/surfaces/) whose origin the transcript does not clearly attribute to V2.2.\",\n  \"pending\": \"The transcript ends with the assistant's PASS final answer and a task_complete event (single user request; no later user turn). In the current repo state there is no committed V2.2 result and nothing further to implement: the durable close-out steps are still open — (a) the V2.2 edits/new files are uncommitted relative to HEAD a247e75; (b) the requested written report exists only as the chat final answer, not as a repository artifact; (c) no independent post-session validation was performed in this environment (no Node, node_modules, .runtime, or out2 artifacts present); (d) full-suite greenness was never re-established even historically (see historicalValidation). If the workflow continues, the remaining activity is verification/durable close-out, not new feature development.\",\n  \"historicalValidation\": \"From the original transcript only (not reproducible here): final answer claimed PASS — focused source/CLI/resource/board tests 13/13 passing, `npm run build` passed, `npm run electron:make` produced out2\\\\make\\\\squirrel.windows\\\\x64\\\\margin-0.1.0 Setup.exe, and the packaged app smoke-launched from a temp directory without repo cwd or global Node. TAP summaries recorded in-session: tests=20 pass=20 fail=0; tests=13 pass=13 fail=0 (consistent with agentSourceRegistry 3 + agentResourceQuota 4 + marginR3Board 6); tests=6 pass=6; a margin-focused run tests=88 pass=86 fail=2 (2 marginR3Board DOM failures later addressed via a SessionBoard.js change); and an earlier full-suite run tests=614 pass=603 fail=11 whose failing groups included marginR3Board DOM errors, v1IntegrationBoundary.test.js Electron-era assertions (no electron/ dir, no Electron main entry, no electron dependency, web-workbench start script), and webWorkbenchComposition.test.js contractVersion '1.0' vs '1.1' mismatches. No later full-suite run with 0 failures is recorded. These are historical reports from the original <repo> environment and are not current validation of the frozen workspace.\",\n  \"recommendedFollowUp\": \"Candidate actions, contingent on an environment that can actually run them (not executable as-is in this sandbox): (1) in a Node-enabled checkout with node_modules and the pinned runtime restored, re-run the focused tests (test/agentSourceRegistry.test.js, test/agentResourceQuota.test.js, test/marginR3Board.test.js, test/marginCli.test.js, test/marginDiscoveryParity.test.js), `npm run build`, and `npm run electron:make`, and compare with the historical PASS claim; (2) if a green full `npm test` is desired for close-out, first reconcile the still-present stale tests — test/v1IntegrationBoundary.test.js still asserts no `electron` directory/main/dependency and a web-workbench `start` script, and test/webWorkbenchComposition.test.js still expects contractVersion '1.0' while the code now reports CONTRACT_VERSION — none of which were updated in the recorded session; (3) before committing, review the whole working-tree diff, giving special attention to modified files whose patches were not observed in the transcript (e.g. src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js), to decide what belongs to the V2.2 slice; (4) commit the V2.2 code (new src/agents/, src/cli/agentSourceCli.js, test/agentSourceRegistry.test.js plus the tracked edits) only after that re-validation; (5) confirm whether a persisted V2.2 report is required as a deliverable, since only a chat final answer exists.\",\n  \"currentApplicability\": \"The transcript's PASS/test/build/installer/smoke claims applied to the original environment and are only partially corroborated by the frozen repo: the V2.2 source is present and consistent (CLI dispatch, HTTP endpoints, UI settings/board prompt, shared resolver, and the new test file all exist), supporting that the slice was implemented. However, none of the test/build/package/smoke claims can be confirmed as currently true in this workspace: node_modules, the pinned Node runtime (.runtime/...), and the out2 installer/build artifacts are absent and Node is unavailable, so no command could be re-run here; and the earlier 11-failure full-suite report plus the unchanged stale test files (v1IntegrationBoundary.test.js, webWorkbenchComposition.test.js) mean overall full-suite greenness is unverified both historically and now. Any real registry contents in ~/.margin/agent-sources.json (outside this sandbox) are unknown.\",\n  \"unsafeAssumptions\": [\n    \"Assuming the historical 'PASS', '13/13 passing', 'npm run build passed', 'electron:make produced Setup.exe', and 'packaged smoke succeeded' still hold for the current workspace; none are re-verifiable here because dependencies, the pinned runtime, and build artifacts are absent.\",\n    \"Assuming the V2.2 work is committed or protected by git history; HEAD is still a247e75 and all V2.2 files are uncommitted/untracked working-tree content.\",\n    \"Assuming a ~/.margin/agent-sources.json registry exists or that real auto-detection results (actual Codex/Claude home directories) were observed; the registry lives in the real user profile outside this sandbox and its state is unknown.\",\n    \"Assuming every file dirty at session end belongs to the V2.2 slice; diffs for src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, and src/runtime/pi/piTerminalPilotRuntime.js were not observed being patched in the transcript.\",\n    \"Assuming the full test suite passes; a recorded full run had 11 failures and no later full-suite green run exists, and the failing test files (v1IntegrationBoundary.test.js, webWorkbenchComposition.test.js) remain unchanged in the workspace.\",\n    \"Assuming a written V2.2 report exists in the repository; only the chat final answer was produced.\",\n    \"Assuming a packaged installer/margin.exe exists in this environment; out2 and build outputs are absent from the workspace.\",\n    \"Assuming Electron/CLI UI behaviors (detect/add/change/remove, empty-source prompt, resource-bar source binding) are functionally verified; they are corroborated only by code inspection and historical reports, not by running the app here.\",\n    \"Assuming the transcript's intermediate full-suite output and focused-run counts map precisely to the current tree; they were produced against <repo> at various in-session moments, several before later fixes.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Margin V2.2 'Agent Source Management' slice on the <repo> repo (git a247e75, remote YJ-Q/Echo): build one profile-scoped Agent Source Registry shared by CLI and Electron, with Auto Detect + Manual Register + minimal adapters (detect / validateSource / discoverSessions). Add CLI commands `margin agent list|detect|add <type> --path <path>|remove <id>`; add Electron Settings 'Agent Sources' (Auto Detect, Add Source, Change path, Remove manual source) and a Board prompt 'No supported Agent sources found' when no supported agent exists; unsupported Pi/DeepSeek/Custom sources may register but must never fabricate sessions ('Registered · Adapter required'); Claude shows Partial (no quota); Codex keeps full discovery plus 5h/7d Resource Status; Resource Bar must read quota from the active Codex source (shared manual/env path precedence); CLI and Electron must see the same registry and active source. No credentials/tokens/sessions stored. Validate with focused tests + build + Forge make + fresh-install smoke; deliver a PASS or PARTIAL report and stop development after PASS.",
+    "progress": "The frozen workspace already contains the V2.2 implementation left by the original session, and it is internally consistent. New files present: src/agents/sourceRegistry.js (type allowlist codex/claude/pi/deepseek/custom; supportLevel Full/Partial/'Registered · Adapter required'; registry at ~/.margin/agent-sources.json keyed off USERPROFILE/HOME/homedir; normalize/read/write/register/remove/validate/detect; resolveActiveSource precedence = last manual source → env-path match (CODEX_HOME/CLAUDE_HOME) → last auto source; stores only id/type/name/path/origin/enabled/supportLevel), src/agents/adapters.js (codex discoverSessions delegates to session-source.discoverSessions(source.path); claude discoverSessions → []; other types adapterFor→null), src/cli/agentSourceCli.js, and test/agentSourceRegistry.test.js (3 tests). Modified files in workspace: bin/margin.js (dispatches `margin agent`), src/core/handoff/httpAdapter.js (startup convenience detect+persist that preserves manual sources; GET/POST/DELETE /api/agent-sources; POST /api/agent-sources/detect; discovery and /api/resources/status both resolve the active Codex source), web/src/margin/MarginApp.js, web/src/margin/SessionBoard.js (Settings panel 'Agent Sources' with Auto Detect/Add Source/Change path/Remove for manual; EmptySources 'No supported Agent sources found'), web/src/margin/marginApiClient.js, src/resources/codexQuotaSource.js and src/resources/agentResourceService.js (quota reads active source path via shared resolveCodexHome). Git HEAD is still a247e75 (the commit recorded at session start); all V2.2 changes and the new untracked files were never committed. The frozen working tree also carries other dirty/untracked items (e.g. src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js, Margin_Phase0_PoC_Plan.md, experiments/, scripts/run-feishu-surface.js etc., src/runtime/claude/, src/surfaces/) whose origin the transcript does not clearly attribute to V2.2.",
+    "pending": "The transcript ends with the assistant's PASS final answer and a task_complete event (single user request; no later user turn). In the current repo state there is no committed V2.2 result and nothing further to implement: the durable close-out steps are still open — (a) the V2.2 edits/new files are uncommitted relative to HEAD a247e75; (b) the requested written report exists only as the chat final answer, not as a repository artifact; (c) no independent post-session validation was performed in this environment (no Node, node_modules, .runtime, or out2 artifacts present); (d) full-suite greenness was never re-established even historically (see historicalValidation). If the workflow continues, the remaining activity is verification/durable close-out, not new feature development.",
+    "historicalValidation": "From the original transcript only (not reproducible here): final answer claimed PASS — focused source/CLI/resource/board tests 13/13 passing, `npm run build` passed, `npm run electron:make` produced out2\\make\\squirrel.windows\\x64\\margin-0.1.0 Setup.exe, and the packaged app smoke-launched from a temp directory without repo cwd or global Node. TAP summaries recorded in-session: tests=20 pass=20 fail=0; tests=13 pass=13 fail=0 (consistent with agentSourceRegistry 3 + agentResourceQuota 4 + marginR3Board 6); tests=6 pass=6; a margin-focused run tests=88 pass=86 fail=2 (2 marginR3Board DOM failures later addressed via a SessionBoard.js change); and an earlier full-suite run tests=614 pass=603 fail=11 whose failing groups included marginR3Board DOM errors, v1IntegrationBoundary.test.js Electron-era assertions (no electron/ dir, no Electron main entry, no electron dependency, web-workbench start script), and webWorkbenchComposition.test.js contractVersion '1.0' vs '1.1' mismatches. No later full-suite run with 0 failures is recorded. These are historical reports from the original <repo> environment and are not current validation of the frozen workspace.",
+    "recommendedFollowUp": "Candidate actions, contingent on an environment that can actually run them (not executable as-is in this sandbox): (1) in a Node-enabled checkout with node_modules and the pinned runtime restored, re-run the focused tests (test/agentSourceRegistry.test.js, test/agentResourceQuota.test.js, test/marginR3Board.test.js, test/marginCli.test.js, test/marginDiscoveryParity.test.js), `npm run build`, and `npm run electron:make`, and compare with the historical PASS claim; (2) if a green full `npm test` is desired for close-out, first reconcile the still-present stale tests — test/v1IntegrationBoundary.test.js still asserts no `electron` directory/main/dependency and a web-workbench `start` script, and test/webWorkbenchComposition.test.js still expects contractVersion '1.0' while the code now reports CONTRACT_VERSION — none of which were updated in the recorded session; (3) before committing, review the whole working-tree diff, giving special attention to modified files whose patches were not observed in the transcript (e.g. src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js), to decide what belongs to the V2.2 slice; (4) commit the V2.2 code (new src/agents/, src/cli/agentSourceCli.js, test/agentSourceRegistry.test.js plus the tracked edits) only after that re-validation; (5) confirm whether a persisted V2.2 report is required as a deliverable, since only a chat final answer exists.",
+    "currentApplicability": "The transcript's PASS/test/build/installer/smoke claims applied to the original environment and are only partially corroborated by the frozen repo: the V2.2 source is present and consistent (CLI dispatch, HTTP endpoints, UI settings/board prompt, shared resolver, and the new test file all exist), supporting that the slice was implemented. However, none of the test/build/package/smoke claims can be confirmed as currently true in this workspace: node_modules, the pinned Node runtime (.runtime/...), and the out2 installer/build artifacts are absent and Node is unavailable, so no command could be re-run here; and the earlier 11-failure full-suite report plus the unchanged stale test files (v1IntegrationBoundary.test.js, webWorkbenchComposition.test.js) mean overall full-suite greenness is unverified both historically and now. Any real registry contents in ~/.margin/agent-sources.json (outside this sandbox) are unknown.",
+    "unsafeAssumptions": [
+      "Assuming the historical 'PASS', '13/13 passing', 'npm run build passed', 'electron:make produced Setup.exe', and 'packaged smoke succeeded' still hold for the current workspace; none are re-verifiable here because dependencies, the pinned runtime, and build artifacts are absent.",
+      "Assuming the V2.2 work is committed or protected by git history; HEAD is still a247e75 and all V2.2 files are uncommitted/untracked working-tree content.",
+      "Assuming a ~/.margin/agent-sources.json registry exists or that real auto-detection results (actual Codex/Claude home directories) were observed; the registry lives in the real user profile outside this sandbox and its state is unknown.",
+      "Assuming every file dirty at session end belongs to the V2.2 slice; diffs for src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, and src/runtime/pi/piTerminalPilotRuntime.js were not observed being patched in the transcript.",
+      "Assuming the full test suite passes; a recorded full run had 11 failures and no later full-suite green run exists, and the failing test files (v1IntegrationBoundary.test.js, webWorkbenchComposition.test.js) remain unchanged in the workspace.",
+      "Assuming a written V2.2 report exists in the repository; only the chat final answer was produced.",
+      "Assuming a packaged installer/margin.exe exists in this environment; out2 and build outputs are absent from the workspace.",
+      "Assuming Electron/CLI UI behaviors (detect/add/change/remove, empty-source prompt, resource-bar source binding) are functionally verified; they are corroborated only by code inspection and historical reports, not by running the app here.",
+      "Assuming the transcript's intermediate full-suite output and focused-run counts map precisely to the current tree; they were produced against <repo> at various in-session moments, several before later fixes."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788761013356
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force | Select-Object Mode, LastWriteTime, Length, Name | Format-Table -AutoSize\"}",
+      "tsMs": 1788761013357
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788761015119
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788761015120
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788761015120
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788761015120
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 20\"}",
+      "tsMs": 1788761016871
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C .\\\\workspace log --oneline -20\"}",
+      "tsMs": 1788761016877
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C .\\\\workspace status\"}",
+      "tsMs": 1788761016882
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; \\\"Total lines: $($lines.Count)\\\"\"}",
+      "tsMs": 1788761022550
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; $lines | ForEach-Object { $o = $_ | ConvertFrom-Json; \\\"$($o.ordinal)|$($o.type)\\\" } | Select-Object -First 120\"}",
+      "tsMs": 1788761022560
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; $out = foreach ($l in $lines) { try { $o = $l | ConvertFrom-Json } catch { continue }; $kind = $o.type; if ($kind -eq 'response_item' -and $o.payload.type -eq 'message' -and $o.payload.role -eq 'assistant') { $txts = $o.payload.content | Where-Object { $_.type -eq 'output_text' }; foreach ($t in $txts) { $s = $t.text; if ($s.Length -gt 300) { $s = $s.Substring(0,300) }; \\\"ASST[$($o.ordinal)]: $s\\\" } } elseif ($kind -eq 'response_item' -and $o.payload.type -eq 'custom_tool_call') { \\\"TOOL[$($o.ordinal)]: $($o.payload.name) status=$($o.payload.status)\\\" } elseif ($kind -eq 'event_msg' -and $o.payload.item.type -eq 'AgentMessage') { $c = $o.payload.item.content | Where-Object { $_.type -eq 'Text' }; foreach ($cc in $c) { $s = $cc.text; if ($s.Length -gt 300) { $s = $s.Substring(0,300) }; \\\"AGENTMSG[$($o.ordinal)]: $s\\\" } } }; $out\"}",
+      "tsMs": 1788761043008
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; $out = foreach ($l in $lines) { try { $o = $l | ConvertFrom-Json } catch { continue }; if ($o.type -eq 'response_item' -and $o.payload.type -eq 'custom_tool_call') { $inp = $o.payload.input; $s = if ($inp) { ($inp | ConvertTo-Json -Compress -Depth 6) } else { '' }; if ($s.Length -gt 400) { $s = $s.Substring(0,400) }; \\\"TOOL[$($o.ordinal)] name=$($o.payload.name) id=$($o.payload.call_id) status=$($o.payload.status)`n  $s\\\" } }; $out -join \\\"`n\\\"\"}",
+      "tsMs": 1788761058919
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace/src\"}",
+      "tsMs": 1788761065020
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path .\\\\workspace\\\\src\\\\agents\\\\sourceRegistry.js; Test-Path .\\\\workspace\\\\src\\\\cli\\\\agentSourceCli.js; Test-Path .\\\\workspace\\\\test\\\\agentSourceRegistry.test.js; Test-Path .\\\\workspace\\\\web\\\\src\\\\margin\\\\SessionBoard.js; Test-Path .\\\\workspace\\\\electron\\\\main.js; Get-Content .\\\\workspace\\\\.git\\\\HEAD; Get-Content .\\\\workspace\\\\.git\\\\refs\\\\heads\\\\main -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788761065020
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"V2\\\\.2|Agent Source Management|agent-sources|sourceRegistry|Registered · Adapter required|No supported Agent\",\"path\":\"workspace\",\"maxResults\":80}",
+      "tsMs": 1788761079785
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem .\\\\workspace\\\\src\\\\agents, .\\\\workspace\\\\src\\\\cli, .\\\\workspace\\\\src\\\\resources -File | Select-Object Directory,Name,Length | Format-Table -AutoSize\"}",
+      "tsMs": 1788761079891
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; for ($i = [Math]::Max(0, $lines.Count-12); $i -lt $lines.Count; $i++) { $o = $lines[$i] | ConvertFrom-Json; $t = ($o | ConvertTo-Json -Depth 30 -Compress); if ($t.Length -gt 2500) { $t = $t.Substring(0,2500) }; \\\"--- ordinal $($o.ordinal) type=$($o.type) ---\\\"; $t; \\\"\\\" }\"}",
+      "tsMs": 1788761086079
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Test-Path .\\\\workspace\\\\node_modules; Test-Path .\\\\workspace\\\\.runtime; Test-Path .\\\\workspace\\\\out; Test-Path .\\\\workspace\\\\out2; Test-Path .\\\\workspace\\\\out-electron; Test-Path .\\\\workspace\\\\.margin; Get-Command node -ErrorAction SilentlyContinue | Select-Object Name,Source; Get-Command npm -ErrorAction SilentlyContinue | Select-Object Name,Source; Get-ChildItem .\\\\workspace\\\\src\\\\agents -Force | Select-Object Name,Length; Get-Content .\\\\workspace\\\\src\\\\agents\\\\sourceRegistry.js\"}",
+      "tsMs": 1788761099992
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"node_modules: $(Test-Path .\\\\workspace\\\\node_modules)\\\"; \\\".runtime: $(Test-Path .\\\\workspace\\\\.runtime)\\\"; \\\"out: $(Test-Path .\\\\workspace\\\\out)\\\"; \\\"out2: $(Test-Path .\\\\workspace\\\\out2)\\\"; \\\"out-electron: $(Test-Path .\\\\workspace\\\\out-electron)\\\"; \\\"node: $((Get-Command node -ErrorAction SilentlyContinue).Source)\\\"; \\\"npm: $((Get-Command npm -ErrorAction SilentlyContinue).Source)\\\"\"}",
+      "tsMs": 1788761102863
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/agents/sourceRegistry.js\"}",
+      "tsMs": 1788761102870
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/agents/adapters.js\"}",
+      "tsMs": 1788761102870
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/cli/agentSourceCli.js\"}",
+      "tsMs": 1788761102871
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/package.json\"}",
+      "tsMs": 1788761122244
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/bin/margin.js\"}",
+      "tsMs": 1788761122244
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/resources/codexQuotaSource.js\"}",
+      "tsMs": 1788761122245
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/resources/agentResourceService.js\"}",
+      "tsMs": 1788761122245
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"v1IntegrationBoundary.test.js exists: $(Test-Path .\\\\workspace\\\\test\\\\v1IntegrationBoundary.test.js)\\\"; \\\"marginR3Board.test.js exists: $(Test-Path .\\\\workspace\\\\test\\\\marginR3Board.test.js)\\\"; \\\"webWorkbenchComposition.test.js exists: $(Test-Path .\\\\workspace\\\\test\\\\webWorkbenchComposition.test.js)\\\"; \\\"marginCli.test.js exists: $(Test-Path .\\\\workspace\\\\test\\\\marginCli.test.js)\\\"; \\\"marginDiscoveryParity.test.js exists: $(Test-Path .\\\\workspace\\\\test\\\\marginDiscoveryParity.test.js)\\\"; \\\"agentResourceQuota.test.js exists: $(Test-Path .\\\\workspace\\\\test\\\\agentResourceQuota.test.js)\\\"; Get-ChildItem .\\\\workspace\\\\test -Filter \\\"*.test.js\\\" | Measure-Object | Select-Object -ExpandProperty Count\"}",
+      "tsMs": 1788761135532
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/v1IntegrationBoundary.test.js\"}",
+      "tsMs": 1788761135539
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/session-source.js\"}",
+      "tsMs": 1788761135540
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"maxResults\":40,\"path\":\"workspace\",\"pattern\":\"contractVersion\"}",
+      "tsMs": 1788761143325
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"agentSourceRegistry subtests: $((Select-String -Path .\\\\workspace\\\\test\\\\agentSourceRegistry.test.js -Pattern \\\"^test\\\\(|^\\\\s*test\\\\(\\\" -AllMatches).Count)\\\"; \\\"marginR3Board subtests: $((Select-String -Path .\\\\workspace\\\\test\\\\marginR3Board.test.js -Pattern \\\"test\\\\(\\\" -AllMatches).Count)\\\"; \\\"marginCli subtests: $((Select-String -Path .\\\\workspace\\\\test\\\\marginCli.test.js -Pattern \\\"test\\\\(\\\" -AllMatches).Count)\\\"; \\\"agentResourceQuota subtests: $((Select-String -Path .\\\\workspace\\\\test\\\\agentResourceQuota.test.js -Pattern \\\"test\\\\(\\\" -AllMatches).Count)\\\"; \\\"marginDiscoveryParity subtests: $((Select-String -Path .\\\\workspace\\\\test\\\\marginDiscoveryParity.test.js -Pattern \\\"test\\\\(\\\" -AllMatches).Count)\\\"\"}",
+      "tsMs": 1788761143398
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/agentSourceRegistry.test.js\"}",
+      "tsMs": 1788761143406
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"\\\"agentSourceRegistry: $((Select-String -Path .\\\\workspace\\\\test\\\\agentSourceRegistry.test.js -Pattern \\\"^test\\\\(\\\" | Measure-Object).Count)\\\"; \\\"marginR3Board: $((Select-String -Path .\\\\workspace\\\\test\\\\marginR3Board.test.js -Pattern \\\"^test\\\\(\\\" | Measure-Object).Count)\\\"; \\\"marginCli: $((Select-String -Path .\\\\workspace\\\\test\\\\marginCli.test.js -Pattern \\\"^test\\\\(\\\" | Measure-Object).Count)\\\"; \\\"agentResourceQuota: $((Select-String -Path .\\\\workspace\\\\test\\\\agentResourceQuota.test.js -Pattern \\\"^test\\\\(\\\" | Measure-Object).Count)\\\"; \\\"marginDiscoveryParity: $((Select-String -Path .\\\\workspace\\\\test\\\\marginDiscoveryParity.test.js -Pattern \\\"^test\\\\(\\\" | Measure-Object).Count)\\\"\"}",
+      "tsMs": 1788761149537
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\workspace\\\\.git\\\\logs\\\\HEAD -ErrorAction SilentlyContinue | Select-Object -Last 15; \\\"---- config ----\\\"; Get-Content .\\\\workspace\\\\.git\\\\config -ErrorAction SilentlyContinue\"}",
+      "tsMs": 1788761149544
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/MarginApp.js\",\"limitChars\":6000}",
+      "tsMs": 1788761149549
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/test/agentSourceRegistry.test.js\",\"pattern\":\"^test\\\\(\"}",
+      "tsMs": 1788761153806
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/test/marginR3Board.test.js\",\"pattern\":\"^test\\\\(|^  test\\\\(|^    test\\\\(\",\"maxResults\":40}",
+      "tsMs": 1788761153806
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/test/marginCli.test.js\",\"pattern\":\"^test\\\\(\"}",
+      "tsMs": 1788761153806
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/test/agentResourceQuota.test.js\",\"pattern\":\"^test\\\\(\"}",
+      "tsMs": 1788761153807
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/test/marginDiscoveryParity.test.js\",\"pattern\":\"^test\\\\(\"}",
+      "tsMs": 1788761153807
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/test/agentSourceRegistry.test.js\",\"pattern\":\"^test\\\\('\"}",
+      "tsMs": 1788761157701
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$files = 'agentSourceRegistry','marginR3Board','marginCli','agentResourceQuota','marginDiscoveryParity'; foreach ($f in $files) { $c = (Select-String -Path \\\".\\\\workspace\\\\test\\\\$f.test.js\\\" -Pattern \\\"^\\\\s*test\\\\('\\\").Count; Write-Output \\\"$f : $c\\\" }\"}",
+      "tsMs": 1788761157702
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; foreach ($l in $lines) { try { $o = $l | ConvertFrom-Json } catch { continue }; if ($o.type -eq 'event_msg' -and $o.payload.item.type -eq 'CommandExecution') { $item = $o.payload.item; $id = $item.id; $out = $item.stdout; $code = $item.exit_code; $matches = [regex]::Matches($out, '(?m)^# (tests|pass|fail) (\\\\d+)'); $sum = ($matches | ForEach-Object { \\\"$($_.Groups[1].Value)=$($_.Groups[2].Value)\\\" }) -join ' '; $notok = ([regex]::Matches($out, '(?m)^not ok \\\\d+')).Count; \\\"EXEC $id exit=$code $sum notok_total=$notok\\\" } }\"}",
+      "tsMs": 1788761168135
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$raw = Get-Content .\\\\input\\\\session.jsonl -Raw; $m = [regex]::Matches($raw, '(?m)# (tests|pass|fail|cancelled|skipped|todo) (\\\\d+)'); $seen = @(); foreach ($x in $m) { $key = \\\"$($x.Groups[1].Value)=$($x.Groups[2].Value)\\\"; if ($seen -notcontains $key) { $seen += $key } }; $seen -join '  '\"}",
+      "tsMs": 1788761175991
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$raw = Get-Content .\\\\input\\\\session.jsonl -Raw; [regex]::Matches($raw, '(?m)^not ok \\\\d+[^\\\\r\\\\n]*').Value | Select-Object -Unique | Select-Object -First 60\"}",
+      "tsMs": 1788761175998
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\"}",
+      "tsMs": 1788761201371
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\",\"limitChars\":5000}",
+      "tsMs": 1788761201372
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"offsetChars\":5000,\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788761232241
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$raw = Get-Content .\\\\input\\\\session.jsonl -Raw; [regex]::Matches($raw, '\\\"role\\\":\\\"user\\\"').Count\"}",
+      "tsMs": 1788761236875
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; $found = @(); for ($i=0; $i -lt $lines.Count; $i++) { $s = $lines[$i]; if ($s -match '\\\"type\\\":\\\"task_started\\\"') { $found += \\\"line $i task_started\\\" }; if ($s -match '\\\"type\\\":\\\"task_complete\\\"') { $found += \\\"line $i task_complete\\\" } }; $found -join ' | '\"}",
+      "tsMs": 1788761236884
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "Test-Path .\\workspace\\node_modules; Test-Path .\\workspace\\.runtime; Test-Path .\\workspace\\out; Test-Path .\\workspace\\out2; Test-Path .\\workspace\\out-electron; Test-Path .\\workspace\\.margin; Get-Command node -ErrorAction SilentlyContinue | Select-Object Name,Source; Get-Command npm -ErrorAction SilentlyContinue | Select-Object Name,Source; Get-ChildItem .\\workspace\\src\\agents -Force | Select-Object Name,Length; Get-Content .\\workspace\\src\\agents\\sourceRegistry.js",
+      "reasons": [
+        "protected path fragment is disabled: \\.margin"
+      ],
+      "tsMs": 1788761099993
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 258695,
+  "controller": {
+    "phase": "formal",
+    "caseId": "case-01",
+    "arm": "A",
+    "runId": "formal-case-01-A-2026-09-07T06-03-24-378Z",
+    "startMs": "2026-09-07T06:03:30.801Z",
+    "endMs": "2026-09-07T06:07:50.663Z",
+    "durationMs": 259862,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE formal-case-01-A-2026-09-07T06-03-24-378Z status=ok durationMs=258695\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\formal-case-01-A-2026-09-07T06-03-24-378Z.cert.json"
+  }
+}

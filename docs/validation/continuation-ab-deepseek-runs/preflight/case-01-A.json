@@ -1,0 +1,275 @@
+{
+  "runId": "preflight-case-01-A-2026-09-07T05-43-24-196Z",
+  "caseId": "case-01",
+  "arm": "A",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoningLevel": "high",
+  "provider": "deepseek",
+  "infraStatus": "ok",
+  "startTs": "2026-09-07T05:43:33.038Z",
+  "endTs": "2026-09-07T05:46:53.672Z",
+  "durationMs": 200634,
+  "modelPromptStartMs": 29,
+  "modelPromptEndMs": 200634,
+  "sessionId": "01a07a64-abc8-7079-91a5-1ee6a92a7c13",
+  "rawResponse": "Based on my investigation, here is the recovered state:\n\n```json\n{\n  \"goal\": \"Implement the 'Margin V2.2 – Agent Source Management' slice (the last functional slice before real daily use): a unified Agent Source Registry + Auto Detect + Manual Register + Adapter shared by CLI and Electron. Requirements from the brief: registry stores only metadata (id/type/name/path/origin(auto|manual)/enabled/supportLevel), never credentials or session content; minimal adapter API (detect / validateSource / discoverSessions); do not rewrite the existing Codex parser/Handoff Core; Codex = full support (auto detect, manual path, session discovery, 5h/7d resource status, one shared path resolver with explicit manual > env > detected precedence); Claude = detect + manual source + Partial support only (no quota); Pi/DeepSeek/Custom registrable but shown as 'Registered · Adapter required' with no fabricated sessions; CLI gains `margin agent list|detect|add <type> --path <path>|remove <id>` with no TUI framework; Electron Settings gains 'Agent Sources' (Auto Detect, Add Source, Change path, Remove manual) plus a 'No supported Agent sources found' board prompt; Resource Bar must read quota from the currently active Codex source; CLI and Electron must see the same registry and active source.\",\n  \"progress\": \"Current repository truth (verified by direct file reads, not just the log): the frozen ./workspace contains the complete V2.2 implementation exactly as it existed on disk at the end of the recorded session (mtimes match the session's last file writes). Present files/content include: new src/agents/sourceRegistry.js (AGENT_TYPES, profile-scoped ~/.margin/agent-sources.json via registryPath(), read/write/detect/register/remove/validate, resolveActiveSource precedence manual > CODEX_HOME-matching auto > detected), new src/agents/adapters.js (codex full via session-source discovery; claude Partial with no sessions; null adapter for others), new src/cli/agentSourceCli.js (list/detect/add/remove), new test/agentSourceRegistry.test.js (3 tests incl. profile-scoped persistence and manual-over-CODEX_HOME), modified bin/margin.js (agent dispatch + registry-based CLI discovery), modified src/core/handoff/httpAdapter.js (agent-source GET/POST/DELETE + detect routes, startup detect-and-persist, /api/sessions and /api/resources/status now resolve the active Codex source), modified src/resources/agentResourceService.js (accepts codexHome) and codexQuotaSource.js ('import os' + resolveCodexHome alias), modified web/src/margin/marginApiClient.js (listAgentSources/detectAgentSources/addAgentSource/removeAgentSource), MarginApp.js (source state + onSourcesChanged wiring), SessionBoard.js (Agent Sources settings UI, Add/Change path/Remove, 'No supported Agent sources found' empty state, sources-guard fix). Nothing in the log indicates any V2.2 file was reverted after these writes.\",\n  \"pending\": \"1) All V2.2 changes plus numerous pre-existing unrelated dirty/untracked files are UNCOMMITTED (final session `git status --short` lists M bin/margin.js, src/core/handoff/httpAdapter.js, src/core/persistentWorkRepository.js, src/resources/agentResourceService.js, src/resources/codexQuotaSource.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js, web margin app files, and ?? src/agents/, src/cli/agentSourceCli.js, test/agentSourceRegistry.test.js, src/runtime/claude/, src/surfaces/, experiments/, feishu scripts, Margin_Phase0_PoC_Plan.md). No `git commit` appears anywhere in the session. 2) After the last code fix only focused test files were re-run (agentSourceRegistry + agentResourceQuota + marginR3Board + earlier margin*.test.js); a full `npm test` suite pass after the final state is NOT evidenced. 3) The brief's real validation list (e.g., GUI changes the active Codex source and CLI then sees the same source; CLI manual Codex and Electron use the same source) was only partially evidenced (auto-detect CLI run and a packaged-app launch smoke); live cross-surface parity was not clearly demonstrated. 4) Docs/CHANGELOG/acceptance report updates for V2.2 were not made (no in-session doc changes observed).\",\n  \"historicalValidation\": \"From input/session.jsonl only (not re-run here): early TDD failure 'os is not defined' in codexQuotaSource tests was fixed by adding `import os` (ordinal ~97-103); npm run build passed at ~ordinal 111 and again ~ordinal 226 (Vite, 26 modules); CLI `margin agent list` and `agent detect` executed successfully on the real machine listing Codex/Claude sources (~ordinal 111); focused tests agentSourceRegistry/agentResourceQuota/marginCli/marginDiscoveryParity passed (~137-140) and again agentSourceRegistry/agentResourceQuota/marginR3Board passed (~223-226); margin*.test.js passed (~144); marginR3Board.test.js passed (~157-160); git diff --check passed with only LF/CRLF warnings (~196, ~256); electron:make ultimately produced out2\\\\make\\\\squirrel.windows\\\\x64\\\\margin-0.1.0 Setup.exe (~235); packaged Margin app launched from a temp no-cwd directory smoke test PASS (~246-249); final assistant message self-reported 'PASS – V2.2 Agent Source Management ready for real daily use' (~261). These are historical claims and are NOT current validation because this sandbox has no node/node_modules/.runtime/git and excluded build artifacts.\",\n  \"recommendedFollowUp\": \"In a fully provisioned clone of this workspace (node_modules + .runtime bootstrap + git available): (1) run the full `npm test` suite and `npm run build` to confirm the final on-disk state actually passes, since only focused tests were re-run after the last code change; (2) run `git diff --check` and review `git status`/`git diff` to separate the V2.2 delta (src/agents/*, src/cli/agentSourceCli.js, test/agentSourceRegistry.test.js, and the M edits to bin/margin.js, src/core/handoff/httpAdapter.js, src/resources/agentResourceService.js, src/resources/codexQuotaSource.js, web/src/margin/*) from pre-existing unrelated dirty/untracked files; (3) commit the V2.2 change set (no commit exists); (4) if still required by the brief, complete the live CLI<->Electron shared-source parity validation and any documentation/acceptance note. Treat these as recommendations for that provisioned environment, not as actions executable inside this read-only sandbox.\",\n  \"currentApplicability\": \"The frozen ./workspace is a faithful end-of-session copy of the source tree for this task: every V2.2 file the session created or edited is present with its final recorded content and matching mtimes, and untracked-file presence mirrors the session's final git status. A continuation can safely treat the V2.2 implementation as present on disk and proceed from an uncommitted, nominally-complete state. Caveats: gitignored/derived content (node_modules/, .runtime/, web/dist/, out*/out2, handoff-output/, .margin/, data payloads, .env) was excluded from the copy, node and git binaries are unavailable here, and the registry's real runtime state (C:\\\\Users\\\\<user>\\\\.codex, ~/.margin/agent-sources.json) belongs to the original host and is not present; therefore test/build/packaging success and live-detection behavior are UNVERIFIED for this snapshot.\",\n  \"unsafeAssumptions\": [\n    \"That the session's final self-reported 'PASS' summary is current truth; it is an assistant report and no test/build has been re-executed against this workspace copy.\",\n    \"That passing focused tests (agentSourceRegistry/agentResourceQuota/margin*/R3 board, ~13 tests) implies the full `npm test` suite passes on the final code; the full suite was not re-run after the last fix.\",\n    \"That the workspace snapshot is byte-identical to the session's final on-disk state for every file; only the key V2.2 files were individually verified.\",\n    \"That the electron:make artifact (out2 Setup.exe, 520 MB) remains valid/current; out2 is excluded from the sandbox and cannot be inspected.\",\n    \"That tracked modifications not touched by this session (src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js) and other untracked items are a pre-existing baseline rather than errors; this is inferred only from the absence of in-session edits because git history cannot be inspected (no git binary).\",\n    \"That git HEAD content equals whatever the session began with; unverifiable in this environment.\",\n    \"That registry/manual-source data or detected Codex/Claude paths from the original machine (~/.margin/agent-sources.json, .codex/.claude profiles) would exist or resolve identically on a new host.\",\n    \"That the session log captures the complete task (it ends cleanly at ordinal ~264 with a final answer); if the log was truncated there is no evidence of additional pending work, but that possibility cannot be fully excluded.\",\n    \"That the excluded/ignored directories (node_modules, .runtime, web/dist, handoff-output, .margin, data) contain nothing needed for source-level continuation; dependency/toolchain setup will be required before any validation.\"\n  ]\n}\n```",
+  "parsedRecovery": {
+    "goal": "Implement the 'Margin V2.2 – Agent Source Management' slice (the last functional slice before real daily use): a unified Agent Source Registry + Auto Detect + Manual Register + Adapter shared by CLI and Electron. Requirements from the brief: registry stores only metadata (id/type/name/path/origin(auto|manual)/enabled/supportLevel), never credentials or session content; minimal adapter API (detect / validateSource / discoverSessions); do not rewrite the existing Codex parser/Handoff Core; Codex = full support (auto detect, manual path, session discovery, 5h/7d resource status, one shared path resolver with explicit manual > env > detected precedence); Claude = detect + manual source + Partial support only (no quota); Pi/DeepSeek/Custom registrable but shown as 'Registered · Adapter required' with no fabricated sessions; CLI gains `margin agent list|detect|add <type> --path <path>|remove <id>` with no TUI framework; Electron Settings gains 'Agent Sources' (Auto Detect, Add Source, Change path, Remove manual) plus a 'No supported Agent sources found' board prompt; Resource Bar must read quota from the currently active Codex source; CLI and Electron must see the same registry and active source.",
+    "progress": "Current repository truth (verified by direct file reads, not just the log): the frozen ./workspace contains the complete V2.2 implementation exactly as it existed on disk at the end of the recorded session (mtimes match the session's last file writes). Present files/content include: new src/agents/sourceRegistry.js (AGENT_TYPES, profile-scoped ~/.margin/agent-sources.json via registryPath(), read/write/detect/register/remove/validate, resolveActiveSource precedence manual > CODEX_HOME-matching auto > detected), new src/agents/adapters.js (codex full via session-source discovery; claude Partial with no sessions; null adapter for others), new src/cli/agentSourceCli.js (list/detect/add/remove), new test/agentSourceRegistry.test.js (3 tests incl. profile-scoped persistence and manual-over-CODEX_HOME), modified bin/margin.js (agent dispatch + registry-based CLI discovery), modified src/core/handoff/httpAdapter.js (agent-source GET/POST/DELETE + detect routes, startup detect-and-persist, /api/sessions and /api/resources/status now resolve the active Codex source), modified src/resources/agentResourceService.js (accepts codexHome) and codexQuotaSource.js ('import os' + resolveCodexHome alias), modified web/src/margin/marginApiClient.js (listAgentSources/detectAgentSources/addAgentSource/removeAgentSource), MarginApp.js (source state + onSourcesChanged wiring), SessionBoard.js (Agent Sources settings UI, Add/Change path/Remove, 'No supported Agent sources found' empty state, sources-guard fix). Nothing in the log indicates any V2.2 file was reverted after these writes.",
+    "pending": "1) All V2.2 changes plus numerous pre-existing unrelated dirty/untracked files are UNCOMMITTED (final session `git status --short` lists M bin/margin.js, src/core/handoff/httpAdapter.js, src/core/persistentWorkRepository.js, src/resources/agentResourceService.js, src/resources/codexQuotaSource.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js, web margin app files, and ?? src/agents/, src/cli/agentSourceCli.js, test/agentSourceRegistry.test.js, src/runtime/claude/, src/surfaces/, experiments/, feishu scripts, Margin_Phase0_PoC_Plan.md). No `git commit` appears anywhere in the session. 2) After the last code fix only focused test files were re-run (agentSourceRegistry + agentResourceQuota + marginR3Board + earlier margin*.test.js); a full `npm test` suite pass after the final state is NOT evidenced. 3) The brief's real validation list (e.g., GUI changes the active Codex source and CLI then sees the same source; CLI manual Codex and Electron use the same source) was only partially evidenced (auto-detect CLI run and a packaged-app launch smoke); live cross-surface parity was not clearly demonstrated. 4) Docs/CHANGELOG/acceptance report updates for V2.2 were not made (no in-session doc changes observed).",
+    "historicalValidation": "From input/session.jsonl only (not re-run here): early TDD failure 'os is not defined' in codexQuotaSource tests was fixed by adding `import os` (ordinal ~97-103); npm run build passed at ~ordinal 111 and again ~ordinal 226 (Vite, 26 modules); CLI `margin agent list` and `agent detect` executed successfully on the real machine listing Codex/Claude sources (~ordinal 111); focused tests agentSourceRegistry/agentResourceQuota/marginCli/marginDiscoveryParity passed (~137-140) and again agentSourceRegistry/agentResourceQuota/marginR3Board passed (~223-226); margin*.test.js passed (~144); marginR3Board.test.js passed (~157-160); git diff --check passed with only LF/CRLF warnings (~196, ~256); electron:make ultimately produced out2\\make\\squirrel.windows\\x64\\margin-0.1.0 Setup.exe (~235); packaged Margin app launched from a temp no-cwd directory smoke test PASS (~246-249); final assistant message self-reported 'PASS – V2.2 Agent Source Management ready for real daily use' (~261). These are historical claims and are NOT current validation because this sandbox has no node/node_modules/.runtime/git and excluded build artifacts.",
+    "recommendedFollowUp": "In a fully provisioned clone of this workspace (node_modules + .runtime bootstrap + git available): (1) run the full `npm test` suite and `npm run build` to confirm the final on-disk state actually passes, since only focused tests were re-run after the last code change; (2) run `git diff --check` and review `git status`/`git diff` to separate the V2.2 delta (src/agents/*, src/cli/agentSourceCli.js, test/agentSourceRegistry.test.js, and the M edits to bin/margin.js, src/core/handoff/httpAdapter.js, src/resources/agentResourceService.js, src/resources/codexQuotaSource.js, web/src/margin/*) from pre-existing unrelated dirty/untracked files; (3) commit the V2.2 change set (no commit exists); (4) if still required by the brief, complete the live CLI<->Electron shared-source parity validation and any documentation/acceptance note. Treat these as recommendations for that provisioned environment, not as actions executable inside this read-only sandbox.",
+    "currentApplicability": "The frozen ./workspace is a faithful end-of-session copy of the source tree for this task: every V2.2 file the session created or edited is present with its final recorded content and matching mtimes, and untracked-file presence mirrors the session's final git status. A continuation can safely treat the V2.2 implementation as present on disk and proceed from an uncommitted, nominally-complete state. Caveats: gitignored/derived content (node_modules/, .runtime/, web/dist/, out*/out2, handoff-output/, .margin/, data payloads, .env) was excluded from the copy, node and git binaries are unavailable here, and the registry's real runtime state (C:\\Users\\<user>\\.codex, ~/.margin/agent-sources.json) belongs to the original host and is not present; therefore test/build/packaging success and live-detection behavior are UNVERIFIED for this snapshot.",
+    "unsafeAssumptions": [
+      "That the session's final self-reported 'PASS' summary is current truth; it is an assistant report and no test/build has been re-executed against this workspace copy.",
+      "That passing focused tests (agentSourceRegistry/agentResourceQuota/margin*/R3 board, ~13 tests) implies the full `npm test` suite passes on the final code; the full suite was not re-run after the last fix.",
+      "That the workspace snapshot is byte-identical to the session's final on-disk state for every file; only the key V2.2 files were individually verified.",
+      "That the electron:make artifact (out2 Setup.exe, 520 MB) remains valid/current; out2 is excluded from the sandbox and cannot be inspected.",
+      "That tracked modifications not touched by this session (src/core/persistentWorkRepository.js, src/runtime/pi/marginPiAdapter.js, src/runtime/pi/piTerminalPilotRuntime.js) and other untracked items are a pre-existing baseline rather than errors; this is inferred only from the absence of in-session edits because git history cannot be inspected (no git binary).",
+      "That git HEAD content equals whatever the session began with; unverifiable in this environment.",
+      "That registry/manual-source data or detected Codex/Claude paths from the original machine (~/.margin/agent-sources.json, .codex/.claude profiles) would exist or resolve identically on a new host.",
+      "That the session log captures the complete task (it ends cleanly at ordinal ~264 with a final answer); if the log was truncated there is no evidence of additional pending work, but that possibility cannot be fully excluded.",
+      "That the excluded/ignored directories (node_modules, .runtime, web/dist, handoff-output, .margin, data) contain nothing needed for source-level continuation; dependency/toolchain setup will be required before any validation."
+    ]
+  },
+  "hasAllRequiredKeys": true,
+  "parseError": null,
+  "toolCalls": [
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\".\"}",
+      "tsMs": 1788759814371
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"git -C ./workspace status 2>&1 | Out-String; Write-Output \\\"---LOG---\\\"; git -C ./workspace log --oneline -30 2>&1 | Out-String\"}",
+      "tsMs": 1788759814372
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"README-ENVIRONMENT.md\"}",
+      "tsMs": 1788759816922
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"input\"}",
+      "tsMs": 1788759816923
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"workspace\"}",
+      "tsMs": 1788759816923
+    },
+    {
+      "tool": "list_directory",
+      "args": "{\"path\":\"_tmp\"}",
+      "tsMs": 1788759816923
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"--- session.jsonl size/lines ---\\\"; (Get-Item .\\\\input\\\\session.jsonl).Length; (Get-Content .\\\\input\\\\session.jsonl | Measure-Object -Line).Lines\"}",
+      "tsMs": 1788759818521
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/task-8-report.md\"}",
+      "tsMs": 1788759818529
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-Content .\\\\input\\\\session.jsonl -TotalCount 40\"}",
+      "tsMs": 1788759819943
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; Write-Output \\\"TOTAL LINES: $($lines.Count)\\\"; $users = 0; for ($i=0; $i -lt $lines.Count; $i++) { $l = $lines[$i]; if ($l -match '\\\"role\\\":\\\"user\\\"') { $users++; if ($users -le 12) { Write-Output \\\"--- USER LINE $i (len $($l.Length)) ---\\\"; Write-Output ($l.Substring(0, [Math]::Min(2000, $l.Length))) } } }; Write-Output \\\"total user msgs matching: $users\\\"\"}",
+      "tsMs": 1788759825118
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; Write-Output \\\"=== LAST 12 RECORDS (trimmed to 600 chars each) ===\\\"; for ($i=[Math]::Max(0,$lines.Count-12); $i -lt $lines.Count; $i++) { $l=$lines[$i]; try { $o = $l | ConvertFrom-Json } catch { Write-Output \\\"LINE $i unparsable\\\"; continue }; $t = $o.type; $p = $o.payload; $desc = \\\"\\\"; if ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"message\\\") { $desc = \\\"[msg role=$($p.role)] \\\" + (($p.content | ForEach-Object { $_.text }) -join \\\" \\\") } elseif ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"function_call\\\") { $desc = \\\"[function_call $($p.name)] args=\\\" + $p.arguments } elseif ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"custom_tool_call\\\") { $desc = \\\"[custom_tool_call $($p.name) status=$($p.status)] \\\" + $p.input } elseif ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"custom_tool_call_output\\\") { $desc = \\\"[ctco $($p.call_id)]\\\" } elseif ($t -eq \\\"response_item\\\") { $desc = \\\"[response_item $($p.type)]\\\" } else { $desc = \\\"[$t]\\\" }; if ($desc.Length -gt 600) { $desc = $desc.Substring(0,600) + \\\"...\\\" }; Write-Output (\\\"LINE {0} {1}: {2}\\\" -f $i, $o.ordinal, $desc) }\"}",
+      "tsMs": 1788759830588
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; for ($i=0; $i -lt $lines.Count; $i++) { $l=$lines[$i]; if ($l -match '\\\"ordinal\\\":(6|7|9|10|11|12|13|14|15|16)') { Write-Output \\\"=== LINE $i ===\\\"; Write-Output ($l.Substring(0,[Math]::Min(1500,$l.Length))) } }\"}",
+      "tsMs": 1788759838325
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; for ($i=0; $i -lt 5; $i++) { $l=$lines[$i]; try { $o=$l|ConvertFrom-Json; $t=$o.type; $p=$o.payload; if ($p.type -eq \\\"message\\\") { $txt=(($p.content|ForEach-Object{$_.text}) -join \\\" \\\"); Write-Output (\\\"LINE {0} ordinal {1} msg role={2}: {3}\\\" -f $i,$o.ordinal,$p.role,$txt.Substring(0,[Math]::Min(300,$txt.Length))) } else { Write-Output (\\\"LINE {0} ordinal {1} type {2} payloadtype {3}\\\" -f $i,$o.ordinal,$t,$p.type) } } catch { Write-Output \\\"LINE $i unparsable: $($l.Substring(0,[Math]::Min(200,$l.Length)))\\\" } }\"}",
+      "tsMs": 1788759847326
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; Write-Output \\\"=== LINE 1 task_started payload ===\\\"; $o = $lines[1]|ConvertFrom-Json; $o.payload | ConvertTo-Json -Depth 6\"}",
+      "tsMs": 1788759851110
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; for ($i=170; $i -lt 254; $i++) { $l=$lines[$i]; try { $o=$l|ConvertFrom-Json } catch { continue }; $t=$o.type; $p=$o.payload; $d=\\\"\\\"; if ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"message\\\") { $d=\\\"[msg $($p.role) $($p.phase)] \\\" + ((($p.content|ForEach-Object{$_.text}) -join \\\" \\\")) } elseif ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"custom_tool_call\\\") { $d=\\\"[ctc $($p.name)] \\\" + $p.input } elseif ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"custom_tool_call_output\\\") { $o2=$p.output; $txt = (($o2 | ForEach-Object { $_.text }) -join \\\" \\\"); if ($txt.Length -gt 900) { $txt=$txt.Substring(0,900)+\\\" ...\\\" }; $d=\\\"[ctco] \\\" + $txt } elseif ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"reasoning\\\") { $d=\\\"[reasoning]\\\" } elseif ($t -eq \\\"response_item\\\") { $d=\\\"[resp $($p.type)]\\\" } else { $d=\\\"[$t]\\\" }; if ($d.Length -gt 1200) { $d=$d.Substring(0,1200)+\\\" ...\\\" }; Write-Output (\\\"L{0} o{1} {2}\\\" -f $i,$o.ordinal,$d) }\"}",
+      "tsMs": 1788759855810
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; for ($i=254; $i -lt $lines.Count; $i++) { $l=$lines[$i]; try { $o=$l|ConvertFrom-Json } catch { Write-Output \\\"L$i unparsable\\\"; continue }; $t=$o.type; $p=$o.payload; $d=\\\"\\\"; if ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"message\\\") { $d=\\\"[msg $($p.role) $($p.phase)] \\\" + ((($p.content|ForEach-Object{$_.text}) -join \\\" \\\")) } elseif ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"custom_tool_call_output\\\") { $txt = (($p.output | ForEach-Object { $_.text }) -join \\\" \\\"); if ($txt.Length -gt 2500) { $txt=$txt.Substring(0,2500)+\\\" ...\\\" }; $d=\\\"[ctco] \\\" + $txt } elseif ($t -eq \\\"response_item\\\" -and $p.type -eq \\\"reasoning\\\") { $d=\\\"[reasoning]\\\" } elseif ($t -eq \\\"response_item\\\") { $d=\\\"[resp $($p.type)]\\\" } else { $d=\\\"[$t]\\\" }; if ($d.Length -gt 3000) { $d=$d.Substring(0,3000) }; Write-Output (\\\"L{0} o{1} {2}\\\" -f $i,$o.ordinal,$d) }\"}",
+      "tsMs": 1788759860428
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Get-ChildItem -Force .\\\\workspace | Select-Object Name,Mode,LastWriteTime | Format-Table -AutoSize; Write-Output \\\"--- src/agents ---\\\"; Get-ChildItem .\\\\workspace\\\\src\\\\agents -ErrorAction SilentlyContinue | Select-Object Name,Length,LastWriteTime; Write-Output \\\"--- src/cli/agentSourceCli.js ---\\\"; Test-Path .\\\\workspace\\\\src\\\\cli\\\\agentSourceCli.js; Write-Output \\\"--- test/agentSourceRegistry.test.js ---\\\"; Test-Path .\\\\workspace\\\\test\\\\agentSourceRegistry.test.js\"}",
+      "tsMs": 1788759866745
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"Write-Output \\\"--- gitignore ---\\\"; Get-Content .\\\\workspace\\\\.gitignore; Write-Output \\\"--- data dir ---\\\"; Get-ChildItem .\\\\workspace\\\\data -Force -ErrorAction SilentlyContinue | Select-Object Name,Mode; Write-Output \\\"--- node? ---\\\"; (Get-Command node -ErrorAction SilentlyContinue).Source; Write-Output \\\"--- runtime dirs present? ---\\\"; @('.runtime','node_modules','out','out2','handoff-output','.margin','.env') | ForEach-Object { \\\"$_ : $(Test-Path (Join-Path .\\\\workspace $_))\\\" }; Write-Output \\\"--- git HEAD ---\\\"; Get-Content .\\\\workspace\\\\.git\\\\HEAD; Get-ChildItem .\\\\workspace\\\\.git\\\\refs\\\\heads -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \\\"--- electron dist? ---\\\"; Test-Path .\\\\workspace\\\\web\\\\dist; Test-Path .\\\\workspace\\\\web\\\\dist\\\\margin.html\"}",
+      "tsMs": 1788759886679
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; $hits=@(); for ($i=0; $i -lt $lines.Count; $i++) { if ($lines[$i] -match '\\\"type\\\":\\\"FileChange\\\"') { $o=$lines[$i]|ConvertFrom-Json; $item=$o.payload.item; $ch=$item.changes; foreach ($prop in $ch.PSObject.Properties) { $type=$prop.Value.type; $name=$prop.Name; $hits += (\\\"o{0} L{1} {2} {3}\\\" -f $o.ordinal,$i,$type,($name -replace [regex]::Escape('<repo>\\\\'),'')) } } }; $hits | ForEach-Object { Write-Output $_ }\"}",
+      "tsMs": 1788759898849
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; for ($i=0; $i -lt $lines.Count; $i++) { if ($lines[$i] -match '\\\"type\\\":\\\"FileChange\\\"') { $o=$lines[$i]|ConvertFrom-Json; $item=$o.payload.item; $ch=$item.changes; foreach ($prop in $ch.PSObject.Properties) { $type=$prop.Value.type; $key=[string]$prop.Name; $parts=$key.Split('\\\\'); $tail = if ($parts.Count -ge 3) { ($parts[-3..-1] -join '/') } else { $parts[-1] }; Write-Output (\\\"o{0} L{1} {2,-6} {3}\\\" -f $o.ordinal,$i,$type,$tail) } } }\"}",
+      "tsMs": 1788759904534
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; $pat = 'git (commit|add|push)|\\\"git\\\"'; $c=0; for ($i=0; $i -lt $lines.Count; $i++) { if ($lines[$i] -match 'git\\\\s+(commit|add|push)|-m\\\\s+[\\\"'']') { $c++; if ($c -le 10) { $o=$lines[$i]|ConvertFrom-Json; Write-Output (\\\"L{0} o{1} {2}\\\" -f $i,$o.ordinal,$lines[$i].Substring(0,[Math]::Min(400,$lines[$i].Length))) } } }; Write-Output \\\"total hits: $c\\\"; Write-Output \\\"--- V2.2 file workspace presence check ---\\\"; @('src/agents/sourceRegistry.js','src/agents/adapters.js','src/cli/agentSourceCli.js','test/agentSourceRegistry.test.js') | ForEach-Object { \\\"$_ => $(Test-Path (Join-Path .\\\\workspace $_))\\\" }\"}",
+      "tsMs": 1788759914414
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/agents/sourceRegistry.js\"}",
+      "tsMs": 1788759917167
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/agents/adapters.js\"}",
+      "tsMs": 1788759917168
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"agent-sources|detectAgentSources|resolveActiveSource|readAgentSourceRegistry|replaceId\",\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788759922236
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"agent|resolveActiveSource|readAgentSourceRegistry\",\"path\":\"workspace/bin/margin.js\"}",
+      "tsMs": 1788759922237
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"pattern\":\"active|resolveActiveSource|registryPath|codexQuota|import os\",\"path\":\"workspace/src/resources/codexQuotaSource.js\"}",
+      "tsMs": 1788759922237
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/src/core/handoff\",\"pattern\":\"/api/health\"}",
+      "tsMs": 1788759927410
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/core/handoff/httpAdapter.js\"}",
+      "tsMs": 1788759927413
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/bin/margin.js\",\"pattern\":\"runAgentSourceCli\"}",
+      "tsMs": 1788759931944
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/src/resources/codexQuotaSource.js\",\"pattern\":\"import os\"}",
+      "tsMs": 1788759931944
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/bin/margin.js\"}",
+      "tsMs": 1788759931945
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/resources/codexQuotaSource.js\"}",
+      "tsMs": 1788759931945
+    },
+    {
+      "tool": "run_command",
+      "args": "{\"command\":\"$lines = Get-Content .\\\\input\\\\session.jsonl; $seg = $lines[96..98] -join \\\"`n\\\"; $i = $seg.IndexOf('not ok'); if ($i -ge 0) { Write-Output ($seg.Substring($i, [Math]::Min(3000,$seg.Length-$i))) } else { Write-Output \\\"no 'not ok' found; check for failure markers\\\"; ($lines[96..98] | Select-String -Pattern 'fail|# Subtest.*[0-9]+ -|✖|command failed' -AllMatches | Select-Object -First 20 | ForEach-Object {$_.Line.Substring(0,[Math]::Min(300,$_.Line.Length))}) }\"}",
+      "tsMs": 1788759944780
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/marginApiClient.js\"}",
+      "tsMs": 1788759948360
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/MarginApp.js\"}",
+      "tsMs": 1788759948360
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\",\"pattern\":\"No supported Agent sources found|Agent Sources|listAgentSources|onSourcesChanged\"}",
+      "tsMs": 1788759974844
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/resources/agentResourceService.js\"}",
+      "tsMs": 1788759974845
+    },
+    {
+      "tool": "grep_files",
+      "args": "{\"path\":\"workspace/test/agentSourceRegistry.test.js\",\"pattern\":\"\\\\.claude\"}",
+      "tsMs": 1788759974845
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/web/src/margin/SessionBoard.js\"}",
+      "tsMs": 1788759979588
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/src/cli/agentSourceCli.js\"}",
+      "tsMs": 1788759988740
+    },
+    {
+      "tool": "read_file",
+      "args": "{\"path\":\"workspace/test/agentSourceRegistry.test.js\"}",
+      "tsMs": 1788759988740
+    }
+  ],
+  "deniedToolCalls": [
+    {
+      "command": "$lines = Get-Content .\\input\\session.jsonl; $hits=@(); for ($i=0; $i -lt $lines.Count; $i++) { if ($lines[$i] -match '\"type\":\"FileChange\"') { $o=$lines[$i]|ConvertFrom-Json; $item=$o.payload.item; $ch=$item.changes; foreach ($prop in $ch.PSObject.Properties) { $type=$prop.Value.type; $name=$prop.Name; $hits += (\"o{0} L{1} {2} {3}\" -f $o.ordinal,$i,$type,($name -replace [regex]::Escape('<repo>\\'),'')) } } }; $hits | ForEach-Object { Write-Output $_ }",
+      "reasons": [
+        "absolute path outside the sandbox is disabled: <repo>/",
+        "protected path fragment is disabled: \\code\\margin\\"
+      ],
+      "tsMs": 1788759898849
+    }
+  ],
+  "outOfSandboxAttempts": [],
+  "errors": [],
+  "note": null,
+  "hasThinkingOutput": true,
+  "workerDurationMs": 200634,
+  "controller": {
+    "phase": "preflight",
+    "caseId": "case-01",
+    "arm": "A",
+    "runId": "preflight-case-01-A-2026-09-07T05-43-24-196Z",
+    "startMs": "2026-09-07T05:43:31.967Z",
+    "endMs": "2026-09-07T05:46:53.675Z",
+    "durationMs": 201708,
+    "exitCode": 0,
+    "workerStdout": "RUN_COMPLETE preflight-case-01-A-2026-09-07T05-43-24-196Z status=ok durationMs=200634\n",
+    "workerStderr": ""
+  },
+  "isolationCertificate": {
+    "ok": true,
+    "certPath": "<repo>-bench\\ab-continuation\\records\\preflight-case-01-A-2026-09-07T05-43-24-196Z.cert.json"
+  }
+}

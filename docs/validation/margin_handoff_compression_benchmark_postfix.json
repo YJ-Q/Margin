@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "method": "Postfix outputs were generated through capture → evidence → repo truth → distill → handoff from retained native sessions. Semantic comparison remains a human review against the frozen ground truth; no benchmark-specific extraction rules are used.",
+  "frozenInputs": {
+    "baselineManifest": "docs/validation/recovery-handoffs/manifest.json",
+    "groundTruth": "docs/validation/recovery-benchmark-ground-truth.json",
+    "groundTruthSha256": "5485df6544dc6544b9cb3348b1cedfd65b67e497b394b35b6ed03d6de178d328",
+    "baselineCaseCount": 12,
+    "groundTruthCaseCount": 12
+  },
+  "cases": [
+    {
+      "case": "case-01",
+      "sessionId": "01a077ec-bd2c-78a1-8581-c7440c9bda66",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-07T02-13-18-01a077ec-bd2c-78a1-8581-c7440c9bda66.jsonl",
+      "sourceBytes": 1438110,
+      "sourceSha256": "e365d348363b592e9cdfe8507cd55978c69daf62412b11c1d13c056306a6c26a",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-01.md",
+      "handoffBytes": 7178,
+      "handoffSha256": "597eb6fc441115cf2532684e81f075c8ef7769e6b8fcc4c24ee9faaa96209133",
+      "reductionPct": 99.5008726731613
+    },
+    {
+      "case": "case-02",
+      "sessionId": "01a074ec-9f30-7c62-bb5f-257091ef242a",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T12-14-19-01a074ec-9f30-7c62-bb5f-257091ef242a.jsonl",
+      "sourceBytes": 899546,
+      "sourceSha256": "cee475775fdb647f3650306c43c12f7026721769b637b6f5651a2b5f0f386c96",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-02.md",
+      "handoffBytes": 5111,
+      "handoffSha256": "9a0c5c8bea0b0bdb09dfde18da43ed54aad64e322cde0ca7b428cab68ad66427",
+      "reductionPct": 99.43182449813573
+    },
+    {
+      "case": "case-03",
+      "sessionId": "01a0755d-e84a-7980-afaa-f98246f9436c",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T14-18-03-01a0755d-e84a-7980-afaa-f98246f9436c.jsonl",
+      "sourceBytes": 687084,
+      "sourceSha256": "9c0511185b1d49a1b1894f14ff8219fd6864256534e4b10bba94834f3edb9b5d",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-03.md",
+      "handoffBytes": 4233,
+      "handoffSha256": "4968b77dbeaba5c7286a8afb8e9c13da82b572f35f1b7552b2f9cf7fb3501374",
+      "reductionPct": 99.38391812354821
+    },
+    {
+      "case": "case-04",
+      "sessionId": "01a07639-d0ef-7452-a987-af0de51b29e3",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T18-18-15-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl",
+      "sourceBytes": 3271291,
+      "sourceSha256": "a79da02da100ee86ca5d7c5b2e4834865f8f6bda6b881d225354a112b36be408",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-04.md",
+      "handoffBytes": 3988,
+      "handoffSha256": "dab7d70112b828fa5388aeeddf381ed0a9313736819ed6621debe2e84452d43f",
+      "reductionPct": 99.87809094330036
+    },
+    {
+      "case": "case-05",
+      "sessionId": "01a07786-adf5-77a3-91ba-e4a75ceda7e7",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-07T00-21-50-01a07786-adf5-77a3-91ba-e4a75ceda7e7.jsonl",
+      "sourceBytes": 3957580,
+      "sourceSha256": "0787744584fe6f29bc428a725d387d582eaa7297679d4d41ceb23754a24d9408",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-05.md",
+      "handoffBytes": 5270,
+      "handoffSha256": "1bd1ae6b237f0830e9e446a88bc5eabe60e22c2b3492ddc2a860cf704bef8ffd",
+      "reductionPct": 99.86683781502838
+    },
+    {
+      "case": "case-06",
+      "sessionId": "01a07490-65fb-7643-9a8e-d1d7d69643be",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T10-33-35-01a07490-65fb-7643-9a8e-d1d7d69643be.jsonl",
+      "sourceBytes": 2763251,
+      "sourceSha256": "6e18dec92f65d5c36c0cc0cbbcf090688059e98ff34791907a34ea14e2cdd690",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-06.md",
+      "handoffBytes": 11723,
+      "handoffSha256": "91b6c1e66b5de8f7c97028af877d0b9c3d10a9c626c5100653c0af50a704e3df",
+      "reductionPct": 99.57575334271117
+    },
+    {
+      "case": "case-07",
+      "sessionId": "01a074d4-f3b2-76e1-8411-9f93be0a91a2",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T11-48-28-01a074d4-f3b2-76e1-8411-9f93be0a91a2.jsonl",
+      "sourceBytes": 1222548,
+      "sourceSha256": "e708e99eb83d59f8f321b45e40a6edc0c2a9579ff221b856640fd3ae3e1ae690",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-07.md",
+      "handoffBytes": 23739,
+      "handoffSha256": "9d100e9e47e57f15749290a94b0778c8a87e158dd2aa695515b38effa4f25832",
+      "reductionPct": 98.05823575025275
+    },
+    {
+      "case": "case-08",
+      "sessionId": "01a0763e-bfe9-77f1-b669-900b837d2754",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T18-23-39-01a0763e-bfe9-77f1-b669-900b837d2754.jsonl",
+      "sourceBytes": 1799202,
+      "sourceSha256": "c1d19296db2704a7f9e79b8d4cde6cb06bed6f206fd41c6ab4e0e94c1f14c56f",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-08.md",
+      "handoffBytes": 5448,
+      "handoffSha256": "987e100bb3a985235e20b8312445a33c85b4b12990bc1fb996f9e4c24b453989",
+      "reductionPct": 99.69719909159728
+    },
+    {
+      "case": "case-09",
+      "sessionId": "01a070e6-3bd9-7591-aa4e-31b364badda1",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-05T17-28-52-01a070e6-3bd9-7591-aa4e-31b364badda1.jsonl",
+      "sourceBytes": 2515611,
+      "sourceSha256": "a4ea79acaab9fe222bf899d1ed90fcceeca9441140953050ada3804d6354ee89",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-09.md",
+      "handoffBytes": 12989,
+      "handoffSha256": "b3f4dc123dbffa2f704b45eaba06385cc3e23b5d9d0933131f95ba4819da5f56",
+      "reductionPct": 99.48366420722441
+    },
+    {
+      "case": "case-10",
+      "sessionId": "01a07564-99fa-72e0-b086-4a21e5011211",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T14-25-22-01a07564-99fa-72e0-b086-4a21e5011211.jsonl",
+      "sourceBytes": 2336054,
+      "sourceSha256": "e67c3558ccfaf9199c5590612dbde28938d38f7448a2af614bff9bf93a69080b",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-10.md",
+      "handoffBytes": 14299,
+      "handoffSha256": "5e23bff6ad44e60cb9cd872f940b50a8afdb24d5e32f69745d1a5c3c1d2f97fd",
+      "reductionPct": 99.38789942355784
+    },
+    {
+      "case": "case-11",
+      "sessionId": "01a076e8-fe17-7430-b1c4-b32715a65fe8",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T21-29-36-01a076e8-fe17-7430-b1c4-b32715a65fe8.jsonl",
+      "sourceBytes": 2215417,
+      "sourceSha256": "63cdb8e06094ba0e4ee944988fe30a13a1303f8dd04c5c61b386de6bdda96ef3",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-11.md",
+      "handoffBytes": 5450,
+      "handoffSha256": "bb2e6233469ff010944e1fafdd9044e49ffa74d8af87aadeeb4a3315d5da2028",
+      "reductionPct": 99.75399665164618
+    },
+    {
+      "case": "case-12",
+      "sessionId": "01a07770-d875-7b51-bd03-e154fe30c66c",
+      "sourceSnapshot": "C:\\Users\\<user>\\.codex\\archived_sessions\\rollout-2026-09-06T23-57-59-01a07770-d875-7b51-bd03-e154fe30c66c.jsonl",
+      "sourceBytes": 1658999,
+      "sourceSha256": "f289ddbdd0146cd09c5c2f63ceebba74392a52ec4295b1eb7c572b45af162fb7",
+      "handoff": "docs/validation/recovery-handoffs-postfix/case-12.md",
+      "handoffBytes": 11448,
+      "handoffSha256": "01d4a3b81cf40a6d2e8edfd181f40b96cd7f477b4cde45b72f49b0890b276589",
+      "reductionPct": 99.30994533450593
+    }
+  ],
+  "statistics": {
+    "sourceBytes": {
+      "median": 2007309.5,
+      "mean": 2063724.4166666667
+    },
+    "handoffBytes": {
+      "median": 6314,
+      "mean": 9239.666666666666
+    },
+    "reductionPct": {
+      "median": 99.49226844019284,
+      "mean": 99.44401982122247,
+      "min": 98.05823575025275,
+      "max": 99.87809094330036
+    }
+  }
+}

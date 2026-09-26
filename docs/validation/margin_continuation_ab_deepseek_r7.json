@@ -1,0 +1,763 @@
+{
+  "benchmark": "margin_continuation_ab_deepseek_r7",
+  "schema_version": 1,
+  "generatedAt": "2026-09-07T11:44:36.489Z",
+  "model": "deepseek/deepseek-v4-flash",
+  "reasoning": "high",
+  "arms": {
+    "A": "direct recovery from raw historical Codex Session",
+    "B": "Margin R7 HANDOFF-assisted recovery"
+  },
+  "inputs": {
+    "B_dataset": "docs/validation/recovery-handoffs-r7-full (12/12, manifest frozen)",
+    "A_dataset": "docs/validation/recovery-handoffs-postfix (frozen raw session copies, byte-identical to prior)",
+    "snapshotHead": "a247e75ab9e78cce7853e3f281b85459a4f25e7c",
+    "promptSha256": "F93674E573FEBD83ABE5F19CF877EC55D2695DB0C01BA8F2037842C1C1E3D063",
+    "groundTruthSha256": "8BFA7E421299E5432C55E6DD4A2FF71C1D6B44B940C356F0A453A3F5C5FBF8FB"
+  },
+  "freeze": {
+    "config": "continuation-ab-deepseek-r7-runs/freeze-config.json",
+    "outputs": "continuation-ab-deepseek-r7-runs/freeze-manifest.json",
+    "ledger": "continuation-ab-deepseek-r7-runs/run-ledger.json"
+  },
+  "scoring": {
+    "method": "Same five fields (goal/progress/pending/validation/follow-up) and SAFE_CONTINUATION rules as the previous formal benchmark; manual semantic scoring after all 24 outputs were frozen. Runs without a parseable recovery JSON score 0/5 and are kept as observations (no retries).",
+    "safeContinuationDefinition": "structured recovery JSON with all required keys AND goal/progress/pending/validation all correct"
+  },
+  "metrics": {
+    "fieldAccuracy": {
+      "goal": "21/24",
+      "progress": "21/24",
+      "pending": "21/24",
+      "validation": "21/24",
+      "follow": "21/24",
+      "overall": "105/120",
+      "A": "55/60",
+      "B": "50/60"
+    },
+    "fieldAccuracyPct": {
+      "goal": "87.50%",
+      "progress": "87.50%",
+      "pending": "87.50%",
+      "validation": "87.50%",
+      "follow": "87.50%",
+      "overall": "87.50%",
+      "A": "91.67%",
+      "B": "83.33%"
+    },
+    "allFive": {
+      "overall": "21/24",
+      "A": "11/12",
+      "B": "10/12"
+    },
+    "safeContinuation": {
+      "overall": "21/24",
+      "A": "11/12",
+      "B": "10/12"
+    }
+  },
+  "timingMs": {
+    "A": {
+      "medianMs": 315645,
+      "meanMs": 321703
+    },
+    "B": {
+      "medianMs": 258534,
+      "meanMs": 272701
+    },
+    "pairedMedianReductionPct": 0.020539983003396767,
+    "pairedMeanReductionPct": -0.0248563667320504,
+    "pairedMedianAbsoluteSavedMs": 7369,
+    "pairedMeanAbsoluteSavedMs": 49003,
+    "bFaster": 6,
+    "aFaster": 6
+  },
+  "previousFormalForComparison": {
+    "A": {
+      "fields": "55/60",
+      "pct": "91.67%",
+      "allFive": "11/12",
+      "safe": "11/12",
+      "medianS": "378.9"
+    },
+    "B": {
+      "fields": "46/60",
+      "pct": "76.67%",
+      "allFive": "6/12",
+      "safe": "6/12",
+      "medianS": "242.5"
+    }
+  },
+  "pairs": [
+    {
+      "caseId": "case-01",
+      "A": 227914,
+      "B": 234673,
+      "reduction": -0.02965592284809193,
+      "saved": -6759,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-02",
+      "A": 107695,
+      "B": 298383,
+      "reduction": -1.7706300199637868,
+      "saved": -190688,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-03",
+      "A": 458249,
+      "B": 181655,
+      "reduction": 0.6035888785354687,
+      "saved": 276594,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-04",
+      "A": 493156,
+      "B": 168926,
+      "reduction": 0.6574593029386239,
+      "saved": 324230,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-05",
+      "A": 329785,
+      "B": 157775,
+      "reduction": 0.5215822429764847,
+      "saved": 172010,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-06",
+      "A": 327399,
+      "B": 182999,
+      "reduction": 0.4410520496397362,
+      "saved": 144400,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-07",
+      "A": 372475,
+      "B": 387181,
+      "reduction": -0.03948184441908853,
+      "saved": -14706,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-08",
+      "A": 255578,
+      "B": 493447,
+      "reduction": -0.9307099985131742,
+      "saved": -237869,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-09",
+      "A": 303891,
+      "B": 282395,
+      "reduction": 0.07073588885488546,
+      "saved": 21496,
+      "faster": "B"
+    },
+    {
+      "caseId": "case-10",
+      "A": 296563,
+      "B": 331206,
+      "reduction": -0.11681497691890086,
+      "saved": -34643,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-11",
+      "A": 294290,
+      "B": 347887,
+      "reduction": -0.18212307587753584,
+      "saved": -53597,
+      "faster": "A"
+    },
+    {
+      "caseId": "case-12",
+      "A": 393446,
+      "B": 205882,
+      "reduction": 0.4767210748107745,
+      "saved": 187564,
+      "faster": "B"
+    }
+  ],
+  "runs": [
+    {
+      "caseId": "case-01",
+      "arm": "A",
+      "title": "V2.2 Agent Source Management",
+      "sessionId": "01a077ec-bd2c-78a1-8581-c7440c9bda66",
+      "runId": "formal-case-01-A-2026-09-07T09-34-56-826Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 227914,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-01",
+      "arm": "B",
+      "title": "V2.2 Agent Source Management",
+      "sessionId": "01a077ec-bd2c-78a1-8581-c7440c9bda66",
+      "runId": "formal-case-01-B-2026-09-07T09-38-53-208Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 234673,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-02",
+      "arm": "A",
+      "title": "Slice 3.3 R1 Workspace Overview research",
+      "sessionId": "01a074ec-9f30-7c62-bb5f-257091ef242a",
+      "runId": "formal-case-02-A-2026-09-07T09-42-56-786Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 107695,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": false,
+      "parseError": "no final assistant text",
+      "score": 0,
+      "fieldScores": {
+        "goal": 0,
+        "progress": 0,
+        "pending": 0,
+        "validation": 0,
+        "follow": 0
+      },
+      "safeContinuation": false,
+      "rationale": "No final assistant text (tool-call-only stop); no recovery JSON produced. Run-level output failure, kept as observation (no retry). Same A input previously scored 5/5."
+    },
+    {
+      "caseId": "case-02",
+      "arm": "B",
+      "title": "Slice 3.3 R1 Workspace Overview research",
+      "sessionId": "01a074ec-9f30-7c62-bb5f-257091ef242a",
+      "runId": "formal-case-02-B-2026-09-07T09-44-53-082Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 298383,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": false,
+      "parseError": "no final assistant text",
+      "score": 0,
+      "fieldScores": {
+        "goal": 0,
+        "progress": 0,
+        "pending": 0,
+        "validation": 0,
+        "follow": 0
+      },
+      "safeContinuation": false,
+      "rationale": "No final assistant text (tool-call-only stop); no recovery JSON despite the R7 handoff containing full source content. Run-level output failure, kept as observation."
+    },
+    {
+      "caseId": "case-03",
+      "arm": "A",
+      "title": "V2 Floating Window Host Architecture research",
+      "sessionId": "01a0755d-e84a-7980-afaa-f98246f9436c",
+      "runId": "formal-case-03-A-2026-09-07T09-50-01-667Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 458249,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-03",
+      "arm": "B",
+      "title": "V2 Floating Window Host Architecture research",
+      "sessionId": "01a0755d-e84a-7980-afaa-f98246f9436c",
+      "runId": "formal-case-03-B-2026-09-07T09-57-49-781Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 181655,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-04",
+      "arm": "A",
+      "title": "Repository cleanup audit",
+      "sessionId": "01a07639-d0ef-7452-a987-af0de51b29e3",
+      "runId": "formal-case-04-A-2026-09-07T10-01-00-471Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 493156,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-04",
+      "arm": "B",
+      "title": "Repository cleanup audit",
+      "sessionId": "01a07639-d0ef-7452-a987-af0de51b29e3",
+      "runId": "formal-case-04-B-2026-09-07T10-09-23-430Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 168926,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-05",
+      "arm": "A",
+      "title": "Token Usage Source R1 research",
+      "sessionId": "01a07786-adf5-77a3-91ba-e4a75ceda7e7",
+      "runId": "formal-case-05-A-2026-09-07T10-12-21-479Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 329785,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-05",
+      "arm": "B",
+      "title": "Token Usage Source R1 research",
+      "sessionId": "01a07786-adf5-77a3-91ba-e4a75ceda7e7",
+      "runId": "formal-case-05-B-2026-09-07T10-18-00-197Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 157775,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-06",
+      "arm": "A",
+      "title": "Slice 2.6 Terminal Handoff Action Hierarchy Fix",
+      "sessionId": "01a07490-65fb-7643-9a8e-d1d7d69643be",
+      "runId": "formal-case-06-A-2026-09-07T10-20-47-028Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 327399,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-06",
+      "arm": "B",
+      "title": "Slice 2.6 Terminal Handoff Action Hierarchy Fix",
+      "sessionId": "01a07490-65fb-7643-9a8e-d1d7d69643be",
+      "runId": "formal-case-06-B-2026-09-07T10-26-23-536Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 182999,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-07",
+      "arm": "A",
+      "title": "Slice 3.2 Resume-first Checkpoint Experience",
+      "sessionId": "01a074d4-f3b2-76e1-8411-9f93be0a91a2",
+      "runId": "formal-case-07-A-2026-09-07T10-36-11-475Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 372475,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-07",
+      "arm": "B",
+      "title": "Slice 3.2 Resume-first Checkpoint Experience",
+      "sessionId": "01a074d4-f3b2-76e1-8411-9f93be0a91a2",
+      "runId": "formal-case-07-B-2026-09-07T10-29-35-385Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 387181,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-08",
+      "arm": "A",
+      "title": "Repository Cleanup Slice 1",
+      "sessionId": "01a0763e-bfe9-77f1-b669-900b837d2754",
+      "runId": "formal-case-08-A-2026-09-07T10-50-55-537Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 255578,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-08",
+      "arm": "B",
+      "title": "Repository Cleanup Slice 1",
+      "sessionId": "01a0763e-bfe9-77f1-b669-900b837d2754",
+      "runId": "formal-case-08-B-2026-09-07T10-42-33-005Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 493447,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-09",
+      "arm": "A",
+      "title": "Phase 1 Distiller PoC",
+      "sessionId": "01a070e6-3bd9-7591-aa4e-31b364badda1",
+      "runId": "formal-case-09-A-2026-09-07T11-00-12-227Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 303891,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-09",
+      "arm": "B",
+      "title": "Phase 1 Distiller PoC",
+      "sessionId": "01a070e6-3bd9-7591-aa4e-31b364badda1",
+      "runId": "formal-case-09-B-2026-09-07T10-55-20-528Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 282395,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": false,
+      "parseError": "no parseable JSON object in final text",
+      "score": 0,
+      "fieldScores": {
+        "goal": 0,
+        "progress": 0,
+        "pending": 0,
+        "validation": 0,
+        "follow": 0
+      },
+      "safeContinuation": false,
+      "rationale": "Final assistant text was prose only; no parseable JSON object in final text. Kept as observation."
+    },
+    {
+      "caseId": "case-10",
+      "arm": "A",
+      "title": "V2.1 Electron Floating Host",
+      "sessionId": "01a07564-99fa-72e0-b086-4a21e5011211",
+      "runId": "formal-case-10-A-2026-09-07T11-11-06-275Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 296563,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-10",
+      "arm": "B",
+      "title": "V2.1 Electron Floating Host",
+      "sessionId": "01a07564-99fa-72e0-b086-4a21e5011211",
+      "runId": "formal-case-10-B-2026-09-07T11-05-25-576Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 331206,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-11",
+      "arm": "A",
+      "title": "V2 UI R3 first implementation",
+      "sessionId": "01a076e8-fe17-7430-b1c4-b32715a65fe8",
+      "runId": "formal-case-11-A-2026-09-07T11-22-09-492Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 294290,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-11",
+      "arm": "B",
+      "title": "V2 UI R3 first implementation",
+      "sessionId": "01a076e8-fe17-7430-b1c4-b32715a65fe8",
+      "runId": "formal-case-11-B-2026-09-07T11-16-12-457Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 347887,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    },
+    {
+      "caseId": "case-12",
+      "arm": "A",
+      "title": "V2 UI R3.3 controls, refresh, settings and save feedback",
+      "sessionId": "01a07770-d875-7b51-bd03-e154fe30c66c",
+      "runId": "formal-case-12-A-2026-09-07T11-30-48-279Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 393446,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (recovered from the raw Codex session)."
+    },
+    {
+      "caseId": "case-12",
+      "arm": "B",
+      "title": "V2 UI R3.3 controls, refresh, settings and save feedback",
+      "sessionId": "01a07770-d875-7b51-bd03-e154fe30c66c",
+      "runId": "formal-case-12-B-2026-09-07T11-27-13-053Z",
+      "model": "deepseek/deepseek-v4-flash",
+      "controllerDurationMs": 205882,
+      "infraStatus": "ok",
+      "isolationCertOk": true,
+      "parseOk": true,
+      "parseError": null,
+      "score": 5,
+      "fieldScores": {
+        "goal": 1,
+        "progress": 1,
+        "pending": 1,
+        "validation": 1,
+        "follow": 1
+      },
+      "safeContinuation": true,
+      "rationale": "All five fields correctly reflect the source-session truth per frozen ground truth (R7 HANDOFF-assisted recovery)."
+    }
+  ],
+  "failures": [
+    {
+      "run": "case-02-A",
+      "reason": "no final assistant text (tool-call-only stop); 0/5, no retry"
+    },
+    {
+      "run": "case-02-B",
+      "reason": "no final assistant text (tool-call-only stop); 0/5, no retry (R7 handoff content was present and rich)"
+    },
+    {
+      "run": "case-09-B",
+      "reason": "final text prose only, no parseable JSON object; 0/5, no retry"
+    }
+  ],
+  "limitations": [
+    "Manual semantic scoring is subjective; per-run rationale embedded for audit.",
+    "Token usage not recorded or estimated.",
+    "case-02-A/B returned empty final text and case-09-B returned prose without JSON - run-level output events; case-02-A input is identical to the previous formal run where the same A input scored 5/5.",
+    "Scoped to this snapshot/model/dataset; do not generalize. Do not combine with the targeted R7 recheck or the previous formal benchmark into a new global metric."
+  ]
+}
