@@ -25,34 +25,75 @@ function isSyntheticUnixUser(segment) {
   return syntheticUnixUsers.has(segment.toLowerCase()) || /^<[^>]+>$/.test(segment);
 }
 
-function privacyViolations(relativePath, content) {
-  const violations = [];
-  const isTestFixture = relativePath.replaceAll('\\', '/').startsWith('test/');
+// Path checks match a single backslash or a slash. Machine-generated evidence is JSON, where the very
+// same path is written with every separator escaped (`C:\\Users\\name`), and that encoding matched
+// neither pattern — so a file could carry a real username, pass this guard, and be committed. A false
+// green is worse than no guard, because it is trusted. Both encodings are therefore scanned.
+//
+// The captured segment must look like an account name. Without that, the guard flags its own redaction
+// helpers (`electron/main.js` rewrites `/Users/<name>` for user-facing output) and any regex source
+// text that happens to contain `Users` — noise that gets a guard switched off.
+const WINDOWS_HOME = /C:[\\/]Users[\\/]([A-Za-z0-9._-]{1,64})/gi;
+const UNIX_HOME = /\/(?:Users|home)\/([A-Za-z0-9._-]{1,64})/g;
 
-  for (const match of content.matchAll(/C:[\\/]Users[\\/]([^\\/\s`'"<>]+)/gi)) {
-    if (!isSyntheticWindowsUser(match[1])) violations.push(`personal Windows home path: ${match[0]}`);
+function scanText(text) {
+  const found = [];
+
+  for (const match of text.matchAll(WINDOWS_HOME)) {
+    if (!isSyntheticWindowsUser(match[1])) found.push(`personal Windows home path: ${match[0]}`);
   }
-  for (const match of content.matchAll(/\/(?:Users|home)\/([^/\s`'"<>]+)/g)) {
-    if (!isSyntheticUnixUser(match[1])) violations.push(`personal Unix home path: ${match[0]}`);
+  for (const match of text.matchAll(UNIX_HOME)) {
+    if (!isSyntheticUnixUser(match[1])) found.push(`personal Unix home path: ${match[0]}`);
   }
+
+  if (/(?:[A-Z]:[\\/]Code[\\/]margin)(?:[\\/]|$)/i.test(text)) {
+    found.push('machine-specific repository path: D:/Code/margin');
+  }
+  if (/(?:[A-Z]:[\\/]Echo)(?:[\\/]|$)/i.test(text)) {
+    found.push('machine-specific legacy repository path: D:/Echo');
+  }
+
+  return found;
+}
+
+function privacyViolations(relativePath, content) {
+  const isTestFixture = relativePath.replaceAll('\\', '/').startsWith('test/');
+  // Decode JSON string escapes so `C:\\Users\\x` is also seen as `C:\Users\x`.
+  const decoded = content.replaceAll('\\\\', '\\').replaceAll('\\/', '/');
+  const found = [...scanText(content), ...(decoded === content ? [] : scanText(decoded))];
 
   // Test fixtures intentionally use stable fake workspace paths. Public docs and
   // production material must use repository-relative paths or placeholders.
-  if (!isTestFixture) {
-    if (/(?:[A-Z]:[\\/]Code[\\/]margin)(?:[\\/]|$)/i.test(content)) {
-      violations.push('machine-specific repository path: D:/Code/margin');
-    }
-    if (/(?:[A-Z]:[\\/]Echo)(?:[\\/]|$)/i.test(content)) {
-      violations.push('machine-specific legacy repository path: D:/Echo');
-    }
-  }
-
+  const violations = [...new Set(found)];
+  if (isTestFixture) return violations.filter((violation) => !violation.startsWith('machine-specific'));
   return violations;
 }
 
 function isBinary(content) {
   return content.includes('\0');
 }
+
+// The guard is only worth trusting if it can actually see the encodings it claims to cover, so its
+// own detection is asserted here rather than assumed.
+test('the privacy guard detects both raw and JSON-escaped home paths', () => {
+  const escapedWindows = '{"source": "C:\\\\Users\\\\someone\\\\.codex\\\\x.jsonl"}';
+  assert.deepEqual(privacyViolations('docs/example.json', escapedWindows), ['personal Windows home path: C:\\Users\\someone']);
+
+  const rawWindows = 'see C:\\Users\\someone\\.codex for the source';
+  assert.deepEqual(privacyViolations('docs/example.md', rawWindows), ['personal Windows home path: C:\\Users\\someone']);
+
+  const escapedPosix = '{"cwd": "\\/Users\\/someone\\/project"}';
+  assert.deepEqual(privacyViolations('docs/example.json', escapedPosix), ['personal Unix home path: /Users/someone']);
+
+  // A placeholder must not be reported, or the guard becomes noise and gets ignored.
+  assert.deepEqual(privacyViolations('docs/example.md', 'C:\\Users\\<user>\\.codex and C:\\Users\\user\\.codex'), []);
+  // Redaction helpers and regex sources legitimately contain the words, but not a plausible account.
+  assert.deepEqual(privacyViolations('electron/main.js', ".replace(/\\/Users\\/[^/]+/g, '/Users/<user>')"), []);
+
+  // The repository-path rule still exempts test fixtures only.
+  assert.deepEqual(privacyViolations('test/fixture.js', 'D:\\\\Code\\\\margin\\\\x'), []);
+  assert.deepEqual(privacyViolations('docs/example.md', 'D:\\\\Code\\\\margin\\\\x'), ['machine-specific repository path: D:/Code/margin']);
+});
 
 test('tracked tree contains no personal absolute paths or tracked private evidence paths', () => {
   const files = trackedFiles();
@@ -66,6 +107,9 @@ test('tracked tree contains no personal absolute paths or tracked private eviden
     }
 
     const absolutePath = path.join(repositoryRoot, relativePath);
+    // This guard must contain example paths in order to test itself, so it is the one file exempt from
+    // the home-path rule. Its own detection is asserted by the test above instead.
+    if (normalized === 'test/repositoryPrivacy.test.js') continue;
     const content = readFileSync(absolutePath, 'utf8');
     if (isBinary(content)) continue;
     for (const violation of privacyViolations(relativePath, content)) {

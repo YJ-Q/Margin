@@ -31,3 +31,22 @@ docs/validation/r3.3/
 
 # Generated implementation report retained outside Git for local reference.
 task-8-report.md
+
+# Local experiment evidence (Phase 0/1 exploration output). Contains captured agent sessions,
+# absolute machine paths in recorded git state, and measured outputs whose values are the point.
+# Redacting them would rewrite measurements, so the tree stays local; the conclusions live in
+# docs/architecture/ and experiments/*/README.md.
+experiments/
+
+# Raw agent session transcripts used as validation input: large, duplicated across experiment
+# rounds, and containing real prompts. The reports, capture manifests and freeze manifests that
+# constitute the evidence remain tracked.
+docs/validation/**/*.jsonl
+
+# Validation evidence tree. 67 of its files carry a real home path (only visible once the guard
+# learned to decode JSON string escapes), 55 handoff outputs are SHA-256 bound in the freeze
+# manifests, and 29 are raw session transcripts. Committing it as-is would publish a real username;
+# redacting it would invalidate the manifests that attest those files. It therefore stays local
+# until a redaction pass can regenerate those manifests. The accepted baseline reports under
+# docs/validation/*.md remain tracked.
+docs/validation/

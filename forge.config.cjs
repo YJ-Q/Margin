@@ -6,7 +6,7 @@ function escapeRegExp(value) {
 // app root, always prefixed with `/` and normalized to forward slashes on every
 // platform (see @electron/packager `dist/copy-filter.js`: `name =
 // fullPath.split(path.resolve(opts.dir))[1]`, then `normalizePath` on Windows).
-// It supplies e.g. `/test/api.test.js`, never `D:\\Code\\margin\\test\\api.test.js`.
+// It supplies e.g. `/test/api.test.js`, never `<repo>\\test\\api.test.js`.
 // Anchoring on `^/` therefore excludes only repository-root trees: `/data/...`
 // is dropped while `/node_modules/**/data/...` dependency assets are preserved.
 function rootRelative(name) {
