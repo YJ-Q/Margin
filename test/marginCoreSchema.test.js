@@ -4,6 +4,7 @@ import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 import { createMarginCoreTestDb } from './helpers/marginCoreTestDb.js';
 import { openMarginCoreStore } from '../src/core/marginCoreStore.js';
+import { MARGIN_CORE_MIGRATIONS } from '../src/core/migrations/001-margin-core.js';
 
 const TABLES = [
   'margin_schema_migrations', 'margin_projects', 'margin_tasks', 'margin_decisions',
@@ -27,7 +28,9 @@ test('migration is idempotent and checksum-bound', async (t) => {
   const fixture = await createMarginCoreTestDb();
   t.after(() => fixture.cleanup());
   await fixture.store.migrate();
-  assert.equal((await fixture.store.db.get('SELECT COUNT(*) count FROM margin_schema_migrations')).count, 6);
+  // Derived from the declared migrations: the assertion is "every migration was recorded", not a count
+  // that has to be edited every time one is added.
+  assert.equal((await fixture.store.db.get('SELECT COUNT(*) count FROM margin_schema_migrations')).count, MARGIN_CORE_MIGRATIONS.length);
   await fixture.store.db.run("UPDATE margin_schema_migrations SET checksum = 'drift' WHERE version = 1");
   await assert.rejects(fixture.store.migrate(), /checksum mismatch/u);
 });

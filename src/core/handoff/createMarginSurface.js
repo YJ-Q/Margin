@@ -31,10 +31,11 @@ async function closeServer(server) {
   await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
 }
 
-// Standalone server for the Margin Recent Sessions / Smart Handoff surface.
-// Deliberately independent of src/web/createWebWorkbench.js: no SQLite core,
-// no Application Contract, no Workstream/Run/Memory model. It only exposes
-// the three routes createHandoffHttpAdapter defines over the handoff Core.
+// Standalone server for the Margin Board (agent sessions, resources, Smart Handoff).
+//
+// This is the Runtime Context's host (ADR 003): it owns no persistent Margin state and reads external
+// agent facts only. `resolveRuns` is the optional Session ↔ Run bridge — a caller that also owns a
+// Core injects a reader, and every other caller gets sessions with no Run attached.
 export async function createMarginSurface({
   rootDir = path.resolve('.'),
   staticDir,
@@ -42,6 +43,7 @@ export async function createMarginSurface({
   port,
   dev = false,
   env = process.env,
+  resolveRuns = null,
   dependencies = {}
 } = {}) {
   const deps = {
@@ -72,6 +74,7 @@ export async function createMarginSurface({
     const app = createHandoffHttpAdapter({
       rootDir,
       env,
+      resolveRuns,
       // This server only ever serves the margin page, so root requests are
       // rewritten to margin.html before Vite's SPA fallback (which otherwise
       // defaults to index.html — the old Workbench entry, not this one).

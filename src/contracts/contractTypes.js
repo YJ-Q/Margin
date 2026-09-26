@@ -5,14 +5,16 @@ export const COMMAND_TYPES = Object.freeze([
   'run.create', 'run.start', 'run.pause', 'run.resume', 'run.stop',
   'checkpoint.create', 'artifact.create',
   'needs_owner.create', 'needs_owner.resolve',
-  'workstream.switch', 'memory.confirm', 'memory.correct', 'memory.archive', 'memory.restore'
+  'workstream.switch', 'memory.confirm', 'memory.correct', 'memory.archive', 'memory.restore',
+  'run.bind_session'
 ]);
 
 export const QUERY_TYPES = Object.freeze([
   'workstream.list', 'workstream.get', 'run.get', 'run.list',
   'artifact.list', 'decision.list', 'needs_owner.list',
   'activity.list', 'checkpoint.latest',
-  'resume_brief.get', 'memory.list', 'memory.search'
+  'resume_brief.get', 'memory.list', 'memory.search',
+  'session.resolve_runs'
 ]);
 
 export const EVENT_QUERY_TYPES = Object.freeze(['event.list']);

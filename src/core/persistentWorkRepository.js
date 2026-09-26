@@ -289,6 +289,55 @@ export function createPersistentWorkRepository(store) {
     findOpenRun: (workstreamId) => store.db.get("SELECT * FROM margin_runs WHERE workstream_id=? AND status IN ('queued','running','paused','needs_owner') ORDER BY created_at DESC,id LIMIT 1", workstreamId),
     transitionRun: (input, actor) => mutation(actor, (tx) => transitionRunInTransaction(tx, input, actor)),
     coordinateRunTransition: (input, actor, coordinate) => mutation(actor, (tx) => transitionRunInTransaction(tx, input, actor, coordinate)),
+    // Session ↔ Run bridge (ADR 003): bind, rebind, or unbind the agent session a Run came from.
+    // `sessionCanonicalId: null` unbinds.
+    bindRunSession: (input, actor) => mutation(actor, async (tx) => {
+      const operation = 'run_bind_session';
+      const requestInput = input.requestInput ?? input;
+      const prior = await replay(tx, operation, input.requestId, 'margin_runs', requestInput, actor);
+      if (prior) return prior;
+      const current = await tx.get('SELECT * FROM margin_runs WHERE id=?', input.runId);
+      if (!current) throw new CoreContractError('run_not_found', 'Run not found');
+      if (current.version !== input.expectedVersion) throw versionConflict(current.version);
+      const sessionCanonicalId = input.sessionCanonicalId ?? null;
+      // Exclusivity is enforced by the partial unique index. Checking here as well turns a raw
+      // constraint failure into an actionable error that names the Run already holding the session —
+      // "which Run is this session?" must never require the caller to guess.
+      if (sessionCanonicalId) {
+        const owner = await tx.get('SELECT id, workstream_id FROM margin_runs WHERE runtime_session_canonical_id=? AND id<>?', sessionCanonicalId, current.id);
+        if (owner) {
+          // The surface envelope deliberately carries no message text (ADR 002 forbids leaking internal
+          // detail), so "which Run already holds this session" is reported the same structured way
+          // `version_conflict` reports `currentVersion`. A code the caller cannot act on is not enough.
+          const conflict = new CoreContractError('session_already_bound', `Agent session is already bound to Run ${owner.id}`);
+          conflict.details = { runId: owner.id, workstreamId: owner.workstream_id };
+          throw conflict;
+        }
+      }
+      const now = store.clock(); const nextVersion = current.version + 1;
+      await tx.run(
+        'UPDATE margin_runs SET runtime_session_canonical_id=?,version=?,source_session_id=?,source_event_id=?,updated_at=? WHERE id=?',
+        sessionCanonicalId, nextVersion, actor.sourceSessionId, actor.sourceEventId, now, current.id
+      );
+      const replayEvidence = await evidence(tx, {
+        operation, requestId: input.requestId, actor, workstreamId: current.workstream_id,
+        entityType: 'run', entityId: current.id, version: nextVersion, eventType: 'updated',
+        input: requestInput, status: current.status
+      });
+      return { data: await tx.get('SELECT * FROM margin_runs WHERE id=?', current.id), ...replayEvidence };
+    }),
+    // Reverse lookup for a Board that holds many sessions: one bounded read instead of N queries.
+    // Returns only the projection the caller needs; a Run DTO is fetched through the Contract.
+    resolveRunsByCanonicalSessions: async (canonicalSessionIds = []) => {
+      const ids = [...new Set(canonicalSessionIds.filter((value) => typeof value === 'string' && value.trim()))].slice(0, 100);
+      if (!ids.length) return [];
+      const placeholders = ids.map(() => '?').join(',');
+      return store.db.all(
+        `SELECT id,workstream_id,runtime_session_canonical_id,status,version,updated_at FROM margin_runs
+         WHERE runtime_session_canonical_id IN (${placeholders}) ORDER BY updated_at DESC,id DESC`,
+        ...ids
+      );
+    },
     createArtifact: (input, actor) => mutation(actor, async (tx) => {
       const prior = await replay(tx, 'artifact_create', input.requestId, 'margin_artifacts', input, actor);
       if (prior) return prior;
@@ -523,6 +572,7 @@ export function createPersistentWorkRepository(store) {
              WHEN 'workstream_create' THEN 'workstream_create' WHEN 'workstream_update' THEN 'workstream_update'
              WHEN 'run_create' THEN 'run_create' WHEN 'run_start' THEN 'run_start' WHEN 'run_progress' THEN 'run_progress'
              WHEN 'run_pause' THEN 'run_pause' WHEN 'run_resume' THEN 'run_resume' WHEN 'run_stop' THEN 'run_stop'
+             WHEN 'run_bind_session' THEN 'run_bind_session'
              WHEN 'run_complete' THEN 'run_complete' WHEN 'run_fail' THEN 'run_fail'
              WHEN 'artifact_create' THEN 'artifact_create' WHEN 'checkpoint_create' THEN 'checkpoint_create'
              WHEN 'decision_create' THEN 'decision_create' WHEN 'decision_supersede' THEN 'decision_supersede'

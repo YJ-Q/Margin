@@ -20,9 +20,17 @@ export function toWorkstreamDTO(row, { latestCheckpoint = null, activeRun = null
 export function toRunDTO(row, { checkpoint = null } = {}) {
   const kind = enumValue(row.runtime_kind ?? row.workerKind, WORKER_KINDS, 'workerKind');
   const runtimeId = nullableString(row.runtime_session_id ?? row.runtimeSessionId);
+  const canonicalSessionId = nullableString(row.runtime_session_canonical_id ?? row.runtimeSessionCanonicalId);
+  // The Session bridge (ADR 003) refines the runtime reference rather than replacing it. An unbound
+  // Run keeps exactly the shape it had before, so every existing reader of `{ kind, id }` is
+  // unaffected; a bound Run additionally names the agent session the work came from. That id is the
+  // Board's `canonicalId`, which is what makes the two bounded contexts joinable at all.
+  const runtimeReference = (runtimeId || canonicalSessionId)
+    ? { kind, id: runtimeId ?? null, ...(canonicalSessionId ? { canonicalSessionId } : {}) }
+    : null;
   const dto = {
     id: string(row.id, 'id'), workstreamId: string(row.workstream_id ?? row.workstreamId, 'workstreamId'), workerKind: kind,
-    runtimeReference: runtimeId ? { kind, id: runtimeId } : null, scope: nullableString(row.scope) ?? '', status: enumValue(row.status, RUN_STATUSES, 'status'),
+    runtimeReference, scope: nullableString(row.scope) ?? '', status: enumValue(row.status, RUN_STATUSES, 'status'),
     currentStep: null, progress: null,
     limits: { stopCondition: nullableString(row.stop_condition ?? row.stopCondition), allowedActions: jsonStringArray(row.allowed_actions ?? row.allowedActions ?? [], 'allowedActions'), forbiddenActions: jsonStringArray(row.forbidden_actions ?? row.forbiddenActions ?? [], 'forbiddenActions'), budget: null },
     result: jsonNullable(row.result, 'result'), validationSummary: jsonNullable(row.validation ?? row.validationSummary, 'validationSummary'), error: jsonNullable(row.error, 'error'),
@@ -30,6 +38,19 @@ export function toRunDTO(row, { checkpoint = null } = {}) {
     createdAt: nullableString(row.created_at ?? row.createdAt), updatedAt: nullableString(row.updated_at ?? row.updatedAt), startedAt: nullableString(row.started_at ?? row.startedAt), endedAt: nullableString(row.ended_at ?? row.endedAt)
   };
   return deepFreeze(dto);
+}
+
+// The bridge projection a Board consumes: just enough to label a session with the Run it belongs to.
+// It is deliberately not a Run DTO — a caller that needs the whole Run asks the Contract for `run.get`.
+export function toSessionRunBindingDTO(row) {
+  return deepFreeze({
+    canonicalSessionId: string(row.runtime_session_canonical_id ?? row.canonicalSessionId, 'canonicalSessionId'),
+    runId: string(row.id ?? row.runId, 'runId'),
+    workstreamId: string(row.workstream_id ?? row.workstreamId, 'workstreamId'),
+    status: enumValue(row.status, RUN_STATUSES, 'status'),
+    version: integer(row.version, 'version'),
+    updatedAt: nullableString(row.updated_at ?? row.updatedAt)
+  });
 }
 
 export function toArtifactDTO(row) {

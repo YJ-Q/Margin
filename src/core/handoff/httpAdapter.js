@@ -54,6 +54,11 @@ function sessionSummary(session, options = {}) {
     updatedAt: session.updatedAt ?? null,
     executionStatus: session.executionStatus ?? 'unknown',
     attentionStatus: session.attentionStatus ?? 'none',
+    // Session ↔ Run bridge (ADR 003). Always present so the session shape is stable: `null` means
+    // either this host has no Core wired, or the session is genuinely not bound to a Run. It is never
+    // inferred from cwd, title, or recency.
+    runId: session.runId ?? null,
+    workstreamId: session.workstreamId ?? null,
     capabilities: session.capabilities ?? { sessions: true, handoff: false, executionStatus: false, attentionStatus: false },
   };
 }
@@ -85,11 +90,18 @@ function unavailableResourceAgent(type, revision, options = {}) {
   return { agent: resourceAgentName(type, options), ...resourceAgentMeta(type, options), ...(provider ? { provider } : {}), revision, freshAt: null, stale: false, unavailable: true, resources: [] };
 }
 
-// Minimal, independent boundary: browser UI never touches the Codex filesystem
-// or the repo directly. It only reaches the handoff Core through these three
-// routes. Deliberately not wired into src/http/webGateway.js — that gateway is
-// bound to the old Workstream/Run/Memory Application Contract, and reusing it
-// here would re-couple this Core to that business model.
+// Runtime Context boundary (ADR 003).
+//
+// This adapter owns the *Runtime* context: facts that belong to external agents (their session files,
+// their quotas, the source registry). Margin does not own that data, so it is read-only here and is
+// deliberately NOT routed through the Workstream/Run/Memory Application Contract — ADR 002 forbids a
+// Surface from obtaining Pi/Codex session objects in the first place, and wrapping them in Contract
+// DTOs would need a file-backed repository that lies about ownership.
+//
+// The one thing that genuinely joins the two contexts is the Session ↔ Run bridge (ADR 003). It is
+// supplied by the host as an injected reader rather than read here, so this boundary never reaches
+// into the Core's database: a host that owns both wires `resolveRuns`, and one that does not reports
+// no Run, which is the honest answer rather than a missing field.
 export function createHandoffHttpAdapter({
   rootDir,
   staticDir,
@@ -104,6 +116,7 @@ export function createHandoffHttpAdapter({
   readRegistry = readAgentSourceRegistry,
   writeRegistry = writeAgentSourceRegistry,
   adapterResolver = adapterFor,
+  resolveRuns = null,
 } = {}) {
   if (typeof rootDir !== 'string' || !rootDir.trim()) throw new TypeError('invalid_handoff_adapter_dependencies');
   const app = express();
@@ -134,6 +147,21 @@ export function createHandoffHttpAdapter({
     } catch { /* Registry failure is fail-safe: never replace it with detected defaults. */ }
   }
   const activeCodex = () => resolveActiveSource(registry(), 'codex', registryOptions);
+
+  // The bridge reader is optional by construction. A read failure degrades to "no Run shown" rather
+  // than an error page, because a Board that cannot reach the Core is still a useful Board.
+  const attachRunBindings = async (sessions) => {
+    const unbound = sessions.map((session) => ({ ...session, runId: session.runId ?? null, workstreamId: session.workstreamId ?? null }));
+    if (typeof resolveRuns !== 'function' || !sessions.length) return unbound;
+    let bindings = [];
+    try { bindings = (await resolveRuns(sessions.map((session) => session.canonicalId))) ?? []; }
+    catch { return unbound; }
+    const bySession = new Map(bindings.map((binding) => [binding.canonicalSessionId, binding]));
+    return unbound.map((session) => {
+      const binding = bySession.get(session.canonicalId) ?? null;
+      return { ...session, runId: binding?.runId ?? null, workstreamId: binding?.workstreamId ?? null };
+    });
+  };
   // Every type Margin knows about: the descriptors it ships plus whatever is registered. Deriving
   // this from the registry is what lets an Agent that arrived as a descriptor be discovered, read,
   // and shown without any edit to this file.
@@ -372,7 +400,7 @@ export function createHandoffHttpAdapter({
       if (!sessions.snapshotComplete) throw Object.assign(new Error('One or more agent sources could not be read'), { code: 'source_read_failed' });
       if (revisionBefore !== revisionAfter) throw Object.assign(new Error('Source changed during snapshot read'), { code: 'snapshot_changed_during_read' });
       const mapped = (workspaceKey ? sessions.filter((session) => session.workspaceKey === workspaceKey) : sessions).map((session) => sessionSummary(session, registryOptions));
-      response.json(ok({ revision: revisionAfter, sessions: mapped }));
+      response.json(ok({ revision: revisionAfter, sessions: await attachRunBindings(mapped) }));
     } catch (error) {
       response.status(503).json(fail(error?.code ?? 'discovery_failed', error?.message ?? 'unknown_error'));
     }

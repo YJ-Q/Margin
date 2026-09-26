@@ -84,7 +84,9 @@ test('migration 3 adds persistent work tables and workstream fields', async () =
     for (const name of ['title', 'workstream_status', 'current_plan', 'next_action', 'blockers', 'dependencies', 'workspace_path', 'autonomy_level', 'artifact_refs', 'last_checkpoint_id']) {
       assert.equal(columns.includes(name), true, name);
     }
-    assert.deepEqual((await fixture.store.getSchemaEvidence()).map((row) => row.version), [1, 2, 3, 4, 5, 6]);
+    // Derived from the declared migrations rather than restated, so adding one does not require editing
+  // this test — the assertion is about "every declared migration was applied", not about the count.
+  assert.deepEqual((await fixture.store.getSchemaEvidence()).map((row) => row.version), MARGIN_CORE_MIGRATIONS.map((migration) => migration.version));
   } finally {
     await fixture.cleanup();
   }

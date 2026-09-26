@@ -4,11 +4,14 @@
 import { discoverSessions, captureSession, generateHandoff } from '../src/core/handoff/index.js';
 import { createPrompter, runMarginCli } from '../src/cli/margin/index.js';
 import { runAgentSourceCli } from '../src/cli/agentSourceCli.js';
+import { runRunBridgeCli } from '../src/cli/runBridgeCli.js';
 import { runCostCli } from '../src/cli/margin/runCostCli.js';
 import { adapterFor } from '../src/agents/adapters.js';
 
 if (process.argv[2] === 'agent') {
   process.exitCode = runAgentSourceCli(process.argv.slice(3));
+} else if (process.argv[2] === 'run') {
+  process.exitCode = await runRunBridgeCli(process.argv.slice(3));
 } else if (process.argv[2] === 'cost') {
   process.exitCode = runCostCli(process.argv.slice(3));
 } else {

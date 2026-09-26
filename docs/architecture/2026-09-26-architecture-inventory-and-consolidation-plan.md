@@ -180,14 +180,33 @@ ADR 002（已接受，2026-08-24）原文：
 
 验收：ADR 合并；`httpAdapter.js` 顶部那段"不接 Application Contract"的注释改写为指向 ADR 003（要么是"有界 context 二"，要么是"待合并"），不再留一个与 ADR 002 矛盾的孤立立场。
 
-### P2 — 统一业务流程：Session ↔ Run bridge
+### P2 — 统一业务流程：Session ↔ Run bridge ✅ 已完成
 
-1. Contract 增加 `run.bindSession` / `session.resolveRun`（`COMMAND_TYPES`/`QUERY_TYPES` 增量，DTO 增量）
-2. `Run.runtimeReference` 增加 `sessionCanonicalId` 字段（additive migration）
-3. Board 的 session DTO 增加 `runId`/`workstreamId`（来自 resolve，缺省 null）
-4. CLI 增加 `margin run bind <runId> <sessionCanonicalId>`，让 pilot/Feishu 能把真实会话绑到 Run 上
+| | |
+|---|---|
+| Command | `run.bind_session`（`sessionCanonicalId: null` 即解绑） |
+| Query | `session.resolve_runs`（批量 1–100，非初稿的单数形式） |
+| Migration | 007 `run-session-binding`：新列 + **partial unique index**（一个 session 最多属于一个 Run） |
+| DTO | `runtimeReference.canonicalSessionId`，**只在绑定后出现**，未绑定形状不变 |
+| Board | `createHandoffHttpAdapter({ resolveRuns })` —— 可选**注入**读取器，Runtime Context 不访问 Core |
+| CLI | `margin run bind\|unbind\|resolve` |
+| 测试 | `test/runSessionBridge.test.js`（7 条，含真实关闭重开与跨进程 CLI） |
 
-验收：一次真实重启后，Board 上某个 Codex 会话能显示它所属的 Workstream；反向从 Workbench 能查到它对应的会话。这一条通过，"业务流程统一"就有可演示的事实。
+验收已通过：绑定存盘并在重启后读回；Board 注入 resolver 时显示 `runId`/`workstreamId`，未注入或 resolver 抛错时降级为 `null` 且不影响 session 列表。
+
+**未接线的部分（诚实记录）**：Electron 宿主目前不持有 Core，所以开箱运行的 Board 上 `runId` 是 `null`；要让它显示 Run，需 Electron 同时持有 Core 并注入 `resolveRuns`。目前能显示的是 CLI 与任何自备 Core 的宿主。
+
+**实施量化出来的新输入（给 P4）**：给 Contract 加一个类型要改五处，而它们出错时表现不同：
+
+| 处 | 漏改的后果 |
+|---|---|
+| `contracts/contractTypes.js` | 类型不存在（响亮） |
+| `contracts/validation.js` | `invalid_request`（响亮） |
+| `marginApplicationContract.js` 的 capability map / handler / `KNOWN_ERROR_CODES` | 能力缺失响亮；**错误码漏加则静默降级为 `storage_failure`** |
+| `http/webCapabilities.js` | **启动即抛**（好护枢，应推广） |
+| `persistentWorkRepository.js` 的 event→audit `CASE` 白名单 | **静默**：事件在 activity 投影里 join 失败，不报错 |
+
+另：错误信封**不含 message**（ADR 002 禁止泄内文），所以需要上下文的错误码必须走结构化 `details`（如同 `version_conflict` 的 `currentVersion`）。
 
 ### P3 — 退役 legacy（已有文档要求，尚未执行）
 
@@ -199,9 +218,10 @@ ADR 002（已接受，2026-08-24）原文：
 
 1. 出一份单一接口清单（`docs/architecture/interface-registry.md`），每个端点标注 owner context + 契约版本 + 消费方
 2. 给 Contract 加版本纪律：`COMMAND_TYPES`/`QUERY_TYPES`/DTO 形状变化时，`CONTRACT_VERSION` 必须递增，并在测试里断言（有变化无递增即失败）
-3. Feishu 表面从脚本内手写 if/else 改为 router + 契约校验（对齐 ADR 002 的 "Surface 只调用 Application API"）
+3. **把 P2 发现的五处封闭清单收拢**：契约能力 map、`KNOWN_ERROR_CODES`、event→audit 的 `CASE` 白名单都改为像 `webCapabilities.js` 那样**启动即验证**，并出一份「增加一个 Contract 类型」的检查清单
+4. Feishu 表面从脚本内手写 if/else 改为 router + 契约校验（对齐 ADR 002 的 "Surface 只调用 Application API"）
 
-验收：`interface-registry.md` 覆盖所有端点；契约版本纪律有测试守住；Feishu 不再在脚本里手写路由。
+验收：`interface-registry.md` 覆盖所有端点；契约版本纪律有测试守住；三处封闭清单均启动即验证；Feishu 不再在脚本里手写路由。
 
 ### P5 — 命名与可观测
 

@@ -15,6 +15,7 @@ import {
   toMemoryDTO,
   toNeedsOwnerDTO,
   toRunDTO,
+  toSessionRunBindingDTO,
   toWorkstreamDTO
 } from '../contracts/dtoMappers.js';
 import { toActivityDTO, toEventEnvelope } from '../contracts/eventEnvelope.js';
@@ -35,7 +36,8 @@ const COMMAND_CAPABILITIES = Object.freeze({
   'memory.confirm': 'memory:confirm',
   'memory.correct': 'memory:correct',
   'memory.archive': 'memory:archive',
-  'memory.restore': 'memory:restore'
+  'memory.restore': 'memory:restore',
+  'run.bind_session': 'run:control'
 });
 
 const QUERY_CAPABILITIES = Object.freeze({
@@ -50,14 +52,18 @@ const QUERY_CAPABILITIES = Object.freeze({
   'checkpoint.latest': 'checkpoint:read',
   'resume_brief.get': 'resume_brief:read',
   'memory.list': 'memory:read',
-  'memory.search': 'memory:read'
+  'memory.search': 'memory:read',
+  'session.resolve_runs': 'run:read'
 });
 
 const KNOWN_ERROR_CODES = new Set([
   'invalid_request', 'permission_denied', 'capability_required', 'not_found',
   'version_conflict', 'idempotency_conflict', 'invalid_transition', 'open_run_conflict',
   'runtime_unavailable', 'runtime_control_required', 'storage_failure', 'workstream_not_found',
-  'run_not_found', 'open_run_exists', 'cross_workstream_reference', 'invalid_workstream_transition'
+  'run_not_found', 'open_run_exists', 'cross_workstream_reference', 'invalid_workstream_transition',
+  // Session ↔ Run bridge (ADR 003). Without an entry here the code is downgraded to `storage_failure`,
+  // which tells the caller nothing about what to do next.
+  'session_already_bound'
 ]);
 
 function requireCapability(context, capability, authorizeContext, requestType) {
@@ -119,9 +125,11 @@ function safeIdentity(value) {
 function failure(error, rawContext = {}, rawRequest = {}) {
   const known = error instanceof CoreContractError || error instanceof ContractValidationError;
   const code = known && KNOWN_ERROR_CODES.has(error.code) ? error.code : 'storage_failure';
+  // Structured detail only: the envelope never carries internal message text, so a code that needs
+  // context (which Run owns this session, which version is current) must express it here.
   const details = code === 'version_conflict' && Number.isInteger(error.details?.actual)
     ? { currentVersion: error.details.actual }
-    : undefined;
+    : (known && error.details && typeof error.details === 'object' ? error.details : undefined);
   const envelope = {
     ok: false,
     error: {
@@ -176,6 +184,9 @@ export function createMarginApplicationContract({ services, repository, runtimeC
     'run.pause': (command, context, actor) => runControl('pause', command, actor),
     'run.resume': (command, context, actor) => runControl('resume', command, actor),
     'run.stop': (command, context, actor) => runControl('stop', command, actor),
+    // Session ↔ Run bridge (ADR 003). Reuses the Run mapper, so the binding shows up in the same DTO
+    // the caller already reads instead of introducing a parallel shape for one field.
+    'run.bind_session': async (command, context, actor) => mappedAsync(await services.runs.bindSession(mutationInput(command), actor), mapRun),
     'checkpoint.create': async (command, context, actor) => mapped(await services.checkpoints.create(mutationInput(command), actor), toCheckpointDTO),
     'artifact.create': async (command, context, actor) => {
       const input = mutationInput(command);
@@ -218,6 +229,10 @@ export function createMarginApplicationContract({ services, repository, runtimeC
       return mapRun(row);
     },
     'run.list': async (request) => pageMap(await services.runs.list(request.payload), mapRun),
+    'session.resolve_runs': async (request) => {
+      const result = await services.runs.resolveSessions(request.payload);
+      return { items: result.items.map(toSessionRunBindingDTO) };
+    },
     'artifact.list': async (request) => pageMap(await services.artifacts.list(request.payload), toArtifactDTO),
     'decision.list': async (request) => {
       const input = { ...request.payload };

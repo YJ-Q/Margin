@@ -16,7 +16,8 @@ export const WEB_COMMAND_CAPABILITIES = closedCapabilities(COMMAND_TYPES, [
   ['needs_owner.create', 'needs_owner:write'], ['needs_owner.resolve', 'needs_owner:resolve'],
   ['workstream.switch', 'run:control'],
   ['memory.confirm', 'memory:confirm'], ['memory.correct', 'memory:correct'],
-  ['memory.archive', 'memory:archive'], ['memory.restore', 'memory:restore']
+  ['memory.archive', 'memory:archive'], ['memory.restore', 'memory:restore'],
+  ['run.bind_session', 'run:control']
 ]);
 
 export const WEB_QUERY_CAPABILITIES = closedCapabilities(QUERY_TYPES, [
@@ -25,7 +26,8 @@ export const WEB_QUERY_CAPABILITIES = closedCapabilities(QUERY_TYPES, [
   ['decision.list', 'decision:read'], ['needs_owner.list', 'needs_owner:read'],
   ['activity.list', 'activity:read'], ['checkpoint.latest', 'checkpoint:read'],
   ['resume_brief.get', 'resume_brief:read'],
-  ['memory.list', 'memory:read'], ['memory.search', 'memory:read']
+  ['memory.list', 'memory:read'], ['memory.search', 'memory:read'],
+  ['session.resolve_runs', 'run:read']
 ]);
 
 export const WEB_EVENT_CAPABILITIES = closedCapabilities(EVENT_QUERY_TYPES, [

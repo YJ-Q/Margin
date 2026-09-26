@@ -138,6 +138,13 @@ const COMMAND_VALIDATORS = Object.freeze({
   'run.pause': (base) => mutation(base, ['runId'], (p) => requiredId(p.runId, 'runId'), true),
   'run.resume': (base) => mutation(base, ['runId'], (p) => requiredId(p.runId, 'runId'), true),
   'run.stop': (base) => mutation(base, ['runId'], (p) => requiredId(p.runId, 'runId'), true),
+  // `sessionCanonicalId: null` is a meaningful value here: it unbinds. It is never absent by accident
+  // because the service normalises a missing field to null as well, so "unbind" is always explicit in
+  // the persisted result even when the caller omitted the key.
+  'run.bind_session': (base) => mutation(base, ['runId', 'sessionCanonicalId'], (p) => {
+    requiredId(p.runId, 'runId');
+    if (p.sessionCanonicalId !== null && p.sessionCanonicalId !== undefined) requiredId(p.sessionCanonicalId, 'sessionCanonicalId');
+  }, true),
   'checkpoint.create': (base) => mutation(base, ['workstreamId', 'runId', 'runVersion', 'stateVersion', 'stateDigest', 'gitRef', 'note'], (p) => { requiredId(p.workstreamId, 'workstreamId'); optionalId(p.runId, 'runId'); if (p.runId !== undefined && p.runId !== null) requireInteger(p.runVersion, 'runVersion', { min: 1 }); else if (p.runVersion !== undefined) throw invalid('runVersion requires runId'); requireInteger(p.stateVersion, 'stateVersion', { min: 0 }); requireString(p.stateDigest, 'stateDigest'); optionalString(p.gitRef, 'gitRef'); optionalString(p.note, 'note'); }),
   'artifact.create': (base) => mutation(base, ['workstreamId', 'runId', 'type', 'title', 'resourceReference', 'metadata', 'previewMetadata'], (p) => { requiredId(p.workstreamId, 'workstreamId'); optionalId(p.runId, 'runId'); requireString(p.type, 'type'); requireString(p.title, 'title'); resourceReference(p.resourceReference); metadata(p.metadata, 'metadata'); metadata(p.previewMetadata, 'previewMetadata'); }),
   'needs_owner.create': (base) => mutation(base, ['workstreamId', 'runId', 'type', 'reason', 'options', 'consequenceSummary', 'contextSummary'], (p) => { requiredId(p.workstreamId, 'workstreamId'); optionalId(p.runId, 'runId'); requireEnum(p.type, NEEDS_OWNER_TYPES, 'type'); requireString(p.reason, 'reason'); if (!Array.isArray(p.options) || p.options.length > 10) throw invalid('options must be bounded'); p.options.forEach((o) => { assertClosedObject(o, ['id', 'label', 'consequenceSummary'], 'option'); requiredId(o.id, 'option.id'); requireString(o.label, 'option.label'); optionalString(o.consequenceSummary, 'option.consequenceSummary'); }); if (new Set(p.options.map((option) => option.id)).size !== p.options.length) throw invalid('option IDs must be unique'); optionalString(p.consequenceSummary, 'consequenceSummary'); optionalString(p.contextSummary, 'contextSummary'); }),
@@ -155,6 +162,15 @@ const QUERY_VALIDATORS = Object.freeze({
   'workstream.get': (p) => listPayload(p, ['workstreamId'], ['workstreamId']),
   'run.get': (p) => listPayload(p, ['runId'], ['runId']),
   'run.list': (p) => listPayload(p, ['workstreamId', 'statuses', 'limit', 'cursor'], ['workstreamId'], RUN_STATUSES),
+  // Batch by design: a Board holds many sessions at once, and resolving them one HTTP call at a time
+  // would make the bridge the most expensive thing on the screen. Bounded at 100 so one caller cannot
+  // turn a read into an unbounded scan.
+  'session.resolve_runs': (p) => {
+    assertClosedObject(p, ['canonicalSessionIds'], 'query.payload');
+    if (!Array.isArray(p.canonicalSessionIds) || p.canonicalSessionIds.length === 0) throw invalid('canonicalSessionIds must be a non-empty array');
+    if (p.canonicalSessionIds.length > 100) throw invalid('canonicalSessionIds accepts at most 100 ids');
+    p.canonicalSessionIds.forEach((value) => requiredId(value, 'canonicalSessionIds[]'));
+  },
   'artifact.list': (p) => listPayload(p, ['workstreamId', 'runId', 'limit', 'cursor'], ['workstreamId']),
   'decision.list': (p) => listPayload(p, ['workstreamId', 'statuses', 'limit', 'cursor'], ['workstreamId'], ['active', 'superseded', 'revoked']),
   'needs_owner.list': (p) => listPayload(p, ['workstreamId', 'runId', 'statuses', 'limit', 'cursor'], [], NEEDS_OWNER_STATUSES),

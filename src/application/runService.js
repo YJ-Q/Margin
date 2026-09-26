@@ -55,6 +55,24 @@ export function createRunService({ repository, authorization }) {
     pause: (input,actor,runtime) => control('pause',input,actor,runtime),
     resume: (input,actor,runtime) => control('resume',input,actor,runtime),
     stop: (input,actor,runtime) => control('stop',input,actor,runtime),
-    complete: (input,actor,runtime) => control('complete',input,actor,runtime)
+    complete: (input,actor,runtime) => control('complete',input,actor,runtime),
+    // Session ↔ Run bridge (ADR 003). Host-user owned like every other Run mutation: it asserts which
+    // real agent session a Run corresponds to, and an agent must not be able to claim that about
+    // itself. `sessionCanonicalId: null` unbinds an existing binding.
+    async bindSession(input, actor) {
+      authorize(actor);
+      if (!input?.requestId || !input?.runId || !Number.isInteger(input.expectedVersion)) throw new CoreContractError('invalid_request','Valid Run session binding input is required');
+      const sessionCanonicalId = input.sessionCanonicalId ?? null;
+      if (sessionCanonicalId !== null && (typeof sessionCanonicalId !== 'string' || !sessionCanonicalId.trim())) {
+        throw new CoreContractError('invalid_request','sessionCanonicalId must be a non-empty string or null');
+      }
+      return { ok: true, ...await repository.bindRunSession({ ...input, sessionCanonicalId, requestInput: input }, actor) };
+    },
+    // Read side of the bridge. Returns raw rows; the Contract owns the DTO shape.
+    async resolveSessions(input = {}) {
+      if (!Array.isArray(input.canonicalSessionIds)) throw new CoreContractError('invalid_request','canonicalSessionIds must be an array');
+      if (input.canonicalSessionIds.length > 100) throw new CoreContractError('invalid_request','At most 100 session ids may be resolved at once');
+      return { items: await repository.resolveRunsByCanonicalSessions(input.canonicalSessionIds) };
+    }
   };
 }

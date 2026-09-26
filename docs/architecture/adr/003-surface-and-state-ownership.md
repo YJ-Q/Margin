@@ -1,6 +1,6 @@
 # ADR 003：Surface 与 State 归属 — 两个有界 Context + 显式 bridge
 
-状态：**已决策，P0/P1 部分已实施；P2（bridge）待实施**
+状态：**已实施（P0/P1/P2）**；P3–P5 待办
 日期：2026-09-26
 前置：ADR 002（Transport-neutral Application Contract）、`docs/architecture/2026-09-26-architecture-inventory-and-consolidation-plan.md`
 
@@ -44,16 +44,37 @@ Agent Session / transcript / quota / agent source registry / handoff artifact。
 
 ### Bridge — 一等对象，不做隐式耦合
 
-`Run.runtimeReference` 已经存在（ADR 002 明确定义：「Margin aggregate ID 是主标识；Pi / Codex 等 ID 只出现在 `runtimeReference`」）。bridge 就落在这里，v1 版本 `1.1`。
+`Run.runtimeReference` 已经存在（ADR 002 明确定义：「Margin aggregate ID 是主标识；Pi / Codex 等 ID 只出现在 `runtimeReference`」）。bridge 就落在这里。
 
-新增两个 Contract 能力：
+两个 Contract 能力：
 
-- `run.bindSession` — command，把 `canonicalSessionId` 绑定到某个 Run（走 `requestId` / `idempotencyKey` / `expectedVersion` 规则）
-- `session.resolveRun` → `Run DTO | null` — query
+- `run.bind_session` — command，把 `canonicalSessionId` 绑定到某个 Run（走 `requestId` / `idempotencyKey` / `expectedVersion` 规则）；`sessionCanonicalId: null` 表示解绑
+- `session.resolve_runs` → 批量 `{ canonicalSessionId, runId, workstreamId, status }`
+
+**对本 ADR 初稿的两处修正**（实施后回写）：
+
+- 查询是**批量**的（`session.resolve_runs`，1–100 个 id），而不是初稿的单一 `session.resolveRun`。Board 一次持有几十个 session，逐个 HTTP 调用会让 bridge 成为界面上最贵的东西。
+- **Board 不自己读 Core。** 它通过宿主注入的 `resolveRuns` 拿绑定；没有注入时每个 session 报 `runId: null`。这比让 Runtime Context 去访问 Core 的数据库更符合本 ADR 自己的纪律。
 
 于是「这个会话是哪个 Run / 属于哪个 Workstream」成为可查询事实，而不是靠 cwd 猜出来的分组。
 
-### 一并裁决的两件事
+#**已实施（2026-09-26）**
+
+- `run.bind_session` command + `session.resolve_runs` query（`COMMAND_TYPES` / `QUERY_TYPES` / `validation` / `Contract` capability+handler / `webCapabilities` 五处同步更新）
+- Migration 007：`margin_runs.runtime_session_canonical_id` + **partial unique index**（`WHERE ... IS NOT NULL`），于是任意数量的 Run 可以未绑定，而**一个 agent session 最多属于一个 Run**。把不变量放在 schema 而不是服务里，是让「这个 session 是哪个 Run」只有一个答案、不需要解开并列的原因。
+- `toRunDTO` 把 `canonicalSessionId` 放进 `runtimeReference`；**只在真正绑定后出现**，未绑定的 Run 保持与桥上之前完全相同的形状（`applicationContractValidation.test.js` 对 `runtimeReference` 做严格 deepEqual，这条约束是被测试固定住的）
+- CLI：`margin run bind|unbind|resolve`（作为持有 Core 的宿主，经 Contract 的 host-authority 路径，不直连 repository）
+- Board：`createHandoffHttpAdapter({ resolveRuns })` —— 一个**注入的可选读取器**
+
+## 实施中发现的、ADR 本身没有预见的三件事
+
+这三件都是“两处必须同步、漏一处不报错”的类型，记为 P4 的输入。
+
+1. **错误信封不含 message。** `failure()` 只输出 `{code, retryable, details?}`（ADR 002 禁止泄漏内部文本，这是对的）。所以“这个 session 已被哪个 Run 占用”**不能靠 message 传达**，必须和 `version_conflict` 的 `currentVersion` 一样走结构化 `details`。本 ADR 原文写的“actionable error naming the owner”由此修正为 `error.details = { runId, workstreamId }`。
+2. **`KNOWN_ERROR_CODES` 是第二份封闭白名单。** 新增的错误码不在其中会被静默降级成 `storage_failure` —— 有错误码但信息误导。
+3. **event→audit 投影里有一份硬编码的 command 白名单**（`persistentWorkRepository` 的 `CASE json_extract(e.payload,'$.command')`）。漏加 `run_bind_session` 会让绑定事件在 activity 投影里 join 失败，而且**不报错**。这是本轮发现的最危险的一处隐藏耦合：`webCapabilities.js` 在条目数不匹配时会启动即抛错（好护栏），而这一处不会。
+
+## 一并裁决的两件事（已执行）
 
 1. **旧 Workbench UI 删除，契约层保留。**
    `web/index.html`、`web/src/{main.jsx,App.js,App.jsx,apiClient.js,useWorkbenchData.js,useEventPolling.js,workbenchState.js,styles.css,conflictState.js}` 与 `web/src/components/**` 删除，连同只覆盖它们的 11 个 UI 测试。
@@ -110,4 +131,6 @@ Agent Session / transcript / quota / agent source registry / handoff artifact。
 - Board session DTO 增加 `runId` / `workstreamId`（缺省 `null`）
 - `margin run bind <runId> <sessionCanonicalId>` CLI
 
-**验收标准（P2）**：一次真实重启后，Board 上某个 Codex 会话能显示它所属的 Workstream，且能从 Workbench（或 CLI query）反查到它对应的会话。
+**验收（已通过）**：真实重启后（关闭 Core、重新打开同一数据库），`session.resolve_runs` 与 `run.get` 都能读回绑定；Board 在注入 resolver 时显示 `runId`/`workstreamId`，无 resolver 或 resolver 抛错时降级为 `null` 且不影响 session 列表。测试见 `test/runSessionBridge.test.js`；跨进程 CLI 往返已实测。
+
+**仍未接线的地方（诚实记录）**：Electron 宿主目前**不持有 Core**（它只启动 Board 表面），因此开箱运行的 Board 上每个 session 的 `runId` 是 `null`。要让默认宿主显示 Run，需要 Electron 同时持有 Core 并把 `resolveRuns` 注入 `createMarginSurface`。现在能显示 Run 的是 CLI（`margin run bind`/`resolve`）以及任何自备 Core 的宿主。
