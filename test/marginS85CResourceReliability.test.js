@@ -297,7 +297,7 @@ test('S8.5C smoke: a controlled Codex read failure never flashes the bar to an e
   const during = bar();
   assert.match(during, /Codex · 5h 88% · 7d 60%/);
   assert.match(during, /stale/);
-  assert.doesNotMatch(during, /Codex —/, 'the bar never flashes to an erroneous empty value');
+  assert.doesNotMatch(during, /Codex · —/, 'the bar never flashes to an erroneous empty value');
 
   // Recovery: the same revision is retried and comes back fresh automatically.
   fs.readdirSync = original;
@@ -317,9 +317,9 @@ test('S8.5C Pi bar stays compact and can express partial coverage and stale trut
   t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
   await act(async () => {
     root.render(React.createElement(UsageBar, { resourceStatus: { agents: [
-      { agent: 'codex', unavailable: true },
-      { agent: 'pi', stale: true, resources: [{ resourceType: 'tokenUsage', accessMode: 'api', scope: 'today', totalTokens: 12345, trustedResponseCount: 9, coverage: { partial: true, excludedUnknownResponses: 3, excludedSubscriptionResponses: 2, readFailed: false }, provenance: null }] },
-      { agent: 'claude-code', unavailable: true },
+      { agent: 'codex', label: 'Codex', unavailable: true },
+      { agent: 'pi', label: 'Pi', quotaPrefix: 'Go', stale: true, resources: [{ resourceType: 'tokenUsage', accessMode: 'api', scope: 'today', totalTokens: 12345, trustedResponseCount: 9, coverage: { partial: true, excludedUnknownResponses: 3, excludedSubscriptionResponses: 2, readFailed: false }, provenance: null }] },
+      { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true },
     ] }, expanded: false, settings: {}, alwaysOnTop: false, onToggle() {}, onPin() {}, onHide() {}, onQuit() {} }));
   });
   const text = dom.window.document.querySelector('[data-agent="pi"]').textContent;
@@ -331,7 +331,7 @@ test('S8.5C Pi bar hides the total when coverage makes only unknown responses ex
   t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
   await act(async () => {
     root.render(React.createElement(UsageBar, { resourceStatus: { agents: [
-      { agent: 'pi', resources: [{ resourceType: 'tokenUsage', accessMode: 'api', scope: 'today', totalTokens: 0, trustedResponseCount: 0, coverage: { partial: true, excludedUnknownResponses: 4, excludedSubscriptionResponses: 0, readFailed: false }, provenance: null }] },
+      { agent: 'pi', label: 'Pi', quotaPrefix: 'Go', resources: [{ resourceType: 'tokenUsage', accessMode: 'api', scope: 'today', totalTokens: 0, trustedResponseCount: 0, coverage: { partial: true, excludedUnknownResponses: 4, excludedSubscriptionResponses: 0, readFailed: false }, provenance: null }] },
     ] }, expanded: false, settings: {}, alwaysOnTop: false, onToggle() {}, onPin() {}, onHide() {}, onQuit() {} }));
   });
   const text = dom.window.document.querySelector('[data-agent="pi"]').textContent;

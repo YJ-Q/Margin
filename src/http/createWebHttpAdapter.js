@@ -1,6 +1,6 @@
 import express from 'express';
-import { CONTRACT_VERSION } from '../contracts/contractTypes.js';
 import { failureEnvelope, hasForbiddenBrowserField, httpStatusFor, sanitizeBrowserEnvelope } from './httpErrors.js';
+import { healthPayload } from '../surfaceHealth.js';
 
 export function createWebHttpAdapter({ webGateway, interactionService, staticDir, viteMiddleware } = {}) {
   if (!webGateway?.execute || !webGateway?.query || !webGateway?.events) throw new TypeError('invalid_web_http_dependencies');
@@ -10,7 +10,7 @@ export function createWebHttpAdapter({ webGateway, interactionService, staticDir
   else if (staticDir) app.use(express.static(staticDir));
   if (typeof viteMiddleware === 'function') app.use(bufferedMiddleware(viteMiddleware, { bypass: isApiRequest }));
 
-  app.get('/api/health', (_request, response) => response.json({ ok: true, status: 'ready', contractVersion: CONTRACT_VERSION }));
+  app.get('/api/health', (_request, response) => response.json(healthPayload({ surface: 'workbench-gateway' })));
   app.post('/api/commands', asyncRoute((request) => webGateway.execute(request)));
   app.post('/api/queries', asyncRoute((request) => webGateway.query(request)));
   app.get('/api/events', asyncRoute((request) => webGateway.events(request)));

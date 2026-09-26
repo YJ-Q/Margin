@@ -12,7 +12,7 @@ function liveApi(counter) {
   return {
     listSessions: async () => { counter.list += 1; return { ok: true, data: { revision: 'R', sessions: [] } }; },
     listAgentSources: async () => ({ ok: true, data: { sources: [] } }),
-    getResourceStatus: async () => { counter.resource += 1; return { revision: 'R', agents: [{ agent: 'codex', resources: [{ windowDurationMinutes: 300, percentUsed: counter.resource, resetsAt: 1 }], token: null }, { agent: 'claude-code', unavailable: true }] }; },
+    getResourceStatus: async () => { counter.resource += 1; return { revision: 'R', agents: [{ agent: 'codex', label: 'Codex', resources: [{ windowDurationMinutes: 300, percentUsed: counter.resource, resetsAt: 1 }], token: null }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] }; },
   };
 }
 
@@ -82,7 +82,7 @@ test('S9.2 focus bursts share one pending native resource read and resume after 
   });
   assert.equal(calls, 1, '50 focus events cannot spawn concurrent resource reads');
 
-  release({ revision: 'R', agents: [{ agent: 'codex', resources: [] }, { agent: 'claude-code', unavailable: true }] });
+  release({ revision: 'R', agents: [{ agent: 'codex', label: 'Codex', resources: [] }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] });
   await act(async () => { await wait(0); });
   await act(async () => { window.dispatchEvent(new window.Event('focus')); await wait(0); });
   assert.equal(calls, 2, 'the next focus refresh starts only after the first read settled');
@@ -93,7 +93,7 @@ test('S7.4 UsageBar keeps the primary resource bar and removes normal hover deta
   const { dom, root } = setup();
   t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
   await act(async () => {
-    root.render(React.createElement(UsageBar, { resourceStatus: { agents: [{ agent: 'codex', stale: true, freshAt: '2026-09-07T10:00:00.000Z', resources: [{ windowDurationMinutes: 300, percentUsed: 22, resetsAt: 1 }, { windowDurationMinutes: 10080, percentUsed: 71, resetsAt: 2 }], token: { resourceType: 'tokenUsage', totalTokens: 970872, inputTokens: 400, cachedInputTokens: 50, outputTokens: 30, reasoningTokens: 10, sessionId: 'U' } }, { agent: 'claude-code', unavailable: true }] }, expanded: false, settings: {}, alwaysOnTop: false, onToggle() {}, onPin() {}, onHide() {}, onQuit() {} }));
+    root.render(React.createElement(UsageBar, { resourceStatus: { agents: [{ agent: 'codex', label: 'Codex', stale: true, freshAt: '2026-09-07T10:00:00.000Z', resources: [{ windowDurationMinutes: 300, percentUsed: 22, resetsAt: 1 }, { windowDurationMinutes: 10080, percentUsed: 71, resetsAt: 2 }], token: { resourceType: 'tokenUsage', totalTokens: 970872, inputTokens: 400, cachedInputTokens: 50, outputTokens: 30, reasoningTokens: 10, sessionId: 'U' } }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] }, expanded: false, settings: {}, alwaysOnTop: false, onToggle() {}, onPin() {}, onHide() {}, onQuit() {} }));
   });
   const text = dom.window.document.querySelector('[data-agent="codex"]').textContent;
   assert.match(text, /Codex · 5h 78% · 7d 29% · stale/);

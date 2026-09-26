@@ -1,0 +1,11 @@
+{
+  "name": "margin-phase1-distiller",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "distill": "node run-distiller.mjs",
+    "test": "node --test distiller.test.mjs"
+  },
+  "engines": { "node": ">=22.5.0" },
+  "dependencies": { "acorn": "8.18.0", "js-tiktoken": "1.0.21" }
+}

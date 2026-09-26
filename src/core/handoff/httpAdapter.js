@@ -8,8 +8,11 @@ import { createHandoffArtifact } from './handoffArtifact.js';
 import { saveHandoffArtifact } from './save.js';
 import { createWorkspaceOverview as createWorkspaceOverviewCore } from './workspace-overview.js';
 import { getAgentResourceStatus as getAgentResourceStatusCore, resourceStatusOf } from '../../resources/agentResourceService.js';
-import { AGENT_TYPES, readAgentSourceRegistry, writeAgentSourceRegistry, detectAgentSources, registerAgentSource, removeAgentSource, resolveActiveSource, validateSource } from '../../agents/sourceRegistry.js';
+import { AGENT_TYPES, readAgentSourceRegistry, writeAgentSourceRegistry, detectAgentSources, registerAgentSource, removeAgentSource, enableAgentSource, resolveActiveSource, validateSource, descriptorProblems } from '../../agents/sourceRegistry.js';
 import { adapterFor } from '../../agents/adapters.js';
+import { descriptorFor } from '../../agents/descriptor/load.js';
+import { installAgentDescriptor, uninstallAgentDescriptor } from '../../agents/agentInstall.js';
+import { healthPayload } from '../../surfaceHealth.js';
 
 const MAX_LIST_LIMIT = 20;
 
@@ -23,15 +26,21 @@ function clampLimit(value) {
   return Math.min(Math.trunc(n), MAX_LIST_LIMIT);
 }
 
+// The display name is declared by the Agent's descriptor, so an Agent Margin does not ship can name
+// itself. An unknown type falls back to its own raw type rather than borrowing another Agent's name.
+function descriptorLabel(type, options = {}) {
+  return descriptorFor(type, options)?.label ?? (typeof type === 'string' && type.trim() ? type : 'Unknown');
+}
+
 // Only pass through browser-safe fields derived by the discovery layer.
-function sessionSummary(session) {
+function sessionSummary(session, options = {}) {
   return {
     id: session.id,
     nativeSessionId: session.nativeSessionId ?? session.id,
     canonicalId: session.canonicalId,
     sourceId: session.sourceId ?? null,
     agentType: session.agentType ?? 'codex',
-    agent: session.agentType === 'claude' ? 'Claude' : session.agentType === 'pi' ? 'Pi' : 'Codex',
+    agent: descriptorLabel(session.agentType ?? 'codex', options),
     cwd: session.cwd ?? null,
     workspace: session.workspace ?? { key: session.workspaceKey ?? null, name: session.workspaceName ?? null },
     workspaceKey: session.workspaceKey ?? null,
@@ -54,10 +63,26 @@ function isDirectory(value) {
   try { return fs.statSync(value).isDirectory(); } catch { return false; }
 }
 
-function resourceAgentName(type) { return type === 'claude' ? 'claude-code' : type; }
-function unavailableResourceAgent(type, revision) {
-  const provider = type === 'codex' ? 'openai' : type === 'pi' ? 'pi' : null;
-  return { agent: resourceAgentName(type), ...(provider ? { provider } : {}), revision, freshAt: null, stale: false, unavailable: true, resources: [] };
+// The resource-bar key and the provider are declared by the descriptor. Both used to be ternaries
+// here, which is why a new Agent needed an edit in this file just to appear correctly in the bar.
+function resourceAgentName(type, options = {}) {
+  return descriptorFor(type, options)?.resourceAgent ?? type;
+}
+
+// Display metadata for one resource-bar agent, declared by its descriptor. Attached at this
+// boundary so the resource readers stay free of presentation and the browser never has to guess a
+// label from a resource key.
+function resourceAgentMeta(type, options = {}) {
+  const descriptor = descriptorFor(type, options);
+  return {
+    ...(descriptor ? { label: descriptor.label } : {}),
+    ...(descriptor?.quotaPrefix ? { quotaPrefix: descriptor.quotaPrefix } : {}),
+  };
+}
+
+function unavailableResourceAgent(type, revision, options = {}) {
+  const provider = descriptorFor(type, options)?.provider ?? null;
+  return { agent: resourceAgentName(type, options), ...resourceAgentMeta(type, options), ...(provider ? { provider } : {}), revision, freshAt: null, stale: false, unavailable: true, resources: [] };
 }
 
 // Minimal, independent boundary: browser UI never touches the Codex filesystem
@@ -109,7 +134,18 @@ export function createHandoffHttpAdapter({
     } catch { /* Registry failure is fail-safe: never replace it with detected defaults. */ }
   }
   const activeCodex = () => resolveActiveSource(registry(), 'codex', registryOptions);
-  const enabledSources = () => AGENT_TYPES.map((type) => resolveActiveSource(registry(), type, registryOptions)).filter((source) => source?.enabled);
+  // Every type Margin knows about: the descriptors it ships plus whatever is registered. Deriving
+  // this from the registry is what lets an Agent that arrived as a descriptor be discovered, read,
+  // and shown without any edit to this file.
+  const knownTypes = () => {
+    const current = registry();
+    return [...new Set([...AGENT_TYPES, ...current.sources.map((item) => item.agentType)])];
+  };
+  // Reserved bar slots are the Agents whose resources Margin itself reads. A descriptor-backed Agent
+  // with no resource reader must not claim a permanent chip on every machine, so it earns its slot by
+  // being registered instead.
+  const alwaysPresentResourceTypes = () => AGENT_TYPES.filter((type) => descriptorFor(type, registryOptions)?.resources?.kind === 'builtin');
+  const enabledSources = () => knownTypes().map((type) => resolveActiveSource(registry(), type, registryOptions)).filter((source) => source?.enabled);
   // Each enabled source is isolated: a malformed or unreadable Claude/Pi home must never
   // hide Codex (or another agent) sessions. Manual-vs-detected precedence is resolved per type.
   // Kept per source rather than as one global list so one unavailable Agent cannot make a
@@ -122,11 +158,11 @@ export function createHandoffHttpAdapter({
   const discover = async (_unused, options = {}) => {
     const sources = hasInjectedCodexDiscovery
       ? [injectedCodexSource]
-      : AGENT_TYPES.map((type) => resolveActiveSource(registry(), type, registryOptions)).filter(Boolean);
+      : knownTypes().map((type) => resolveActiveSource(registry(), type, registryOptions)).filter(Boolean);
     let sourceReadFailed = false;
     let readableSources = 0;
     const settled = await Promise.all(sources.map(async (source) => {
-      const adapter = adapterResolver(source.type);
+      const adapter = adapterResolver(source.type, registryOptions);
       if (!source.enabled || !adapter) return [];
       // An adapter is an independent native-data source.  Preserve a thrown reader error as
       // that source's failure envelope, rather than allowing Promise.all to reject the entire
@@ -168,7 +204,7 @@ export function createHandoffHttpAdapter({
   const currentRevision = () => {
     const sources = hasInjectedCodexDiscovery ? [injectedCodexSource] : enabledSources();
     const signatures = sources.flatMap((source) => {
-      const adapter = adapterResolver(source.type);
+      const adapter = adapterResolver(source.type, registryOptions);
       try {
         if (!adapter?.getSessionRevision) throw new Error(`No revision reader for ${source.type}`);
         const revision = adapter.getSessionRevision(source, { computeCodexRevision: computeSourceRevision });
@@ -183,7 +219,7 @@ export function createHandoffHttpAdapter({
   };
   app.use(express.json({ limit: '2mb' }));
 
-  app.get('/api/health', (_request, response) => response.json({ ok: true, status: 'ready' }));
+  app.get('/api/health', (_request, response) => response.json(healthPayload({ surface: 'margin-board' })));
 
   // Resource status is a read-only, independent domain. Every resource adapter returns the same
   // unified envelope { ok, status, revision, agents } whose agents carry their own resource
@@ -199,18 +235,22 @@ export function createHandoffHttpAdapter({
     try { revision = currentRevision(); } catch { /* advisory; a failed revision read is never fatal */ }
     const fallback = {
       ok: true, status: 'unavailable', revision,
-      agents: AGENT_TYPES.map((type) => ({ ...unavailableResourceAgent(type, revision), ...(type === 'codex' ? { stale: true } : {}) })),
+      agents: alwaysPresentResourceTypes().map((type) => ({ ...unavailableResourceAgent(type, revision, registryOptions), ...(type === 'codex' ? { stale: true } : {}) })),
     };
     try {
       const codex = getAgentResourceStatus({ codexHome: source?.path, source, revision });
       const current = registry();
-      const byAgent = new Map((codex?.agents ?? []).filter((agent) => agent.agent !== 'claude-code').map((agent) => [agent.agent, agent]));
+      const byAgent = new Map((codex?.agents ?? []).filter((agent) => agent.agent !== 'claude-code').map((agent) => [agent.agent, { ...agent, ...resourceAgentMeta('codex', registryOptions) }]));
+      const agentName = (type) => resourceAgentName(type, registryOptions);
 
-      // Claude and Pi are supplemental resource adapters. Each read is isolated so a provider
-      // binding/network failure produces only that agent's unavailable/LKG truth.
-      for (const type of ['claude', 'pi']) {
+      // Codex is read above through the shared service. Every OTHER known type — built-in or
+      // descriptor-backed — is read through its own adapter. This loop used to name Claude and Pi
+      // literally, so a newly added Agent could be listed on the Board and still never have its
+      // resources read: the half-wired state that produced no error and no data.
+      const allResourceTypes = [...new Set([...alwaysPresentResourceTypes(), ...current.sources.map((item) => item.agentType)])];
+      for (const type of allResourceTypes.filter((item) => item !== 'codex')) {
         const sourceForType = resolveActiveSource(current, type, registryOptions);
-        const adapter = sourceForType ? adapterResolver(type) : null;
+        const adapter = sourceForType ? adapterResolver(type, registryOptions) : null;
         let result = null;
         if (sourceForType?.enabled && adapter?.collectResourceSnapshot) {
           let sourceRevision = null;
@@ -219,13 +259,13 @@ export function createHandoffHttpAdapter({
             result = await adapter.collectResourceSnapshot(sourceForType, { revision: sourceRevision, env, now: Date.now() });
           } catch { /* one provider's resource failure must not affect other agents */ }
         }
-        const agent = result?.agents?.find((item) => item.agent === resourceAgentName(type));
-        byAgent.set(resourceAgentName(type), agent ?? unavailableResourceAgent(type, revision));
+        const agent = result?.agents?.find((item) => item.agent === agentName(type));
+        byAgent.set(agentName(type), agent ? { ...agent, ...resourceAgentMeta(type, registryOptions) } : unavailableResourceAgent(type, revision, registryOptions));
       }
 
       // Keep a stable visual order and ensure every supported agent remains represented without
       // hardcoding a Claude-specific placeholder in the HTTP contract.
-      const agents = AGENT_TYPES.map((type) => byAgent.get(resourceAgentName(type)) ?? unavailableResourceAgent(type, revision));
+      const agents = allResourceTypes.map((type) => byAgent.get(agentName(type)) ?? unavailableResourceAgent(type, revision, registryOptions));
       response.json({ ok: true, status: resourceStatusOf(agents), revision: codex?.revision ?? revision ?? null, agents });
     }
     catch { response.json(fallback); }
@@ -234,7 +274,18 @@ export function createHandoffHttpAdapter({
   app.get('/api/agent-sources', (_request, response) => {
     try {
       const current = registry();
-      response.json(ok({ sources: current.sources.map((source) => ({ ...source, validation: validateSource(source), active: resolveActiveSource(current, source.type, registryOptions)?.id === source.id })) }));
+      // `problems` is the difference between "the Board is empty" and "the descriptor for this Agent
+      // is malformed, here is why". `adapter` says whether this type can actually be read right now,
+      // which is what turns a registered-but-silent Agent into a visible, explainable state.
+      response.json(ok({
+        sources: current.sources.map((source) => ({
+          ...source,
+          validation: validateSource(source),
+          adapter: Boolean(adapterResolver(source.type, registryOptions)),
+          active: resolveActiveSource(current, source.type, registryOptions)?.id === source.id,
+        })),
+        problems: descriptorProblems(registryOptions),
+      }));
     } catch (error) { response.status(503).json(fail(error.code ?? 'registry_unreadable', error.message)); }
   });
 
@@ -256,14 +307,53 @@ export function createHandoffHttpAdapter({
     } catch (error) { response.status(error?.code === 'registry_unreadable' ? 503 : 400).json(fail(error?.code ?? 'invalid_source', error?.message ?? 'Invalid source')); }
   });
 
+  // Removal is origin-agnostic: an Agent that cannot be removed is an Agent that cannot be tested.
+  // The registry tombstones a source that detection would otherwise recreate, so removing survives a
+  // restart. LKG is dropped with the source, or a re-added Agent would show its old reading.
   app.delete('/api/agent-sources/:id', (request, response) => {
     try {
       const current = registry();
       const source = current.sources.find((item) => item.id === request.params.id);
       if (!source) return response.status(404).json(fail('not_found', 'Source not found'));
-      if (source.origin !== 'manual') return response.status(400).json(fail('auto_source', 'Auto-detected sources cannot be removed'));
-      response.json(ok({ sources: writeRegistry(removeAgentSource(current, source.id), registryOptions).sources }));
+      const next = writeRegistry(removeAgentSource(current, source.id, registryOptions), registryOptions);
+      sourceLastKnownGood.delete(source.id);
+      sourceReadStatus.delete(source.id);
+      response.json(ok({ sources: next.sources, suppressed: next.sources.find((item) => item.id === source.id)?.suppressed === true }));
     } catch (error) { response.status(error?.code === 'registry_unreadable' ? 503 : 400).json(fail(error?.code ?? 'invalid_source', error?.message ?? 'Invalid source')); }
+  });
+
+  // The undo for a removal, so undoing a mis-click never means hand-editing agent-sources.json.
+  app.post('/api/agent-sources/:id/enable', (request, response) => {
+    try {
+      const current = registry();
+      if (!current.sources.some((item) => item.id === request.params.id)) return response.status(404).json(fail('not_found', 'Source not found'));
+      const next = writeRegistry(enableAgentSource(current, request.params.id, registryOptions), registryOptions);
+      response.json(ok({ sources: next.sources }));
+    } catch (error) { response.status(error?.code === 'registry_unreadable' ? 503 : 400).json(fail(error?.code ?? 'invalid_source', error?.message ?? 'Invalid source')); }
+  });
+
+  // The surface an Agent drives to configure itself. Fetching the plugin is deliberately the Agent's
+  // job: these routes only accept a descriptor and reverse it, so Margin never gains a
+  // download-and-execute path. Both are idempotent and dry-runnable for a repeated test loop.
+  app.post('/api/agents/install', (request, response) => {
+    try {
+      const report = installAgentDescriptor({
+        descriptor: request.body?.descriptor,
+        path: typeof request.body?.path === 'string' && request.body.path.trim() ? request.body.path : null,
+        env,
+        dryRun: request.body?.dryRun === true,
+      });
+      if (!report.ok) return response.status(400).json(fail(report.error.code, report.error.message ?? ((report.error.errors ?? []).join('; ') || report.error.code)));
+      response.status(201).json(ok(report));
+    } catch (error) { response.status(400).json(fail(error?.code ?? 'install_failed', error?.message ?? 'Install failed')); }
+  });
+
+  app.post('/api/agents/uninstall', (request, response) => {
+    try {
+      const report = uninstallAgentDescriptor({ type: request.body?.type, env, dryRun: request.body?.dryRun === true });
+      if (!report.ok) return response.status(400).json(fail(report.error.code, report.error.message ?? report.error.code));
+      response.json(ok(report));
+    } catch (error) { response.status(400).json(fail(error?.code ?? 'uninstall_failed', error?.message ?? 'Uninstall failed')); }
   });
 
   app.get('/api/sessions', async (request, response) => {
@@ -281,7 +371,7 @@ export function createHandoffHttpAdapter({
       const revisionAfter = currentRevision();
       if (!sessions.snapshotComplete) throw Object.assign(new Error('One or more agent sources could not be read'), { code: 'source_read_failed' });
       if (revisionBefore !== revisionAfter) throw Object.assign(new Error('Source changed during snapshot read'), { code: 'snapshot_changed_during_read' });
-      const mapped = (workspaceKey ? sessions.filter((session) => session.workspaceKey === workspaceKey) : sessions).map(sessionSummary);
+      const mapped = (workspaceKey ? sessions.filter((session) => session.workspaceKey === workspaceKey) : sessions).map((session) => sessionSummary(session, registryOptions));
       response.json(ok({ revision: revisionAfter, sessions: mapped }));
     } catch (error) {
       response.status(503).json(fail(error?.code ?? 'discovery_failed', error?.message ?? 'unknown_error'));
@@ -327,12 +417,16 @@ export function createHandoffHttpAdapter({
       const repo = typeof request.body?.repo === 'string' && request.body.repo.trim() ? request.body.repo : meta.cwd;
       if (!isDirectory(repo)) return response.status(400).json(fail('invalid_repo', 'Workspace path is not a directory'));
       // Each agent adapter owns its capture/generation path (Pi evidence extractor vs the shared
-      // Codex one). Fall back to the injected Codex defaults for any adapter without its own.
-      const adapter = adapterResolver(meta.agentType);
-      const sessionCapturer = adapter?.captureSession ?? captureSession;
-      const handoffGenerator = adapter?.generateHandoff ?? generateHandoff;
+      // Codex one). Only an adapter that explicitly declares the shared Codex defaults may inherit
+      // them: the previous `?? captureSession` handed Codex's capture path to any Agent that declared
+      // handoff without implementing one, producing a plausible-looking handoff built from the wrong
+      // Agent's transcript.
+      const adapter = adapterResolver(meta.agentType, registryOptions);
+      const sessionCapturer = adapter?.captureSession ?? (adapter?.usesDefaultCapture === true ? captureSession : null);
+      const handoffGenerator = adapter?.generateHandoff ?? (adapter?.usesDefaultCapture === true ? generateHandoff : null);
+      if (!sessionCapturer || !handoffGenerator) return response.status(400).json(fail('unsupported_action', 'Handoff is not supported for this session'));
       const artifact = createHandoffArtifact({ session: meta, canonicalId: sessionId, rootDir, workspace: repo, captureSession: sessionCapturer, generateHandoff: handoffGenerator });
-      response.json(ok({ markdown: artifact.markdown, resumeSummary: artifact.resumeSummary, session: sessionSummary(meta) }));
+      response.json(ok({ markdown: artifact.markdown, resumeSummary: artifact.resumeSummary, session: sessionSummary(meta, registryOptions) }));
     } catch (error) {
       response.status(500).json(fail('handoff_generation_failed', error?.message ?? 'unknown_error'));
     }

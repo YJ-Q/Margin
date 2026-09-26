@@ -27,7 +27,7 @@ const wheel = (dom, overrides) => {
 };
 
 test('S8.5D wheel is only taken over when the bar overflows', async (t) => {
-  const { dom, viewport } = await renderBar(t, { agents: [{ agent: 'codex', resources: [{ windowDurationMinutes: 300, percentUsed: 40, resetsAt: 1 }] }] });
+  const { dom, viewport } = await renderBar(t, { agents: [{ agent: 'codex', label: 'Codex', resources: [{ windowDurationMinutes: 300, percentUsed: 40, resetsAt: 1 }] }] });
   // No overflow: the wheel is not hijacked — not prevented, no scroll.
   const noOverflow = wheel(dom, { deltaY: 200 });
   viewport.dispatchEvent(noOverflow);
@@ -102,7 +102,7 @@ test('S8.5D no overflow => no fade at all', async (t) => {
 });
 
 test('S8.5D quota truth: fresh 0% / 25%, expired —, read-failure LKG value + stale', async (t) => {
-  const { dom, viewport } = await renderBar(t, { agents: [{ agent: 'codex', resources: [
+  const { dom, viewport } = await renderBar(t, { agents: [{ agent: 'codex', label: 'Codex', resources: [
     { windowDurationMinutes: 300, remaining: 0 },
     { windowDurationMinutes: 10080, remaining: 25 },
   ] }] });
@@ -111,7 +111,7 @@ test('S8.5D quota truth: fresh 0% / 25%, expired —, read-failure LKG value + s
   assert.match(text, /5h 0%/, 'fresh remaining=0 renders 0% (not a falsy "—")');
   assert.match(text, /7d 25%/, 'fresh remaining=25 renders 25%');
 
-  const { dom: domExpired, viewport: vp2 } = await renderBar(t, { agents: [{ agent: 'codex', resources: [
+  const { dom: domExpired, viewport: vp2 } = await renderBar(t, { agents: [{ agent: 'codex', label: 'Codex', resources: [
     { windowDurationMinutes: 300, remaining: null, stale: true, resetsAt: 1 },
   ] }] });
   void vp2;
@@ -122,7 +122,7 @@ test('S8.5D quota truth: fresh 0% / 25%, expired —, read-failure LKG value + s
 });
 
 test('S8.5D read-failure LKG keeps the trusted value and stays stale', async (t) => {
-  const { dom } = await renderBar(t, { agents: [{ agent: 'codex', stale: true, resources: [
+  const { dom } = await renderBar(t, { agents: [{ agent: 'codex', label: 'Codex', stale: true, resources: [
     { windowDurationMinutes: 300, remaining: 25 },
   ] }] });
   const text = dom.window.document.querySelector('[data-agent="codex"]').textContent;
@@ -132,23 +132,23 @@ test('S8.5D read-failure LKG keeps the trusted value and stays stale', async (t)
 
 test('S8.5D every agent stays present when its resource is unavailable (no layout jump)', async (t) => {
   const { dom } = await renderBar(t, { agents: [
-    { agent: 'codex', provider: 'openai', unavailable: true, resources: [] },
-    { agent: 'pi', provider: 'pi', unavailable: true, resources: [] },
-    { agent: 'claude-code', unavailable: true },
+    { agent: 'codex', label: 'Codex', provider: 'openai', unavailable: true, resources: [] },
+    { agent: 'pi', label: 'Pi', quotaPrefix: 'Go', provider: 'pi', unavailable: true, resources: [] },
+    { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true },
   ] });
   const codex = dom.window.document.querySelector('[data-agent="codex"]').textContent;
   const pi = dom.window.document.querySelector('[data-agent="pi"]').textContent;
   const claude = dom.window.document.querySelector('[data-agent="claude-code"]').textContent;
-  assert.match(codex, /Codex —/);
-  assert.match(pi, /Pi —/);
+  assert.match(codex, /Codex · —/);
+  assert.match(pi, /Pi · —/);
   assert.match(claude, /Claude · —/);
 });
 
 test('S8.5D Pi Today stays compact while unavailable agents keep their placeholder', async (t) => {
   const { dom } = await renderBar(t, { agents: [
     { agent: 'article' },
-    { agent: 'pi', resources: [{ resourceType: 'tokenUsage', accessMode: 'api', scope: 'today', totalTokens: 8700, trustedResponseCount: 3, coverage: { partial: false, excludedUnknownResponses: 0, excludedSubscriptionResponses: 0, readFailed: false }, provenance: null }] },
-    { agent: 'claude-code', unavailable: true },
+    { agent: 'pi', label: 'Pi', quotaPrefix: 'Go', resources: [{ resourceType: 'tokenUsage', accessMode: 'api', scope: 'today', totalTokens: 8700, trustedResponseCount: 3, coverage: { partial: false, excludedUnknownResponses: 0, excludedSubscriptionResponses: 0, readFailed: false }, provenance: null }] },
+    { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true },
   ] });
   const pi = dom.window.document.querySelector('[data-agent="pi"]').textContent;
   const claude = dom.window.document.querySelector('[data-agent="claude-code"]').textContent;
@@ -167,7 +167,7 @@ test('S8.5D service maps over-budget used_percent to 0 remaining (exhausted trut
 });
 
 test('S8.6B Pi one visual unit: Go 5h/7d/M remaining + API Today, stale window on failure', async (t) => {
-  const { dom } = await renderBar(t, { agents: [{ agent: 'pi', provider: 'pi', subscriptionQuota: true, resources: [
+  const { dom } = await renderBar(t, { agents: [{ agent: 'pi', label: 'Pi', quotaPrefix: 'Go', provider: 'pi', subscriptionQuota: true, resources: [
     { resourceType: 'quota', accessMode: 'subscription', window: '5h', windowDurationMinutes: 300, percentUsed: 14, remaining: 86, status: 'ok' },
     { resourceType: 'quota', accessMode: 'subscription', window: '7d', windowDurationMinutes: 10080, percentUsed: 7, remaining: 93, status: 'ok' },
     { resourceType: 'quota', accessMode: 'subscription', window: 'M', windowDurationMinutes: 43200, percentUsed: 3, remaining: 97, status: 'ok' },
@@ -177,7 +177,7 @@ test('S8.6B Pi one visual unit: Go 5h/7d/M remaining + API Today, stale window o
   assert.match(pi, /Pi · Go 5h 86% · 7d 93% · M 97% · API 8\.2M/);
 
   // A window that rolled with no fresh refresh renders — · stale, never a guessed 0/100.
-  const { dom: domExpired } = await renderBar(t, { agents: [{ agent: 'pi', resources: [
+  const { dom: domExpired } = await renderBar(t, { agents: [{ agent: 'pi', label: 'Pi', quotaPrefix: 'Go', resources: [
     { resourceType: 'quota', accessMode: 'subscription', windowDurationMinutes: 300, remaining: null, stale: true, resetsAt: 1 },
   ] }] });
   const expired = domExpired.window.document.querySelector('[data-agent="pi"]').textContent;
@@ -187,19 +187,19 @@ test('S8.6B Pi one visual unit: Go 5h/7d/M remaining + API Today, stale window o
 });
 
 test('S8.10A Claude Go quota is data-driven, preserves stale LKG, and renders fresh zero', async (t) => {
-  const { dom } = await renderBar(t, { agents: [{ agent: 'claude-code', provider: 'opencode-go', subscriptionQuota: true, resources: [
+  const { dom } = await renderBar(t, { agents: [{ agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', provider: 'opencode-go', subscriptionQuota: true, resources: [
     { resourceType: 'quota', accessMode: 'subscription', window: '5h', windowDurationMinutes: 300, remaining: 75 },
     { resourceType: 'quota', accessMode: 'subscription', window: '7d', windowDurationMinutes: 10080, remaining: 89 },
     { resourceType: 'quota', accessMode: 'subscription', window: 'M', windowDurationMinutes: 43200, remaining: 95 },
   ] }] });
   assert.equal(dom.window.document.querySelector('[data-agent="claude-code"]').textContent, 'Claude · Go 5h 75% · 7d 89% · M 95%');
 
-  const { dom: domStale } = await renderBar(t, { agents: [{ agent: 'claude-code', provider: 'opencode-go', stale: true, resources: [
+  const { dom: domStale } = await renderBar(t, { agents: [{ agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', provider: 'opencode-go', stale: true, resources: [
     { resourceType: 'quota', accessMode: 'subscription', windowDurationMinutes: 300, remaining: 75 },
   ] }] });
   assert.equal(domStale.window.document.querySelector('[data-agent="claude-code"]').textContent, 'Claude · Go 5h 75% · stale');
 
-  const { dom: domZero } = await renderBar(t, { agents: [{ agent: 'claude-code', provider: 'opencode-go', resources: [
+  const { dom: domZero } = await renderBar(t, { agents: [{ agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', provider: 'opencode-go', resources: [
     { resourceType: 'quota', accessMode: 'subscription', windowDurationMinutes: 300, remaining: 0 },
   ] }] });
   assert.equal(domZero.window.document.querySelector('[data-agent="claude-code"]').textContent, 'Claude · Go 5h 0%');

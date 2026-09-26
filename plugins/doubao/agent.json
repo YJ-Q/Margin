@@ -1,0 +1,61 @@
+{
+  "$comment": "Margin Agent plugin. Installing this file teaches Margin how to read 豆包 Agent Mode sessions. It contains no code: Margin validates it against the Agent Descriptor Spec and composes a reader from its own catalogue. See README.md for the install contract.",
+  "specVersion": 1,
+  "type": "doubao",
+  "label": "豆包",
+  "provider": "doubao",
+  "resourceAgent": "doubao",
+  "defaultSourceName": "Doubao",
+  "envHome": "DOUBAO_AGENT_HOME",
+
+  "$comment_home": "Ordered candidates, resolved against the real filesystem at install time. The first that exists AND passes `probe` wins, so one file fits machines that keep 豆包 in different places.",
+  "homeCandidates": [
+    {
+      "env": "DOUBAO_AGENT_HOME",
+      "fallback": "%ENV:LOCALAPPDATA%/Doubao/User Data/Default/.doubao/agent_mode/workspace"
+    },
+    {
+      "fallback": "{profile}/AppData/Local/Doubao/User Data/Default/.doubao/agent_mode/workspace"
+    },
+    {
+      "fallback": "{profile}/.doubao/agent_mode/workspace"
+    }
+  ],
+
+  "supportLevel": "Session discovery",
+
+  "$comment_capabilities": "sessions and nothing else. `quota` and `handoff` are deliberately absent: quota needs a credential-bearing subscription endpoint and handoff needs a transcript distiller, neither of which the declarative catalogue can express. Declaring them without an implementation would be the silent half-wiring the spec rejects.",
+  "capabilities": {
+    "sessions": true,
+    "handoff": false,
+    "apiUsage": false,
+    "quota": false,
+    "executionStatus": false,
+    "attentionStatus": false
+  },
+
+  "sessions": {
+    "kind": "transcript",
+    "layout": "directory-per-session",
+    "roots": ["{home}/.sessions"],
+    "transcript": { "glob": "agents/*/system/trajectory.jsonl", "format": "jsonl" },
+    "id": { "kind": "directoryName" },
+
+    "$comment_timestamps": "The two native session files bracket the session's real span. Nothing the Agent wrote into its own scratch space may move the timestamps.",
+    "createdAt": { "kind": "mtime", "glob": "agents/*/system/*", "pick": "min" },
+    "updatedAt": { "kind": "mtime", "glob": "agents/*/system/*", "pick": "max" },
+
+    "$comment_workspace": "豆包 does not record a working directory at all, so it is recovered from the absolute paths the transcript mentions. `parentOf` turns a file path into its directory; `requireMarker` prefers the candidate that actually looks like a project over an incidental path such as a bundled skill's reference file. The marker is a preference, never a filter — a session whose workspace has no .git still resolves to its first path.",
+    "workspace": { "kind": "scanAbsolutePaths", "parentOf": true, "requireMarker": ".git" },
+
+    "title": { "kind": "record", "where": { "role": "user" }, "index": 0, "path": "content", "as": "first-user-message" }
+  },
+
+  "resources": { "kind": "none" },
+  "handoff": { "kind": "none" },
+
+  "$comment_probe": "Structural check: does a candidate directory actually look like a 豆包 Agent Mode workspace? Without it, a mistyped path is indistinguishable from an Agent with no sessions.",
+  "probe": {
+    "anyOf": [{ "glob": "{home}/.sessions/*/agents/*/system/trajectory.jsonl" }]
+  }
+}

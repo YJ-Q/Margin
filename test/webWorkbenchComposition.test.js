@@ -81,7 +81,7 @@ test('composition opens exactly one configured Core, uses terminal-safe Pi defau
     assert.equal(started.host, '127.0.0.1');
     assert.ok(started.port > 0);
     const health = await fetch(`${started.origin}/api/health`).then((response) => response.json());
-    assert.deepEqual(health, { ok: true, status: 'ready', contractVersion: '1.1' });
+    assert.deepEqual(health, { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: '1.1' });
 
     await f.workbench.close();
     await f.workbench.close();
@@ -110,7 +110,7 @@ test('development routes health, commands, queries, and events before the Vite S
       return { status: response.status, body: await response.json() };
     };
     const health = await api('/api/health');
-    assert.deepEqual(health, { status: 200, body: { ok: true, status: 'ready', contractVersion: '1.1' } });
+    assert.deepEqual(health, { status: 200, body: { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: '1.1' } });
 
     const query = await api('/api/queries', {
       method: 'POST', headers: { 'content-type': 'application/json' },
@@ -138,16 +138,24 @@ test('development routes health, commands, queries, and events before the Vite S
   } finally { await f.cleanup(); }
 });
 
-test('production composition fails clearly before opening Core when web assets are absent', async () => {
-  const rootDir = await mkdtemp(path.join(os.tmpdir(), 'margin-web-missing-assets-'));
-  let opens = 0;
+test('production composition starts API-only when no web assets are present', async () => {
+  // The Workbench UI was removed with the surface consolidation (ADR 003). This server is now the
+  // Application Contract's transport, so an absent front end is the NORMAL case and must not stop Core
+  // from opening. The previous behaviour refused to start, which is the coupling this change removes.
+  const rootDir = await mkdtemp(path.join(os.tmpdir(), 'margin-web-api-only-'));
+  const workbench = await createWebWorkbench({ rootDir, port: 0, dbPath: path.join(rootDir, 'core.sqlite') });
   try {
-    await assert.rejects(
-      createWebWorkbench({ rootDir, dbPath: path.join(rootDir, 'core.sqlite'), dependencies: { async createMarginCore() { opens += 1; } } }),
-      /web_assets_missing.*npm run build/u
-    );
-    assert.equal(opens, 0);
-  } finally { await rm(rootDir, { recursive: true, force: true }); }
+    const started = await workbench.start();
+    assert.ok(started.port > 0);
+    const health = await fetch(`${started.origin}/api/health`).then((response) => response.json());
+    assert.deepEqual(health, { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: '1.1' });
+    // The API answers; nothing is served for a browser path because no static app is mounted.
+    const page = await fetch(`${started.origin}/`);
+    assert.equal(page.status, 404);
+  } finally {
+    await workbench.close();
+    await rm(rootDir, { recursive: true, force: true });
+  }
 });
 
 test('web composition and entrypoint have no legacy application, route, store, or echo database imports', async () => {

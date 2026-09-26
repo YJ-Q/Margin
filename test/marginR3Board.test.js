@@ -24,7 +24,7 @@ test('R3.3 window controls keep content expansion first and Quit at the far righ
   globalThis.window = dom.window; globalThis.document = dom.window.document; globalThis.HTMLElement = dom.window.HTMLElement; globalThis.Event = dom.window.Event;
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   const root = createRoot(document.getElementById('root')); t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
-  await act(async () => root.render(React.createElement(UsageBar, { resourceStatus: { agents: [{ agent: 'codex', resources: [{ windowDurationMinutes: 300, percentUsed: 59, resetsAt: 1 }, { windowDurationMinutes: 10080, percentUsed: 51, resetsAt: 2 }] }, { agent: 'pi', resources: [{ accessMode: 'api', scope: 'today', totalTokens: 126000, trustedResponseCount: 3 }] }, { agent: 'claude-code', unavailable: true }] }, expanded: false, settings: {}, alwaysOnTop: false, onToggle() {}, onPin() {}, onHide() {}, onQuit() {} })));
+  await act(async () => root.render(React.createElement(UsageBar, { resourceStatus: { agents: [{ agent: 'codex', label: 'Codex', resources: [{ windowDurationMinutes: 300, percentUsed: 59, resetsAt: 1 }, { windowDurationMinutes: 10080, percentUsed: 51, resetsAt: 2 }] }, { agent: 'pi', label: 'Pi', quotaPrefix: 'Go', resources: [{ accessMode: 'api', scope: 'today', totalTokens: 126000, trustedResponseCount: 3 }] }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] }, expanded: false, settings: {}, alwaysOnTop: false, onToggle() {}, onPin() {}, onHide() {}, onQuit() {} })));
   assert.deepEqual([...document.querySelectorAll('.margin-control-dock button')].map((button) => button.getAttribute('aria-label')), ['Expand sessions', 'Pin', 'Hide', 'Quit']);
   assert.equal(document.querySelectorAll('[data-agent="codex"]').length, 1);
   assert.match(document.querySelector('[data-agent="codex"]').textContent, /Codex · 5h 41% · 7d 49%/);
@@ -39,7 +39,7 @@ test('S7.1 Codex resource hover has no normal-state detail card', async (t) => {
   globalThis.window = dom.window; globalThis.document = dom.window.document; globalThis.HTMLElement = dom.window.HTMLElement;
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   const root = createRoot(document.getElementById('root')); t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
-  await act(async () => root.render(React.createElement(UsageBar, { resourceStatus: { agents: [{ agent: 'codex', freshAt: '2026-09-08T03:04:00.000Z', token: { model: 'GPT-5.2', totalTokens: 12345, cachedInputTokens: 9000, outputTokens: 345, reasoningTokens: 99, responseId: 'resp-secret' }, resources: [{ windowDurationMinutes: 300, remaining: 41, resetsAt: 1788611748, plan: 'plus' }, { windowDurationMinutes: 10080, remaining: 59, resetsAt: 1789198548 }] }] }, expanded: false, onToggle() {}, onPin() {}, onHide() {}, onQuit() {} })));
+  await act(async () => root.render(React.createElement(UsageBar, { resourceStatus: { agents: [{ agent: 'codex', label: 'Codex', freshAt: '2026-09-08T03:04:00.000Z', token: { model: 'GPT-5.2', totalTokens: 12345, cachedInputTokens: 9000, outputTokens: 345, reasoningTokens: 99, responseId: 'resp-secret' }, resources: [{ windowDurationMinutes: 300, remaining: 41, resetsAt: 1788611748, plan: 'plus' }, { windowDurationMinutes: 10080, remaining: 59, resetsAt: 1789198548 }] }] }, expanded: false, onToggle() {}, onPin() {}, onHide() {}, onQuit() {} })));
   assert.equal(document.querySelector('.margin-resource-details'), null);
   assert.doesNotMatch(document.body.textContent, /GPT-5\.2|Session usage|Total tokens|Quota|Updated|resp-secret/i);
 });
@@ -49,7 +49,7 @@ test('resource bar refreshes its native snapshot when the Board expands', async 
   globalThis.window = dom.window; globalThis.document = dom.window.document; globalThis.HTMLElement = dom.window.HTMLElement; globalThis.Event = dom.window.Event;
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   let reads = 0;
-  const api = { listSessions: async () => ({ ok: true, data: { sessions: [] } }), getResourceStatus: async () => ({ agents: [{ agent: 'codex', resources: [{ windowDurationMinutes: 300, percentUsed: ++reads, resetsAt: 1 }] }, { agent: 'claude-code', unavailable: true }] }) };
+  const api = { listSessions: async () => ({ ok: true, data: { sessions: [] } }), getResourceStatus: async () => ({ agents: [{ agent: 'codex', label: 'Codex', resources: [{ windowDurationMinutes: 300, percentUsed: ++reads, resetsAt: 1 }] }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] }) };
   const root = createRoot(document.getElementById('root')); t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
   await act(async () => { root.render(React.createElement(MarginApp, { api })); await new Promise((resolve) => setTimeout(resolve, 0)); });
   await act(async () => { document.querySelector('.margin-usage-toggle').click(); await new Promise((resolve) => setTimeout(resolve, 0)); });
@@ -67,9 +67,9 @@ test('resource bar renders service truth: stale LKG stays marked, true unavailab
   let calls = 0;
   const api = { listSessions: async () => ({ ok: true, data: { sessions: [] } }), getResourceStatus: async () => {
     calls += 1;
-    if (calls === 1) return { agents: [{ agent: 'codex', resources: [{ windowDurationMinutes: 300, percentUsed: 71, resetsAt: 1 }] }, { agent: 'claude-code', unavailable: true }] };
-    if (calls === 2) return { agents: [{ agent: 'codex', stale: true, resources: [{ windowDurationMinutes: 300, percentUsed: 71, resetsAt: 1 }] }, { agent: 'claude-code', unavailable: true }] };
-    return { agents: [{ agent: 'codex', unavailable: true, resources: [] }, { agent: 'claude-code', unavailable: true }] };
+    if (calls === 1) return { agents: [{ agent: 'codex', label: 'Codex', resources: [{ windowDurationMinutes: 300, percentUsed: 71, resetsAt: 1 }] }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] };
+    if (calls === 2) return { agents: [{ agent: 'codex', label: 'Codex', stale: true, resources: [{ windowDurationMinutes: 300, percentUsed: 71, resetsAt: 1 }] }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] };
+    return { agents: [{ agent: 'codex', label: 'Codex', unavailable: true, resources: [] }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] };
   } };
   const root = createRoot(document.getElementById('root')); t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
   await act(async () => { root.render(React.createElement(MarginApp, { api })); await new Promise((resolve) => setTimeout(resolve, 0)); });
@@ -77,10 +77,10 @@ test('resource bar renders service truth: stale LKG stays marked, true unavailab
   // A failed read with an LKG comes back stale and stays visible + marked — never flickers to —.
   await act(async () => { window.dispatchEvent(new window.Event('focus')); await new Promise((resolve) => setTimeout(resolve, 0)); });
   assert.match(document.querySelector('[data-agent="codex"]').textContent, /Codex · 5h 29% · stale/);
-  assert.doesNotMatch(document.querySelector('[data-agent="codex"]').textContent, /Codex —/);
+  assert.doesNotMatch(document.querySelector('[data-agent="codex"]').textContent, /Codex · —/);
   // A declared unavailable-without-LKG is rendered honestly (—), not hidden behind the old value.
   await act(async () => { window.dispatchEvent(new window.Event('focus')); await new Promise((resolve) => setTimeout(resolve, 0)); });
-  assert.match(document.querySelector('[data-agent="codex"]').textContent, /Codex —/);
+  assert.match(document.querySelector('[data-agent="codex"]').textContent, /Codex · —/);
   assert.equal(calls, 3);
 });
 
@@ -178,7 +178,7 @@ test('S8.2.3 source revision renders unified execution and attention colors', as
     listSessions: async () => ({ ok: true, data: { revision: state.revision, sessions: [{ id: 'old', agent: 'Codex', workspaceName: 'one', label: 'Old', updatedAt: state.revision === 'R0' ? '2026-09-08T03:00:00Z' : '2026-09-08T03:01:00Z', executionStatus: state.revision === 'R1' ? 'working' : state.revision === 'R3' ? 'error' : 'idle', attentionStatus: state.revision === 'R2' ? 'needs-input' : 'none' }] } }),
     getSessionsRevision: async () => ({ ok: true, data: { revision: state.revision } }),
     listAgentSources: async () => ({ ok: true, data: { sources: [{ type: 'codex' }] } }),
-    getResourceStatus: async () => ({ agents: [{ agent: 'codex', resources: [{ windowDurationMinutes: 300, percentUsed: 5, resetsAt: 1 }] }] }),
+    getResourceStatus: async () => ({ agents: [{ agent: 'codex', label: 'Codex', resources: [{ windowDurationMinutes: 300, percentUsed: 5, resetsAt: 1 }] }] }),
   };
   const root = createRoot(document.getElementById('root')); t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
   await act(async () => { root.render(React.createElement(MarginApp, { api, pollMs: 20, refreshGapMs: 0 })); await wait(30); });
@@ -205,7 +205,7 @@ test('S9.3 status feedback is one fixed overlay and stays geometry-stable under 
     listSessions: async () => ({ ok: true, data: { revision: state.revision, sessions: [{ id: 'codex-1', agent: 'Codex', label: 'Live task', executionStatus: state.executionStatus, attentionStatus: 'none' }] } }),
     getSessionsRevision: async () => ({ ok: true, data: { revision: state.revision } }),
     listAgentSources: async () => ({ ok: true, data: { sources: [{ type: 'codex' }] } }),
-    getResourceStatus: async () => ({ agents: [{ agent: 'codex', unavailable: true }] }),
+    getResourceStatus: async () => ({ agents: [{ agent: 'codex', label: 'Codex', unavailable: true }] }),
   };
   const root = createRoot(document.getElementById('root')); t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
   await act(async () => { root.render(React.createElement(MarginApp, { api, pollMs: 5, refreshGapMs: 0 })); await wait(25); });
@@ -235,7 +235,7 @@ function liveApi(state) {
     listSessions: async () => { state.listCalls += 1; return { ok: true, data: { revision: state.revision, sessions: [] } }; },
     getSessionsRevision: async () => { state.revisionCalls += 1; return { ok: true, data: { revision: state.revision } }; },
     listAgentSources: async () => ({ ok: true, data: { sources: [] } }),
-    getResourceStatus: async () => ({ agents: [{ agent: 'codex', resources: [{ windowDurationMinutes: 300, percentUsed: 10, resetsAt: 1 }] }, { agent: 'claude-code', unavailable: true }] }),
+    getResourceStatus: async () => ({ agents: [{ agent: 'codex', label: 'Codex', resources: [{ windowDurationMinutes: 300, percentUsed: 10, resetsAt: 1 }] }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] }),
   };
 }
 

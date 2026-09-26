@@ -26,6 +26,7 @@ export function createMarginApiClient({ fetchImpl = globalThis.fetch, baseUrl = 
     detectAgentSources() { return request('/api/agent-sources/detect', { method: 'POST' }); },
     addAgentSource({ type, path, replaceId }) { return request('/api/agent-sources', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type, path, replaceId }) }); },
     removeAgentSource(id) { return request(`/api/agent-sources/${encodeURIComponent(id)}`, { method: 'DELETE' }); },
+    enableAgentSource(id) { return request(`/api/agent-sources/${encodeURIComponent(id)}/enable`, { method: 'POST' }); },
     listWorkspaceSessions(workspaceKey) {
       return request(`/api/sessions?workspaceKey=${encodeURIComponent(workspaceKey)}`, { method: 'GET' });
     },

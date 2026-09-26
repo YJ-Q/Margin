@@ -26,48 +26,51 @@ function quotaRemaining(resource) {
 }
 function quotaStale(resource, remaining) { return remaining === null || resource.stale === true; }
 // Token usage and 5h/7d quota are separate resources on the codex agent and are never added.
-export function UsageBar({ resourceStatus, expanded, onToggle, alwaysOnTop, onPin, onHide, onQuit }) {
-  const codex = resourceStatus?.agents?.find((agent) => agent.agent === 'codex');
-  const pi = resourceStatus?.agents?.find((agent) => agent.agent === 'pi');
-  const claude = resourceStatus?.agents?.find((agent) => agent.agent === 'claude-code');
-  const resources = codex?.resources ?? [];
-  const token = codex?.token ?? null;
-  const stale = Boolean(codex?.stale);
-  const windowLabel = (minutes) => minutes === 300 ? '5h' : minutes === 10080 ? '7d' : minutes === 43200 ? 'M' : `${minutes}m`;
-  const quotaParts = resources.map((resource) => { const remaining = quotaRemaining(resource); return `${windowLabel(resource.windowDurationMinutes)} ${remaining === null ? '—' : `${remaining}%`}${quotaStale(resource, remaining) ? ' · stale' : ''}`; });
-  // Subscription token usage remains telemetry-only; only an explicit API projection with a
-  // local-calendar total may use the compact main-bar slot.
-  const apiTodayTotal = (token?.accessMode === 'api' || token?.accessMode === 'metered') ? token.todayTotalTokens : null;
-  const tokenPart = apiTodayTotal == null ? null : `Today ${formatTokens(apiTodayTotal) ?? '—'} tok`;
-  // Pi stays one visual unit: Go subscription remaining windows + API Today. Data-driven — show only
-  // the windows the structured reader actually returned; a failed/stale window renders '—' via
-  // quotaRemaining. Never a Pi/generic hardcoded branch beyond the harmless 'Go' label prefix.
-  const piQuota = (pi?.resources ?? []).filter((resource) => resource.accessMode === 'subscription' && resource.resourceType === 'quota');
-  const piQuotaText = piQuota.length ? `Go ${piQuota.map((resource) => { const remaining = quotaRemaining(resource); return `${windowLabel(resource.windowDurationMinutes)} ${remaining === null ? '—' : `${remaining}%`}${quotaStale(resource, remaining) ? ' · stale' : ''}`; }).join(' · ')}` : null;
-  // Pi today API usage stays on the compact main bar. The total is only ever the TRUSTED subset of
-  // responses: unknown/unclassified providers are excluded and flagged as partial, and a failed
-  // read keeps the last trusted total marked stale — never a full-looking total over a partial
-  // aggregation. Stale/partial come from the service record (the UI renders truth, it never derives it).
-  const piUsage = pi?.resources?.find((resource) => resource.accessMode === 'api' && resource.scope === 'today');
-  const piTotal = piUsage?.trustedResponseCount ? (formatTokens(piUsage.totalTokens) ?? '—') : '—';
-  const piMarkers = [piUsage?.coverage?.partial ? 'partial' : null, pi?.stale ? 'stale' : null].filter(Boolean);
-  const piApiText = piUsage ? `API ${piTotal}${piMarkers.length ? ` · ${piMarkers.join(' · ')}` : ''}` : null;
-  const piParts = [piQuotaText, piApiText].filter(Boolean);
-  const piText = pi && pi.unavailable !== true ? (piParts.length ? `Pi · ${piParts.join(' · ')}` : 'Pi —') : 'Pi —';
-  const claudeQuota = (claude?.resources ?? []).filter((resource) => resource.accessMode === 'subscription' && resource.resourceType === 'quota');
-  const claudeQuotaParts = claudeQuota.map((resource) => {
+// Pure presentational constants derived from the record's own window budget.
+const windowLabel = (minutes) => minutes === 300 ? '5h' : minutes === 10080 ? '7d' : minutes === 43200 ? 'M' : `${minutes}m`;
+const isQuotaResource = (resource) => resource?.resourceType === 'quota'
+  || (resource?.resourceType === undefined && resource?.windowDurationMinutes !== undefined);
+
+// One agent's segment, derived entirely from the service record.
+//
+// There is deliberately no per-Agent branch here any more. The label, the subscription prefix and
+// the resource list are all data supplied by the Agent's descriptor, so an Agent Margin has never
+// heard of renders correctly the moment its adapter returns resources — which is what closes the
+// onboarding loop: without this, a newly registered Agent could be reading its resources and still
+// never appear.
+function agentSegment(agent) {
+  const label = typeof agent?.label === 'string' && agent.label.trim() ? agent.label : String(agent?.agent ?? 'Unknown');
+  const resources = Array.isArray(agent?.resources) ? agent.resources : [];
+  const quota = resources.filter(isQuotaResource);
+  const apiUsage = resources.find((resource) => resource.accessMode === 'api' && resource.scope === 'today');
+  // Subscription token counts stay telemetry-only: only an explicit API/metered projection with a
+  // local-calendar total may claim the compact main-bar slot.
+  const token = agent?.token && (agent.token.accessMode === 'api' || agent.token.accessMode === 'metered') ? agent.token : null;
+
+  const windowParts = quota.map((resource) => {
     const remaining = quotaRemaining(resource);
     return `${windowLabel(resource.windowDurationMinutes)} ${remaining === null ? '—' : `${remaining}%`}${quotaStale(resource, remaining) ? ' · stale' : ''}`;
   });
-  const claudeHasWindowStale = claudeQuota.some((resource) => quotaStale(resource, quotaRemaining(resource)));
-  const claudeStale = claude?.stale === true && !claudeHasWindowStale ? ' · stale' : '';
-  const claudeText = claude && claude.unavailable !== true && claudeQuotaParts.length
-    ? `Claude · Go ${claudeQuotaParts.join(' · ')}${claudeStale}`
-    : 'Claude · —';
-  const baseParts = ['Codex', ...quotaParts, ...(tokenPart ? [tokenPart] : [])];
-  const hasData = baseParts.length > 1;
-  const baseText = (hasData || stale) ? baseParts.join(' · ') : 'Codex —';
-  const staleElem = stale ? createElement('span', { className: 'margin-usage-stale' }, 'stale') : null;
+  const windowStale = quota.some((resource) => quotaStale(resource, quotaRemaining(resource)));
+
+  const parts = [];
+  if (windowParts.length) parts.push(`${agent?.quotaPrefix ? `${agent.quotaPrefix} ` : ''}${windowParts.join(' · ')}`);
+  if (apiUsage) {
+    // The total is only ever the TRUSTED subset: unknown/unclassified providers are excluded and
+    // flagged partial, so a partial aggregation is never shown as a complete-looking total.
+    const total = apiUsage.trustedResponseCount ? (formatTokens(apiUsage.totalTokens) ?? '—') : '—';
+    parts.push(`API ${total}${apiUsage.coverage?.partial ? ' · partial' : ''}`);
+  }
+  if (token) parts.push(`Today ${formatTokens(token.todayTotalTokens) ?? '—'} tok`);
+
+  const unavailable = agent?.unavailable === true;
+  const body = !unavailable && parts.length ? parts.join(' · ') : null;
+  // A window that already reported stale is not marked stale a second time at agent level.
+  return { label, text: body === null ? `${label} · —` : `${label} · ${body}`, stale: !unavailable && agent?.stale === true && !windowStale };
+}
+
+export function UsageBar({ resourceStatus, expanded, onToggle, alwaysOnTop, onPin, onHide, onQuit }) {
+  const segments = (Array.isArray(resourceStatus?.agents) ? resourceStatus.agents : []).map((agent) => ({ agent, ...agentSegment(agent) }));
   // Overflow fade is driven by real scroll metrics, never a static mask: no overflow => no fade
   // on either side; left fade only once content is scrolled out to the left; right fade only while
   // more content remains off-screen to the right. Recomputed on scroll and on element resize.
@@ -84,7 +87,7 @@ export function UsageBar({ resourceStatus, expanded, onToggle, alwaysOnTop, onPi
     };
     setFade((previous) => (previous.left === next.left && previous.right === next.right ? previous : next));
   }, []);
-  useEffect(() => { updateFade(); }, [updateFade, baseText, piText, claudeText]);
+  useEffect(() => { updateFade(); }, [updateFade, segments.map((segment) => segment.text).join('|')]);
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return undefined;
@@ -125,7 +128,12 @@ export function UsageBar({ resourceStatus, expanded, onToggle, alwaysOnTop, onPi
     : fade.right ? 'linear-gradient(to left, transparent, #000 24px)'
     : 'none';
   return createElement('header', { className: 'margin-usage-bar', 'data-window-drag-region': true },
-    createElement('span', { ref: viewportRef, className: 'margin-usage-viewport', style: { maskImage: mask, WebkitMaskImage: mask } }, createElement('span', { className: 'margin-usage-agent margin-usage-agent-codex', 'data-agent': 'codex' }, createElement('span', { className: 'margin-usage-agent-label' }, baseText, staleElem ? ' · ' : null, staleElem)), createElement('span', { className: 'margin-usage-agent', 'data-agent': 'pi' }, piText), createElement('span', { className: 'margin-usage-agent', 'data-agent': 'claude-code' }, claudeText)),
+    createElement('span', { ref: viewportRef, className: 'margin-usage-viewport', style: { maskImage: mask, WebkitMaskImage: mask } },
+      segments.map((segment, index) => createElement('span', {
+        key: `${segment.agent?.agent ?? segment.label}-${index}`,
+        className: 'margin-usage-agent',
+        'data-agent': segment.agent?.agent ?? segment.label,
+      }, createElement('span', { className: 'margin-usage-agent-label' }, segment.text), segment.stale ? ' · ' : null, segment.stale ? createElement('span', { className: 'margin-usage-stale' }, 'stale') : null))),
     createElement('div', { className: 'margin-control-dock', 'data-window-drag-region': false },
       createElement('button', { type: 'button', className: 'margin-usage-toggle', onClick: onToggle, 'aria-expanded': expanded, 'aria-label': expanded ? 'Collapse sessions' : 'Expand sessions', title: expanded ? 'Collapse' : 'Expand' }, expanded ? createElement(IconChevronUp) : createElement(IconChevronDown)),
       createElement('button', { type: 'button', className: `margin-window-control ${alwaysOnTop ? 'is-active' : ''}`, onClick: onPin, title: 'Pin', 'aria-label': 'Pin', 'aria-pressed': alwaysOnTop }, createElement(IconPin)),
@@ -133,7 +141,7 @@ export function UsageBar({ resourceStatus, expanded, onToggle, alwaysOnTop, onPi
       createElement('button', { type: 'button', className: 'margin-window-control is-quit', onClick: onQuit, title: 'Quit', 'aria-label': 'Quit' }, createElement(IconX))));
 }
 
-export function SessionBoard({ api, sessions, loading, error, onRetry, sources, onSourcesChanged, settings, onSettingsChange, onToast, alwaysOnTop, onPin }) {
+export function SessionBoard({ api, sessions, loading, error, onRetry, sources, problems, onSourcesChanged, settings, onSettingsChange, onToast, alwaysOnTop, onPin }) {
   const [mode, setMode] = useState('Workspace'); const [showSettings, setShowSettings] = useState(false); const [actionState, setActionState] = useState({}); const [columnWidths, setColumnWidths] = useState(readColumnWidths); const groups = groupSessions(sessions, mode);
   useEffect(() => { persistColumnWidths(columnWidths); }, [columnWidths]);
   async function handoff(session, action) { const actionKey = session.canonicalId ?? session.id; if (actionState[actionKey] === 'working') return; setActionState((state) => ({ ...state, [actionKey]: 'working' })); try { const generated = await api.generateHandoff({ sessionId: actionKey, repo: session.cwd }); if (!generated.ok) throw new Error(generated.error?.message ?? 'Handoff generation failed'); if (action === 'copy') { await copyToClipboard(generated.data.markdown); onToast?.('✓ Copied'); } else { const saved = await api.saveToWorkspace({ repo: generated.data.session?.cwd ?? session.cwd, markdown: generated.data.markdown }); if (!saved.ok || !saved.data?.path) throw new Error(saved.error?.message ?? 'Handoff write was not confirmed'); onToast?.(settings.saveConfirmation === 'compact' ? '✓ Saved' : `✓ Saved · ${saved.data.path}`); } setActionState((state) => ({ ...state, [actionKey]: action === 'copy' ? 'copied' : 'saved' })); } catch (failure) { setActionState((state) => ({ ...state, [actionKey]: 'error' })); onToast?.(`${action === 'copy' ? 'Copy' : 'Save'} failed · ${failure.message || 'Unknown error'}`, 'error'); } }
@@ -147,12 +155,36 @@ export function SessionBoard({ api, sessions, loading, error, onRetry, sources, 
   const retry = error ? createElement('div', { className: 'margin-board-message margin-error', role: 'alert' }, error, ' ', createElement('button', { type: 'button', className: 'margin-btn', onClick: onRetry }, 'Retry')) : null;
   // A transient read failure is not an empty Board.  Keep rendered LKG rows in place and make
   // the existing small retry affordance available above them.
-  const content = showSettings ? createElement(Settings, { api, sources, onSourcesChanged, settings, onSettingsChange, alwaysOnTop, onPin }) : loading ? createElement('p', { className: 'margin-board-message' }, 'Loading sessions…') : error && sessions.length ? createElement('div', { className: 'margin-board-lkg' }, retry, list) : error ? retry : sessions.length ? list : !supported ? createElement(EmptySources, { api, onSourcesChanged }) : createElement('p', { className: 'margin-board-message' }, 'No supported sessions found on this machine.');
+  const content = showSettings ? createElement(Settings, { api, sources, problems, onSourcesChanged, settings, onSettingsChange, alwaysOnTop, onPin }) : loading ? createElement('p', { className: 'margin-board-message' }, 'Loading sessions…') : error && sessions.length ? createElement('div', { className: 'margin-board-lkg' }, retry, list) : error ? retry : sessions.length ? list : !supported ? createElement(EmptySources, { api, onSourcesChanged }) : createElement('p', { className: 'margin-board-message' }, 'No supported sessions found on this machine.');
   return createElement('section', { className: 'margin-board', 'aria-label': 'Session Board', style: { '--margin-workspace-agent-width': `${columnWidths.Workspace}px`, '--margin-metadata-width': `${columnWidths[mode]}px` } }, createElement('div', { className: 'margin-board-modes', role: 'tablist', 'aria-label': 'Session grouping' }, MODES.map((item) => createElement('button', { type: 'button', role: 'tab', key: item, onClick: () => { setMode(item); setShowSettings(false); }, 'aria-selected': !showSettings && item === mode, className: !showSettings && item === mode ? 'is-selected' : '' }, item)), createElement('button', { type: 'button', className: `margin-settings-button ${showSettings ? 'is-selected' : ''}`, title: 'Settings', 'aria-label': 'Settings', onClick: () => setShowSettings((value) => !value) }, createElement(IconGear))), content);
 }
 function SourceActions({ api, onSourcesChanged, source }) { const add = async () => { const sourcePath = window.prompt(source ? 'New source path' : 'Agent source path'); if (!sourcePath) return; const type = source?.agentType ?? source?.type ?? window.prompt('Agent type', 'codex'); if (!type) return; const result = await api.addAgentSource({ type: type.toLowerCase(), path: sourcePath, replaceId: source?.sourceId ?? source?.id }); if (result.ok) onSourcesChanged?.(); }; return createElement('span', { className: 'margin-source-actions' }, source ? createElement('button', { type: 'button', className: 'margin-btn', onClick: add }, 'Change path') : createElement('button', { type: 'button', className: 'margin-btn', onClick: add }, 'Add Source')); }
 function EmptySources({ api, onSourcesChanged }) { const detect = async () => { await api.detectAgentSources(); onSourcesChanged?.(); }; return createElement('div', { className: 'margin-board-message' }, createElement('p', null, 'No supported Agent sources found'), createElement('button', { type: 'button', className: 'margin-btn', onClick: detect }, 'Detect'), ' ', createElement(SourceActions, { api, onSourcesChanged })); }
-function Settings({ api, sources = [], onSourcesChanged, settings, onSettingsChange, alwaysOnTop, onPin }) { const detect = async () => { await api.detectAgentSources(); onSourcesChanged?.(); }; const remove = async (id) => { await api.removeAgentSource(id); onSourcesChanged?.(); }; return createElement('div', { className: 'margin-settings-panel' }, createElement('section', null, createElement('h2', null, 'Agent Sources'), createElement('button', { type: 'button', className: 'margin-btn', onClick: detect }, 'Auto Detect'), ' ', createElement(SourceActions, { api, onSourcesChanged }), sources.length ? createElement('ul', { className: 'margin-source-list' }, sources.map((source) => { const capabilities = Object.entries(source.capabilities ?? {}).filter(([, enabled]) => enabled).map(([name]) => name).join(', ') || 'unavailable'; return createElement('li', { key: source.sourceId ?? source.id }, createElement('span', null, `${source.name} · ${source.origin} · ${capabilities}${source.active ? ' · Active' : ''}`), createElement('small', null, source.home ?? source.path), source.origin === 'manual' ? createElement('span', null, ' ', createElement(SourceActions, { api, onSourcesChanged, source }), ' ', createElement('button', { type: 'button', className: 'margin-btn', onClick: () => remove(source.sourceId ?? source.id) }, 'Remove')) : null); })) : createElement('p', null, 'No sources registered.')), createElement('section', null, createElement('h2', null, 'Display'), createElement('label', null, createElement('input', { type: 'checkbox', checked: settings.showSummary, onChange: (event) => onSettingsChange({ showSummary: event.target.checked }) }), ' Show workspace/session summary')), createElement('section', null, createElement('h2', null, 'Window'), createElement('label', null, createElement('input', { type: 'checkbox', checked: Boolean(alwaysOnTop), onChange: onPin }), ' Always on top')), createElement('section', null, createElement('h2', null, 'Feedback'), createElement('label', null, 'Save confirmation ', createElement('select', { value: settings.saveConfirmation, onChange: (event) => onSettingsChange({ saveConfirmation: event.target.value }) }, createElement('option', { value: 'full' }, 'Full path'), createElement('option', { value: 'compact' }, 'Compact'))))); }
+// The Agent Sources panel. Every row now reports one of four explicit states and offers removal,
+// because "registered but invisible" was previously unrepresentable here: an auto-detected Agent had
+// no Remove button at all, and a registered Agent whose plugin was broken simply did not appear.
+function Settings({ api, sources = [], problems = [], onSourcesChanged, settings, onSettingsChange, alwaysOnTop, onPin }) {
+  const detect = async () => { await api.detectAgentSources(); onSourcesChanged?.(); };
+  const remove = async (id) => { await api.removeAgentSource(id); onSourcesChanged?.(); };
+  const enable = async (id) => { await api.enableAgentSource?.(id); onSourcesChanged?.(); };
+  const stateOf = (source) => {
+    if (source.suppressed) return 'removed';
+    if (source.enabled === false) return 'disabled';
+    if (source.adapter === false) return 'adapter required';
+    return source.active ? 'active' : 'enabled';
+  };
+  return createElement('div', { className: 'margin-settings-panel' }, createElement('section', null, createElement('h2', null, 'Agent Sources'), createElement('button', { type: 'button', className: 'margin-btn', onClick: detect }, 'Auto Detect'), ' ', createElement(SourceActions, { api, onSourcesChanged }), sources.length ? createElement('ul', { className: 'margin-source-list' }, sources.map((source) => {
+    const capabilities = Object.entries(source.capabilities ?? {}).filter(([, enabled]) => enabled).map(([name]) => name).join(', ') || 'unavailable';
+    const id = source.sourceId ?? source.id;
+    const removed = source.suppressed === true || source.enabled === false;
+    return createElement('li', { key: id, 'data-source-state': stateOf(source) },
+      createElement('span', null, `${source.name} · ${source.origin} · ${capabilities} · ${stateOf(source)}`),
+      createElement('small', null, source.home ?? source.path),
+      createElement('span', null, ' ',
+        removed ? createElement('button', { type: 'button', className: 'margin-btn', onClick: () => enable(id) }, 'Enable') : createElement(SourceActions, { api, onSourcesChanged, source }),
+        ' ',
+        createElement('button', { type: 'button', className: 'margin-btn', onClick: () => remove(id) }, 'Remove')));
+  })) : createElement('p', null, 'No sources registered.'), problems.length ? createElement('ul', { className: 'margin-source-list margin-source-problems' }, problems.map((problem, index) => createElement('li', { key: `${problem.type ?? 'unknown'}-${problem.code}-${index}` }, createElement('span', null, `${problem.type ?? 'unknown'} · ${problem.code}`), createElement('small', null, problem.errors.join('; '))))) : null), createElement('section', null, createElement('h2', null, 'Display'), createElement('label', null, createElement('input', { type: 'checkbox', checked: settings.showSummary, onChange: (event) => onSettingsChange({ showSummary: event.target.checked }) }), ' Show workspace/session summary')), createElement('section', null, createElement('h2', null, 'Window'), createElement('label', null, createElement('input', { type: 'checkbox', checked: Boolean(alwaysOnTop), onChange: onPin }), ' Always on top')), createElement('section', null, createElement('h2', null, 'Feedback'), createElement('label', null, 'Save confirmation ', createElement('select', { value: settings.saveConfirmation, onChange: (event) => onSettingsChange({ saveConfirmation: event.target.value }) }, createElement('option', { value: 'full' }, 'Full path'), createElement('option', { value: 'compact' }, 'Compact'))))); }
 const COLUMN_LAYOUTS = Object.freeze({
   Workspace: Object.freeze({ key: 'margin.workspace.agent-column-width', defaultWidth: 112, label: 'Resize Agent column' }),
   Agent: Object.freeze({ key: 'margin.agent.workspace-column-width', defaultWidth: 112, label: 'Resize Workspace column' }),

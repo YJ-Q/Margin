@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { detectAgentSources, readAgentSourceRegistry, registerAgentSource, resolveActiveSource, writeAgentSourceRegistry } from '../src/agents/sourceRegistry.js';
+import { detectAgentSources, readAgentSourceRegistry, registerAgentSource, resolveActiveSource, writeAgentSourceRegistry, AGENT_TYPES } from '../src/agents/sourceRegistry.js';
 import { adapterFor } from '../src/agents/adapters.js';
 import { runAgentSourceCli } from '../src/cli/agentSourceCli.js';
 
@@ -65,11 +65,18 @@ test('unified CLI detects and lists every default source, including PI_HOME', (t
   assert.match(stdout.text(), /Detected codex/); assert.match(stdout.text(), /Detected claude/); assert.match(stdout.text(), /Detected pi/);
   const listed = sink();
   assert.equal(runAgentSourceCli(['list'], { env: { ...env, PI_HOME: piHome }, stdout: listed, stderr }), 0);
-  for (const agentType of ['codex', 'claude', 'pi']) assert.match(listed.text(), new RegExp(`\\t${agentType}\\t`));
+  // Derived from the registry rather than a repeated literal: the point of the assertion is that the
+  // CLI lists what was detected, not that a specific set of names was hardcoded somewhere.
+  const registered = readAgentSourceRegistry({ env: { ...env, PI_HOME: piHome } }).sources.map((source) => source.agentType).sort();
+  assert.deepEqual(registered, ['claude', 'codex', 'pi']);
+  for (const agentType of registered) assert.match(listed.text(), new RegExp(`\\t${agentType}\\t`));
 });
 
 test('every supported agent has the same minimal adapter methods', () => {
-  for (const agentType of ['codex', 'claude', 'pi']) {
+  // The list is derived, so adding an Agent cannot leave this test silently behind — which is
+  // exactly the failure mode the whole descriptor change removes.
+  assert.ok(AGENT_TYPES.length >= 3);
+  for (const agentType of AGENT_TYPES) {
     const adapter = adapterFor(agentType);
     assert.equal(adapter.agentType, agentType);
     for (const method of ['detect', 'validateSource', 'collectSessionSnapshots', 'getSessionRevision', 'getResourceStatus']) assert.equal(typeof adapter[method], 'function');

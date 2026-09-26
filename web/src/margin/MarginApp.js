@@ -9,8 +9,8 @@ function readSettings() { try { return { ...DEFAULT_SETTINGS, ...JSON.parse(loca
 export function MarginApp({ api: suppliedApi, pollMs = 500, refreshGapMs = 250 }) {
   const api = useMemo(() => suppliedApi ?? createMarginApiClient(), [suppliedApi]);
   const [listState, setListState] = useState({ loading: true, error: null, sessions: [] });
-  const [sourceState, setSourceState] = useState({ loading: true, sources: [] });
-  const [resourceStatus, setResourceStatus] = useState({ agents: [{ agent: 'codex', unavailable: true }, { agent: 'claude-code', unavailable: true }] });
+  const [sourceState, setSourceState] = useState({ loading: true, sources: [], problems: [] });
+  const [resourceStatus, setResourceStatus] = useState({ agents: [{ agent: 'codex', label: 'Codex', unavailable: true }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', unavailable: true }] });
   const [expanded, setExpanded] = useState(false); const [settings, setSettings] = useState(readSettings); const [alwaysOnTop, setAlwaysOnTop] = useState(false); const [toast, setToast] = useState(null); const toastTimer = useRef();
   const previousExecutionStatuses = useRef(null);
   // `observedRevision` is only a dirty hint from the cheap endpoint.  It must never advance the
@@ -65,7 +65,10 @@ export function MarginApp({ api: suppliedApi, pollMs = 500, refreshGapMs = 250 }
       }
     });
   }, [api]);
-  const loadSources = useCallback(() => { api.listAgentSources?.().then((result) => { if (result.ok) setSourceState({ loading: false, sources: result.data.sources }); }).catch(() => setSourceState({ loading: false, sources: [] })); }, [api]);
+  // `problems` is descriptor-level diagnostics: a registered Agent whose plugin is malformed, or one
+  // that names a reader Margin does not have. Without it, the Settings list can only show what
+  // loaded, which is the half of the truth that never explains a missing Agent.
+  const loadSources = useCallback(() => { api.listAgentSources?.().then((result) => { if (result.ok) setSourceState({ loading: false, sources: result.data.sources ?? [], problems: result.data.problems ?? [] }); }).catch(() => setSourceState({ loading: false, sources: [], problems: [] })); }, [api]);
   const showToast = useCallback((message, kind = 'success') => { clearTimeout(toastTimer.current); setToast({ message, kind }); toastTimer.current = setTimeout(() => setToast(null), kind === 'error' ? 3500 : 1800); }, []);
   // Status changes are presentation-only feedback. Keep one previous snapshot after the
   // initial load, then replace the single overlay message when a session's execution truth
@@ -180,5 +183,5 @@ export function MarginApp({ api: suppliedApi, pollMs = 500, refreshGapMs = 250 }
     return () => { disposed = true; clearInterval(interval); document.removeEventListener('visibilitychange', onVisible); window.removeEventListener('focus', onFocus); };
   }, [api, pollMs, loadResources]);
   useEffect(() => () => { mounted.current = false; clearTimeout(toastTimer.current); }, []);
-  return createElement('main', { className: 'margin-shell' }, createElement(UsageBar, { resourceStatus, expanded, onToggle: toggleExpanded, settings, alwaysOnTop, onPin: togglePin, onHide: () => globalThis.marginShell?.hide?.(), onQuit: () => globalThis.marginShell?.quit?.() }), expanded ? createElement(SessionBoard, { api, sessions: listState.sessions, loading: listState.loading, error: listState.error, onRetry: loadSessions, sources: sourceState.sources, onSourcesChanged: () => { loadSources(); loadSessions({ quiet: true }); loadResources(); }, settings, onSettingsChange: updateSettings, onToast: showToast, alwaysOnTop, onPin: togglePin }) : null, toast ? createElement('div', { className: `margin-toast ${toast.kind === 'error' ? 'is-error' : ''}`, role: 'status', 'aria-live': 'polite', 'data-toast-region': 'session-status', title: toast.message }, toast.message) : null);
+  return createElement('main', { className: 'margin-shell' }, createElement(UsageBar, { resourceStatus, expanded, onToggle: toggleExpanded, settings, alwaysOnTop, onPin: togglePin, onHide: () => globalThis.marginShell?.hide?.(), onQuit: () => globalThis.marginShell?.quit?.() }), expanded ? createElement(SessionBoard, { api, sessions: listState.sessions, loading: listState.loading, error: listState.error, onRetry: loadSessions, sources: sourceState.sources, problems: sourceState.problems, onSourcesChanged: () => { loadSources(); loadSessions({ quiet: true }); loadResources(); }, settings, onSettingsChange: updateSettings, onToast: showToast, alwaysOnTop, onPin: togglePin }) : null, toast ? createElement('div', { className: `margin-toast ${toast.kind === 'error' ? 'is-error' : ''}`, role: 'status', 'aria-live': 'polite', 'data-toast-region': 'session-status', title: toast.message }, toast.message) : null);
 }

@@ -11,7 +11,10 @@ services:
       - margin-data:/app/data
     environment:
       - NODE_ENV=production
-      - PORT=3000
+      # The started surface is the Margin Board and reads MARGIN_SURFACE_*. PORT belongs to the
+      # deprecated Workbench gateway and is deliberately unset so no second surface can silently
+      # claim a port. 0.0.0.0 is required inside the container for the published port to work; the
+      # host side stays loopback (see `ports`).
       - MARGIN_SURFACE_HOST=0.0.0.0
       - MARGIN_SURFACE_PORT=3000
       - MARGIN_PI_PROVIDER=yapi

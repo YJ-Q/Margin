@@ -38,7 +38,7 @@ test('HTTP adapter exposes a bounded readiness response without touching the Gat
   await withServer(createWebHttpAdapter({ webGateway: f.gateway }), async (origin) => {
     const response = await fetch(`${origin}/api/health`);
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { ok: true, status: 'ready', contractVersion: '1.1' });
+    assert.deepEqual(await response.json(), { ok: true, status: 'ready', name: 'Margin', surface: 'workbench-gateway', contractVersion: '1.1' });
   });
   assert.equal(f.calls.length, 0);
 });

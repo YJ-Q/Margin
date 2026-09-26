@@ -131,9 +131,10 @@ export async function createWebWorkbench({
   const listenHost = host ?? (env.MARGIN_WEB_HOST?.trim() || DEFAULT_HOST);
   const listenPort = portNumber(port ?? env.PORT);
   if (typeof listenHost !== 'string' || !listenHost.trim()) throw new TypeError('invalid_web_host');
-  if (!dev && !deps.fileExists(path.join(resolvedStaticDir, 'index.html'))) {
-    throw new Error('web_assets_missing: run npm run build before npm start');
-  }
+  // The Workbench UI was removed with the surface consolidation (ADR 003). This server is now the
+  // Application Contract's transport only: it starts API-only and never requires a built front end.
+  // A caller that supplies assets still gets them mounted.
+  const hasStaticApp = !dev && deps.fileExists(path.join(resolvedStaticDir, 'index.html'));
 
   await mkdir(path.dirname(resolvedDbPath), { recursive: true });
   await mkdir(resolvedAgentDir, { recursive: true });
@@ -179,7 +180,7 @@ export async function createWebWorkbench({
     }
     const app = deps.createWebHttpAdapter({
       webGateway: gateway, interactionService,
-      ...(dev ? { viteMiddleware: vite.middlewares } : { staticDir: resolvedStaticDir })
+      ...(dev ? { viteMiddleware: vite.middlewares } : (hasStaticApp ? { staticDir: resolvedStaticDir } : {}))
     });
 
     async function reconcile() {

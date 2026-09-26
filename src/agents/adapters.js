@@ -1,4 +1,9 @@
+import os from 'node:os';
 import { detectAgentSources, validateSource } from './sourceRegistry.js';
+import { builtinDescriptors } from './descriptor/builtin.js';
+import { descriptorFor } from './descriptor/load.js';
+import { composeAdapter } from './descriptor/compose.js';
+import { normalizeDescriptor, validateDescriptor } from './descriptor/spec.js';
 import { discoverSessions as discoverCodexSessions, computeSourceRevision as computeCodexSourceRevision } from '../core/handoff/session-source.js';
 import { discoverClaudeSessions, discoverPiSessions, computeExternalSessionRevision } from './externalSessionDiscovery.js';
 import { collectPiResourceSnapshot } from '../resources/piApiUsage.js';
@@ -9,62 +14,29 @@ import { captureSession as captureSessionCore } from '../core/handoff/session-so
 import { generatePiHandoff } from './pi/piHandoff.js';
 import { generateClaudeHandoff } from './claude/claudeHandoff.js';
 
+// Composition root.
+//
+// The adapter objects hosts consume are no longer hand-wired per Agent. Each type is composed from
+// its descriptor (identity, capabilities, wiring) plus an optional built-in reader module below. A
+// descriptor-backed Agent that Margin does not ship therefore reaches the same contract without this
+// file changing at all — which is the whole point of the onboarding interface.
+//
+// `adapters.js` is the only place that knows both sides (descriptors and reader implementations),
+// which is why the readers live here rather than in the descriptor layer.
+
 // Every agent uses this source-facing shape.  A false capability is represented
 // by an intentionally empty stub, never by inferred session/resource data.
-const unsupportedSnapshots = async () => [];
-const unsupportedResources = async () => null;
-const baseCapabilities = Object.freeze({ sessions: true, handoff: false, apiUsage: false, quota: false, executionStatus: false, attentionStatus: false });
 
-function asSnapshot(session, source, capabilities) {
-  const agentType = session.agentType ?? source.agentType ?? source.type;
-  const sourceId = session.sourceId ?? source.sourceId ?? source.id;
-  const nativeSessionId = session.nativeSessionId ?? session.id;
-  return {
-    ...session,
-    id: nativeSessionId,
-    agentType,
-    sourceId,
-    nativeSessionId,
-    canonicalId: `${agentType}:${sourceId}:${nativeSessionId}`,
-    displayTitle: session.displayTitle ?? session.label ?? `Untitled session · ${String(nativeSessionId).slice(0, 8)}`,
-    titleSource: session.titleSource ?? 'fallback-id',
-    workspace: session.workspace ?? { key: session.workspaceKey ?? null, name: session.workspaceName ?? null },
-    createdAt: session.createdAt ?? null,
-    updatedAt: session.updatedAt ?? null,
-    executionStatus: session.executionStatus ?? 'unknown',
-    attentionStatus: session.attentionStatus ?? 'none',
-    capabilities: { ...baseCapabilities, ...(source.capabilities ?? {}), ...capabilities },
-  };
-}
+// ---- Built-in reader modules ---------------------------------------------------------------
+// A reader module provides only what is genuinely Agent-specific: how to find sessions, how to
+// compute a cheap change signal, how to read resources, and (when the Agent owns a handoff
+// extractor) how to capture and generate one.
 
-const snapshotCollector = (agentType, collect, capabilities) => async (source, options = {}) => {
-  const sessions = await collect(source, options);
-  return sessions.map((session) => asSnapshot({ ...session, agentType }, source, capabilities));
-};
-
-// `collectSessionSnapshots` remains the compatibility projection used by the CLI and older
-// callers.  The Board reads this explicit result form so an I/O failure is never mistaken for
-// a legitimate empty source.
-const snapshotRead = (collect) => async (source, options = {}) => {
-  try {
-    const validation = validateSource(source);
-    if (!validation.valid) return { ok: false, error: { code: 'source_unavailable', message: validation.reason } };
-    return { ok: true, snapshots: await collect(source, options) };
-  } catch (error) {
-    return { ok: false, error: { code: 'source_read_failed', message: error?.message ?? 'Unable to read agent source' } };
-  }
-};
-
-const unsupportedRevision = () => null;
-const stubAdapter = (agentType) => Object.freeze({ agentType, detect: detectAgentSources, validateSource, collectSessionSnapshots: unsupportedSnapshots, readSessionSnapshots: snapshotRead(unsupportedSnapshots), getSessionRevision: unsupportedRevision, discoverSessions: unsupportedSnapshots, getResourceStatus: unsupportedResources, collectResourceSnapshot: unsupportedResources });
-
-// Every resource adapter returns the SAME unified envelope { ok, status, revision, agents } where
-// each agent record carries its own resources/freshAt/stale/unavailable. The envelope is a read
-// truth, never an instruction: consumers render it as-is and the service domain owns LKG semantics.
 async function codexResourceStatus(source, options = {}) {
   const { getAgentResourceStatus } = await import('../resources/agentResourceService.js');
   return getAgentResourceStatus({ ...options, source });
 }
+
 async function piResourceStatus(source, options = {}) {
   const fallbackRevision = options.revision ?? null;
   if (!source?.path) {
@@ -157,18 +129,69 @@ function piAgent(revision, apiSnapshot, goQuota, stale, unavailable) {
   return agent;
 }
 
-const codexSnapshots = snapshotCollector('codex', (source, { codexDiscoverSessions = discoverCodexSessions, ...options } = {}) =>
-  codexDiscoverSessions(source.path, { ...options, sourceId: source.sourceId ?? source.id, agentType: 'codex' }), { handoff: true, apiUsage: true, quota: true, executionStatus: true });
-const codexRevision = (source, { computeCodexRevision = computeCodexSourceRevision } = {}) => computeCodexRevision({ codexHome: source.path, source });
-const claudeSnapshots = snapshotCollector('claude', discoverClaudeSessions, { handoff: true });
-const piSnapshots = snapshotCollector('pi', discoverPiSessions, { handoff: true });
+const codexRevision = (source, options = {}) => (options.computeCodexRevision ?? computeCodexSourceRevision)({ codexHome: source.path, source });
 const claudeRevision = (source, options = {}) => computeExternalSessionRevision(source, ['projects'], options);
 const piRevision = (source) => computeExternalSessionRevision(source, ['agent', 'sessions']);
 
-export const agentAdapters = Object.freeze({
-  codex: Object.freeze({ agentType: 'codex', detect: detectAgentSources, validateSource, collectSessionSnapshots: codexSnapshots, readSessionSnapshots: snapshotRead(codexSnapshots), getSessionRevision: codexRevision, discoverSessions: codexSnapshots, getResourceStatus: codexResourceStatus, collectResourceSnapshot: codexResourceStatus }),
-  claude: Object.freeze({ agentType: 'claude', detect: detectAgentSources, validateSource, collectSessionSnapshots: claudeSnapshots, readSessionSnapshots: snapshotRead(claudeSnapshots), getSessionRevision: claudeRevision, discoverSessions: claudeSnapshots, getResourceStatus: claudeResourceStatus, collectResourceSnapshot: claudeResourceStatus, captureSession: captureSessionCore, generateHandoff: generateClaudeHandoff }),
-  pi: Object.freeze({ agentType: 'pi', detect: detectAgentSources, validateSource, collectSessionSnapshots: piSnapshots, readSessionSnapshots: snapshotRead(piSnapshots), getSessionRevision: piRevision, discoverSessions: piSnapshots, getResourceStatus: piResourceStatus, collectResourceSnapshot: piResourceStatus, captureSession: captureSessionCore, generateHandoff: generatePiHandoff }),
+const builtinReaders = Object.freeze({
+  codex: Object.freeze({
+    // `codexDiscoverSessions` stays injectable: the existing host tests drive the Codex reader with
+    // a fixture through exactly this seam.
+    discoverSessions: (source, { codexDiscoverSessions = discoverCodexSessions, ...options } = {}) =>
+      codexDiscoverSessions(source.path, { ...options, sourceId: source.sourceId ?? source.id, agentType: 'codex' }),
+    getSessionRevision: codexRevision,
+    collectResourceSnapshot: codexResourceStatus,
+  }),
+  claude: Object.freeze({
+    discoverSessions: discoverClaudeSessions,
+    getSessionRevision: claudeRevision,
+    collectResourceSnapshot: claudeResourceStatus,
+    captureSession: captureSessionCore,
+    generateHandoff: generateClaudeHandoff,
+  }),
+  pi: Object.freeze({
+    discoverSessions: discoverPiSessions,
+    getSessionRevision: piRevision,
+    collectResourceSnapshot: piResourceStatus,
+    captureSession: captureSessionCore,
+    generateHandoff: generatePiHandoff,
+  }),
 });
 
-export function adapterFor(type) { return agentAdapters[type] ?? null; }
+// A shipped descriptor that does not validate is a release-blocking bug, not a soft warning: it
+// would silently remove one of Margin's own Agents. Failing at import makes that loud and cheap.
+function composeBuiltinAdapters() {
+  const adapters = {};
+  for (const raw of builtinDescriptors) {
+    const validation = validateDescriptor(raw);
+    if (!validation.ok) {
+      throw new Error(`Invalid built-in Agent descriptor "${raw?.type}": ${validation.errors.join('; ')}`);
+    }
+    adapters[raw.type] = composeAdapter(normalizeDescriptor(raw), {
+      builtinAdapter: builtinReaders[raw.type] ?? null,
+      detect: detectAgentSources,
+      validateSource,
+    });
+  }
+  return Object.freeze(adapters);
+}
+
+export const agentAdapters = composeBuiltinAdapters();
+
+// A type with no built-in adapter is resolved from its descriptor on demand, so an Agent that ships
+// its own descriptor needs no change here. `options` carries the profile/environment the caller is
+// operating in; a descriptor's templates are expanded against it, never against import-time state.
+export function adapterFor(type, options = {}) {
+  if (agentAdapters[type]) return agentAdapters[type];
+  const descriptor = descriptorFor(type, options);
+  if (!descriptor) return null;
+  const env = options.env ?? process.env;
+  const profile = env.USERPROFILE?.trim() || env.HOME?.trim() || os.homedir();
+  try {
+    return composeAdapter(descriptor, { builtinAdapter: null, detect: detectAgentSources, validateSource, profile, env });
+  } catch {
+    // A descriptor that validated but cannot be composed is reported by loadDescriptors; here it
+    // simply means "no usable adapter", which the caller renders as an adapter-required Agent.
+    return null;
+  }
+}

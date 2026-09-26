@@ -34,7 +34,9 @@ test('GET /api/resources/status is independent, read-only, and fail-soft', async
     const body = await response.json();
     assert.equal(body.ok, true);
     assert.equal(body.status, 'ok');
-    assert.deepEqual(body.agents, [{ agent: 'codex', resources: [{ windowDurationMinutes: 300, percentUsed: 59, resetsAt: 1 }] }, { agent: 'claude-code', revision: null, freshAt: null, stale: false, unavailable: true, resources: [] }, { agent: 'pi', provider: 'pi', revision: null, freshAt: null, stale: false, unavailable: true, resources: [] }]);
+    // Each agent carries the display metadata its descriptor declares, so the bar never has to infer
+    // a label or a subscription prefix from a resource key.
+    assert.deepEqual(body.agents, [{ agent: 'codex', label: 'Codex', resources: [{ windowDurationMinutes: 300, percentUsed: 59, resetsAt: 1 }] }, { agent: 'claude-code', label: 'Claude', quotaPrefix: 'Go', revision: null, freshAt: null, stale: false, unavailable: true, resources: [] }, { agent: 'pi', label: 'Pi', quotaPrefix: 'Go', provider: 'pi', revision: null, freshAt: null, stale: false, unavailable: true, resources: [] }]);
   });
   const failed = createHandoffHttpAdapter({ rootDir: os.tmpdir(), readRegistry: () => ({ version: 1, sources: [] }), writeRegistry: (registry) => registry, getAgentResourceStatus: () => { throw new Error('source failed'); } });
   await withServer(failed, async (origin) => {

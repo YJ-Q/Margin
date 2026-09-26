@@ -10,6 +10,7 @@ import stateRoutes from './routes/stateRoutes.js';
 import summaryRoutes from './routes/summaryRoutes.js';
 import ttsRoutes from './routes/ttsRoutes.js';
 import { sendData, sendError } from './lib/apiResponse.js';
+import { healthPayload } from './surfaceHealth.js';
 import { createRequestLogger } from './lib/logger.js';
 import { ensureMemoryStore } from './storage/memoryStore.js';
 
@@ -35,7 +36,9 @@ export async function createApp({ logger } = {}) {
   });
 
   app.get('/health', (_req, res) => {
-    sendData(res, { status: 'ok', name: 'Margin' });
+    // Deprecated, but it answers in the same shape as every other surface: a consumer that reaches it
+    // by mistake should be able to see which surface it actually hit.
+    sendData(res, healthPayload({ surface: 'legacy-rest' }));
   });
 
   app.use('/chat', chatRoutes);
