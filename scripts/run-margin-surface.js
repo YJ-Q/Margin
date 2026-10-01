@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createMarginSurface } from '../src/core/handoff/createMarginSurface.js';
+import { createRunBindingReader } from '../src/core/handoff/createRunBindingReader.js';
 
 export async function main({
   argv = process.argv.slice(2), env = process.env,
@@ -9,9 +10,12 @@ export async function main({
   const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   const dev = argv.includes('--dev');
   let surface;
+  let bindingReader;
   let shutdownPromise;
   const shutdown = () => {
-    shutdownPromise ??= surface?.close?.() ?? Promise.resolve();
+    shutdownPromise ??= (async () => {
+      try { await surface?.close?.(); } finally { await bindingReader?.close?.(); }
+    })();
     return shutdownPromise;
   };
   const onSignal = () => {
@@ -20,7 +24,8 @@ export async function main({
     shutdown().catch(() => { process.exitCode = 1; });
   };
   try {
-    surface = await createMarginSurface({ rootDir, dev, env });
+    bindingReader = await createRunBindingReader({ rootDir, env }).catch(() => null);
+    surface = await createMarginSurface({ rootDir, dev, env, resolveRuns: bindingReader?.resolveRuns ?? null });
     const started = await surface.start();
     signalSource.once?.('SIGINT', onSignal);
     signalSource.once?.('SIGTERM', onSignal);

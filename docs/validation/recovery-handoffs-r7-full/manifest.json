@@ -22,9 +22,9 @@
       "sourceBytes": 1438110,
       "sourceSha256": "e365d348363b592e9cdfe8507cd55978c69daf62412b11c1d13c056306a6c26a",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-01.md",
-      "handoffBytes": 8014,
+      "handoffBytes": 7966,
       "handoffSha256": "03416bd31d8e228f2d4806cf627f268188cee1d08c55ae5ac6c504b887ded802",
-      "reductionPct": 99.44274081954788
+      "reductionPct": 99.44607853363094
     },
     {
       "case": "case-02",
@@ -33,9 +33,9 @@
       "sourceBytes": 899546,
       "sourceSha256": "cee475775fdb647f3650306c43c12f7026721769b637b6f5651a2b5f0f386c96",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-02.md",
-      "handoffBytes": 6958,
+      "handoffBytes": 6926,
       "handoffSha256": "e7e6a4d51b0ddb0ce40414ac0eb2a12f981ec9a39c23ebde2df95f92280d165d",
-      "reductionPct": 99.22649870045556
+      "reductionPct": 99.23005605049659
     },
     {
       "case": "case-03",
@@ -44,9 +44,9 @@
       "sourceBytes": 687084,
       "sourceSha256": "9c0511185b1d49a1b1894f14ff8219fd6864256534e4b10bba94834f3edb9b5d",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-03.md",
-      "handoffBytes": 6451,
+      "handoffBytes": 6419,
       "handoffSha256": "ea924bf7501603944c9bd1639e0d0933994a4bd27d03fa42ff97c30c7e2e02c1",
-      "reductionPct": 99.06110461020778
+      "reductionPct": 99.06576197379069
     },
     {
       "case": "case-04",
@@ -55,9 +55,9 @@
       "sourceBytes": 3271291,
       "sourceSha256": "a79da02da100ee86ca5d7c5b2e4834865f8f6bda6b881d225354a112b36be408",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-04.md",
-      "handoffBytes": 5574,
+      "handoffBytes": 5510,
       "handoffSha256": "718205852287664853641312c949c22e4820f44eeb9960fc7ea4ebe552712939",
-      "reductionPct": 99.82960855515452
+      "reductionPct": 99.83156496930417
     },
     {
       "case": "case-05",
@@ -66,9 +66,9 @@
       "sourceBytes": 3957580,
       "sourceSha256": "0787744584fe6f29bc428a725d387d582eaa7297679d4d41ceb23754a24d9408",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-05.md",
-      "handoffBytes": 6784,
+      "handoffBytes": 6752,
       "handoffSha256": "8c948444f34a145210c55ac4afe65b9771dc674e5aec6bf8f5df426e44af8adb",
-      "reductionPct": 99.82858211331167
+      "reductionPct": 99.82939068824888
     },
     {
       "case": "case-06",
@@ -77,9 +77,9 @@
       "sourceBytes": 2763251,
       "sourceSha256": "6e18dec92f65d5c36c0cc0cbbcf090688059e98ff34791907a34ea14e2cdd690",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-06.md",
-      "handoffBytes": 12237,
+      "handoffBytes": 12205,
       "handoffSha256": "17df889c88b1f9132b40622b34d5b2aad4a703c82690a3a416517dfb38317824",
-      "reductionPct": 99.55715206472377
+      "reductionPct": 99.55831012094087
     },
     {
       "case": "case-07",
@@ -88,9 +88,9 @@
       "sourceBytes": 1222548,
       "sourceSha256": "e708e99eb83d59f8f321b45e40a6edc0c2a9579ff221b856640fd3ae3e1ae690",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-07.md",
-      "handoffBytes": 24592,
+      "handoffBytes": 24560,
       "handoffSha256": "c5c4696d3344e818a6e5203ea790b6d873f9df137dcac9b931ffe34c8da7c944",
-      "reductionPct": 97.98846343865435
+      "reductionPct": 97.99108092279404
     },
     {
       "case": "case-08",
@@ -99,9 +99,9 @@
       "sourceBytes": 1799202,
       "sourceSha256": "c1d19296db2704a7f9e79b8d4cde6cb06bed6f206fd41c6ab4e0e94c1f14c56f",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-08.md",
-      "handoffBytes": 6519,
+      "handoffBytes": 6487,
       "handoffSha256": "8b81a66acad24199ef05522a232f9db6a44c0ea799d503352a962c6214eaeaa9",
-      "reductionPct": 99.63767270156436
+      "reductionPct": 99.63945126783985
     },
     {
       "case": "case-09",
@@ -110,9 +110,9 @@
       "sourceBytes": 2515611,
       "sourceSha256": "a4ea79acaab9fe222bf899d1ed90fcceeca9441140953050ada3804d6354ee89",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-09.md",
-      "handoffBytes": 14362,
+      "handoffBytes": 14297,
       "handoffSha256": "f4559300b0cff92aa2bd0a3f756f33398644a5e4219e8948ffd176e38e0eb9be",
-      "reductionPct": 99.42908502149179
+      "reductionPct": 99.43166888680325
     },
     {
       "case": "case-10",
@@ -121,9 +121,9 @@
       "sourceBytes": 2336054,
       "sourceSha256": "e67c3558ccfaf9199c5590612dbde28938d38f7448a2af614bff9bf93a69080b",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-10.md",
-      "handoffBytes": 15300,
+      "handoffBytes": 15232,
       "handoffSha256": "dd6c2e8d9ba977567b43a46775549f7a30619daf0fbed873f2e6cc2affa70c1d",
-      "reductionPct": 99.34504938670082
+      "reductionPct": 99.34796027831548
     },
     {
       "case": "case-11",
@@ -132,9 +132,9 @@
       "sourceBytes": 2215417,
       "sourceSha256": "63cdb8e06094ba0e4ee944988fe30a13a1303f8dd04c5c61b386de6bdda96ef3",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-11.md",
-      "handoffBytes": 6601,
+      "handoffBytes": 6537,
       "handoffSha256": "fae9bece95dd2feb2e743c7545aa5e7d2eb8c6e30f701e9a6d1dbe1422997571",
-      "reductionPct": 99.702042550003
+      "reductionPct": 99.70493139666257
     },
     {
       "case": "case-12",
@@ -143,9 +143,9 @@
       "sourceBytes": 1658999,
       "sourceSha256": "f289ddbdd0146cd09c5c2f63ceebba74392a52ec4295b1eb7c572b45af162fb7",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-12.md",
-      "handoffBytes": 12440,
+      "handoffBytes": 12392,
       "handoffSha256": "678d2ee7bc75212012813589f868565af6526773d23538fdf4288cd8e815d81d",
-      "reductionPct": 99.25015024119966
+      "reductionPct": 99.2530435521661
     }
   ],
   "statistics": {

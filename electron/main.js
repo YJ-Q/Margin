@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultCreateSurface = async (options) => (await import('../src/core/handoff/createMarginSurface.js')).createMarginSurface(options);
+const defaultCreateBindingReader = async (options) => (await import('../src/core/handoff/createRunBindingReader.js')).createRunBindingReader(options);
 
 function sanitizedValue(value) {
   if (typeof value !== 'string') return value;
@@ -36,6 +37,7 @@ export function createStartupDiagnostics({ directory, now = () => new Date().toI
 export function createElectronHost({
   electron,
   createSurface = defaultCreateSurface,
+  createBindingReader = defaultCreateBindingReader,
   rootDir = sourceRoot,
   staticDir,
   env = process.env,
@@ -47,6 +49,7 @@ export function createElectronHost({
 
   const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, screen } = electron;
   let surface;
+  let bindingReader;
   let window;
   let tray;
   let quitting = false;
@@ -152,7 +155,7 @@ export function createElectronHost({
       quitting = true;
       tray?.destroy?.();
       if (window && !window.isDestroyed?.()) window.close();
-      await surface?.close?.();
+      try { await surface?.close?.(); } finally { await bindingReader?.close?.(); }
       app.quit();
     })();
     return quitPromise;
@@ -163,17 +166,23 @@ export function createElectronHost({
     try {
       diagnostics.write('surface-start');
       diagnostics.write('backend-runtime-not-applicable', { detail: 'surface runs in the Electron main process' });
+      bindingReader = await createBindingReader({
+        rootDir, env,
+        ...(packaged && !env.MARGIN_CORE_DB_PATH ? { dbPath: path.join(app.getPath('userData'), 'margin-core.sqlite') } : {}),
+      }).catch((error) => { diagnostics.write('run-binding-reader-unavailable', error); return null; });
       surface = await createSurface({
         rootDir: runtimeRoot,
         staticDir: packaged ? packagedStaticDir : undefined,
         host: '127.0.0.1',
         port: 0,
         env,
+        resolveRuns: bindingReader?.resolveRuns ?? null,
       });
       started = await surface.start();
       diagnostics.write('surface-port-bound', { origin: started.origin });
       createWindow(started.origin);
     } catch (error) {
+      await bindingReader?.close?.().catch(() => {});
       diagnostics.write('fatal-startup-error', error);
       throw error;
     }

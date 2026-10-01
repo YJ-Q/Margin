@@ -101,7 +101,7 @@ test('tracked tree contains no personal absolute paths or tracked private eviden
 
   for (const relativePath of files) {
     const normalized = relativePath.replaceAll('\\', '/');
-    if (/^(?:\.margin|handoff-output|\.runtime|out[^/]*|data\/(?:phase2b-live|pi-spike))(?:\/|$)/i.test(normalized)) {
+    if (/^(?:\.margin|handoff-output|\.runtime|out[^/]*|data\/(?:phase2b-live|pi-spike))(?:\/|$)/i.test(normalized) || /^docs\/validation\/.*\.jsonl$/i.test(normalized)) {
       violations.push(`${relativePath}: private/generated artifact is tracked`);
       continue;
     }

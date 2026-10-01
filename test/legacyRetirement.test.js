@@ -6,10 +6,8 @@ import { fileURLToPath } from 'node:url';
 
 // Legacy retirement guard.
 //
-// The legacy surface is frozen, not deleted: `data/echo.sqlite` and the Express routes stay until the
-// table-by-table decision recorded in docs/audit/legacy_retirement_plan.md is made. "Frozen" has to mean
-// something executable, so this test asserts the two properties that make it true — the gate cannot be
-// opened by accident, and the current entry points cannot reach the legacy code at all.
+// The legacy surface is archived: the data and historical modules remain, but no launcher can open
+// a listener against the frozen database. Current entry points must not reach the legacy code.
 //
 // Without this, a refactor could quietly re-import `src/services/*` from the default surface and the
 // freeze would exist only in a document.
@@ -22,8 +20,7 @@ const LEGACY_MODULES = Object.freeze([
 ]);
 const LEGACY_PREFIXES = Object.freeze(['src/routes/', 'src/services/']);
 
-// Entry points that must NOT reach the legacy surface. `scripts/run-legacy-api.js` is deliberately absent:
-// it is the one supported way in, and it opens the gate explicitly.
+// Entry points that must NOT reach the historical implementation.
 const CURRENT_ENTRIES = Object.freeze([
   'scripts/run-margin-surface.js',
   'scripts/run-web-workbench.js',
@@ -91,18 +88,19 @@ test('the current entry points cannot reach the legacy surface', async () => {
   const reachable = await reachableFrom(CURRENT_ENTRIES);
   const reached = [...reachable].filter((module) => LEGACY_MODULES.includes(module) || LEGACY_PREFIXES.some((prefix) => module.startsWith(prefix)));
   assert.deepEqual(reached, [],
-    `a current entry point reaches frozen legacy code: ${reached.join(', ')}. The legacy surface is reachable only through \`npm run legacy:api\`.`);
+    `a current entry point reaches archived legacy code: ${reached.join(', ')}.`);
 });
 
-test('the legacy API stays behind its explicit gate', async () => {
+test('the archived legacy API has no startup route, even with the former opt-in flag', async () => {
   const server = await readFile(path.join(repositoryRoot, 'src/server.js'), 'utf8');
-  // The gate must be an exact-match check on an env var that is not set by default, and it must refuse
-  // rather than warn: a warning would still leave the deprecated surface listening.
-  assert.match(server, /MARGIN_ENABLE_LEGACY_API\s*!==\s*'true'/, 'src/server.js must refuse to start unless MARGIN_ENABLE_LEGACY_API is exactly "true"');
+  assert.match(server, /legacy_api_archived/);
+  assert.doesNotMatch(server, /\.listen\(/, 'the archived entry must never open a listener');
   const launcher = await readFile(path.join(repositoryRoot, 'scripts/run-legacy-api.js'), 'utf8');
-  assert.match(launcher, /MARGIN_ENABLE_LEGACY_API\s*=\s*'true'/, 'the legacy launcher must be the one place that opens the gate');
-  // Surface C (the default) must not be able to start it as a side effect: the gate reads the environment,
-  // so a default run without the variable set is closed.
+  assert.doesNotMatch(launcher, /MARGIN_ENABLE_LEGACY_API\s*=/);
+  const writes = [];
+  const { main } = await import('../src/server.js');
+  assert.equal(await main({ env: { MARGIN_ENABLE_LEGACY_API: 'true' }, stderr: { write: (value) => writes.push(value) } }), 1);
+  assert.match(writes.join(''), /legacy_api_archived/);
   const marginSurface = await readFile(path.join(repositoryRoot, 'scripts/run-margin-surface.js'), 'utf8');
   assert.doesNotMatch(marginSurface, /MARGIN_ENABLE_LEGACY_API/, 'the default surface must not touch the legacy gate');
 });

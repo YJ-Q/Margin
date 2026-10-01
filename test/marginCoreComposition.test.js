@@ -4,13 +4,6 @@ import path from 'node:path';
 import os from 'node:os';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { createMarginCore } from '../src/core/createMarginCore.js';
-import { loadRuntimeConfig } from '../src/config/env.js';
-
-test('runtime flag defaults off, parses explicit values, and rejects ambiguity', () => {
-  assert.equal(loadRuntimeConfig({}, { rootDir: 'D:\\tmp', pathExists: () => false }).marginCoreEnabled, false);
-  assert.equal(loadRuntimeConfig({ MARGIN_CORE_ENABLED: 'true' }, { rootDir: 'D:\\tmp', pathExists: () => false }).marginCoreEnabled, true);
-  assert.throws(() => loadRuntimeConfig({ MARGIN_CORE_ENABLED: 'yes' }, { rootDir: 'D:\\tmp', pathExists: () => false }), /MARGIN_CORE_ENABLED/u);
-});
 
 test('disabled facade performs no database I/O', async () => {
   assert.deepEqual(await createMarginCore({ enabled: false, dbPath: 'Z:\\does-not-exist\\core.sqlite' }), { enabled: false });

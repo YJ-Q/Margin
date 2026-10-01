@@ -5,11 +5,7 @@ import { fileURLToPath } from 'node:url';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
-const disposition = (name) => {
-  if (['conversations', 'summaries'].includes(name)) return 'archive';
-  if (['actions', 'learning_events', 'learning_sessions', 'user_profile'].includes(name)) return 'migrate_candidate_after_review';
-  return 'delete_candidate_after_export';
-};
+const disposition = () => 'archive';
 
 async function hashFile(file) {
   const hash = createHash('sha256');

@@ -216,19 +216,19 @@ test('package, Docker, environment example, and launchers expose exact Phase 2B 
   assert.doesNotMatch(compose, /['"]3000:3000['"]/u);
   assert.match(marginLauncher, /scripts\\run-margin-surface\.js/u);
   assert.doesNotMatch(marginLauncher, /src\\server\.js/u);
-  assert.match(echoLauncher, /deprecated/iu);
+  assert.match(echoLauncher, /archived/iu);
   assert.match(echoLauncher, /scripts\\run-legacy-api\.js/u);
   assert.match(envExample, /MARGIN_SURFACE_HOST=127\.0\.0\.1/u);
 });
 
-test('legacy server direct launch is gated and the deliberate wrapper owns the opt-in flag', async () => {
+test('legacy server direct launch and wrapper both report archived status', async () => {
   const env = { ...process.env };
-  delete env.MARGIN_ENABLE_LEGACY_API;
+  env.MARGIN_ENABLE_LEGACY_API = 'true';
   const blocked = spawnSync(pinnedNode, ['src/server.js'], { cwd: path.resolve('.'), env, encoding: 'utf8', timeout: 2_000 });
   assert.equal(blocked.status, 1, blocked.error?.message ?? blocked.stderr);
-  assert.match(`${blocked.stdout}${blocked.stderr}`, /legacy_api_disabled/u);
+  assert.match(`${blocked.stdout}${blocked.stderr}`, /legacy_api_archived/u);
 
   const wrapper = await readFile(path.resolve('scripts/run-legacy-api.js'), 'utf8');
-  assert.match(wrapper, /MARGIN_ENABLE_LEGACY_API\s*=\s*['"]true['"]/u);
-  assert.match(wrapper, /deprecated/iu);
+  assert.doesNotMatch(wrapper, /MARGIN_ENABLE_LEGACY_API\s*=/u);
+  assert.match(wrapper, /archived/iu);
 });

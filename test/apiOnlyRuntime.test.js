@@ -4,7 +4,6 @@ import test from 'node:test';
 
 test('package defaults to the Margin Surface while exposing the Electron host separately', async () => {
   const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
-  const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   const legacyServerSource = await readFile(new URL('../src/server.js', import.meta.url), 'utf8');
 
   assert.equal(packageJson.main, 'electron/main.js');
@@ -16,10 +15,7 @@ test('package defaults to the Margin Surface while exposing the Electron host se
   assert.equal(packageJson.scripts?.dev, '.\\.runtime\\node-v22.23.1-win-x64\\node.exe scripts/run-margin-surface.js --dev');
   assert.equal(packageJson.scripts?.['legacy:workbench'], '.\\.runtime\\node-v22.23.1-win-x64\\node.exe scripts/run-web-workbench.js');
   assert.equal(packageJson.scripts?.['legacy:api'], '.\\.runtime\\node-v22.23.1-win-x64\\node.exe scripts/run-legacy-api.js');
-  assert.doesNotMatch(appSource, /express\.static|publicDir/);
-  assert.doesNotMatch(appSource, /desktop-style frontend|ui-connected/);
-  assert.match(appSource, /Margin API is running\./);
-  assert.match(legacyServerSource, /MARGIN_ENABLE_LEGACY_API/);
+  assert.match(legacyServerSource, /legacy_api_archived/);
 });
 
 test('README describes the Phase 2B Web Workbench, canonical Core, and explicit alternate surfaces', async () => {

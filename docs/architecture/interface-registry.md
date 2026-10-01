@@ -110,21 +110,21 @@ Owner context：**Core**。API-only（旧 UI 已按 ADR 003 删除）。端口 `
 | GET | `/api/events` | §1.3 |
 | POST | `/api/interactions` | 与 Pi runtime 交互；无凭据时恒返回 `runtime_unavailable` |
 
-### 2.3 Surface A — Legacy REST（`npm run legacy:api`，**已弃用**）
+### 2.3 Surface A — Legacy REST（`npm run legacy:api`，**已归档，不再启动**）
 
-Owner context：无（直连 `src/services/*` → `src/storage/memoryStore.js`，独立 sqlite，无契约、无版本化）。被 `MARGIN_ENABLE_LEGACY_API=true` 门控。`/health` 报 `surface: legacy-rest`。
+历史 owner context：无（直连 `src/services/*` → `src/storage/memoryStore.js`，独立 sqlite，无契约、无版本化）。原健康标识为 `legacy-rest`。以下端点仅供历史接口审计；启动入口现在返回 `legacy_api_archived`，不再监听。
 
 端点（33）：`GET /api`、`GET /health`、`POST /chat`、`GET /state`、`GET|POST /actions`、`POST /actions/suggested`、`POST /actions/:id/status`、`GET /achievements`、`GET /achievements/recent`、`GET /achievements/icons`、`GET /learning`、`GET /learning/active`、`GET /learning/events`、`POST /learning/:id/steps/:stepIndex`、`GET /management/overview`、`GET|POST /management/proposals`、`POST /management/proposals/:id/confirm`、`POST /management/proposals/:id/cancel`、`GET /management/operation-events`、`GET /memory`、`GET /memory/states`、`GET /memory/profile`、`POST /memory/profile/refresh`、`POST /memory/profile/override`、`GET /memory/calibration`、`GET /memory/context`、`POST /memory/:id/pin`、`POST /memory/:id/priority`、`POST /summary`、`GET /summary/recent`、`POST /tts`
 
 ### 2.4 Surface D — Feishu（`npm run feishu`）
 
-Owner context：**Core**（经 `createMarginCore`）。端口 `FEISHU_PORT`（默认 3200）。路由在脚本内手写 if/else（P4 待改为 router）。
+Owner context：**Core**（经 `createMarginCore`）。端口 `FEISHU_PORT`（默认 3200）。HTTP 路由由 `src/surfaces/feishu/httpAdapter.js` 统一注册，启动脚本负责组合与监听。
 
 | Method | Path | 说明 |
 |---|---|---|
 | POST | `/feishu/webhook` | → Claude agent loop 或 Pi pilot |
 | GET | `/health` | `surface: feishu`（含 `pilotReady`） |
-| POST | `/feishu/send-brief` | 无 `FEISHU_OWNER_ID` 时 400 |
+| POST | `/feishu/send-brief` | 无 `FEISHU_OWNER_OPEN_ID` 时 400 |
 
 ## 3. CLI
 

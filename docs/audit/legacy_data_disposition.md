@@ -1,12 +1,12 @@
 # Legacy Echo Data Disposition
 
-Status: Phase 1 decision, 2026-08-23. No record was exported, migrated, or deleted.
+Status: Updated 2026-09-26. All tables archived locally; no record migrated or deleted.
 
 ## Boundary
 
 `data/terminal-pilot/margin-core.sqlite` is the only Source of Truth for Margin V1 Workstream, Run, Event, Decision, Artifact, Checkpoint, Memory and Action state. `data/echo.sqlite` is a frozen legacy dataset. The old Express routes remain test-covered only as a deprecated compatibility surface and must not receive new V1 behavior.
 
-The default `npm start` entry now opens the terminal client backed by the Persistent Core. The old API is available only through the explicitly named `npm run legacy:api` transition command. Its removal gate is: export completed, table-by-table user decision recorded, and any approved migration verified against IDs/counts.
+The default `npm start` entry opens the Margin Board. The old API launcher now exits with an archived-status message and does not open the legacy database for writes. The user decided to archive every legacy table without importing it into Core or deleting the source database. The export and verification are recorded in `legacy_retirement_plan.md`.
 
 ## Read-only inventory
 
@@ -18,7 +18,7 @@ npm run inventory:legacy
 
 Observed on 2026-08-23 without reading record content into the report:
 
-| Table | Rows | Proposed disposition |
+| Table | Rows | Phase 1 proposal (superseded by the 2026-09-26 archive decision) |
 | --- | ---: | --- |
 | conversations | 19 | archive |
 | summaries | 1 | archive |
@@ -33,13 +33,14 @@ Observed on 2026-08-23 without reading record content into the report:
 
 The inventory records column metadata, counts, per-table schema hashes, database schema hash and file hash. It never emits conversation/profile values.
 
+Final disposition for all ten rows above: **archive**. `inventory:legacy` now reports that final disposition; the earlier proposals remain in this table as historical context.
+
 ## Export and migration policy
 
 - Nothing is auto-imported as Memory, Decision, Workstream or user truth.
 - A full-content export requires both `--approve` and a new output path; overwrite is refused.
-- “Migrate candidate” means human review is still required. It is not approval to migrate.
-- “Delete candidate” means export and explicit deletion approval are still required.
-- Legacy IDs and raw records remain unchanged until a later migration decision.
+- The earlier migration and deletion candidates were superseded by the user's archive-only decision.
+- Legacy IDs and raw records remain unchanged.
 
 Example explicit export (not run during Phase 1):
 

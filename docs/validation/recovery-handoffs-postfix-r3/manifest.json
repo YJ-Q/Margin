@@ -22,9 +22,9 @@
       "sourceBytes": 899546,
       "sourceSha256": "cee475775fdb647f3650306c43c12f7026721769b637b6f5651a2b5f0f386c96",
       "handoff": "docs/validation/recovery-handoffs-postfix-r3/case-02.md",
-      "handoffBytes": 6860,
+      "handoffBytes": 6828,
       "handoffSha256": "63d1905758e2ce1f944eb4507950b3266524846c2b7511131e52db49a0dec24f",
-      "reductionPct": 99.2373930849562
+      "reductionPct": 99.24095043499722
     },
     {
       "case": "case-04",
@@ -33,9 +33,9 @@
       "sourceBytes": 3271291,
       "sourceSha256": "a79da02da100ee86ca5d7c5b2e4834865f8f6bda6b881d225354a112b36be408",
       "handoff": "docs/validation/recovery-handoffs-postfix-r3/case-04.md",
-      "handoffBytes": 5145,
+      "handoffBytes": 5081,
       "handoffSha256": "6afbd53a6b51f6f310c18092bb5ee0f4384682fe6442f0089aa0d5943a27f155",
-      "reductionPct": 99.84272264375134
+      "reductionPct": 99.844679057901
     },
     {
       "case": "case-05",
@@ -44,9 +44,9 @@
       "sourceBytes": 3957580,
       "sourceSha256": "0787744584fe6f29bc428a725d387d582eaa7297679d4d41ceb23754a24d9408",
       "handoff": "docs/validation/recovery-handoffs-postfix-r3/case-05.md",
-      "handoffBytes": 6776,
+      "handoffBytes": 6744,
       "handoffSha256": "1e543ae1491ac5c1f027889a18668ef8031e7214bde1e3c96d640846dd85c635",
-      "reductionPct": 99.82878425704598
+      "reductionPct": 99.82959283198318
     },
     {
       "case": "case-08",
@@ -55,9 +55,9 @@
       "sourceBytes": 1799202,
       "sourceSha256": "c1d19296db2704a7f9e79b8d4cde6cb06bed6f206fd41c6ab4e0e94c1f14c56f",
       "handoff": "docs/validation/recovery-handoffs-postfix-r3/case-08.md",
-      "handoffBytes": 6382,
+      "handoffBytes": 6350,
       "handoffSha256": "3dff984431aaabcbb69f5903cfed5ab7d4b472d9cce691d37097db544af03085",
-      "reductionPct": 99.64528718843133
+      "reductionPct": 99.64706575470682
     },
     {
       "case": "case-11",
@@ -66,9 +66,9 @@
       "sourceBytes": 2215417,
       "sourceSha256": "63cdb8e06094ba0e4ee944988fe30a13a1303f8dd04c5c61b386de6bdda96ef3",
       "handoff": "docs/validation/recovery-handoffs-postfix-r3/case-11.md",
-      "handoffBytes": 6768,
+      "handoffBytes": 6696,
       "handoffSha256": "4ac8f1a7f18bc06c121b7de384a4361c666680da81a2eecf2785d3e1a224f7ce",
-      "reductionPct": 99.69450446575068
+      "reductionPct": 99.6977544182427
     }
   ],
   "statistics": {

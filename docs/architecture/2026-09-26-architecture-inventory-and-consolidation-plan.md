@@ -1,8 +1,10 @@
 # Margin 架构与接口梳理 + 业务流程统一方案
 
-状态：**提案，有一个岔口等你决策**（见 §4）
+状态：**实施完成；历史结构图保留原始勘察时点**
 日期：2026-09-26
 方法：4 路代码勘察（持久层/HTTP 面/运行时与宿主/前端与评测）+ 现有 ADR 与架构文档比对。所有结论带文件路径证据。
+
+**进度修订（2026-09-26）**：§4 已裁决。P0.6 的 Board、Contract gateway、Feishu 实际健康检查均返回 HTTP 200、统一形状与契约版本 1.2；构建通过。P2 的读取器现已接入默认 Board 与 Electron 宿主，Core 不可用时仍能打开 Board。P3 的 10 张表和 5 项独有功能均经用户决定仅归档，完整数据已本地导出并核对，旧 API 启动入口已关闭，见 `docs/audit/legacy_retirement_plan.md`。P0.5 的已清洗产物已入库、原始会话转储仍留本地；54 个已发布 handoff 的 manifest 元数据已重新核验并修复。
 
 ---
 
@@ -145,12 +147,12 @@ ADR 002（已接受，2026-08-24）原文：
 ### P0 — 止血
 
 1. ✅ **代码与架构文档已入库**（commit `f0f37a9`）：`src/surfaces/feishu/**`、`src/agents/descriptor/**`、`src/agents/agentInstall.js`、`plugins/**`、两个新 test、`docs/architecture/**`。
-2. ⏳ **证据树待在清洗后入库**，见下方 P0.5。
+2. ✅ **已清洗的证据产物入库，原始会话转储留本地**，见下方 P0.5。
 3. ✅ 统一 `/api/health` 为一种形状（含 `surface` + `contractVersion` + `name`）
 4. ✅ 修 `run-legacy-api.js` 过期文案；`docker-compose.yml` 去掉属于其他表面的 `PORT`（并注明容器内 `0.0.0.0` 是必需的，不是问题）
 5. ✅ 旧 Workbench UI 删除（ADR 003），`createWebWorkbench` 改为 API-only
 
-### P0.5 — 隐私守卫漏洞与证据树清洗（新增，优先级高于 P1）
+### P0.5 — 隐私守卫漏洞与证据树清洗 ✅
 
 **守卫漏洞（已修）**：`test/repositoryPrivacy.test.js` 原来只匹配单反斜杠/斜杠形态，而机器生成的证据是 JSON，路径写作 `C:\\Users\\<user>`（分隔符全部转义）。该形态**两个模式都不命中**，于是一个含真实用户名的文件可以**通过守卫并被提交** —— 假绿，比没有守卫更糟，因为它被信任。
 
@@ -166,11 +168,11 @@ ADR 002（已接受，2026-08-24）原文：
 | 被 freeze manifest 的 SHA-256 绑定 | 55 个 handoff 输出 |
 | 原始会话转储 | 29 个 `.jsonl`，58.8 MB，跨轮次重复 |
 
-**两种处理都不通**：原样提交 → 发布真实用户名；清洗 → manifest 的 `handoffSha256` 全部失配，证据链断裂。因此该树保持本地（`.gitignore`），并需一次**同时重算 manifest 的清洗**。已跟踪的 `docs/validation/*.md` 验收报告不受影响。
+**后续处置**：已清洗的 handoff 与 manifest 已入库；原始会话 `.jsonl` 保持本地且被 `.gitignore` 排除。再次核验发现 12 个基线 handoff 的 manifest 哈希以及 42 个后续 handoff 的字节数元数据过期；已按当前入库文件修复 54 条记录。`scripts/verify-validation-manifests.js` 与测试现在持续核对哈希、字节数及压缩比例，不读取或提交原始会话正文。
 
 **结论修正**：先前「未跟踪资产全部入库」的判断基于一个不可信的守卫，实际可安全入库的只有代码、插件与架构文档。
 
-### P0.6 — 完成 P0 剩余项
+### P0.6 — 完成 P0 剩余项 ✅
 
 验收：`npm start`、`npm run build`、`npm run legacy:workbench`、`npm run feishu` 四个入口的健康检查形状一致；`git ls-files src/surfaces` > 0。
 
@@ -194,7 +196,7 @@ ADR 002（已接受，2026-08-24）原文：
 
 验收已通过：绑定存盘并在重启后读回；Board 注入 resolver 时显示 `runId`/`workstreamId`，未注入或 resolver 抛错时降级为 `null` 且不影响 session 列表。
 
-**未接线的部分（诚实记录）**：Electron 宿主目前不持有 Core，所以开箱运行的 Board 上 `runId` 是 `null`；要让它显示 Run，需 Electron 同时持有 Core 并注入 `resolveRuns`。目前能显示的是 CLI 与任何自备 Core 的宿主。
+**后续进度**：默认 Board 和 Electron 宿主现通过 Contract-backed reader 注入 `resolveRuns`；查询按每批最多 100 个会话执行。Core 不可用时降级为未绑定显示，不阻止 Board 启动。Electron 打包时默认将 Core 放在可写的 userData 目录；显式设置 `MARGIN_CORE_DB_PATH` 可指向同一个既有 Core。
 
 **实施量化出来的新输入（给 P4）**：给 Contract 加一个类型要改五处，而它们出错时表现不同：
 
@@ -208,13 +210,13 @@ ADR 002（已接受，2026-08-24）原文：
 
 另：错误信封**不含 message**（ADR 002 禁止泄内文），所以需要上下文的错误码必须走结构化 `details`（如同 `version_conflict` 的 `currentVersion`）。
 
-### P3 — 退役 legacy ✅ 代码侧完成，数据侧待你决定
+### P3 — 退役 legacy ✅ 数据与功能已归档，旧 API 启动入口已关闭
 
 产出 `docs/audit/legacy_retirement_plan.md`：
 
 - **只读清单复核**：10 表行数与 Phase 1 完全一致，并新增文件哈希（`1f565309…`）与 schema 哈希（`4c4fc799…`），使「未改动」从断言变成可复核证据
-- **发现的真问题**：退役 legacy 不是删死代码，而是**删掉五个只在废弃表面上存在的功能**——Management proposals、Achievements、Learning、Summaries、TTS。因此本轮**没有删除任何代码**，需要你逐功能给出「移植/归档/删除」结论
-- **可执行的冻结**：`test/legacyRetirement.test.js` 从每个当前入口做**静态 import 图遍历**，断言不可达 `src/app.js` / `src/routes/**` / `src/services/**` / `src/storage/memoryStore.js`；断言门控必须精确匹配 `'true'` 且只有 `run-legacy-api.js` 能打开；断言 `data/echo.sqlite` 保留且本文覆盖全部 10 张表
+- **功能处置**：Management proposals、Achievements、Learning、Summaries、TTS 已决定归档、不移植；旧入口已关闭，历史源码仍保留
+- **可执行的冻结**：`test/legacyRetirement.test.js` 从每个当前入口做**静态 import 图遍历**，断言不可达 `src/app.js` / `src/routes/**` / `src/services/**` / `src/storage/memoryStore.js`；断言旧 API 入口即使带旧 opt-in 标志也不监听；断言 `data/echo.sqlite` 保留且本文覆盖全部 10 张表
 
 ### P4 — 接口收敛 ✅ 完成
 
@@ -225,7 +227,7 @@ ADR 002（已接受，2026-08-24）原文：
    - `KNOWN_ERROR_CODES` 白名单 → 反转为 `NEVER_EXPOSE_CODES` 黑名单（新增错误码默认透传，不再静默降级）
    - event→audit 的 `CASE` 白名单 → **整份删除**（每个分支都是恒等映射，改为直接读 `payload.command`）
    - `eventEnvelope.js` 的 `EVENT_TYPE_BY_EVIDENCE` 仍需人工同步，但已由 `test/activityTrace.test.js` 守住
-4. ⏳ Feishu 表面仍为脚本内手写路由（未改）
+4. ✅ Feishu 路由移入 `src/surfaces/feishu/httpAdapter.js`，脚本只负责组合和启动；`test/feishuHttpAdapter.test.js` 验证三个端点及故障响应
 
 ### P5 — 命名与可观测 ✅ 完成
 
@@ -245,7 +247,7 @@ ADR 002（已接受，2026-08-24）原文：
 
 ## 附录 A — 端点清单（按 owner context 归类）
 
-### A. Legacy REST（`src/app.js`，已弃用，门控 `MARGIN_ENABLE_LEGACY_API`）
+### A. Legacy REST（`src/app.js`，历史端点清单；启动入口已关闭）
 
 `GET /api`、`GET /health`、`POST /chat`、`GET /state`、`GET|POST /actions`、`POST /actions/suggested`、`POST /actions/:id/status`、`GET /achievements`、`GET /achievements/recent`、`GET /achievements/icons`、`GET /learning`、`GET /learning/active`、`GET /learning/events`、`POST /learning/:id/steps/:stepIndex`、`GET /management/overview`、`GET|POST /management/proposals`、`POST /management/proposals/:id/confirm`、`POST /management/proposals/:id/cancel`、`GET /management/operation-events`、`GET /memory`、`GET /memory/states`、`GET /memory/profile`、`POST /memory/profile/refresh`、`POST /memory/profile/override`、`GET /memory/calibration`、`GET /memory/context`、`POST /memory/:id/pin`、`POST /memory/:id/priority`、`POST /summary`、`GET /summary/recent`、`POST /tts`
 
@@ -257,7 +259,7 @@ ADR 002（已接受，2026-08-24）原文：
 
 `GET /api/health`、`GET /api/resources/status`、`GET /api/agent-sources`、`POST /api/agent-sources/detect`、`POST /api/agent-sources`、`DELETE /api/agent-sources/:id`、`POST /api/agent-sources/:id/enable`、`POST /api/agents/install`、`POST /api/agents/uninstall`、`GET /api/sessions`、`GET /api/sessions/revision`、`GET /api/workspace-overview`、`POST /api/handoff/generate`、`POST /api/handoff/save`
 
-### D. Feishu（`scripts/run-feishu-surface.js`，手写路由）
+### D. Feishu（`src/surfaces/feishu/httpAdapter.js`）
 
 `POST /feishu/webhook`、`GET /health`、`POST /feishu/send-brief`
 

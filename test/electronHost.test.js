@@ -58,9 +58,13 @@ test('Electron host owns one ephemeral loopback Surface and window/tray lifecycl
   };
   let surfaceOptions;
   let closeCalls = 0;
+  let readerCloseCalls = 0;
+  let readerOptions;
+  const resolveRuns = async () => [];
   const host = createElectronHost({
     electron,
     rootDir: 'ignored-when-packaged',
+    createBindingReader: async (options) => { readerOptions = options; return { resolveRuns, close: async () => { readerCloseCalls += 1; } }; },
     staticDir: 'C:\\Margin\\resources\\web\\dist',
     createSurface: async (options) => {
       surfaceOptions = options;
@@ -69,10 +73,11 @@ test('Electron host owns one ephemeral loopback Surface and window/tray lifecycl
   });
 
   await host.start();
+  assert.match(readerOptions.dbPath, /margin-core\.sqlite$/);
   const window = host.window;
   assert.deepEqual(surfaceOptions, {
     rootDir: 'C:\\Users\\Margin\\AppData\\margin-runtime', staticDir: 'C:\\Margin\\resources\\web\\dist',
-    host: '127.0.0.1', port: 0, env: process.env,
+    host: '127.0.0.1', port: 0, env: process.env, resolveRuns,
   });
   assert.equal(window.url, 'http://127.0.0.1:43123');
   assert.equal(window.options.webPreferences.nodeIntegration, false);
@@ -107,6 +112,7 @@ test('Electron host owns one ephemeral loopback Surface and window/tray lifecycl
   assert.equal(window.closed, true);
   assert.equal(trays[0].destroyed, true);
   assert.equal(closeCalls, 1);
+  assert.equal(readerCloseCalls, 1);
   assert.equal(app.quitCalls, 1);
 });
 
@@ -119,8 +125,10 @@ test('Electron host clamps expanded floating windows to the visible display work
     Menu: { buildFromTemplate: (template) => template }, nativeImage: { createEmpty: () => ({}) },
     screen: { getDisplayMatching: () => ({ workArea: { x: 0, y: 0, width: 1920, height: 700 } }) },
   };
-  const host = createElectronHost({ electron, createSurface: async () => ({ start: async () => ({ origin: 'http://127.0.0.1:1' }), close: async () => {} }) });
+  let surfaceOptions;
+  const host = createElectronHost({ electron, createBindingReader: async () => { throw new Error('core unavailable'); }, createSurface: async (options) => { surfaceOptions = options; return { start: async () => ({ origin: 'http://127.0.0.1:1' }), close: async () => {} }; } });
   await host.start();
+  assert.equal(surfaceOptions.resolveRuns, null, 'the Board still opens when Core is unavailable');
   host.window.bounds = { x: 10, y: 500, width: 560, height: 44 };
   host.setExpanded(true);
   assert.equal(host.window.bounds.height, 620);

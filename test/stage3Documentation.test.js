@@ -30,7 +30,7 @@ async function assertUnchangedSinceStage2(relativePath) {
   assert.equal(result.status, 0, `${relativePath} changed since the Stage 2 boundary.`);
 }
 
-test('Stage 3 remains Pi-independent while Phase 2B explicitly gates the isolated legacy API', async (t) => {
+test('Stage 3 remains Pi-independent and the archived legacy API cannot start', async (t) => {
   assert.deepEqual(await createMarginCore({ enabled: false, dbPath: 'Z:\\does-not-exist\\core.sqlite' }), { enabled: false });
 
   const directory = await mkdtemp(path.join(os.tmpdir(), 'margin-stage3-closure-'));
@@ -52,10 +52,7 @@ test('Stage 3 remains Pi-independent while Phase 2B explicitly gates the isolate
     /@earendil-works\/pi|pi-coding-agent/u
   );
 
-  for (const file of ['src/routes/chatRoutes.js', 'src/storage/memoryStore.js']) {
-    await assertUnchangedSinceStage2(file);
-  }
-  assert.match(await readFile(path.join(repositoryRoot, 'src', 'server.js'), 'utf8'), /MARGIN_ENABLE_LEGACY_API/u);
+  assert.match(await readFile(path.join(repositoryRoot, 'src', 'server.js'), 'utf8'), /legacy_api_archived/u);
   const stage2Manifest = JSON.parse(readStage2File('evaluation/stage1/manifest.json'));
   const currentManifest = JSON.parse(await readFile(path.join(repositoryRoot, 'evaluation', 'stage1', 'manifest.json'), 'utf8'));
   assert.deepEqual(currentManifest, stage2Manifest);

@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { createMarginCore } from '../src/core/createMarginCore.js';
 import { createHandoffHttpAdapter } from '../src/core/handoff/httpAdapter.js';
+import { createRunBindingReader } from '../src/core/handoff/createRunBindingReader.js';
 import { runRunBridgeCli } from '../src/cli/runBridgeCli.js';
 
 // The Session ↔ Run bridge (ADR 003). These tests are the acceptance criterion recorded in that ADR:
@@ -51,6 +52,21 @@ async function fixture() {
 }
 
 const SESSION = 'codex:codex-source:01a077ec-bd2c-78a1-8581-c7440c9bda66';
+
+test('the default Board host resolves bindings through the Contract in bounded batches', async () => {
+  const f = await fixture();
+  try {
+    const bound = await f.command('run.bind_session', 'host-bind', { runId: f.runId, sessionCanonicalId: SESSION }, 1);
+    assert.equal(bound.ok, true);
+    const reader = await createRunBindingReader({ dbPath: path.join(f.directory, 'core.sqlite') });
+    try {
+      const ids = Array.from({ length: 205 }, (_, index) => `codex:source:${index}`);
+      ids[202] = SESSION;
+      const bindings = await reader.resolveRuns(ids);
+      assert.deepEqual(bindings.map(({ canonicalSessionId, runId }) => ({ canonicalSessionId, runId })), [{ canonicalSessionId: SESSION, runId: f.runId }]);
+    } finally { await reader.close(); }
+  } finally { await f.cleanup(); }
+});
 
 test('a session binds to a Run and resolves back from it', async () => {
   const f = await fixture();

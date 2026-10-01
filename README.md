@@ -92,16 +92,16 @@ Its commands include `/state`, `/status`, `/pause`, `/resume`, `/stop`,
 `/checkpoint`, `/memory`, `/confirm-memory <memoryId> <version>`, `/new`, and
 `/exit`.
 
-The old Express product API is deprecated and disabled on direct launch. It can
-be started only through the deliberate wrapper:
+The old Express product API and its data are archived. The launcher is retained
+for a clear migration message and exits without starting a server:
 
 ```powershell
 npm run legacy:api
 ```
 
-The wrapper prints a deprecation warning and explicitly enables the legacy
-gate. `run-echo-local.cmd` points to that legacy wrapper and never starts the
-Web Workbench under an ambiguous name.
+`run-echo-local.cmd` reports the same archived status. The historical API
+source remains in the repository for review; the frozen `data/echo.sqlite`
+database is not opened for writes by either launcher.
 
 ## Web Transport
 
@@ -165,21 +165,19 @@ npm run verify:pi-stage-0
 Test counts are reported from each actual run instead of being maintained as a
 static claim.
 
-## Legacy Backup and Export
+## Legacy Data Archive
 
-The existing backup/import commands operate on the deprecated API data path and
-do not migrate it into the current Core automatically:
+The old database is preserved unchanged. A read-only inventory and explicit,
+non-overwriting export remain available:
 
 ```powershell
-npm run backup
-npm run export:data
-npm run import:data -- --file=./data/exports/margin-export.json
+npm run inventory:legacy
+npm run export:legacy -- data/echo.sqlite --approve --output data/exports/echo-legacy-copy.json
 ```
 
-See `docs/BACKUP_AND_EXPORT.md` for those legacy data operations,
-`docs/architecture/phase_1_persistent_core.md` for the authoritative Core, and
-`docs/superpowers/specs/2026-08-24-phase2b-web-workbench-design.md` for the
-frozen Web design.
+The original `data/echo.sqlite` and the earlier full JSON export are retained
+locally. See `docs/audit/legacy_retirement_plan.md` for hashes and disposition,
+and `docs/architecture/phase_1_persistent_core.md` for the authoritative Core.
 
 ## License
 

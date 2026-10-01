@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { createFeishuClient } from '../src/surfaces/feishu/feishuClient.js';
 import { createFeishuWebhookHandler } from '../src/surfaces/feishu/feishuWebhookHandler.js';
 import { buildMorningBrief } from '../src/surfaces/feishu/morningBrief.js';
+import { createFeishuHttpAdapter } from '../src/surfaces/feishu/httpAdapter.js';
 import { createCommandHandler } from '../src/surfaces/feishu/commandHandler.js';
 import { createFeishuDocClient } from '../src/surfaces/feishu/feishuDocClient.js';
 import { createJobStore } from '../src/surfaces/feishu/jobStore.js';
@@ -15,7 +16,6 @@ import { createJobTools } from '../src/surfaces/feishu/jobTools.js';
 import { createResumeBitableTools } from '../src/surfaces/feishu/resumeBitableTools.js';
 import { createClaudeAgentLoop } from '../src/runtime/claude/claudeAgentLoop.js';
 import { createMarginCore } from '../src/core/createMarginCore.js';
-import { healthPayload } from '../src/surfaceHealth.js';
 import { createPiTerminalPilotRuntime } from '../src/runtime/pi/piTerminalPilotRuntime.js';
 import { createTerminalPilotController } from '../src/pilot/terminalPilotController.js';
 
@@ -275,43 +275,16 @@ const monitor = createMonitor({
 
 const handler = createFeishuWebhookHandler({ feishuClient, onMessage, encryptKey: FEISHU_ENCRYPT_KEY });
 
-const server = http.createServer(async (req, res) => {
-  if (req.method === 'POST' && req.url === '/feishu/webhook') {
-    let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', async () => {
-      const result = await handler.handle(body, req.headers);
-      res.writeHead(result.status, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(result.body));
-    });
-    return;
-  }
-
-  if (req.method === 'GET' && req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    // Same shape as every other surface. Runtime readiness travels in `extra` rather than replacing
-    // the payload, so a supervisor can poll all four surfaces with one parser.
-    res.end(JSON.stringify(healthPayload({ surface: 'feishu', extra: { pilotReady: pilotStarted } })));
-    return;
-  }
-
-  if (req.method === 'POST' && req.url === '/feishu/send-brief') {
-    if (!FEISHU_OWNER_OPEN_ID) { res.writeHead(400); res.end(JSON.stringify({ error: 'FEISHU_OWNER_OPEN_ID not configured' })); return; }
-    try {
-      await buildMorningBrief({ feishuClient, receiveId: FEISHU_OWNER_OPEN_ID, receiveIdType: 'open_id' });
-      res.writeHead(200); res.end(JSON.stringify({ ok: true }));
-    } catch (err) { res.writeHead(500); res.end(JSON.stringify({ error: err.message })); }
-    return;
-  }
-
-  res.writeHead(404); res.end();
-});
+const server = http.createServer(createFeishuHttpAdapter({
+  webhookHandler: handler, feishuClient, ownerOpenId: FEISHU_OWNER_OPEN_ID,
+  getPilotReady: () => pilotStarted, buildBrief: buildMorningBrief,
+}));
 
 // Init job services before starting server so interviewHandler is ready
 await initJobServices();
 
 server.listen(PORT, '127.0.0.1', async () => {
-  console.log(`margin_feishu_ready http://127.0.0.1:${PORT}`);
+  console.log(`margin_feishu_ready http://127.0.0.1:${server.address().port}`);
   const core = await createMarginCore({ enabled: true, dbPath: DB_PATH, clock, idFactory }).catch(() => null);
   ensureClaudeAgent(core)
     .then(() => ensurePilot())
