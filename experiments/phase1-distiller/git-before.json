@@ -1,0 +1,184 @@
+{
+  "recordedAt": "2026-09-05T18:07:50.5412309+08:00",
+  "head": "0836e800a4bf386e58ec1e9c02be5b7279497c9f",
+  "branch": "main",
+  "status": [
+    " M package-lock.json",
+    " M package.json",
+    " M src/core/persistentWorkRepository.js",
+    " M src/runtime/pi/marginPiAdapter.js",
+    " M src/runtime/pi/piTerminalPilotRuntime.js",
+    "?? .claude/",
+    "?? Margin_Phase0_PoC_Plan.md",
+    "?? experiments/",
+    "?? scripts/run-feishu-surface.js",
+    "?? scripts/schedule-setup.ps1",
+    "?? scripts/setup-feishu-folders.js",
+    "?? src/runtime/claude/",
+    "?? src/surfaces/"
+  ],
+  "files": [
+    {
+      "path": "package-lock.json",
+      "sha256": "C3D4E28ABB6213658132209C5776B34D9906339819B912432431696EE349BA14"
+    },
+    {
+      "path": "package.json",
+      "sha256": "563BF258C5B53B5B279A93294D15A4A7D72D6A18C3844C97BB89B8AF51B37CF3"
+    },
+    {
+      "path": "src/core/persistentWorkRepository.js",
+      "sha256": "D35232660AF46EFE560E3902E7A3292888CB0C9FF8775E3F47B2CF65FD90D2A4"
+    },
+    {
+      "path": "src/runtime/pi/marginPiAdapter.js",
+      "sha256": "7377EB5DAE2BD9CDB7417635C11B339DBF823DD880E4A154A61F81C2473A8899"
+    },
+    {
+      "path": "src/runtime/pi/piTerminalPilotRuntime.js",
+      "sha256": "AB98C433609DEBDEC1716FC3E16E0F4F9BFCE34C134A878BC44A22C061B4291C"
+    },
+    {
+      "path": ".claude/settings.local.json",
+      "sha256": "93BD9A43D707445E101844F3769543A04A4CCADD0BAD8C0F05AA128B4EA00426"
+    },
+    {
+      "path": "Margin_Phase0_PoC_Plan.md",
+      "sha256": "E276CDAEF6772AE22DCC64587977A24A4C9A86E092F320AD58747FFEE42FAB40"
+    },
+    {
+      "path": "experiments/phase0-continues/.gitignore",
+      "sha256": "EB98A4E03C4DB7AD172AA3103E2DE2B964AF2A0B6B190AF2243234C758FD5661"
+    },
+    {
+      "path": "experiments/phase0-continues/README.md",
+      "sha256": "B3BA1E07BAA961F4B443B5C882F11197DD030D4CFD948F5DD9B242CA6EC38CC4"
+    },
+    {
+      "path": "experiments/phase0-continues/git-before.json",
+      "sha256": "A561A37AD25935D4665FD19110DE9990503AC7D7F43466542B72DE90ADA82497"
+    },
+    {
+      "path": "experiments/phase0-continues/package-lock.json",
+      "sha256": "633363E6DE4E6CF67EC4753796875D4841E8515013209340A4B8FFBBB8898EAC"
+    },
+    {
+      "path": "experiments/phase0-continues/package.json",
+      "sha256": "D4A0E588BDB5FFA785185B8F2D048EC6BF0FCBE06DCB605036F057480902B667"
+    },
+    {
+      "path": "experiments/phase0-continues/run-baseline.mjs",
+      "sha256": "57B94111C5163434006456D6A26462BF28F9DB872CDAF3319851DA7705CDC84B"
+    },
+    {
+      "path": "experiments/phase0-continues/verify-baseline.mjs",
+      "sha256": "98C65C63833FF8317DCB15AC7CFB84E0ABE1ED5C99970173C107D5B7A52F9929"
+    },
+    {
+      "path": "scripts/run-feishu-surface.js",
+      "sha256": "A3DBF659E0D5130E5DC54CD270D9670231A888AF1C14CD10DD7ABF2F56492C19"
+    },
+    {
+      "path": "scripts/schedule-setup.ps1",
+      "sha256": "D9447181861E62A1BA015F651E4962EFFB3F83A919F36861870C6B27BCF6E033"
+    },
+    {
+      "path": "scripts/setup-feishu-folders.js",
+      "sha256": "D95B34558C823F2017D8B1AF27A20A3A06C84DCB377726F1A2C16DDDB7E7DD9B"
+    },
+    {
+      "path": "src/runtime/claude/claudeAgentLoop.js",
+      "sha256": "8C99C675FB87E4DFD37AC62219C6A58F44F9FACF1FCAD8AC0A94B55AEEB47428"
+    },
+    {
+      "path": "src/surfaces/feishu/commandHandler.js",
+      "sha256": "90659A3F4694EA4D98D7D5E22CCF42243B1D72D50492A1E3E89C61E1CA34FEEF"
+    },
+    {
+      "path": "src/surfaces/feishu/feishuClient.js",
+      "sha256": "9C259CD3EE9E293747DBDBAFE2D68350205F824169B32DE7E88ACD0850D08E27"
+    },
+    {
+      "path": "src/surfaces/feishu/feishuDocClient.js",
+      "sha256": "D799226CCBB09C56F3B83DF394D73A9ACCD3711CB135744515139396339A11F2"
+    },
+    {
+      "path": "src/surfaces/feishu/feishuWebhookHandler.js",
+      "sha256": "AAF3D047324EAC3171E69698DD0D995CA42ACCFE6741622863420CBE82156108"
+    },
+    {
+      "path": "src/surfaces/feishu/interviewHandler.js",
+      "sha256": "CBA479BC0D1E99F8DAA1BAFCEE7FAEC64469A341DB2AF2B2C0E0D0817EB3DB5F"
+    },
+    {
+      "path": "src/surfaces/feishu/jobStore.js",
+      "sha256": "7C4BB72FDF73D9FA5675849A30E58BD868432523FFC19E50E1D88A58B264F4F2"
+    },
+    {
+      "path": "src/surfaces/feishu/jobTools.js",
+      "sha256": "F941279F012F6C1FBAA43A71987190EFD03E648309665C6E0E52C878EEED7FF8"
+    },
+    {
+      "path": "src/surfaces/feishu/llmClient.js",
+      "sha256": "3B32EA3A92A8CC717DE39ABD98EEEA47200B83F0F6EDE02958FF992C356443DC"
+    },
+    {
+      "path": "src/surfaces/feishu/monitor.js",
+      "sha256": "5F7EA6A9BD09D19B8C84FECBE13B207D4D9579082EE12A6FBC8DAAB05695EFB2"
+    },
+    {
+      "path": "src/surfaces/feishu/morningBrief.js",
+      "sha256": "413F640F89EC5FDCE8EBFCB3903EF9F4A0F3BA0749F09EDF03B8557C238A85F3"
+    },
+    {
+      "path": "src/surfaces/feishu/newsFetcher.js",
+      "sha256": "501883DDA5EDF18A790647473E842B56FE3F1A06E2389C40DB68D709FC175DB6"
+    },
+    {
+      "path": "src/surfaces/feishu/resumeBitableTools.js",
+      "sha256": "873D4F4149086667A3DBF384E66D9828BF68E15A6CF6281D8A455A31F1DC3779"
+    }
+  ],
+  "phase0Artifacts": [
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\baseline-context.json",
+      "sha256": "ECEF2454A4284D61015171F356D94ABE9B5119DC294F6550CDDE440F09504B6B"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\baseline-continues-handoff.md",
+      "sha256": "30C94CDA794B37767E78266B072C20C40013392B8FD4C0AD02B57DFD1BB5B7FB"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\baseline-session-info.md",
+      "sha256": "3DF20BD43704B25F89A19CBB1733BCA468750CEDA558A55FA337547551AAD422"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\capture.json",
+      "sha256": "F67DDEFDCD14B3CDBA239594F201B359F5665704A6410E43C4D118A244153B19"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\continues-standard-context.json",
+      "sha256": "4ADBFFC5DEF240316D1D5A218071BFFF54F57D10B5258D003167FC884D8CD4E9"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\discovery-initial.json",
+      "sha256": "4F53CDA18C2BAA0C0354BB5F9A3ECBE5ED12AB4D8E11BA873C2F11161202B945"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\discovery.json",
+      "sha256": "5C79E5EF493B9E9FFB6BD6A7006EA0D92FA621BF0DB98CA7D97837A51A166D6C"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\measurements.json",
+      "sha256": "5E3896510DBC111A7F679C7D397ED4BDB0B4C415E2F1F89C44620ED14B2EE443"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\rollout-2026-09-05T17-28-52-01a070e6-3bd9-7591-aa4e-31b364badda1.jsonl",
+      "sha256": "7FFD11AB9CCDD1CE5B07D2202540E4CC56893F33AC95FCBC47F833AC4D187ABC"
+    },
+    {
+      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\verification.json",
+      "sha256": "4E6149F28107ED03205F2DCA8AD5B373D18BB2FBD5CE9448F4D6ABC668937877"
+    }
+  ]
+}

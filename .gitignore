@@ -32,11 +32,16 @@ docs/validation/r3.3/
 # Generated implementation report retained outside Git for local reference.
 task-8-report.md
 
-# Local experiment evidence (Phase 0/1 exploration output). Contains captured agent sessions,
-# absolute machine paths in recorded git state, and measured outputs whose values are the point.
-# Redacting them would rewrite measurements, so the tree stays local; the conclusions live in
-# docs/architecture/ and experiments/*/README.md.
-experiments/
+# Phase 0/1 experiments: the reproducible SOURCE and conclusions are tracked; the RAW EVIDENCE is
+# not. Each experiment's own .gitignore designates its trackable files (scripts, package.json,
+# package-lock.json, git-before.json, README.md / evaluation.md) and ignores output/ + node_modules/.
+# The raw evidence under output/ contains captured agent sessions, absolute machine paths in the
+# recorded git state, and measured outputs whose values are the point — redacting them would rewrite
+# the freeze-manifest measurements, so it stays local (also resilient to `git clean -fd`, which never
+# touches ignored files). Keeping the source/conclusions in Git means an explicit `git clean -fdx`
+# cannot lose the reproducible code and the written conclusions.
+experiments/*/output/
+experiments/*/node_modules/
 
 # Validation evidence tree. The reports, capture manifests and freeze manifests are tracked; the raw
 # agent session transcripts are not. Those are 29 files / ~59 MB, duplicated across experiment rounds,
