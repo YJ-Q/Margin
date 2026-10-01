@@ -26,8 +26,10 @@ function fakeRuntime(calls) {
 async function fixture({ dev = false } = {}) {
   const rootDir = await mkdtemp(path.join(os.tmpdir(), 'margin-web-composition-'));
   const staticDir = path.join(rootDir, 'web', 'dist');
-  await mkdir(staticDir, { recursive: true });
-  await writeFile(path.join(staticDir, 'index.html'), '<!doctype html><title>Margin Workbench</title>', 'utf8');
+  const assetsDir = path.join(staticDir, 'assets');
+  await mkdir(assetsDir, { recursive: true });
+  await writeFile(path.join(staticDir, 'margin.html'), '<!doctype html><title>Margin</title>', 'utf8');
+  await writeFile(path.join(assetsDir, 'margin.js'), 'export const tag = "margin-built";', 'utf8');
   const dbPath = path.join(rootDir, 'configured', 'core.sqlite');
   const calls = [];
   let coreOpenCount = 0;
@@ -159,6 +161,43 @@ test('production composition starts API-only when no web assets are present', as
   }
 });
 
+test('production composition mounts the built margin app and serves it at the site root', async () => {
+  // The vite entry is web/margin.html, so the bundle is dist/margin.html (not index.html). A built
+  // package must be served at '/'; before the fix the server detected index.html, found nothing, and
+  // silently stayed API-only even after a successful `vite build`.
+  const rootDir = await mkdtemp(path.join(os.tmpdir(), 'margin-web-built-'));
+  const staticDir = path.join(rootDir, 'web', 'dist');
+  const assetsDir = path.join(staticDir, 'assets');
+  await mkdir(assetsDir, { recursive: true });
+  await writeFile(path.join(staticDir, 'margin.html'), '<!doctype html><title>Margin</title>', 'utf8');
+  await writeFile(path.join(assetsDir, 'margin.js'), 'export const tag = "margin-built";', 'utf8');
+  const workbench = await createWebWorkbench({
+    rootDir, port: 0, dbPath: path.join(rootDir, 'core.sqlite'), staticDir
+  });
+  try {
+    const started = await workbench.start();
+    const index = await fetch(`${started.origin}/`);
+    assert.equal(index.status, 200);
+    assert.match(index.headers.get('content-type'), /text\/html/);
+    assert.equal(await index.text(), '<!doctype html><title>Margin</title>');
+
+    const asset = await fetch(`${started.origin}/assets/margin.js`);
+    assert.equal(asset.status, 200);
+    assert.match(asset.headers.get('content-type'), /javascript/);
+    assert.match(await asset.text(), /margin-built/);
+
+    // API routes still take priority over the static front end.
+    const health = await fetch(`${started.origin}/api/health`).then((response) => response.json());
+    assert.equal(health.status, 'ready');
+
+    // No client-side router means unknown browser paths are not rewritten to the app shell.
+    assert.equal((await fetch(`${started.origin}/no-such-route`)).status, 404);
+  } finally {
+    await workbench.close();
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
+
 test('web composition and entrypoint have no legacy application, route, store, or echo database imports', async () => {
   for (const relative of ['src/web/createWebWorkbench.js', 'scripts/run-web-workbench.js']) {
     const source = await readFile(path.resolve(relative), 'utf8');
@@ -175,7 +214,7 @@ test('environment selects the configured Core path and ephemeral listen port', a
   let workbench;
   try {
     await mkdir(staticDir, { recursive: true });
-    await writeFile(path.join(staticDir, 'index.html'), '<!doctype html>', 'utf8');
+    await writeFile(path.join(staticDir, 'margin.html'), '<!doctype html>', 'utf8');
     workbench = await createWebWorkbench({
       rootDir, staticDir,
       env: { MARGIN_CORE_DB_PATH: configured, MARGIN_WEB_HOST: '127.0.0.1', PORT: '0' },

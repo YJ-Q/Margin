@@ -12,6 +12,10 @@ import { createPiWebRuntimeCoordinator } from '../runtime/pi/piWebRuntimeCoordin
 
 const DEFAULT_HOST = '127.0.0.1';
 const DEFAULT_CORE_PATH = path.join('data', 'terminal-pilot', 'margin-core.sqlite');
+// Must match the vite build entry in web/vite.config.js. The production bundle emits
+// web/dist/margin.html (not index.html); detecting index.html here meant a freshly built package was
+// never mounted, so `vite build` succeeded while the server silently stayed API-only.
+const STATIC_ENTRY_FILE = 'margin.html';
 
 function stableRuntimeFailure() {
   return Object.freeze({ code: 'runtime_unavailable' });
@@ -134,7 +138,7 @@ export async function createWebWorkbench({
   // The Workbench UI was removed with the surface consolidation (ADR 003). This server is now the
   // Application Contract's transport only: it starts API-only and never requires a built front end.
   // A caller that supplies assets still gets them mounted.
-  const hasStaticApp = !dev && deps.fileExists(path.join(resolvedStaticDir, 'index.html'));
+  const hasStaticApp = !dev && deps.fileExists(path.join(resolvedStaticDir, STATIC_ENTRY_FILE));
 
   await mkdir(path.dirname(resolvedDbPath), { recursive: true });
   await mkdir(resolvedAgentDir, { recursive: true });
@@ -180,7 +184,7 @@ export async function createWebWorkbench({
     }
     const app = deps.createWebHttpAdapter({
       webGateway: gateway, interactionService,
-      ...(dev ? { viteMiddleware: vite.middlewares } : (hasStaticApp ? { staticDir: resolvedStaticDir } : {}))
+      ...(dev ? { viteMiddleware: vite.middlewares } : (hasStaticApp ? { staticDir: resolvedStaticDir, staticIndexFile: STATIC_ENTRY_FILE } : {}))
     });
 
     async function reconcile() {

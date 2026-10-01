@@ -2,12 +2,14 @@ import express from 'express';
 import { failureEnvelope, hasForbiddenBrowserField, httpStatusFor, sanitizeBrowserEnvelope } from './httpErrors.js';
 import { healthPayload } from '../surfaceHealth.js';
 
-export function createWebHttpAdapter({ webGateway, interactionService, staticDir, viteMiddleware } = {}) {
+export function createWebHttpAdapter({ webGateway, interactionService, staticDir, staticIndexFile = 'index.html', viteMiddleware } = {}) {
   if (!webGateway?.execute || !webGateway?.query || !webGateway?.events) throw new TypeError('invalid_web_http_dependencies');
   const app = express();
   app.use(express.json({ limit: '64kb' }));
   if (typeof staticDir === 'function') app.use(bufferedMiddleware(staticDir));
-  else if (staticDir) app.use(express.static(staticDir));
+  // The canonical built entry is named after the surface (margin.html, see web/vite.config.js), not
+  // index.html, so the static index is explicit rather than relying on express's index.html default.
+  else if (staticDir) app.use(express.static(staticDir, { index: staticIndexFile }));
   if (typeof viteMiddleware === 'function') app.use(bufferedMiddleware(viteMiddleware, { bypass: isApiRequest }));
 
   app.get('/api/health', (_request, response) => response.json(healthPayload({ surface: 'workbench-gateway' })));

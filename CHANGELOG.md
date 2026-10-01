@@ -38,6 +38,11 @@ All notable changes to Margin will be documented in this file.
 - the terminal client now consumes the unified Application Core and is the default entry point; the frozen Express/Echo API is explicitly deprecated
 - the test command uses the pinned Node 22.23.1 runtime so Pi tests are reproducible on Windows
 
+### Fixed
+
+- the production web server now serves the built Application Contract UI at `/`: the vite entry is `web/margin.html` and emits `dist/margin.html`, but the server probed for a `dist/index.html` that never exists, so a successful `vite build` was silently never mounted and the process stayed API-only. The static index is now `margin.html` (hashed assets resolve, `/api/*` still takes priority, unknown paths still 404); the default remains API-only when no build is present
+- redacted the machine-specific repository path from the tracked Phase 1 `git-before.json` manifest (repo-relative paths, SHA-256 evidence retained) so the repository privacy guard stays green for the experiments sources tracked in this release
+
 ### Removed
 
 - obsolete Electron shell, static Margin frontend, desktop launchers, and Electron dependency
@@ -59,6 +64,7 @@ All notable changes to Margin will be documented in this file.
 
 ### Verified
 
+- production web packaging on 2026-10-02: `vite build` emits `dist/margin.html` + hashed assets and a real production server serves them at `/` (assets resolve, `/api/*` wins, unknown paths 404); full suite `625/625` passes, and the tracked-tree privacy guard is green after redacting the experiments manifest
 - Task 111 multi-Agent execution status: full suite `622/622` automated tests pass on 2026-10-02, including Claude/Pi built-in transcript-status discovery, 豆包 declarative idle, and the confirmed-idle Board dot
 - Phase 2A final-fix acceptance: `352/352` automated tests, Stage 1 fixture validation `10/10`, and Pi baseline audit passed on 2026-08-24; YAPI Live Pi was not rerun and remains a declared gap
 - real Pi SDK execution with `yapi/gpt-5.6-terra`: tool call, new Session, restore, fork parent relationship, and manual compaction

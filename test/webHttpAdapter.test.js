@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
@@ -378,6 +378,49 @@ test('GET events malformed payload returns invalid_request without a fabricated 
   assert.equal(f.calls.length, 0);
   const source = await import('node:fs/promises').then((fs) => fs.readFile(new URL('../src/http/createWebHttpAdapter.js', import.meta.url), 'utf8'));
   assert.equal(source.includes("payload: { stack: 'invalid' }"), false);
+});
+
+test('HTTP adapter serves a built app from a static directory using the configured index file', async () => {
+  const f = gatewayFixture();
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'margin-web-static-'));
+  const assets = path.join(directory, 'assets');
+  await mkdir(assets, { recursive: true });
+  await writeFile(path.join(directory, 'margin.html'), '<!doctype html><title>Margin</title>', 'utf8');
+  await writeFile(path.join(assets, 'margin.js'), 'export const tag = "built";', 'utf8');
+  // Only margin.html is present (the vite bundle has no index.html); the custom index makes '/' serve it.
+  const app = createWebHttpAdapter({ webGateway: f.gateway, staticDir: directory, staticIndexFile: 'margin.html' });
+  try {
+    await withServer(app, async (origin) => {
+      const index = await fetch(`${origin}/`);
+      assert.equal(index.status, 200);
+      assert.match(index.headers.get('content-type'), /text\/html/);
+      assert.equal(await index.text(), '<!doctype html><title>Margin</title>');
+      const asset = await fetch(`${origin}/assets/margin.js`);
+      assert.equal(asset.status, 200);
+      assert.match(await asset.text(), /built/);
+      // The API still wins over static hosting.
+      const health = await fetch(`${origin}/api/health`);
+      assert.equal(health.status, 200);
+    });
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('HTTP adapter defaults the static index to index.html when none is configured', async () => {
+  const f = gatewayFixture();
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'margin-web-static-default-'));
+  await writeFile(path.join(directory, 'index.html'), '<!doctype html><title>Default</title>', 'utf8');
+  const app = createWebHttpAdapter({ webGateway: f.gateway, staticDir: directory });
+  try {
+    await withServer(app, async (origin) => {
+      const index = await fetch(`${origin}/`);
+      assert.equal(index.status, 200);
+      assert.match(await index.text(), /Default/);
+    });
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test('HTTP adapter source boundary keeps web files free of Core, storage, Pi, and legacy dependencies', async () => {
