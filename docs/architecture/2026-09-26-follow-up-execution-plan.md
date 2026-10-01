@@ -34,12 +34,14 @@
 
 历史 legacy 模块的物理删除留作单独清理：其测试、备份/导入脚本仍使用这些模块，移除前需要逐一处理依赖。归档决策已通过关闭运行入口落实，无需为了删除源码改写历史测试。
 
-## 2026-09-27 续阶段：移除冻结的旧实现
+## 2026-09-27 续阶段：移除冻结的旧实现 ✅ 完成（2026-10-01）
 
-- [ ] 核对当前运行入口无旧实现依赖；保留 `inventory:legacy`、`export:legacy` 和本地归档原件。
-- [ ] 移除已归档的 `src/app.js`、`src/routes/`、`src/services/`、`src/storage/memoryStore.js` 及其专属配置、旧备份/导入/管理脚本；保留返回归档状态的兼容启动提示。
-- [ ] 移除仅验证已归档产品的测试；改造混合测试，保留 Core、入口边界与归档数据的有效验证。
-- [ ] 验证完整导出仍可在新文件中重建、拒绝覆盖，且原始数据库哈希不变。
-- [ ] 全量测试、构建、入口健康检查和隐私守卫通过。
+- [x] 核对当前运行入口无旧实现依赖；保留 `inventory:legacy`、`export:legacy` 和本地归档原件。
+- [x] 移除已归档的 `src/app.js`、`src/routes/`、`src/services/`、`src/storage/memoryStore.js` 及其专属配置、旧备份/导入/管理脚本；保留返回归档状态的兼容启动提示。
+- [x] 移除仅验证已归档产品的测试；改造混合测试，保留 Core、入口边界与归档数据的有效验证。
+- [x] 验证完整导出仍可在新文件中重建、拒绝覆盖，且原始数据库哈希不变。
+- [x] 全量测试、构建、入口健康检查和隐私守卫通过。
+
+验收结果（2026-10-01）：`npm test` 592/592 通过；`npm run build` 成功；`npm run validate:stage1` 10/10；`npm run audit:pi` 通过；Board/Workbench/Feishu 健康检查均 HTTP 200、contractVersion 1.2；Legacy API 返回 `legacy_api_archived`（exit 1）；数据库哈希 `1f565309` 未变。Commit `bde4879`。
 
 这一步删除的是当前工作树中的旧代码；已跟踪的历史版本仍可从 Git 恢复。原始 SQLite、JSON 归档和只读清单/导出工具不删除。
