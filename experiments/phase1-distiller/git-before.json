@@ -141,43 +141,43 @@
   ],
   "phase0Artifacts": [
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\baseline-context.json",
+      "path": "experiments\\phase0-continues\\output\\baseline-context.json",
       "sha256": "ECEF2454A4284D61015171F356D94ABE9B5119DC294F6550CDDE440F09504B6B"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\baseline-continues-handoff.md",
+      "path": "experiments\\phase0-continues\\output\\baseline-continues-handoff.md",
       "sha256": "30C94CDA794B37767E78266B072C20C40013392B8FD4C0AD02B57DFD1BB5B7FB"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\baseline-session-info.md",
+      "path": "experiments\\phase0-continues\\output\\baseline-session-info.md",
       "sha256": "3DF20BD43704B25F89A19CBB1733BCA468750CEDA558A55FA337547551AAD422"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\capture.json",
+      "path": "experiments\\phase0-continues\\output\\capture.json",
       "sha256": "F67DDEFDCD14B3CDBA239594F201B359F5665704A6410E43C4D118A244153B19"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\continues-standard-context.json",
+      "path": "experiments\\phase0-continues\\output\\continues-standard-context.json",
       "sha256": "4ADBFFC5DEF240316D1D5A218071BFFF54F57D10B5258D003167FC884D8CD4E9"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\discovery-initial.json",
+      "path": "experiments\\phase0-continues\\output\\discovery-initial.json",
       "sha256": "4F53CDA18C2BAA0C0354BB5F9A3ECBE5ED12AB4D8E11BA873C2F11161202B945"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\discovery.json",
+      "path": "experiments\\phase0-continues\\output\\discovery.json",
       "sha256": "5C79E5EF493B9E9FFB6BD6A7006EA0D92FA621BF0DB98CA7D97837A51A166D6C"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\measurements.json",
+      "path": "experiments\\phase0-continues\\output\\measurements.json",
       "sha256": "5E3896510DBC111A7F679C7D397ED4BDB0B4C415E2F1F89C44620ED14B2EE443"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\rollout-2026-09-05T17-28-52-01a070e6-3bd9-7591-aa4e-31b364badda1.jsonl",
+      "path": "experiments\\phase0-continues\\output\\rollout-2026-09-05T17-28-52-01a070e6-3bd9-7591-aa4e-31b364badda1.jsonl",
       "sha256": "7FFD11AB9CCDD1CE5B07D2202540E4CC56893F33AC95FCBC47F833AC4D187ABC"
     },
     {
-      "path": "D:\\Code\\margin\\experiments\\phase0-continues\\output\\verification.json",
+      "path": "experiments\\phase0-continues\\output\\verification.json",
       "sha256": "4E6149F28107ED03205F2DCA8AD5B373D18BB2FBD5CE9448F4D6ABC668937877"
     }
   ]
