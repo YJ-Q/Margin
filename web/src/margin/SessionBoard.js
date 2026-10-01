@@ -9,6 +9,9 @@ function status(executionStatus, attentionStatus) {
   if (executionStatus === 'error') return { className: 'is-error', title: 'Agent reported a native task error' };
   if (attentionStatus === 'needs-input' || attentionStatus === 'unread') return { className: 'is-attention', title: 'User attention required' };
   if (executionStatus === 'working') return { className: 'is-working', title: 'Agent is working' };
+  // 'idle' is a real terminal state read from the Agent's own transcript (the last turn finished),
+  // so it earns its own colour rather than sharing the grey 'no evidence' dot that 'unknown' gets.
+  if (executionStatus === 'idle') return { className: 'is-idle', title: 'Agent finished its last turn' };
   return { className: 'is-neutral', title: 'No live runtime evidence' };
 }
 function formatTokens(value) {

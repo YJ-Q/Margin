@@ -26,6 +26,7 @@ All notable changes to Margin will be documented in this file.
 - runtime-neutral Workstream and Run state machines, versioned Run/Artifact/Checkpoint schema, and transaction-backed Application Services
 - host-owned persistent Run start, status, pause, resume, stop, and checkpoint controls with restart recovery
 - read-only legacy Echo inventory and explicit approval-gated export tooling
+- transcript-derived `executionStatus` for Claude (`stop_reason` / `isApiErrorMessage`) and Pi (`stopReason`) built-in sessions, plus a declarative idle status for 豆包; the Web Board now renders a confirmed-idle dot distinct from the grey no-evidence state (Task 111)
 
 ### Changed
 
@@ -57,6 +58,7 @@ All notable changes to Margin will be documented in this file.
 
 ### Verified
 
+- Task 111 multi-Agent execution status: full suite `622/622` automated tests pass on 2026-10-02, including Claude/Pi built-in transcript-status discovery, 豆包 declarative idle, and the confirmed-idle Board dot
 - Phase 2A final-fix acceptance: `352/352` automated tests, Stage 1 fixture validation `10/10`, and Pi baseline audit passed on 2026-08-24; YAPI Live Pi was not rerun and remains a declared gap
 - real Pi SDK execution with `yapi/gpt-5.6-terra`: tool call, new Session, restore, fork parent relationship, and manual compaction
 - Stage 0 verification gate: `212/212` automated tests passed on 2026-08-20

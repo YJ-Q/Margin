@@ -28,7 +28,7 @@ test('Claude discovers only top-level recoverable sessions and ignores partial/i
   const sessions = await adapterFor('claude').collectSessionSnapshots({ type: 'claude', path: home, sourceId: 'claude-source' });
   assert.equal(sessions.length, 1); assert.equal(sessions[0].nativeSessionId, 'claude-id'); assert.equal(sessions[0].updatedAt, '2026-09-01T01:00:00.000Z');
   assert.equal(sessions[0].model, 'claude-sonnet'); assert.equal(sessions[0].executionStatus, 'unknown'); assert.equal(sessions[0].attentionStatus, 'none'); assert.equal(sessions[0].canonicalId, 'claude:claude-source:claude-id');
-  assert.equal(sessions[0].capabilities.executionStatus, false); assert.equal(sessions[0].capabilities.attentionStatus, false);
+  assert.equal(sessions[0].capabilities.executionStatus, true); assert.equal(sessions[0].capabilities.attentionStatus, false);
   assert.equal(sessions[0].displayTitle, 'Untitled session · claude-i'); assert.equal(sessions[0].titleSource, 'fallback-id');
 });
 
@@ -175,3 +175,74 @@ test('Codex reconciles the separately indexed native thread name without changin
   fs.writeFileSync(path.join(home, 'session_index.jsonl'), `${JSON.stringify({ id, thread_name: 'Renamed by Codex', updated_at: '2026-01-01T00:02:00Z' })}\n`);
   [session] = await discoverCodexSessions(home, { sourceId: 'codex-test' }); assert.equal(session.displayTitle, 'Renamed by Codex'); assert.equal(session.canonicalId, canonical); assert.equal(session.updatedAt, '2026-01-01T00:00:00.000Z');
 });
+
+// ---- Transcript-derived execution status -----------------------------------------------------
+
+const claudeTurn = (stopReason, { content = [{ type: 'text', text: 'done' }], isApiErrorMessage = false } = {}) => ({
+  type: 'assistant', sessionId: 'c', timestamp: '2026-09-01T01:00:00Z', isApiErrorMessage: isApiErrorMessage || undefined,
+  message: { role: 'assistant', model: 'claude-sonnet', stop_reason: stopReason, content },
+});
+async function claudeStatus(records) {
+  const home = fixture({ after: () => {} });
+  // tests need t for cleanup; emulate via mkdtemp + register finally on process
+  const dir = path.join(home, 'projects', 'D--repo'); fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'c.jsonl'), jsonl(records));
+  try {
+    const [session] = await adapterFor('claude').collectSessionSnapshots({ type: 'claude', path: home, sourceId: 'src' });
+    return session.executionStatus;
+  } finally { fs.rmSync(home, { recursive: true, force: true }); }
+}
+
+test('Claude executionStatus maps the last turn stop_reason to working/idle/error', async () => {
+  const base = (turn) => [
+    { type: 'user', sessionId: 'c', cwd: 'D:/repo', timestamp: '2026-09-01T00:00:00Z', message: { role: 'user', content: 'go' } },
+    turn,
+  ];
+  assert.equal(await claudeStatus(base(claudeTurn('tool_use', { content: [{ type: 'tool_use', name: 'Bash' }] }))), 'working');
+  assert.equal(await claudeStatus(base(claudeTurn('end_turn'))), 'idle');
+  assert.equal(await claudeStatus(base(claudeTurn('stop_sequence'))), 'idle', 'a stop_sequence answer is still a finished turn');
+  assert.equal(await claudeStatus(base(claudeTurn('end_turn', { isApiErrorMessage: true }))), 'error', 'native API error outranks the stop reason');
+});
+
+test('Claude executionStatus always reflects the LAST assistant turn, not an earlier tool call', async () => {
+  const records = [
+    { type: 'user', sessionId: 'c', cwd: 'D:/repo', timestamp: '2026-09-01T00:00:00Z', message: { role: 'user', content: 'go' } },
+    claudeTurn('tool_use', { content: [{ type: 'tool_use', name: 'Read' }] }),
+    { type: 'user', sessionId: 'c', cwd: 'D:/repo', timestamp: '2026-09-01T00:05:00Z', message: { role: 'user', content: [{ type: 'tool_result', content: 'file text' }] } },
+    claudeTurn('end_turn', { content: [{ type: 'text', text: 'all done' }] }),
+  ];
+  assert.equal(await claudeStatus(records), 'idle');
+});
+
+const piTurn = (stopReason, { types = ['text'] } = {}) => ({
+  type: 'message', timestamp: '2026-09-01T01:00:00Z',
+  message: { role: 'assistant', stopReason: stopReason, content: types.map((t) => (t === 'toolCall' ? { type: 'toolCall', toolName: 'Bash' } : { type: 'text', text: 'ok' })) },
+});
+async function piStatus(records) {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'margin-pi-status-'));
+  const dir = path.join(home, 'agent', 'sessions', 'D--repo'); fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'p.jsonl'), jsonl(records));
+  try {
+    const [session] = await adapterFor('pi').collectSessionSnapshots({ type: 'pi', path: home, sourceId: 'src' });
+    return session.executionStatus;
+  } finally { fs.rmSync(home, { recursive: true, force: true }); }
+}
+
+test('Pi executionStatus maps the last assistant message stopReason to working/idle/error', async () => {
+  const base = (turn) => [{ type: 'session', id: 'p', cwd: 'D:/repo', timestamp: '2026-09-01T00:00:00Z' }, turn];
+  assert.equal(await piStatus(base(piTurn('toolUse', { types: ['toolCall'] }))), 'working');
+  assert.equal(await piStatus(base(piTurn('stop'))), 'idle');
+  assert.equal(await piStatus(base(piTurn('aborted'))), 'idle', 'a user interrupt is stopped work, not an Agent error');
+  assert.equal(await piStatus(base(piTurn('error'))), 'error');
+});
+
+test('Pi executionStatus does not treat a failed tool RESULT as an Agent error', async () => {
+  const records = [
+    { type: 'session', id: 'p', cwd: 'D:/repo', timestamp: '2026-09-01T00:00:00Z' },
+    piTurn('toolUse', { types: ['toolCall'] }),
+    { type: 'message', timestamp: '2026-09-01T00:05:00Z', message: { role: 'toolResult', isError: true, content: [{ type: 'text', text: 'fatal: not a git repository' }] } },
+    piTurn('stop', { types: ['text'] }),
+  ];
+  assert.equal(await piStatus(records), 'idle');
+});
+

@@ -54,10 +54,15 @@ export const builtinDescriptors = Object.freeze([
     // Source-level handoff stays false while a Claude *session* still advertises it. That split is
     // pre-existing behaviour and is preserved deliberately: collapsing the two surfaces here would
     // be a silent product change disguised as a refactor.
-    capabilities: { sessions: true, handoff: false, apiUsage: false, quota: false, executionStatus: false, attentionStatus: false },
-    sessionCapabilities: { handoff: true },
+    capabilities: { sessions: true, handoff: false, apiUsage: false, quota: false, executionStatus: true, attentionStatus: false },
+    sessionCapabilities: { handoff: true, executionStatus: true },
     sessions: { kind: 'builtin' },
     resources: { kind: 'builtin' },
+    // Claude status is derived during built-in discovery from the last assistant turn's stop_reason
+    // and native API-error marker in the project JSONL (see executionStatus.js). It follows the same
+    // "last turn wins" rule as a descriptor transcript extractor, but cannot be declarative because
+    // Claude's session reader spans the archive-filtered multi-file project layout.
+    executionStatus: { kind: 'builtin' },
     handoff: { kind: 'builtin' },
   }),
   Object.freeze({
@@ -72,10 +77,13 @@ export const builtinDescriptors = Object.freeze([
     envHome: 'PI_HOME',
     defaultHome: { fallback: '{profile}/.pi' },
     supportLevel: 'Session discovery',
-    capabilities: { sessions: true, handoff: true, apiUsage: false, quota: false, executionStatus: false, attentionStatus: false, subscriptionQuota: true },
-    sessionCapabilities: { handoff: true },
+    capabilities: { sessions: true, handoff: true, apiUsage: false, quota: false, executionStatus: true, attentionStatus: false, subscriptionQuota: true },
+    sessionCapabilities: { handoff: true, executionStatus: true },
     sessions: { kind: 'builtin' },
     resources: { kind: 'builtin' },
+    // Pi status is derived during built-in discovery from the last assistant message's stopReason
+    // (toolUse -> working, stop -> idle, error -> error, aborted -> idle); see executionStatus.js.
+    executionStatus: { kind: 'builtin' },
     handoff: { kind: 'builtin' },
   }),
 ]);

@@ -24,13 +24,13 @@
 
   "supportLevel": "Session discovery",
 
-  "$comment_capabilities": "sessions and nothing else. `quota` and `handoff` are deliberately absent: quota needs a credential-bearing subscription endpoint and handoff needs a transcript distiller, neither of which the declarative catalogue can express. Declaring them without an implementation would be the silent half-wiring the spec rejects.",
+  "$comment_capabilities": "sessions plus transcript-derived execution status. `quota` and `handoff` are deliberately absent: quota needs a credential-bearing subscription endpoint and handoff needs a transcript distiller, neither of which the declarative catalogue can express. Declaring them without an implementation would be the silent half-wiring the spec rejects.",
   "capabilities": {
     "sessions": true,
     "handoff": false,
     "apiUsage": false,
     "quota": false,
-    "executionStatus": false,
+    "executionStatus": true,
     "attentionStatus": false
   },
 
@@ -49,6 +49,15 @@
     "workspace": { "kind": "scanAbsolutePaths", "parentOf": true, "requireMarker": ".git" },
 
     "title": { "kind": "record", "where": { "role": "user" }, "index": 0, "path": "content", "as": "first-user-message" }
+  },
+
+  "$comment_executionStatus": "豆包 trajectory.jsonl carries no timestamps and no native turn-terminal field: records are only OpenAI-shaped role/content entries, and 62% of real sessions end on a tool record because the file is not rewritten when a run ends. A live 'working' state therefore cannot be told apart from a crashed mid-tool session, and no error marker exists. The honest, zero-false-positive signal this format DOES support is 'an assistant turn exists', which maps to idle ('last known non-error state') rather than fabricating working/error. where+path read the assistant record's own role field purely to exercise the closed declarative catalogue — no expression, no free-text inference.",
+  "executionStatus": {
+    "kind": "transcript",
+    "where": { "role": "assistant" },
+    "path": "role",
+    "pick": "last",
+    "map": { "assistant": "idle" }
   },
 
   "resources": { "kind": "none" },

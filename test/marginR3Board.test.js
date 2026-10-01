@@ -169,6 +169,19 @@ test('R3 board treats timestamp-only discoveries as neutral historical sessions'
   assert.match(dot.title, /no live runtime evidence/i);
 });
 
+test('R3 board gives a transcript-confirmed idle session its own colour, distinct from unknown', async (t) => {
+  const dom = new JSDOM('<!doctype html><div id="root"></div>', { url: 'https://margin.test/' });
+  globalThis.window = dom.window; globalThis.document = dom.window.document; globalThis.HTMLElement = dom.window.HTMLElement; globalThis.Event = dom.window.Event;
+  globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+  const idle = { ...sessions[0], executionStatus: 'idle' };
+  const root = createRoot(document.getElementById('root')); t.after(async () => { await act(async () => root.unmount()); dom.window.close(); });
+  await act(async () => root.render(React.createElement(SessionBoard, { api: {}, sessions: [idle], loading: false, error: null, onRetry() {} })));
+  const dot = document.querySelector('.margin-status-dot');
+  assert.ok(dot.classList.contains('is-idle'));
+  assert.ok(!dot.classList.contains('is-neutral'), 'idle is a confirmed state, not the grey no-evidence dot');
+  assert.match(dot.title, /finished its last turn/i);
+});
+
 test('S8.2.3 source revision renders unified execution and attention colors', async (t) => {
   const dom = new JSDOM('<!doctype html><div id="root"></div>', { url: 'https://margin.test/' });
   globalThis.window = dom.window; globalThis.document = dom.window.document; globalThis.HTMLElement = dom.window.HTMLElement; globalThis.Event = dom.window.Event;

@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { resolveWorkspaceIdentity } from '../core/handoff/session-source.js';
 import { titleDto } from './sessionTitle.js';
 import { archiveStateRevision, readClaudeArchiveState } from './claude/claudeArchiveState.js';
+import { readClaudeExecutionStatus, readPiExecutionStatus } from './executionStatus.js';
 
 const validTime = (value) => typeof value === 'string' && Number.isFinite(Date.parse(value)) ? new Date(value).toISOString() : null;
 const string = (value) => typeof value === 'string' && value.trim() ? value.trim() : null;
@@ -54,11 +55,11 @@ function textContent(record) {
   if (typeof content === 'string') return content;
   return Array.isArray(content) ? content.filter((item) => item?.type === 'text' && typeof item.text === 'string').map((item) => item.text).join('\n') : null;
 }
-function projected({ agentType, sourceId, nativeSessionId, cwd, createdAt, updatedAt, originalPath, model = null, provider = null, nativeTitle = null, metadataTitle = null, firstUserMessage = null }) {
+function projected({ agentType, sourceId, nativeSessionId, cwd, createdAt, updatedAt, originalPath, model = null, provider = null, nativeTitle = null, metadataTitle = null, firstUserMessage = null, executionStatus = 'unknown' }) {
   if (!nativeSessionId || !cwd || !createdAt || !updatedAt) return null;
   const identity = resolveWorkspaceIdentity({ cwd });
   return { id: nativeSessionId, nativeSessionId, sourceId, agentType, canonicalId: `${agentType}:${sourceId}:${nativeSessionId}`,
-    cwd, createdAt, updatedAt, originalPath, model, provider, executionStatus: 'unknown', attentionStatus: 'none', ...titleDto({ nativeTitle, metadataTitle, firstUserMessage, nativeSessionId }), ...identity };
+    cwd, createdAt, updatedAt, originalPath, model, provider, executionStatus, attentionStatus: 'none', ...titleDto({ nativeTitle, metadataTitle, firstUserMessage, nativeSessionId }), ...identity };
 }
 
 function collectRevisionStats(dir, entries) {
@@ -113,7 +114,7 @@ export async function discoverClaudeSessions(source, { archiveReader = readClaud
       const nativeTitle = records.map((record) => string(record?.aiTitle)).find(Boolean);
       const metadataTitle = records.map((record) => string(record?.title) ?? string(record?.name) ?? string(record?.summary)).find(Boolean);
       const firstUserMessage = records.map(textContent).find(Boolean);
-      const result = projected({ agentType: 'claude', sourceId: source.sourceId ?? source.id, nativeSessionId, cwd, createdAt: times[0], updatedAt: [...times].sort().at(-1), originalPath: file, model, nativeTitle, metadataTitle, firstUserMessage });
+      const result = projected({ agentType: 'claude', sourceId: source.sourceId ?? source.id, nativeSessionId, cwd, createdAt: times[0], updatedAt: [...times].sort().at(-1), originalPath: file, model, nativeTitle, metadataTitle, firstUserMessage, executionStatus: readClaudeExecutionStatus(records) });
       if (result) output.push(result);
     }
   }
@@ -138,7 +139,7 @@ export async function discoverPiSessions(source) {
       const metadataTitle = records.map((record) => string(record?.title) ?? string(record?.name) ?? string(record?.summary)).find(Boolean);
       const firstUserMessage = records.map(textContent).find(Boolean);
       const result = projected({ agentType: 'pi', sourceId: source.sourceId ?? source.id, nativeSessionId: string(session.id), cwd,
-        createdAt: times[0], updatedAt: [...times].sort().at(-1), originalPath: file, provider: string(latest.provider) ?? nested(latest, ['provider']), model: string(latest.model) ?? string(latest.modelId) ?? nested(latest, ['model', 'modelId']), metadataTitle, firstUserMessage });
+        createdAt: times[0], updatedAt: [...times].sort().at(-1), originalPath: file, provider: string(latest.provider) ?? nested(latest, ['provider']), model: string(latest.model) ?? string(latest.modelId) ?? nested(latest, ['model', 'modelId']), metadataTitle, firstUserMessage, executionStatus: readPiExecutionStatus(records) });
       if (result) output.push(result);
     }
   }

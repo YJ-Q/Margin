@@ -199,6 +199,8 @@ test('the 豆包 plugin installs itself, reads a real workspace, and uninstalls 
   assert.equal(sessions[0].nativeSessionId, '38444176668977666');
   assert.equal(sessions[0].agentType, 'doubao');
   assert.match(sessions[0].displayTitle, /Margin Smart Handoff/);
+  assert.equal(sessions[0].executionStatus, 'idle', 'the last assistant turn maps to idle even when a tool record trails it');
+  assert.equal(sessions[0].capabilities.executionStatus, true);
   assert.equal(adapter.probe({ ...source, path: env.USERPROFILE }, { env }).valid, false, 'the probe rejects a wrong directory');
 
   const uninstall = uninstallAgentDescriptor({ type: 'doubao', env });
