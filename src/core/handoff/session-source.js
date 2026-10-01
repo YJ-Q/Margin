@@ -109,7 +109,9 @@ function validNativeSessionId(value) {
 // tracker, so an old unmatched `task_started` can never revive a green dot after restart.
 const runtimeTrackersByHome = new Map();
 
-function trackerFor(codexHome) {
+// Per-home runtime tracker, exported so the adapter contract can wire a post-discovery
+// executionStatus refresh without re-running full session discovery.
+export function trackerFor(codexHome) {
   let tracker = runtimeTrackersByHome.get(codexHome);
   if (!tracker) {
     tracker = { initialized: false, rollouts: new Map(), executionStatus: new Map(), lifecycleWatermark: new Map(), terminalLkg: new Map() };
@@ -413,7 +415,9 @@ export function resumableSessions(discovered, { limit, sourceId = 'default', age
   return limit ? sessions.slice(0, limit) : sessions;
 }
 
-async function composeCodexTerminalStatuses(sessions, home, tracker) {
+// Post-discovery terminal status enrichment, exported so the adapter contract can wire
+// a `readExecutionStatus` step for Codex without re-running full session discovery.
+export async function composeCodexTerminalStatuses(sessions, home, tracker) {
   const composed = [];
   for (const session of sessions) {
     const native = await readLatestCodexTurnStatus(home, session.nativeSessionId);

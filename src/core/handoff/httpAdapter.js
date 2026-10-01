@@ -206,10 +206,19 @@ export function createHandoffHttpAdapter({
       if (result?.ok) {
         // A successful empty read is authoritative and therefore intentionally clears this
         // source's LKG.  Only an explicit failed result retains it.
-        sourceLastKnownGood.set(source.id, result.snapshots ?? []);
+        let snapshots = result.snapshots ?? [];
+        // Post-discovery executionStatus enrichment for built-in agents that provide a
+        // separate `readExecutionStatus` step. Transcript agents already get status during
+        // discovery via extractExecutionStatus, so they do not provide this method. A failure
+        // here is advisory only — sessions keep whatever executionStatus discovery set.
+        if (adapter.readExecutionStatus && snapshots.length) {
+          try { snapshots = await adapter.readExecutionStatus(snapshots, source, { ...options, env }); }
+          catch { /* status enrichment failure is never fatal to session display */ }
+        }
+        sourceLastKnownGood.set(source.id, snapshots);
         sourceReadStatus.set(source.id, { stale: false, unavailable: false, error: null });
         readableSources += 1;
-        return result.snapshots ?? [];
+        return snapshots;
       }
       sourceReadFailed = true;
       sourceReadStatus.set(source.id, { stale: true, unavailable: !sourceLastKnownGood.has(source.id), error: result?.error ?? null });

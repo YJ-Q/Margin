@@ -200,6 +200,26 @@ export function extractField(extractor, context) {
 
 const asString = (value) => (typeof value === 'string' && value.trim() ? value.trim() : null);
 
+// Extract executionStatus from transcript records using a declarative extractor.
+//
+// The extractor is the same bounded shape the spec validates: a `where` filter narrows to
+// status-bearing records, `path` reads a dotted field, and `map` translates the raw value
+// into one of the four Board status values ('unknown', 'working', 'idle', 'error').
+// `pick` selects which matching record wins (default: last = most recent).
+//
+// Returns 'unknown' when no records match or the mapped value is not in the map — never
+// invents a status from free text, the same completeness rule the title extractor follows.
+export function extractExecutionStatus(spec, records) {
+  if (!spec || spec.kind !== 'transcript') return 'unknown';
+  const where = spec.where ?? {};
+  const matching = records.filter((record) => matchesWhere(record, where));
+  if (!matching.length) return 'unknown';
+  const record = spec.pick === 'first' ? matching[0] : matching[matching.length - 1];
+  const raw = readPath(record, spec.path);
+  if (raw === null || raw === undefined) return 'unknown';
+  return spec.map?.[String(raw)] ?? spec.map?.[raw] ?? 'unknown';
+}
+
 // Structural probe: does this directory actually look like this Agent's home? Registered-but-empty
 // is otherwise indistinguishable from a mistyped path, which is what made onboarding opaque.
 export function probeDescriptor(descriptor, home, { profile = null, env = process.env } = {}) {
@@ -284,6 +304,12 @@ export function buildTranscriptSession(descriptor, source, { sessionDir, session
     : { firstUserMessage: rawTitle };
   const sourceId = source.sourceId ?? source.id;
   const identity = resolveWorkspaceIdentity({ cwd });
+  // executionStatus is extracted from the same transcript records the session discovery
+  // already parses. A descriptor without an executionStatus section stays 'unknown', which
+  // is the honest answer rather than a fabricated status.
+  const executionStatus = descriptor.executionStatus?.kind === 'transcript'
+    ? extractExecutionStatus(descriptor.executionStatus, records)
+    : 'unknown';
   return {
     id: nativeSessionId,
     nativeSessionId,
@@ -296,7 +322,7 @@ export function buildTranscriptSession(descriptor, source, { sessionDir, session
     originalPath,
     model: asString(extractField(spec.model, context)),
     provider: asString(extractField(spec.provider, context)),
-    executionStatus: 'unknown',
+    executionStatus,
     attentionStatus: 'none',
     ...titleDto({ ...titleInput, nativeSessionId }),
     ...identity,

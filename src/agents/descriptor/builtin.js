@@ -31,6 +31,10 @@ export const builtinDescriptors = Object.freeze([
     sessionCapabilities: { handoff: true, apiUsage: true, quota: true, executionStatus: true },
     sessions: { kind: 'builtin' },
     resources: { kind: 'builtin' },
+    // Codex reads executionStatus from its SQLite terminal projection during discovery,
+    // so this is builtin kind — the adapter's discovery function owns the full lifecycle
+    // + terminal composition. No separate readExecutionStatus step is needed.
+    executionStatus: { kind: 'builtin' },
     // Codex is the origin of the shared Handoff Core, so its capture/generate are the host-injected
     // Codex defaults rather than adapter-local methods.
     handoff: { kind: 'shared-codex' },

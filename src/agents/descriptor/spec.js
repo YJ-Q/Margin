@@ -29,6 +29,9 @@ export const DESCRIPTOR_CAPABILITIES = Object.freeze([
 export const SESSION_KINDS = Object.freeze(['builtin', 'transcript', 'none']);
 export const RESOURCE_KINDS = Object.freeze(['builtin', 'none']);
 export const HANDOFF_KINDS = Object.freeze(['none', 'builtin', 'shared-codex']);
+export const EXECUTION_STATUS_KINDS = Object.freeze(['none', 'transcript', 'builtin']);
+export const EXECUTION_STATUS_VALUES = Object.freeze(['unknown', 'working', 'idle', 'error']);
+export const EXECUTION_STATUS_PICK = Object.freeze(['first', 'last']);
 export const TRANSCRIPT_FORMATS = Object.freeze(['jsonl']);
 export const SESSION_LAYOUTS = Object.freeze(['directory-per-session', 'file-per-session']);
 export const TITLE_AS = Object.freeze(['native', 'metadata', 'first-user-message']);
@@ -134,6 +137,48 @@ function checkSessions(value, errors) {
   checkExtractor(value.provider, 'sessions.provider', errors, { allowNull: true });
 }
 
+// ExecutionStatus section — the declarative form for "how to read this Agent's session status".
+//
+// For `transcript` kind, the extractor reads from the same JSONL records the session discovery
+// already parses. A `where` filter narrows to status-bearing records, `path` reads a dotted field
+// from each match, and `map` translates the raw value into one of the four Board status values.
+// `pick` selects which matching record wins (default: last = most recent).
+//
+// For `builtin` kind, the adapter's `readExecutionStatus` method handles enrichment after
+// discovery. For `none` kind (or when the section is absent), executionStatus stays 'unknown'.
+function checkExecutionStatus(value, errors) {
+  if (value === undefined || value === null) return;
+  if (!isPlainObject(value)) { errors.push('executionStatus must be an object'); return; }
+  if (!EXECUTION_STATUS_KINDS.includes(value.kind)) {
+    errors.push(`executionStatus.kind must be one of ${EXECUTION_STATUS_KINDS.join(', ')}`);
+    return;
+  }
+  if (value.kind === 'transcript') {
+    if (value.where !== undefined) {
+      if (!isPlainObject(value.where)) errors.push('executionStatus.where must be an object of literal equalities');
+      else for (const [key, expected] of Object.entries(value.where)) {
+        if (!key.trim()) errors.push('executionStatus.where has an empty key');
+        if (expected !== null && typeof expected !== 'string' && typeof expected !== 'number' && typeof expected !== 'boolean') {
+          errors.push(`executionStatus.where.${key} must be a string, number, boolean, or null literal`);
+        }
+      }
+    }
+    if (!nonEmptyString(value.path)) errors.push('executionStatus.path is required for transcript kind');
+    if (!isPlainObject(value.map)) errors.push('executionStatus.map is required for transcript kind');
+    else {
+      for (const [raw, mapped] of Object.entries(value.map)) {
+        if (!EXECUTION_STATUS_VALUES.includes(mapped)) {
+          errors.push(`executionStatus.map.${raw} must be one of ${EXECUTION_STATUS_VALUES.join(', ')}`);
+        }
+      }
+    }
+    if (value.pick !== undefined && !EXECUTION_STATUS_PICK.includes(value.pick)) {
+      errors.push(`executionStatus.pick must be one of ${EXECUTION_STATUS_PICK.join(', ')}`);
+    }
+  }
+  // builtin kind: no extra fields to validate — the adapter contract handles wiring.
+}
+
 export function validateDescriptor(value) {
   const errors = [];
   if (!isPlainObject(value)) return { ok: false, errors: ['descriptor must be an object'] };
@@ -197,6 +242,8 @@ export function validateDescriptor(value) {
 
   checkSessions(value.sessions, errors);
 
+  checkExecutionStatus(value.executionStatus, errors);
+
   if (value.probe !== undefined) {
     if (!isPlainObject(value.probe)) errors.push('probe must be an object');
     else if (!Array.isArray(value.probe.anyOf) || value.probe.anyOf.length === 0) errors.push('probe.anyOf must be a non-empty array');
@@ -238,6 +285,19 @@ export function validateDescriptor(value) {
   }
   if (sessionKind === 'builtin' && capabilities.sessions === false) {
     errors.push('capabilities.sessions cannot be false when sessions.kind is builtin');
+  }
+  // executionStatus capability must match its wiring. A descriptor that claims
+  // executionStatus: true without a transcript extractor or built-in reader is
+  // half-wired — the Board would show green/amber/red dots from 'unknown' data.
+  const executionStatusKind = value.executionStatus?.kind ?? 'none';
+  if (capabilities.executionStatus === true && executionStatusKind === 'none' && sessionKind !== 'builtin') {
+    errors.push('capabilities.executionStatus is true but executionStatus.kind is none or missing');
+  }
+  if (executionStatusKind === 'builtin' && sessionKind !== 'builtin') {
+    errors.push('executionStatus.kind builtin requires sessions.kind builtin');
+  }
+  if (executionStatusKind === 'transcript' && sessionKind !== 'transcript') {
+    errors.push('executionStatus.kind transcript requires sessions.kind transcript');
   }
 
   return { ok: errors.length === 0, errors };
@@ -292,6 +352,17 @@ export function normalizeDescriptor(value) {
         title: value.sessions.title ? Object.freeze({ ...value.sessions.title, as: value.sessions.title.as ?? 'first-user-message' }) : null,
       })
       : Object.freeze({ kind: value.sessions.kind }),
+    executionStatus: value.executionStatus
+      ? Object.freeze({
+        kind: value.executionStatus.kind,
+        ...(value.executionStatus.kind === 'transcript' ? Object.freeze({
+          where: Object.freeze({ ...(value.executionStatus.where ?? {}) }),
+          path: value.executionStatus.path,
+          map: Object.freeze({ ...value.executionStatus.map }),
+          pick: value.executionStatus.pick ?? 'last',
+        }) : {}),
+      })
+      : null,
     probe: value.probe ? Object.freeze({ anyOf: Object.freeze(value.probe.anyOf.map((entry) => Object.freeze({ ...entry }))) }) : null,
     resources: Object.freeze({ kind: value.resources?.kind ?? 'none' }),
     handoff: Object.freeze({ kind: handoffKind }),

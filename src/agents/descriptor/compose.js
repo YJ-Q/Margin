@@ -88,6 +88,9 @@ export function compositionProblems(descriptor, { hasBuiltinAdapter = false } = 
   if (descriptor.handoff.kind !== 'none' && !hasBuiltinAdapter) {
     problems.push(`handoff.kind ${descriptor.handoff.kind} requires a built-in adapter for type "${descriptor.type}"`);
   }
+  if (descriptor.executionStatus?.kind === 'builtin' && !hasBuiltinAdapter) {
+    problems.push(`executionStatus.kind builtin requires a built-in adapter for type "${descriptor.type}"`);
+  }
   return problems;
 }
 
@@ -153,6 +156,14 @@ export function composeAdapter(descriptor, {
     collectResourceSnapshot,
     // `probe` is what turns "registered but returns nothing" into an actionable message.
     probe: (source, options = {}) => probeDescriptor(descriptor, source?.path ?? null, { ...readerOptions, ...options }),
+    // `readExecutionStatus` is an optional post-discovery enrichment step for built-in agents
+    // whose status reading cannot be expressed declaratively (e.g. Codex's SQLite terminal
+    // status). Transcript agents already get status during discovery via extractExecutionStatus,
+    // so they do not need this method. When absent, sessions keep whatever executionStatus
+    // discovery set.
+    ...(builtinAdapter?.readExecutionStatus && descriptor.executionStatus?.kind === 'builtin'
+      ? { readExecutionStatus: builtinAdapter.readExecutionStatus }
+      : {}),
   };
 
   // Handoff is the one capability with no declarative form: the shared Handoff Core consumes
