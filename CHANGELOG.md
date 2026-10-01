@@ -27,6 +27,7 @@ All notable changes to Margin will be documented in this file.
 - host-owned persistent Run start, status, pause, resume, stop, and checkpoint controls with restart recovery
 - read-only legacy Echo inventory and explicit approval-gated export tooling
 - transcript-derived `executionStatus` for Claude (`stop_reason` / `isApiErrorMessage`) and Pi (`stopReason`) built-in sessions, plus a declarative idle status for 豆包; the Web Board now renders a confirmed-idle dot distinct from the grey no-evidence state (Task 111)
+- the Phase 0/1 PoC **Review conclusion** (`docs/validation/margin_poc_review_conclusion.md`): answers "how much valid development state is recovered per 1K tokens" from the frozen evidence — ~1.9K median handoff tokens, 50/50 correct fields on the 10 parseable single-model B-arm runs (~1.87 correct fields/1K tokens; 1.56 as-run), byte median compression 99.4% — and records a conditional-Go verdict with four gated next steps
 
 ### Changed
 
