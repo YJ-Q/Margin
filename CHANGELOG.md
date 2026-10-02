@@ -28,6 +28,7 @@ All notable changes to Margin will be documented in this file.
 - read-only legacy Echo inventory and explicit approval-gated export tooling
 - transcript-derived `executionStatus` for Claude (`stop_reason` / `isApiErrorMessage`) and Pi (`stopReason`) built-in sessions, plus a declarative idle status for 豆包; the Web Board now renders a confirmed-idle dot distinct from the grey no-evidence state (Task 111)
 - the Phase 0/1 PoC **Review conclusion** (`docs/validation/margin_poc_review_conclusion.md`): answers "how much valid development state is recovered per 1K tokens" from the frozen evidence — ~1.9K median handoff tokens, 50/50 correct fields on the 10 parseable single-model B-arm runs (~1.87 correct fields/1K tokens; 1.56 as-run), byte median compression 99.4% — and records a conditional-Go verdict with four gated next steps
+- **Review Gate 1 — structured resumption output** (`src/core/handoff/recoveryJson.js`, dependency-free and browser-safe): a tolerant string-aware extractor (prose-prefixed bare JSON, fenced / trailing-fence JSON, braces inside strings, truncated-tail and raw-control-char repair), closed-schema validation and normalisation for the 5 graded fields plus `currentApplicability` / `unsafeAssumptions`, a strict `json_schema` / `json_object` / prompt-only `response_format` builder, and a no-tool recovery turn for tool-only stops. Replaying the frozen R7 B-runs shows the old harness had mis-scored `case-09-B` (complete JSON after a prose prefix) as NO-JSON — it now parses ready — while only `case-02-B` (genuinely empty final text) routes to the recovery turn
 
 ### Changed
 
@@ -47,6 +48,7 @@ All notable changes to Margin will be documented in this file.
 
 - obsolete Electron shell, static Margin frontend, desktop launchers, and Electron dependency
 - UI-centred case-study site, screenshots, generated PDFs, frontend mocks, build scripts, and artifact-only tests
+- the local frozen legacy Echo dataset and its full-content export by recorded user decision on 2026-10-02 — `data/echo.sqlite`, `data/echo.sqlite-shm`, `data/echo.sqlite-wal`, and `data/exports/echo-legacy-2026-09-26.json`. The read-only inventory/export had already run and the table-by-table disposition was recorded; the database/schema/export SHA-256 hashes remain as permanent audit evidence in `docs/audit/legacy_retirement_plan.md` §7, and the content can no longer be re-exported
 
 ### Security
 
@@ -59,11 +61,13 @@ All notable changes to Margin will be documented in this file.
 
 - the production chat path has not been migrated to Pi
 - production use still requires an explicit credential-management and provider-configuration design; the isolated YAPI-backed Stage 0 spike has passed
-- production chat integration, legacy-data migration, comparative evaluation, and real-user research remain future stages
+- production chat integration, comparative evaluation, and real-user research remain future stages; legacy-data migration is now off the table — the legacy dataset was discarded rather than migrated (see Removed and the 2026-10-02 retirement decision)
 - Stage 3 does not activate production chat, migrate legacy data, run the 50-task evaluation, compare A/B/C baselines, measure recall, or conduct user research
+- of the four conditional-Go gates in the PoC Review conclusion, Gate 1 (structured resumption output + fallback) is now implemented; Gates 2–4 remain external-dependency work — replay on ≥2 heterogeneous models, an independent non-Margin failure→fix→test A/B sample, and a runtime that reports provider input tokens with per-run fs allowlist before scaling to the 50-task run and user research
 
 ### Verified
 
+- Review Gate 1 + legacy Echo retirement on 2026-10-02: full suite `643/643` passes (18 new `test/recoveryJson.test.js` cases, including three that read the frozen R7 evidence — 10 parseable B-runs stay ready, `case-09-B` recovers as embedded JSON, `case-02-B` routes to the no-tool recovery turn); the legacy guard now asserts the recorded 2026-10-02 deletion and that `data/echo.sqlite*` and its export stay absent
 - production web packaging on 2026-10-02: `vite build` emits `dist/margin.html` + hashed assets and a real production server serves them at `/` (assets resolve, `/api/*` wins, unknown paths 404); full suite `625/625` passes, and the tracked-tree privacy guard is green after redacting the experiments manifest
 - Task 111 multi-Agent execution status: full suite `622/622` automated tests pass on 2026-10-02, including Claude/Pi built-in transcript-status discovery, 豆包 declarative idle, and the confirmed-idle Board dot
 - Phase 2A final-fix acceptance: `352/352` automated tests, Stage 1 fixture validation `10/10`, and Pi baseline audit passed on 2026-08-24; YAPI Live Pi was not rerun and remains a declared gap
