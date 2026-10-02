@@ -22,8 +22,10 @@ through the trusted Application Gateway (`execute`, `query`, and `events`). It
 does not import the legacy application, routes, or legacy memory store, and it
 does not create a second SQLite database or browser shadow state.
 
-The frozen legacy `data/echo.sqlite` database is not migrated, merged, or
-double-written by the Workbench.
+The legacy Echo dataset is retired: it is not migrated, merged, or
+double-written, and the local frozen `data/echo.sqlite` copy was physically
+deleted on 2026-10-02 after a recorded decision
+(`docs/audit/legacy_retirement_plan.md` §7).
 
 ## Quick Start
 
@@ -92,16 +94,17 @@ Its commands include `/state`, `/status`, `/pause`, `/resume`, `/stop`,
 `/checkpoint`, `/memory`, `/confirm-memory <memoryId> <version>`, `/new`, and
 `/exit`.
 
-The old Express product API and its data are archived. The launcher is retained
-for a clear migration message and exits without starting a server:
+The old Express product API is archived; its local dataset has since been
+physically deleted (2026-10-02). The launcher is retained for a clear migration
+message and exits without starting a server:
 
 ```powershell
 npm run legacy:api
 ```
 
 `run-echo-local.cmd` reports the same archived status. The historical API
-source remains in the repository for review; the frozen `data/echo.sqlite`
-database is not opened for writes by either launcher.
+source remains in the repository for review, but neither launcher starts a
+server or opens a database.
 
 ## Web Transport
 
@@ -167,17 +170,21 @@ static claim.
 
 ## Legacy Data Archive
 
-The old database is preserved unchanged. A read-only inventory and explicit,
-non-overwriting export remain available:
+The local legacy dataset (`data/echo.sqlite*` and its full-content JSON export)
+was physically deleted on 2026-10-02 by recorded user decision, after the
+read-only inventory and a non-overwriting export had been completed. The
+read-only inventory and approval-gated export scripts remain for any other
+explicit database path:
 
 ```powershell
 npm run inventory:legacy
-npm run export:legacy -- data/echo.sqlite --approve --output data/exports/echo-legacy-copy.json
+npm run export:legacy -- <path-to-another-sqlite> --approve --output data/exports/echo-legacy-copy.json
 ```
 
-The original `data/echo.sqlite` and the earlier full JSON export are retained
-locally. See `docs/audit/legacy_retirement_plan.md` for hashes and disposition,
-and `docs/architecture/phase_1_persistent_core.md` for the authoritative Core.
+The original database can no longer be re-exported. Its file/schema/export
+SHA-256 hashes and the table-by-table disposition remain as permanent audit
+evidence in `docs/audit/legacy_retirement_plan.md`; see
+`docs/architecture/phase_1_persistent_core.md` for the authoritative Core.
 
 ## License
 

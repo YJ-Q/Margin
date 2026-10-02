@@ -1,7 +1,7 @@
 # Legacy Retirement Plan（P3）
 
-状态：**数据与功能已本地归档；旧 API 启动入口已关闭**
-日期：2026-09-26
+状态：**旧 API 启动入口已关闭；本地 legacy 数据集已于 2026-10-02 经用户决定物理删除（见 §7）**
+日期：2026-09-26（2026-10-02 更新，见 §7）
 前置：`docs/audit/legacy_data_disposition.md`（Phase 1 的边界与策略）、`docs/architecture/2026-09-26-architecture-inventory-and-consolidation-plan.md` §P3
 
 ## 1. 边界（不变）
@@ -44,7 +44,7 @@ npm run inventory:legacy
 - [x] **逐表用户决定**：10 张表均归档，不迁移、不删除
 - [x] 导出完成，JSON 内 10 张表的行数与上表逐项相符；导出文件 SHA-256：`49716bb9ac71d3ea4907ec3df03287b0b5ffa9697da26209964b1eeb2b697702`
 
-`data/echo.sqlite` 是保留的原始归档，不删除（已由 `test/legacyRetirement.test.js` 断言）。
+~~`data/echo.sqlite` 是保留的原始归档，不删除（2026-09-26 当时的决定）。~~ 该保留决定已被 **2026-10-02 用户决定**取代：本地 legacy 数据集物理删除，见 §7。
 
 ## 4. 端点侧：真正的发现 —— 5 个功能只存在于废弃表面上
 
@@ -78,7 +78,7 @@ npm run inventory:legacy
 1. **当前入口不可达 legacy**：对 `scripts/run-margin-surface.js`、`scripts/run-web-workbench.js`、`electron/main.js`、`bin/margin.js` 做**静态 import 图遍历**，断言可达集合里不含 `src/app.js`、`src/storage/memoryStore.js`、`src/config/env.js`、`src/routes/**`、`src/services/**`。
    → 没有这条，一次重构就能把 `src/services/*` 悄悄重新引进默认表面，而冻结只存在于文档里。
 2. **旧入口不可启动**：`src/server.js` 无监听器，即使传入旧 `MARGIN_ENABLE_LEGACY_API=true` 也返回 `legacy_api_archived`；`scripts/run-legacy-api.js` 不再设置该变量。
-3. **数据集保留**：`data/echo.sqlite` 必须存在，且本文必须覆盖全部 10 张表（漏一张表就失败，防止在决定时遗漏）。
+3. **数据集退役终态**：本文必须覆盖全部 10 张表（漏一张就失败，防止在决定时遗漏），并必须记录物理删除决策（§7 锚点）；`data/echo.sqlite*` 现在必须**不存在**——此断言已随 2026-10-02 的删除决定从「保留直到决策」翻转为「确认已退役、不得复活」。
 
 ### 5.2 已确认的边界事实
 
@@ -94,3 +94,28 @@ npm run export:legacy -- data/echo.sqlite --approve --output data/exports/echo-l
 ```
 
 导出需要 `--approve` 与新路径，覆盖会被拒绝。导出物包含记录正文，因此 `data/exports/` 已在 `.gitignore` 中。
+
+## 7. 物理删除本地 legacy 数据集（2026-10-02 用户决定）
+
+<!-- legacy-echo-dataset-physically-deleted:2026-10-02 -->
+
+**决定**：用户确认 Echo 旧产品内容已全部不再需要，授权物理删除本地冻结 legacy 数据集及其 JSON 导出。延续 §3 的方向，10 张表全部 **discard，不迁入 Margin Core**。
+
+删除前的退役门槛均已在前序阶段满足，删除不是绕过流程：
+
+- [x] 只读清点与逐表处置：§2 覆盖全部 10 张表（2026-09-26 复核行数与 Phase 1 一致）
+- [x] 全量导出：2026-09-26 已导出，行数与清单逐项相符（见 §3）
+- [x] 逐表用户决定：10 张表均不迁移（§3，2026-09-26）；2026-10-02 进一步决定连本地原库与导出一并删除
+
+删除清单（均为本地、Git 忽略的运行时数据）：
+
+- `data/echo.sqlite`
+- `data/echo.sqlite-shm`
+- `data/echo.sqlite-wal`
+- `data/exports/echo-legacy-2026-09-26.json`
+
+删除后留存的**永久审计证据**（不依赖原库）：数据库文件 SHA-256 `1f565309…78a9f1`、Schema 哈希 `4c4fc799…619fdbd`、导出文件 SHA-256 `49716bb9…b2b697702`，以及 §2 的逐表行数。原始记录正文随本次删除不可再得——这是用户明确接受的结果。
+
+不受影响的部分：`data/terminal-pilot/margin-core.sqlite` 仍是唯一 Source of Truth；`src/app.js`、`src/routes/`、`src/services/` 等历史源码继续保留在 Git 中供审计；`inventory:legacy` / `export:legacy` 脚本保留，但对已删除的默认库路径会报告文件缺失（可对其它显式路径使用）。
+
+守卫同步：`test/legacyRetirement.test.js` 的数据集断言已从「`data/echo.sqlite` 必须存在直到记录决策」翻转为「删除决策已在本节记录（上面的锚点）、10 张表仍被本文覆盖、且 `data/echo.sqlite*` 与该导出文件不存在」，以确认退役终态并防止旧库被悄悄重新引入。
