@@ -5,6 +5,16 @@ export { distill } from './distiller.js';
 export { selectSmart } from './smartSelect.js';
 export { renderSmartHandoff } from './handoff.js';
 export { projectResumeSummary } from './resume-summary.js';
+export {
+  extractRecoveryObject,
+  validateRecoveryObject,
+  parseRecovery,
+  buildStructuredRecoveryRequest,
+  buildRecoveryTurnMessage,
+  RECOVERY_REQUIRED_FIELDS,
+  RECOVERY_ALL_FIELDS,
+  RECOVERY_JSON_SCHEMA
+} from './recoveryJson.js';
 export { createWorkspaceOverview, selectLatestSession } from './workspace-overview.js';
 export { createHandoffArtifact, snapshotPathForCanonicalSession } from './handoffArtifact.js';
 export { saveHandoffArtifact } from './save.js';
