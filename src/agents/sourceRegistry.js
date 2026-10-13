@@ -194,7 +194,7 @@ export function detectAgentSources(registry, options = {}) {
   const detected = [];
   for (const descriptor of descriptorsFor(options).descriptors) {
     for (const candidate of resolveAgentHome(descriptor, { env: options.env ?? process.env, homedir: options.homedir, profile: profileOf(options) }).candidates) {
-      if (!candidate.exists) continue;
+      if (!candidate.exists || candidate.unsafe) continue;
       const source = normalizeSource({ type: descriptor.type, path: candidate.path, name: descriptor.label, origin: 'auto' }, options);
       if (!validateSource(source).valid) continue;
       next = registerAgentSource(next, source, options);

@@ -26,6 +26,17 @@ export const DESCRIPTOR_CAPABILITIES = Object.freeze([
   'sessions', 'handoff', 'apiUsage', 'quota', 'executionStatus', 'attentionStatus', 'subscriptionQuota',
 ]);
 
+// The closed set of top-level keys. A descriptor that misspells one of these — the classic
+// `resource` for `resources`, or `root` for `roots` — would otherwise be silently ignored and the
+// capability it names would quietly default off. For a human author that is a footgun; for an
+// Agent-authored descriptor it is the single most likely failure mode. `$comment*` keys remain
+// reserved at every level and are always ignored.
+export const DESCRIPTOR_TOP_LEVEL_KEYS = Object.freeze([
+  'specVersion', 'type', 'label', 'provider', 'resourceAgent', 'defaultSourceName',
+  'quotaPrefix', 'envHome', 'order', 'supportLevel', 'defaultHome', 'homeCandidates',
+  'capabilities', 'sessionCapabilities', 'sessions', 'executionStatus', 'probe', 'resources', 'handoff',
+]);
+
 export const SESSION_KINDS = Object.freeze(['builtin', 'transcript', 'none']);
 export const RESOURCE_KINDS = Object.freeze(['builtin', 'none']);
 export const HANDOFF_KINDS = Object.freeze(['none', 'builtin', 'shared-codex']);
@@ -41,6 +52,56 @@ const EXTRACTOR_KINDS = Object.freeze(['directoryName', 'filename', 'mtime', 're
 
 const isPlainObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 const nonEmptyString = (value) => typeof value === 'string' && value.trim().length > 0;
+
+// Small, bounded suggestion helper for the closed-key error. It only exists to turn
+// `unknown key "resource"` into a message a descriptor author can act on immediately.
+function editDistance(left, right) {
+  const a = String(left);
+  const b = String(right);
+  const previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i += 1) {
+    let prior = previous[0];
+    previous[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const current = previous[j];
+      previous[j] = Math.min(previous[j] + 1, previous[j - 1] + 1, prior + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prior = current;
+    }
+  }
+  return previous[b.length];
+}
+
+function nearestKey(key, candidates) {
+  let best = null;
+  let bestDistance = Infinity;
+  for (const candidate of candidates) {
+    const distance = editDistance(key, candidate);
+    if (distance < bestDistance) { bestDistance = distance; best = candidate; }
+  }
+  return bestDistance <= Math.max(2, Math.floor(key.length / 3)) ? best : null;
+}
+
+// Unknown top-level keys are an error, not a silent default. Nested comment keys stay ignored.
+function checkTopLevelKeys(value, errors) {
+  for (const key of Object.keys(value)) {
+    if (key.startsWith('$comment')) continue;
+    if (DESCRIPTOR_TOP_LEVEL_KEYS.includes(key)) continue;
+    const suggestion = nearestKey(key, DESCRIPTOR_TOP_LEVEL_KEYS);
+    errors.push(`unknown top-level key "${key}"${suggestion ? `; did you mean "${suggestion}"?` : ''}`);
+  }
+}
+
+// A session root must be anchored at the Agent's own home. Without this, `{profile}` or `C:/` is a
+// legal root and Margin enumerates files the user never associated with the Agent. The read path
+// re-checks containment after expansion, so a traversal such as `{home}/../..` is refused there too.
+function checkSessionRoot(root, label, errors) {
+  if (!nonEmptyString(root)) return;
+  const normalized = root.replace(/\\/g, '/');
+  if (normalized === '{home}') return;
+  if (!normalized.startsWith('{home}/')) {
+    errors.push(`${label} must be {home} or a path beneath it so reads stay inside the Agent home`);
+  }
+}
 
 function checkTemplateString(value, label, errors) {
   if (!nonEmptyString(value)) { errors.push(`${label} must be a non-empty string`); return; }
@@ -112,7 +173,10 @@ function checkSessions(value, errors) {
   if (value.kind !== 'transcript') return;
 
   if (!Array.isArray(value.roots) || value.roots.length === 0) errors.push('sessions.roots must be a non-empty array');
-  else value.roots.forEach((root, index) => checkTemplateString(root, `sessions.roots[${index}]`, errors));
+  else value.roots.forEach((root, index) => {
+    checkTemplateString(root, `sessions.roots[${index}]`, errors);
+    checkSessionRoot(root, `sessions.roots[${index}]`, errors);
+  });
 
   if (value.layout !== undefined && !SESSION_LAYOUTS.includes(value.layout)) {
     errors.push(`sessions.layout must be one of ${SESSION_LAYOUTS.join(', ')}`);
@@ -182,6 +246,8 @@ function checkExecutionStatus(value, errors) {
 export function validateDescriptor(value) {
   const errors = [];
   if (!isPlainObject(value)) return { ok: false, errors: ['descriptor must be an object'] };
+
+  checkTopLevelKeys(value, errors);
 
   if (value.specVersion !== DESCRIPTOR_SPEC_VERSION) {
     errors.push(`specVersion must be ${DESCRIPTOR_SPEC_VERSION}`);
@@ -298,6 +364,16 @@ export function validateDescriptor(value) {
   }
   if (executionStatusKind === 'transcript' && sessionKind !== 'transcript') {
     errors.push('executionStatus.kind transcript requires sessions.kind transcript');
+  }
+  // Resource-family capabilities follow the same principle already enforced for handoff and
+  // executionStatus: a flag may only be set when a declared reader can deliver it. A misspelled
+  // `resource` is caught by the closed key set above; this catches the subtler case of a capability
+  // with no resource wiring at all, which would otherwise render as permanently `unavailable`.
+  const resourcesKind = value.resources?.kind ?? 'none';
+  for (const capability of ['quota', 'apiUsage', 'subscriptionQuota']) {
+    if (capabilities[capability] === true && resourcesKind === 'none') {
+      errors.push(`capabilities.${capability} is true but resources.kind is none; declare a resource reader that can deliver it`);
+    }
   }
 
   return { ok: errors.length === 0, errors };

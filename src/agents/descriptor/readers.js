@@ -23,6 +23,25 @@ export function expandTemplate(template, { home = null, profile = null, env = pr
     .replace(/%ENV:([A-Z0-9_]+)%/g, (_match, name) => String(env?.[name] ?? '').trim());
 }
 
+// Read-scope containment: a resolved session root must stay inside the resolved Agent home. This is
+// the one boundary standing between a self-declared descriptor and "enumerate the user's home
+// directory". `path.relative` is used rather than a string prefix so `...home` and
+// `...home-evil` are not mistaken for children.
+export function isPathContained(candidate, root) {
+  if (!candidate || !root) return false;
+  const relative = path.relative(path.resolve(root), path.resolve(candidate));
+  return relative === '' || (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+}
+
+// A resolved home may not be the filesystem root or the profile root: either would turn the
+// descriptor's own declared home into an unbounded read scope.
+export function isUnsafeIntegrationRoot(target, profile = null) {
+  if (!target) return true;
+  const resolved = path.resolve(target);
+  if (resolved === path.parse(resolved).root) return true;
+  return Boolean(profile) && resolved === path.resolve(profile);
+}
+
 // `*` never crosses a separator; `**` matches zero or more whole segments. Everything else is
 // escaped, so a descriptor cannot smuggle a regex in through a glob.
 export function globToRegExp(pattern) {
@@ -266,6 +285,9 @@ export function resolveAgentHome(descriptor, { env = process.env, homedir = os.h
     const fromEnv = candidate.env ? String(env[candidate.env] ?? '').trim() : '';
     const expanded = fromEnv || expandTemplate(candidate.fallback, { home: null, profile: resolvedProfile, env });
     const target = expanded ? path.resolve(expanded) : null;
+    // Unsafe roots are reported but never resolved: a descriptor cannot widen its read scope by
+    // declaring the profile root (or a drive root) as its home.
+    const unsafe = Boolean(target) && isUnsafeIntegrationRoot(target, resolvedProfile);
     // Two candidates often describe the SAME place by different means (an explicit env var and the
     // profile-relative default). Reporting the same directory twice makes a working install look
     // broken, so the report is keyed on resolved locations, not on how each was derived.
@@ -274,13 +296,18 @@ export function resolveAgentHome(descriptor, { env = process.env, homedir = os.h
     seen.add(key);
     let exists = false;
     try { exists = Boolean(target) && fs.statSync(target).isDirectory(); } catch { exists = false; }
-    const probe = exists ? probeDescriptor(descriptor, target, { profile: resolvedProfile, env }) : { valid: false, reason: 'Path does not exist' };
-    candidates.push({ env: candidate.env ?? null, path: target, exists, probe });
+    const probe = !exists
+      ? { valid: false, reason: 'Path does not exist' }
+      : unsafe
+        ? { valid: false, reason: 'Path is the filesystem or profile root, not an Agent home' }
+        : probeDescriptor(descriptor, target, { profile: resolvedProfile, env });
+    candidates.push({ env: candidate.env ?? null, path: target, exists, unsafe, probe });
   }
   // Prefer a candidate that both exists and passes the descriptor's own probe: a real directory that
-  // does not look like the Agent is a far weaker signal than one that does.
-  const resolved = candidates.find((candidate) => candidate.exists && candidate.probe.valid)
-    ?? candidates.find((candidate) => candidate.exists)
+  // does not look like the Agent is a far weaker signal than one that does. Unsafe candidates are
+  // never eligible, however they were declared.
+  const resolved = candidates.find((candidate) => candidate.exists && !candidate.unsafe && candidate.probe.valid)
+    ?? candidates.find((candidate) => candidate.exists && !candidate.unsafe)
     ?? null;
   return { profile: resolvedProfile, candidates, resolved };
 }
@@ -343,6 +370,9 @@ export async function discoverTranscriptSessions(descriptor, source, { profile =
   for (const rootTemplate of spec.roots) {
     const root = expandTemplate(rootTemplate, { home, profile, env });
     if (!root) continue;
+    if (!isPathContained(root, home)) {
+      throw Object.assign(new Error(`${descriptor.label} session root resolves outside its home`), { code: 'session_root_outside_home' });
+    }
     let entries;
     try { entries = fs.readdirSync(root, { withFileTypes: true }); }
     catch (error) {
@@ -393,6 +423,9 @@ export function computeTranscriptRevision(descriptor, source, { profile = null, 
   for (const rootTemplate of spec.roots) {
     const root = expandTemplate(rootTemplate, { home, profile, env });
     if (!root) continue;
+    if (!isPathContained(root, home)) {
+      throw Object.assign(new Error(`${descriptor.label} session root resolves outside its home`), { code: 'session_root_outside_home' });
+    }
     let top;
     try { top = fs.readdirSync(root, { withFileTypes: true }); }
     catch (error) { if (error?.code === 'ENOENT') continue; throw error; }
