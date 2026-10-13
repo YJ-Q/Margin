@@ -9,7 +9,8 @@ import { runCostCli } from '../src/cli/margin/runCostCli.js';
 import { adapterFor } from '../src/agents/adapters.js';
 
 if (process.argv[2] === 'agent') {
-  process.exitCode = runAgentSourceCli(process.argv.slice(3));
+  // `agent verify` is async; every other command returns a number. `await` handles both.
+  process.exitCode = await runAgentSourceCli(process.argv.slice(3));
 } else if (process.argv[2] === 'run') {
   process.exitCode = await runRunBridgeCli(process.argv.slice(3));
 } else if (process.argv[2] === 'cost') {

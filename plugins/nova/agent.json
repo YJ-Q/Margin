@@ -1,0 +1,76 @@
+{
+  "$comment": "Margin Agent plugin. This is the OUTPUT of the Margin Integration Skill run against the synthetic 'Nova' fixture Agent: a data-only descriptor that Margin validates against the Agent Descriptor Spec and composes into a reader from its own catalogue. No code, no expressions, no eval. See README.md.",
+  "specVersion": 1,
+
+  "type": "nova",
+  "label": "Nova",
+  "provider": "nova-labs",
+  "resourceAgent": "nova",
+  "defaultSourceName": "Nova",
+  "envHome": "NOVA_HOME",
+  "order": 500,
+  "supportLevel": "Session discovery",
+
+  "$comment_home": "Ordered candidates, resolved against the real filesystem at install time. The first that exists AND passes `probe` wins, so one file fits machines that keep Nova in different places.",
+  "homeCandidates": [
+    { "env": "NOVA_HOME", "fallback": "{profile}/.nova" },
+    { "fallback": "{profile}/.config/nova" }
+  ],
+
+  "$comment_capabilities": "Sessions plus transcript-derived execution status. `quota`, `apiUsage`, `subscriptionQuota` and `handoff` are deliberately false: Nova exposes them only behind a credentialed endpoint and its own handoff distiller, neither of which the declarative catalogue can express. Declaring them without a declared reader is a validation error, which is the point: a capability is never claimed without wiring.",
+  "capabilities": {
+    "sessions": true,
+    "handoff": false,
+    "apiUsage": false,
+    "quota": false,
+    "executionStatus": true,
+    "attentionStatus": false
+  },
+  "sessionCapabilities": {
+    "executionStatus": true
+  },
+
+  "$comment_sessions": "Nova keeps one directory per rollout under {home}/sessions and one append-only events.jsonl per rollout. The directory name is an opaque rollout folder, NOT the session id: the native id is a field inside the transcript. Every projection field below reads a NATIVE value out of the record stream, so nothing is inferred from a path or a file mtime.",
+  "sessions": {
+    "kind": "transcript",
+    "layout": "directory-per-session",
+    "roots": ["{home}/sessions"],
+    "transcript": { "glob": "events.jsonl", "format": "jsonl" },
+
+    "$comment_identity": "Nova's native identity is `session.id` on the `session.start` record. Reading it from the record (rather than `directoryName`) is what lets the Board show the id the Agent itself uses, even though the rollout directory is named differently.",
+    "id": { "kind": "record", "where": { "kind": "session.start" }, "index": 0, "path": "session.id" },
+
+    "$comment_timestamps": "Nova records its own start and end instants. These are native timestamps, not file-write times, so the Board orders sessions by when they actually ran.",
+    "createdAt": { "kind": "record", "where": { "kind": "session.start" }, "index": 0, "path": "session.createdAt" },
+    "updatedAt": { "kind": "record", "where": { "kind": "session.end" }, "index": "last", "path": "session.updatedAt" },
+
+    "$comment_workspace": "Nova records the working directory natively on its session header. This is a `record` extractor, not `scanAbsolutePaths`: the workspace is stated by the Agent, never recovered from transcript text.",
+    "workspace": { "kind": "record", "where": { "kind": "session.start" }, "index": 0, "path": "session.cwd" },
+
+    "title": { "kind": "record", "where": { "kind": "turn.user" }, "index": 0, "path": "text", "as": "first-user-message" },
+    "model": { "kind": "record", "where": { "kind": "turn.assistant" }, "index": "last", "path": "model" },
+    "provider": { "kind": "record", "where": { "kind": "turn.assistant" }, "index": "last", "path": "provider" }
+  },
+
+  "$comment_executionStatus": "Nova writes a native `finishReason` on every assistant turn. The last assistant turn wins; `stop` is a completed turn, `tool_use` is a turn still driving tools, `error` is a native failure marker, `cancelled` is a user stop and therefore a known non-error rest state. Any raw value not in the map yields `unknown`, never a guessed status.",
+  "executionStatus": {
+    "kind": "transcript",
+    "where": { "kind": "turn.assistant" },
+    "path": "finishReason",
+    "pick": "last",
+    "map": {
+      "stop": "idle",
+      "tool_use": "working",
+      "error": "error",
+      "cancelled": "idle"
+    }
+  },
+
+  "resources": { "kind": "none" },
+  "handoff": { "kind": "none" },
+
+  "$comment_probe": "Structural check: does a candidate directory actually look like a Nova home? Without it, a mistyped path is indistinguishable from an Agent with no sessions.",
+  "probe": {
+    "anyOf": [{ "glob": "{home}/sessions/*/events.jsonl" }]
+  }
+}

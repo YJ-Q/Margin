@@ -54,7 +54,7 @@ function writeDescriptorFile(dir, type, descriptor, dryRun) {
   return { target, changed };
 }
 
-function findDescriptorFile(type, options) {
+export function findDescriptorFile(type, options) {
   const dir = descriptorDirectory(options);
   let names;
   try { names = fs.readdirSync(dir).filter((name) => name.toLowerCase().endsWith('.json')); }

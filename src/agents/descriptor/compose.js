@@ -16,6 +16,12 @@ const BASE_CAPABILITIES = Object.freeze({
 const noSnapshots = async () => [];
 const noRevision = () => null;
 
+// Only safety/containment rejections are allowed to survive the read envelope. A descriptor can
+// escape its home at read time (`session_root_outside_home`) and that must stay distinguishable from
+// a transient read failure; every other internal reader code keeps the historical generic envelope
+// so existing consumers are never surprised by a new code.
+const PRESERVED_READ_ERROR_CODES = new Set(['session_root_outside_home']);
+
 // Identical to the collector used by the built-in adapters. It is deliberately duplicated in
 // behaviour rather than imported so the descriptor layer has no dependency on the adapter module it
 // is about to be composed into. `validateSource` is passed in (rather than held in module state) so
@@ -26,7 +32,10 @@ const snapshotRead = (collect, validateSource) => async (source, options = {}) =
     if (!validation.valid) return { ok: false, error: { code: 'source_unavailable', message: validation.reason } };
     return { ok: true, snapshots: await collect(source, options) };
   } catch (error) {
-    return { ok: false, error: { code: 'source_read_failed', message: error?.message ?? 'Unable to read agent source' } };
+    // Preserve a safety rejection code (e.g. `session_root_outside_home`) so a caller can tell an
+    // unsafe read from a transient one. Any other reader code keeps the generic historical envelope.
+    const code = PRESERVED_READ_ERROR_CODES.has(error?.code) ? error.code : 'source_read_failed';
+    return { ok: false, error: { code, message: error?.message ?? 'Unable to read agent source' } };
   }
 };
 
