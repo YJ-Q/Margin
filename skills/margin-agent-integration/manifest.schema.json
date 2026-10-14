@@ -1,0 +1,371 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Closed JSON Schema for the Margin Agent Manifest (Agent Descriptor). Mirrors src/agents/descriptor/spec.js validateDescriptor exactly: same top-level key set (DESCRIPTOR_TOP_LEVEL_KEYS), same capability vocabulary (DESCRIPTOR_CAPABILITIES), same closed kind enums, same extractor catalogue, same cross-field wiring rules. A manifest that passes this schema passes validateDescriptor. $comment-prefixed keys are reserved at every level and always ignored, exactly as in the spec.",
+  "title": "Margin Agent Manifest (Agent Descriptor)",
+  "description": "The declarative, data-only descriptor a self-integrating Agent emits. Current contract only: specVersion 1, 19 closed top-level keys, 7 capability flags. No generatedBy, no runtime, no agent key, no new capability flag.",
+  "type": "object",
+  "required": ["specVersion", "type", "label", "sessions"],
+  "properties": {
+    "specVersion": { "const": 1 },
+    "type": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{1,31}$" },
+    "label": { "type": "string", "minLength": 1 },
+    "provider": { "type": ["string", "null"], "minLength": 1 },
+    "resourceAgent": { "type": "string", "minLength": 1 },
+    "defaultSourceName": { "type": "string", "minLength": 1 },
+    "quotaPrefix": { "type": ["string", "null"], "minLength": 1 },
+    "envHome": { "type": "string", "minLength": 1 },
+    "order": { "type": "number" },
+    "supportLevel": { "type": "string", "minLength": 1 },
+    "defaultHome": {
+      "type": "object",
+      "required": ["fallback"],
+      "properties": {
+        "env": { "type": "string", "minLength": 1 },
+        "fallback": { "$ref": "#/definitions/templateString" }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "homeCandidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["fallback"],
+        "properties": {
+          "env": { "type": "string", "minLength": 1 },
+          "fallback": { "$ref": "#/definitions/templateString" }
+        },
+        "additionalProperties": false,
+        "patternProperties": { "^\\$comment.*$": {} }
+      }
+    },
+    "capabilities": { "$ref": "#/definitions/capabilityFlags" },
+    "sessionCapabilities": { "$ref": "#/definitions/capabilityFlags" },
+    "sessions": { "$ref": "#/definitions/sessions" },
+    "executionStatus": { "$ref": "#/definitions/executionStatus" },
+    "probe": {
+      "type": "object",
+      "required": ["anyOf"],
+      "properties": {
+        "anyOf": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["glob"],
+            "properties": { "glob": { "$ref": "#/definitions/templateString" } },
+            "additionalProperties": false,
+            "patternProperties": { "^\\$comment.*$": {} }
+          }
+        }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "resources": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": { "kind": { "enum": ["builtin", "none"] } },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "handoff": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": { "kind": { "enum": ["none", "builtin", "shared-codex"] } },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    }
+  },
+  "additionalProperties": false,
+  "patternProperties": { "^\\$comment.*$": {} },
+  "definitions": {
+    "templateString": {
+      "allOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "not": {
+            "pattern": "\\{(?!home\\}|profile\\})[a-zA-Z]+\\}"
+          }
+        }
+      ]
+    },
+    "rootTemplate": {
+      "allOf": [
+        { "$ref": "#/definitions/templateString" },
+        { "pattern": "^\\{home\\}(/|$)" }
+      ]
+    },
+    "literalWhere": {
+      "type": "object",
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+    },
+    "capabilityFlags": {
+      "type": "object",
+      "properties": {
+        "sessions": { "type": "boolean" },
+        "handoff": { "type": "boolean" },
+        "apiUsage": { "type": "boolean" },
+        "quota": { "type": "boolean" },
+        "executionStatus": { "type": "boolean" },
+        "attentionStatus": { "type": "boolean" },
+        "subscriptionQuota": { "type": "boolean" }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "extractor": {
+      "oneOf": [
+        { "$ref": "#/definitions/extractorDirectoryName" },
+        { "$ref": "#/definitions/extractorFilename" },
+        { "$ref": "#/definitions/extractorMtime" },
+        { "$ref": "#/definitions/extractorRecord" },
+        { "$ref": "#/definitions/extractorScanAbsolutePaths" }
+      ]
+    },
+    "extractorDirectoryName": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": { "kind": { "const": "directoryName" } },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "extractorFilename": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": { "kind": { "const": "filename" } },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "extractorMtime": {
+      "type": "object",
+      "required": ["kind", "glob"],
+      "properties": {
+        "kind": { "const": "mtime" },
+        "glob": { "type": "string", "minLength": 1 },
+        "pick": { "enum": ["max", "min"] }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "extractorRecord": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "record" },
+        "where": { "$ref": "#/definitions/literalWhere" },
+        "index": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "const": "last" }] },
+        "path": { "type": "string", "minLength": 1 },
+        "maxLength": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "extractorRecordTitle": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "record" },
+        "where": { "$ref": "#/definitions/literalWhere" },
+        "index": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "const": "last" }] },
+        "path": { "type": "string", "minLength": 1 },
+        "maxLength": { "type": "integer", "minimum": 1 },
+        "as": { "enum": ["native", "metadata", "first-user-message"] }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "extractorScanAbsolutePaths": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "scanAbsolutePaths" },
+        "parentOf": { "type": "boolean" },
+        "requireMarker": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} }
+    },
+    "nullableExtractor": {
+      "anyOf": [
+        { "$ref": "#/definitions/extractor" },
+        { "type": "null" }
+      ]
+    },
+    "sessions": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["builtin", "transcript", "none"] },
+        "layout": { "enum": ["directory-per-session", "file-per-session"] },
+        "roots": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/rootTemplate" } },
+        "transcript": {
+          "type": "object",
+          "required": ["glob", "format"],
+          "properties": {
+            "glob": { "type": "string", "minLength": 1 },
+            "format": { "const": "jsonl" }
+          },
+          "additionalProperties": false,
+          "patternProperties": { "^\\$comment.*$": {} }
+        },
+        "id": { "$ref": "#/definitions/extractor" },
+        "createdAt": { "$ref": "#/definitions/extractor" },
+        "updatedAt": { "$ref": "#/definitions/extractor" },
+        "workspace": { "$ref": "#/definitions/nullableExtractor" },
+        "title": {
+          "anyOf": [
+            { "$ref": "#/definitions/extractorRecordTitle" },
+            { "type": "null" }
+          ]
+        },
+        "model": { "$ref": "#/definitions/nullableExtractor" },
+        "provider": { "$ref": "#/definitions/nullableExtractor" }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "transcript" } } },
+          "then": { "required": ["roots", "transcript", "id", "createdAt", "updatedAt"] }
+        },
+        {
+          "if": { "properties": { "kind": { "not": { "const": "transcript" } } } },
+          "then": {
+            "required": ["kind"],
+            "properties": { "kind": { "enum": ["builtin", "none"] } },
+            "additionalProperties": false,
+            "patternProperties": { "^\\$comment.*$": {} }
+          }
+        }
+      ]
+    },
+    "executionStatus": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["none", "transcript", "builtin"] },
+        "where": { "$ref": "#/definitions/literalWhere" },
+        "path": { "type": "string", "minLength": 1 },
+        "map": {
+          "type": "object",
+          "additionalProperties": { "enum": ["unknown", "working", "idle", "error"] }
+        },
+        "pick": { "enum": ["first", "last"] }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^\\$comment.*$": {} },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "transcript" } } },
+          "then": { "required": ["path", "map"] }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "capabilities": { "properties": { "handoff": { "const": true } }, "required": ["handoff"] }
+        }
+      },
+      "then": {
+        "required": ["handoff"],
+        "properties": { "handoff": { "properties": { "kind": { "not": { "const": "none" } } }, "required": ["kind"] } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "handoff": { "properties": { "kind": { "enum": ["builtin", "shared-codex"] } }, "required": ["kind"] }
+        }
+      },
+      "then": {
+        "required": ["sessions"],
+        "properties": { "sessions": { "properties": { "kind": { "const": "builtin" } }, "required": ["kind"] } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resources": { "properties": { "kind": { "const": "builtin" } }, "required": ["kind"] }
+        }
+      },
+      "then": {
+        "required": ["sessions"],
+        "properties": { "sessions": { "properties": { "kind": { "const": "builtin" } }, "required": ["kind"] } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "sessions": { "properties": { "kind": { "const": "builtin" } }, "required": ["kind"] }
+        },
+        "required": ["sessions"]
+      },
+      "then": {
+        "properties": { "capabilities": { "properties": { "sessions": { "not": { "const": false } } } } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "capabilities": { "properties": { "executionStatus": { "const": true } }, "required": ["executionStatus"] }
+        }
+      },
+      "then": {
+        "anyOf": [
+          {
+            "required": ["executionStatus"],
+            "properties": { "executionStatus": { "properties": { "kind": { "enum": ["transcript", "builtin"] } }, "required": ["kind"] } }
+          },
+          {
+            "required": ["sessions"],
+            "properties": { "sessions": { "properties": { "kind": { "const": "builtin" } }, "required": ["kind"] } }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "executionStatus": { "properties": { "kind": { "const": "builtin" } }, "required": ["kind"] }
+        }
+      },
+      "then": {
+        "required": ["sessions"],
+        "properties": { "sessions": { "properties": { "kind": { "const": "builtin" } }, "required": ["kind"] } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "executionStatus": { "properties": { "kind": { "const": "transcript" } }, "required": ["kind"] }
+        }
+      },
+      "then": {
+        "required": ["sessions"],
+        "properties": { "sessions": { "properties": { "kind": { "const": "transcript" } }, "required": ["kind"] } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "capabilities": {
+            "anyOf": [
+              { "properties": { "quota": { "const": true } }, "required": ["quota"] },
+              { "properties": { "apiUsage": { "const": true } }, "required": ["apiUsage"] },
+              { "properties": { "subscriptionQuota": { "const": true } }, "required": ["subscriptionQuota"] }
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": ["resources"],
+        "properties": { "resources": { "properties": { "kind": { "const": "builtin" } }, "required": ["kind"] } }
+      }
+    }
+  ]
+}
