@@ -287,7 +287,7 @@ and `canonicalId` / `revision: null` (§2.5).
 
   "input": {
     "kind": "file",                    // file | stdin
-    "path": "D:\\Code\\margin\\margin-agent.json",
+    "path": "margin-agent.json",       // repo-relative manifest path
     "sha256": "3c1f…",                  // bytes as read
     "type": "nova",
     "label": "Nova",
@@ -370,7 +370,7 @@ and `canonicalId` / `revision: null` (§2.5).
   "refusals": [],
 
   "evidenceSources": [
-    { "kind": "manifest",   "path": "D:\\Code\\margin\\margin-agent.json", "sha256": "3c1f…" },
+    { "kind": "manifest",   "path": "margin-agent.json", "sha256": "3c1f…" },
     { "kind": "registry",   "path": "C:\\Users\\<user>\\.margin\\agent-sources.json" },
     { "kind": "filesystem", "path": "D:\\tmp\\nova-home", "detail": "read scope: sessions.roots[0]" },
     { "kind": "probe",      "detail": "{home}/sessions/*/events.jsonl" },
@@ -562,7 +562,7 @@ Short, staged, and free of any claim verify did not observe:
 
 ```
 verify  nova  (Nova)  specVersion 1
-input   D:\Code\margin\margin-agent.json  sha256 3c1f…  (not installed)
+input   margin-agent.json  sha256 3c1f…  (not installed)
 
   descriptor    passed    1 root, 2 extractors, 0 refusals
   installation  not_installed
