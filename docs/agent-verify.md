@@ -108,6 +108,7 @@ the descriptor's `specVersion`. A breaking change to this contract increments it
 | `installation` | stable after `descriptor` passes | `{ state, descriptorPath, descriptorSha256, descriptorDigest, source }`; informational, never a verdict by itself |
 | `source` | stable once source classification begins | `{ origin, path, unsafe, validate{valid,reason}, probe{state,reason}, candidates[] }`; omitted only when the input never parsed or the descriptor was refused before source classification |
 | `sessions` | stable after a successful projection | `{ observed, checked, revision, invariantFailures[], sample[], evidence[] }` |
+| `diagnostics` | **optional** — present only when a transcript discovery ran | `{ roots[], entriesExamined, skippedLayout, matchedFiles, candidateCount, projectedCount, dropped[] }`; observed-only debugging evidence — never changes the verdict or the `reasonCode` (see §4.7) |
 | `capabilities[]` | stable | one row per closed capability: `{ name, declared, wiring, status, origin, evidence[] }` |
 | `refusals[]` | stable | declarations an existing authority refused (§5); non-empty implies `rejected` |
 | `evidenceSources[]` | stable | read-scope manifest: what this invocation actually touched |
@@ -154,13 +155,48 @@ specific capability reads the capability table.
    `transcript`, `adapter`.
 4. **`sessions.observed` is "what the reader published", not an on-disk count.**
    `no_sessions` is consistent with both "the Agent has never run here" and "every
-   candidate was dropped"; verify does not guess between them and invents no
-   `candidatesExamined` field.
+   candidate was dropped". When the glob matched files, the optional `diagnostics`
+   block records each observed drop; when it matched none, the cause is not
+   determined and verify still invents no explanation.
 5. **Pre-install honesty.** Without a registered source, Margin canonical ids and the
    revision hash are omitted (`canonicalId: null`, `revision: null`) with a
    `no_registered_source` note; native session evidence is still reported.
 6. **Content minimisation.** Session samples omit titles/message content;
    `titlePresent` records only the structural fact.
+7. **Diagnostics are observed-only.** The optional `diagnostics` block is written by
+   the discovery reader at each decision point; nothing in it is inferred afterwards.
+   When `matchedFiles` is zero, the empty-projection cause is genuinely undetermined
+   and no cause is printed.
+
+### 4.7 Diagnostics contract
+
+Counts, all tied to the discovery run that produced them:
+
+| Field | Meaning |
+|---|---|
+| `roots[]` | one entry per declared root: `{ root, expanded, exists }`; an unexpandable root carries `reason: "unresolved_template"` |
+| `entriesExamined` | layout entries (files or directories) iterated across all roots |
+| `skippedLayout` | entries ignored because they did not match the declared layout |
+| `matchedFiles` | files matching the declared transcript glob |
+| `candidateCount` | candidates with ≥1 parseable record that reached the projection builder |
+| `projectedCount` | sessions actually published (deduped); equals `sessions.observed` |
+| `dropped[]` | per-candidate observed drop: `{ path, reason, nativeSessionId? }`; builder drops carry `missing[]` with every required binding that was absent |
+
+Closed `dropped[].reason` vocabulary:
+
+| Reason | Observed when |
+|---|---|
+| `no_transcript_match` | no file under the candidate matched the transcript glob |
+| `no_records` | the matched transcript contained zero parseable records |
+| `missing_native_session_id` | the id extractor produced no value |
+| `missing_workspace` | the workspace extractor produced no value |
+| `missing_created_at` | the createdAt extractor produced no value |
+| `missing_updated_at` | the updatedAt extractor produced no value |
+| `missing_required_evidence` | more than one required binding was missing; the full list is in `missing[]` |
+| `duplicate_session` | another candidate with the same canonical id was already projected |
+
+These reasons are debugging evidence, never a new verdict or reasonCode: the
+automation signal stays the four verdicts and the §2.2 vocabulary.
 
 ---
 
@@ -219,8 +255,9 @@ installed.
 - **Unsupported capabilities** — handoff, resource-family, and write-path capabilities
   are not verified; an unsupported capability is never rendered as verified.
 - **Layout durability** — it does not attest that a future Agent version keeps the
-  observed layout, that the reader is complete (dropped sessions produce no reasons), or
-  that a manifest describing real files is *truthful* rather than merely *consistent*.
+  observed layout, that the reader is complete (transcript diagnostics report observed
+  drops but do not prove no candidate was missed; builtin readers emit no diagnostics),
+  or that a manifest describing real files is *truthful* rather than merely *consistent*.
 - A verdict is a point-in-time observation of mutable files, recomputed every run and
   never cached.
 
@@ -264,5 +301,5 @@ The interface verifies descriptors only; it adds no Agent, no reader, and no des
 field. The shipped built-in Agents **Codex, Claude, and Pi** and the registered-plugin
 path exercised by **Nova** remain on their existing adapters and continue to validate,
 compose, and verify unchanged — the only additions are the explicit `reasonCode`, the
-`not_applicable` probe state, and the `sessions.kind: "none"` classification. OpenCode is
-not part of this interface.
+`not_applicable` probe state, the `sessions.kind: "none"` classification, and the
+optional, additive `diagnostics` block (§4.7). OpenCode is not part of this interface.

@@ -277,3 +277,41 @@ test('report.schema.json formalises the four claim statuses and the redaction pr
   assert.deepEqual(reportSchema.properties.redaction.required, ['scanned', 'redacted']);
   assert.equal(reportSchema.properties.reportVersion.const, 1);
 });
+
+// ---------------------------------------------------------------------------------------------
+// Bounded sampling guidance (v0.1.1) — the Tier 1 trial fix on the skill side
+// ---------------------------------------------------------------------------------------------
+
+test('SKILL.md guidance replaces first-line-only sampling with bounded windows', () => {
+  assert.match(skillMarkdown, /bounded windows/);
+  // The concrete window bounds are documented.
+  assert.match(skillMarkdown, /first up to 10 records/);
+  assert.match(skillMarkdown, /first conversational record/);
+  assert.match(skillMarkdown, /hard cap of \*\*20 records\*\*/);
+  // Full transcripts remain forbidden, and the stop-on-observed rule is present.
+  assert.match(skillMarkdown, /Never read a complete\s+transcript/);
+  assert.match(skillMarkdown, /Stop sampling as soon as every required field has been observed/);
+});
+
+test('SKILL.md guidance covers the Claude trial failure points', () => {
+  // Native fields beyond the first line are anticipated.
+  assert.match(skillMarkdown, /beyond the first line/);
+  // The scanAbsolutePaths fallback is a mandatory consideration, not a skipped last resort.
+  assert.match(skillMarkdown, /mandatory consideration whenever no native cwd appeared/);
+  // workspace: null is documented as a projection blocker.
+  assert.match(skillMarkdown, /`workspace: null` is not a neutral value/);
+  // A native timestamp on a sampled record binds createdAt directly.
+  assert.match(skillMarkdown, /a parseable timestamp on a sampled record \*is\* the native `createdAt`/);
+  // Roots describe the whole store, never the trial cwd.
+  assert.match(skillMarkdown, /Roots describe the whole store/);
+  // The optional diagnostics block is documented with its closed vocabulary.
+  assert.match(skillMarkdown, /optional\s+`diagnostics`/);
+  assert.match(skillMarkdown, /missing_required_evidence/);
+});
+
+test('SKILL.md version reflects the refinement without changing the descriptor contract', () => {
+  assert.match(skillMarkdown, /\*\*Version 0\.1\.1\*\*/);
+  // The descriptor schema remains exactly the shipped one (asserted by the tests above);
+  // the skill still emits only the closed key set.
+  assert.match(skillMarkdown, /descriptor contract is\s+unchanged/);
+});

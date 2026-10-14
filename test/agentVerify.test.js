@@ -345,7 +345,7 @@ test('verify — the result document schema is stable', async (t) => {
   const result = await verifyAgentDescriptor({ descriptor: readNovaDescriptor(), env: { ...env, NOVA_HOME: fixture.home }, input: { kind: 'file', path: 'x.json', sha256: 'b'.repeat(64) } });
 
   assert.deepEqual(Object.keys(result).sort(), [
-    'capabilities', 'evidenceSources', 'generatedAt', 'input', 'installation', 'notes', 'reasonCode', 'refusals',
+    'capabilities', 'diagnostics', 'evidenceSources', 'generatedAt', 'input', 'installation', 'notes', 'reasonCode', 'refusals',
     'resultVersion', 'scope', 'sessions', 'source', 'stages', 'tool', 'verdict',
   ].sort());
   assert.deepEqual(Object.keys(result.input).sort(), ['kind', 'label', 'path', 'sha256', 'specVersion', 'type'].sort());
@@ -353,6 +353,15 @@ test('verify — the result document schema is stable', async (t) => {
   assert.deepEqual(Object.keys(result.source).sort(), ['candidates', 'origin', 'path', 'probe', 'unsafe', 'validate'].sort());
   assert.deepEqual(Object.keys(result.source.probe).sort(), ['reason', 'state'].sort());
   assert.deepEqual(Object.keys(result.sessions).sort(), ['checked', 'evidence', 'invariantFailures', 'observed', 'revision', 'sample'].sort());
+  // The optional diagnostics block is an additive, observed-only debugging surface.
+  assert.deepEqual(Object.keys(result.diagnostics).sort(), ['candidateCount', 'dropped', 'entriesExamined', 'matchedFiles', 'projectedCount', 'roots', 'skippedLayout'].sort());
+  assert.deepEqual(Object.keys(result.diagnostics.roots[0]).sort(), ['exists', 'expanded', 'root'].sort());
+  assert.equal(result.diagnostics.projectedCount, result.sessions.observed, 'projected count equals what the reader published');
+  assert.equal(result.diagnostics.matchedFiles, 3, 'all three rollout files matched the glob');
+  assert.equal(result.diagnostics.candidateCount, 3, 'all three reached the builder');
+  assert.equal(result.diagnostics.dropped.length, 1, 'the interrupted rollout has an observed builder drop');
+  assert.equal(result.diagnostics.dropped[0].reason, 'missing_updated_at');
+  assert.deepEqual(result.diagnostics.dropped[0].missing, ['missing_updated_at']);
   assert.deepEqual(result.stages.map((stage) => stage.stage), ['load', 'descriptor', 'installation', 'source', 'projection']);
   assert.equal(result.tool.command, 'agent verify');
   assert.equal(PROBE_STATES.includes(result.source.probe.state), true);

@@ -16,6 +16,44 @@ import { normalizeDisplayTitle, titleDto } from '../sessionTitle.js';
 const MAX_FILES_PER_SESSION = 4000;
 const MAX_SESSIONS = 2000;
 
+// The closed vocabulary of observed drop reasons a discovery run can record. Each reason is written
+// at the exact point where discovery decides to drop a candidate — the list is never inferred after
+// the fact, so a consumer debugging `no_sessions` sees only evidence the reader actually produced.
+export const DIAGNOSTIC_DROP_REASONS = Object.freeze([
+  'no_transcript_match',
+  'no_records',
+  'missing_native_session_id',
+  'missing_workspace',
+  'missing_created_at',
+  'missing_updated_at',
+  'missing_required_evidence',
+  'duplicate_session',
+]);
+
+// Opt-in diagnostics sink. Passed to `discoverTranscriptSessions` (and threaded through
+// `readSessionSnapshots`); when absent, discovery behaves byte-for-byte as before.
+//
+// Counts:
+//   roots[]           one entry per declared root — the expanded path and whether it existed
+//   entriesExamined   layout entries (files or directories) iterated across all roots
+//   skippedLayout     entries ignored because they did not match the declared layout (e.g. a
+//                     directory under a file-per-session root)
+//   matchedFiles      files matching the declared transcript glob
+//   candidateCount    candidates with ≥1 record that reached the projection builder
+//   projectedCount    sessions actually published (deduped)
+//   dropped[]         per-candidate observed drop reason; builder drops carry `missing[]`
+export function createDiscoveryDiagnostics() {
+  return {
+    roots: [],
+    entriesExamined: 0,
+    skippedLayout: 0,
+    matchedFiles: 0,
+    candidateCount: 0,
+    projectedCount: 0,
+    dropped: [],
+  };
+}
+
 export function expandTemplate(template, { home = null, profile = null, env = process.env } = {}) {
   return String(template)
     .replace(/\{home\}/g, home ?? '')
@@ -312,17 +350,34 @@ export function resolveAgentHome(descriptor, { env = process.env, homedir = os.h
   return { profile: resolvedProfile, candidates, resolved };
 }
 
-export function buildTranscriptSession(descriptor, source, { sessionDir, sessionName, basename, relativeFiles, records, originalPath, env }) {
+export function buildTranscriptSession(descriptor, source, { sessionDir, sessionName, basename, relativeFiles, records, originalPath, env, diagnostics = null }) {
   const spec = descriptor.sessions;
   const context = { sessionDir, sessionName, basename, relativeFiles, records, env };
   const nativeSessionId = asString(extractField(spec.id, context));
-  if (!nativeSessionId) return null;
   const cwd = asString(extractField(spec.workspace, context));
   const createdAt = asString(extractField(spec.createdAt, context));
   const updatedAt = asString(extractField(spec.updatedAt, context));
-  // A session without a workspace, a start and an end cannot be placed on the Board or ordered, and
-  // publishing it with invented values would be worse than omitting it.
-  if (!cwd || !createdAt || !updatedAt) return null;
+  // Every required binding is evaluated so a drop can record all evidence that was missing rather
+  // than only the first check that failed. A session without a workspace, a start and an end cannot
+  // be placed on the Board or ordered, and publishing it with invented values would be worse than
+  // omitting it.
+  const missing = [
+    ...(nativeSessionId ? [] : ['missing_native_session_id']),
+    ...(cwd ? [] : ['missing_workspace']),
+    ...(createdAt ? [] : ['missing_created_at']),
+    ...(updatedAt ? [] : ['missing_updated_at']),
+  ];
+  if (missing.length) {
+    if (diagnostics) {
+      diagnostics.dropped.push({
+        path: originalPath,
+        nativeSessionId: nativeSessionId ?? null,
+        reason: missing.length === 1 ? missing[0] : 'missing_required_evidence',
+        missing,
+      });
+    }
+    return null;
+  }
 
   const rawTitle = asString(extractField(spec.title, context));
   const titleSource = TITLE_SOURCE_BY_AS[spec.title?.as ?? 'first-user-message'] ?? 'first-user-message';
@@ -360,7 +415,7 @@ export function buildTranscriptSession(descriptor, source, { sessionDir, session
 //
 // Read failures throw, matching the native readers: the caller's per-source envelope turns a throw
 // into `ok: false`, so a transient failure can never be published as "this Agent has no sessions".
-export async function discoverTranscriptSessions(descriptor, source, { profile = null, env = process.env, now = Date.now() } = {}) {
+export async function discoverTranscriptSessions(descriptor, source, { profile = null, env = process.env, now = Date.now(), diagnostics = null } = {}) {
   const spec = descriptor.sessions;
   const home = source?.path ?? null;
   if (!home) return [];
@@ -369,29 +424,43 @@ export async function discoverTranscriptSessions(descriptor, source, { profile =
 
   for (const rootTemplate of spec.roots) {
     const root = expandTemplate(rootTemplate, { home, profile, env });
-    if (!root) continue;
+    if (!root) {
+      diagnostics?.roots.push({ root: rootTemplate, expanded: null, exists: false, reason: 'unresolved_template' });
+      continue;
+    }
     if (!isPathContained(root, home)) {
       throw Object.assign(new Error(`${descriptor.label} session root resolves outside its home`), { code: 'session_root_outside_home' });
     }
     let entries;
     try { entries = fs.readdirSync(root, { withFileTypes: true }); }
     catch (error) {
-      if (error?.code === 'ENOENT') continue;
+      if (error?.code === 'ENOENT') {
+        diagnostics?.roots.push({ root: rootTemplate, expanded: root, exists: false });
+        continue;
+      }
       throw error;
     }
+    diagnostics?.roots.push({ root: rootTemplate, expanded: root, exists: true });
     for (const entry of entries) {
       if (output.length >= MAX_SESSIONS) break;
+      if (diagnostics) diagnostics.entriesExamined += 1;
       const absolute = path.join(root, entry.name);
       let sessionDir; let sessionName; let basename; let relativeFiles; let transcriptFiles;
       if (spec.layout === 'file-per-session') {
-        if (!entry.isFile()) continue;
+        if (!entry.isFile()) {
+          if (diagnostics) diagnostics.skippedLayout += 1;
+          continue;
+        }
         const listing = listRelativeFiles(root);
         if (listing.failed) throw Object.assign(new Error(`${descriptor.label} source read failed`), { code: 'source_read_failed' });
         sessionDir = root; sessionName = entry.name.replace(/\.[^.]+$/, ''); basename = entry.name;
         relativeFiles = listing.files;
         transcriptFiles = selectRelativeFiles(relativeFiles, spec.transcript.glob).filter((file) => file === entry.name);
       } else {
-        if (!entry.isDirectory()) continue;
+        if (!entry.isDirectory()) {
+          if (diagnostics) diagnostics.skippedLayout += 1;
+          continue;
+        }
         const listing = listRelativeFiles(absolute);
         if (listing.failed) throw Object.assign(new Error(`${descriptor.label} source read failed`), { code: 'source_read_failed' });
         sessionDir = absolute; sessionName = entry.name; basename = entry.name;
@@ -399,16 +468,29 @@ export async function discoverTranscriptSessions(descriptor, source, { profile =
         transcriptFiles = selectRelativeFiles(relativeFiles, spec.transcript.glob);
       }
       const transcript = transcriptFiles[0];
-      if (!transcript) continue;
+      if (!transcript) {
+        diagnostics?.dropped.push({ path: absolute, reason: 'no_transcript_match' });
+        continue;
+      }
+      if (diagnostics) diagnostics.matchedFiles += 1;
       const originalPath = path.join(sessionDir, transcript);
       const { records, failed } = readJsonlRecords(originalPath);
       if (failed) throw Object.assign(new Error(`${descriptor.label} source read failed`), { code: 'source_read_failed' });
-      if (!records.length) continue;
+      if (!records.length) {
+        diagnostics?.dropped.push({ path: originalPath, reason: 'no_records' });
+        continue;
+      }
+      if (diagnostics) diagnostics.candidateCount += 1;
       const session = buildTranscriptSession(descriptor, source, {
-        sessionDir, sessionName, basename, relativeFiles, records, originalPath, env,
+        sessionDir, sessionName, basename, relativeFiles, records, originalPath, env, diagnostics,
       });
-      if (!session || seen.has(session.canonicalId)) continue;
+      if (!session) continue; // the builder recorded its observed `missing` evidence
+      if (seen.has(session.canonicalId)) {
+        diagnostics?.dropped.push({ path: originalPath, nativeSessionId: session.nativeSessionId, reason: 'duplicate_session' });
+        continue;
+      }
       seen.add(session.canonicalId);
+      if (diagnostics) diagnostics.projectedCount += 1;
       output.push(session);
     }
   }

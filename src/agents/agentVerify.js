@@ -29,7 +29,7 @@ import { findDescriptorFile, installAgentDescriptor } from './agentInstall.js';
 import { adapterFor } from './adapters.js';
 import { composeAdapter, compositionProblems } from './descriptor/compose.js';
 import { hasBuiltinAdapter } from './descriptor/load.js';
-import { isUnsafeIntegrationRoot, probeDescriptor, resolveAgentHome } from './descriptor/readers.js';
+import { createDiscoveryDiagnostics, isUnsafeIntegrationRoot, probeDescriptor, resolveAgentHome } from './descriptor/readers.js';
 import { normalizeDescriptor, validateDescriptor } from './descriptor/spec.js';
 import { AGENT_CAPABILITIES, detectAgentSources, readAgentSourceRegistry, registryPath, resolveActiveSource, validateSource } from './sourceRegistry.js';
 
@@ -272,6 +272,13 @@ function stageDetail(stage, result) {
   return '';
 }
 
+// Aggregate observed drop reasons for the human rendering. Counts come only from recorded drops.
+function dropReasonCounts(diagnostics) {
+  const counts = new Map();
+  for (const drop of diagnostics.dropped) counts.set(drop.reason, (counts.get(drop.reason) ?? 0) + 1);
+  return [...counts.entries()].sort((left, right) => left[0].localeCompare(right[0])).map(([reason, count]) => ({ reason, count }));
+}
+
 // Human-readable, staged output. It never claims more than the result document records.
 export function formatVerifyResult(result) {
   const input = result.input ?? {};
@@ -284,6 +291,14 @@ export function formatVerifyResult(result) {
   for (const stage of result.stages ?? []) {
     const detail = stageDetail(stage, result);
     lines.push(`  ${String(stage.stage).padEnd(14)}${String(stage.status).padEnd(9)}${detail}`);
+  }
+  if (result.diagnostics) {
+    const diagnostics = result.diagnostics;
+    lines.push('');
+    lines.push(`diagnostics ${diagnostics.matchedFiles} glob match(es), ${diagnostics.candidateCount} candidate(s), ${diagnostics.projectedCount} projected`);
+    for (const { reason, count } of dropReasonCounts(diagnostics)) {
+      lines.push(`  dropped   ${reason.padEnd(28)}${count}`);
+    }
   }
   if (result.capabilities?.length) {
     lines.push('');
@@ -303,8 +318,14 @@ export function formatVerifyResult(result) {
   if (result.verdict === 'no_sessions') {
     lines.push('');
     lines.push('diagnosis  the home exists and the probe passed, but the reader published nothing.');
-    lines.push('           This is consistent with "no sessions yet" and with "every candidate was"');
-    lines.push('           dropped; verify cannot distinguish them (no drop reasons are produced).');
+    const diagnostics = result.diagnostics;
+    if (diagnostics && diagnostics.matchedFiles >= 1) {
+      lines.push('           Every glob-matched file was dropped; the observed drop reasons are');
+      lines.push('           listed in diagnostics above.');
+    } else {
+      lines.push('           The transcript glob matched no files; this is consistent with "no');
+      lines.push('           sessions yet" and with a wrong root or glob — the cause is not determined.');
+    }
   }
   if (result.reasonCode === 'session_source_not_declared') {
     lines.push('');
@@ -514,6 +535,11 @@ export async function verifyAgentDescriptor({
   stage('source', 'passed');
 
   // ---- S4: projection through the host's own adapter ---------------------------------------
+  // Opt-in diagnostics sink. The transcript discovery records every observed drop — while the
+  // same reader the hosts consume runs — so a zero-projection result is explainable without a
+  // second inspection or source reading. Builtin readers do not emit diagnostics; the block stays
+  // null for them. Diagnostics never change the verdict.
+  const diagnostics = normalized.sessions.kind === 'transcript' ? createDiscoveryDiagnostics() : null;
   let adapter = null;
   try {
     adapter = (installation.state === 'installed_match' ? adapterFor(normalized.type, options) : null)
@@ -537,7 +563,7 @@ export async function verifyAgentDescriptor({
   };
 
   let envelope;
-  try { envelope = await adapter.readSessionSnapshots(readSource, { env }); }
+  try { envelope = await adapter.readSessionSnapshots(readSource, { env, ...(diagnostics ? { diagnostics } : {}) }); }
   catch (error) { envelope = { ok: false, error: { code: error?.code ?? 'source_read_failed', message: error?.message } }; }
 
   if (!envelope.ok) {
@@ -557,6 +583,10 @@ export async function verifyAgentDescriptor({
     result.capabilities = deriveCapabilities(normalized, { sessions: { observed: 0, sample: [] }, sourceReachable: result.verdict === 'rejected' });
     return result;
   }
+
+  // Projection ran: the observed diagnostics are attached before the verdict is decided, so
+  // verified / no_sessions / invariant-rejected results all carry the same debugging evidence.
+  if (diagnostics) result.diagnostics = diagnostics;
 
   const snapshots = Array.isArray(envelope.snapshots) ? envelope.snapshots : [];
   const observed = snapshots.length;

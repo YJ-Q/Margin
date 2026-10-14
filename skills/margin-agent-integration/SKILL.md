@@ -1,8 +1,11 @@
 # Margin Agent Self-Integration Skill
 
-**Version 0.1.0** — first shipped artifact of the researched Integration Skill concept
-(`docs/research/margin-agent-integration-skill.md`), reconciled with the **shipped** descriptor
-contract (`src/agents/descriptor/spec.js`, `DESCRIPTOR_SPEC_VERSION = 1`).
+**Version 0.1.1** — refinement of the first shipped artifact of the researched Integration Skill
+concept (`docs/research/margin-agent-integration-skill.md`), reconciled with the **shipped**
+descriptor contract (`src/agents/descriptor/spec.js`, `DESCRIPTOR_SPEC_VERSION = 1`). v0.1.1
+replaces the first-line-only sampling rule with bounded sampling windows (Step 1/2) and documents
+the optional `diagnostics` block of `margin agent verify` (§5). The descriptor contract is
+unchanged.
 
 This skill is a **read-only self-inspection procedure**. A coding agent executes it inside its own
 environment and emits two files:
@@ -24,8 +27,8 @@ These are stated first because every step below is subordinate to them. A step t
 completed under these rules is a **reported gap**, never a skipped step with a default.
 
 1. **Read-only.** Never write outside `<out>`. Never write to `~/.margin/**` or to the Agent's own
-   home. Listing, reading one complete record, and stat-ing files are allowed; mutating, moving,
-   renaming, or deleting anything is not.
+   home. Listing, stat-ing, and reading a **bounded sample** of records (the windows defined in
+   Step 1) are allowed; mutating, moving, renaming, or deleting anything is not.
 2. **No network.** This skill never fetches, registers, uploads, or telemetry-pings. No HTTP call of
    any kind. No endpoint is ever contacted.
 3. **Credentials must never be copied or exposed.** In the manifest, in the report, in command
@@ -116,7 +119,7 @@ use `transcript` (its own plain-text store) or `none`.
 | `filename` | none | the transcript file's basename |
 | `mtime` | `glob` (required), `pick: max\|min` | filesystem mtime — **file-write time, not session time**; a weaker claim, label it `weak` in the report |
 | `record` | `where` (literal equalities only), `index` (non-negative int or `"last"`), `path` (dotted), `maxLength` (positive int) | a dotted field from the Nth (or last) matching JSONL record |
-| `scanAbsolutePaths` | `parentOf` (bool), `requireMarker` (string\|null) | recover a workspace from absolute paths in transcript text — **last resort, never the default**; a heuristic binding, label it `weak` |
+| `scanAbsolutePaths` | `parentOf` (bool), `requireMarker` (string\|null) | recover a workspace from absolute paths in transcript text — the fallback **after a bounded native-field window found no cwd** (Step 2); never chosen over a native cwd field, and labelled `weak` |
 
 `id`, `createdAt`, `updatedAt` are **required** extractors for a `transcript` session store;
 `workspace`, `title`, `model`, `provider` are optional (`null` is allowed and means "no binding —
@@ -188,11 +191,38 @@ but do not name a variable you never saw in your own source.
 
 Under the resolved home, find where sessions live. Determine: the root path template relative to
 home, the layout (one directory per session vs one file per session), the file extension/glob, the
-format, and how many sessions exist right now. Read the **first complete line** of one file — that is
-enough to learn the shape; never read whole transcripts.
+format, and how many sessions exist right now.
 
 Emit `sessions.roots[]`, `sessions.layout`, `sessions.transcript.glob`, `sessions.transcript.format`,
 plus the observation (file count) into the report.
+
+**Discovery sampling — bounded windows, not one line, not whole transcripts.**
+
+Native workspace/session information is often written **beyond the first line**: many Agents emit
+queue, lifecycle, or other bookkeeping records before the first conversational record. Sampling only
+the first line can therefore miss the native fields the descriptor requires (a real Tier 1 trial
+failed this way: the native `cwd` first appeared on line 3, after two `queue-operation` records).
+Sample inside bounded windows instead:
+
+1. Read the **first up to 10 records** of **one or two** transcript files, recording **field names
+   and value types only** — never quote message content.
+2. If a required native field (id, workspace/cwd, timestamps, title) has not appeared yet, extend
+   the window forward **only until the first conversational record** (the first user/assistant
+   turn) or a hard cap of **20 records** — whichever comes first.
+3. Stop sampling as soon as every required field has been observed. Never read a complete
+   transcript, never tail a file looking for "more evidence".
+4. If a required field does not appear within the window, its absence is an observation: use the
+   Step 2 fallback for that field or emit `null`, and record the gap in the report. Never assume a
+   field exists further down in an unread part of the file.
+
+The same windows apply to the content you inspect: identify credential- or token-bearing records
+by their field names, and do not read, copy, quote, or hash their values (see rule 3).
+
+**Roots describe the whole store.** `sessions.roots[]` must name the Agent's complete session
+store, never the directory of the current trial or one specific cwd — pinning a root to the
+workspace you are running in makes the descriptor self-referential and non-portable. If the
+store's grouping cannot be expressed with the current layout semantics (§2.3), record the
+limitation in `unverified[]`; do not narrow the root to work around it.
 
 **Stop rule:** if the store is not plain text (SQLite, encrypted, binary, remote/API, or a store
 spread across non-transcript files), **stop and emit `sessions.kind: "none"`** with reason
@@ -201,20 +231,28 @@ Agent-side one.
 
 ### Step 2 — Determine identity, time, workspace, and title
 
-Inspect the **sampled record's field names and value types** — not values, except where a value is
-structurally required (a timestamp format, an absolute path).
+Inspect the **field names and value types observed inside the Step 1 sampling window** — not values,
+except where a value is structurally required (a timestamp format, an absolute path). Search for
+each field across the **whole bounded window, not just line 1**; bookkeeping records legitimately
+precede the first conversational record.
 
 | Field | Look for | Catalogue fallback |
 |---|---|---|
-| `id` | a native session/thread id field | `{ "kind": "directoryName" }` / `{ "kind": "filename" }` when the id *is* the name |
-| `createdAt` | a native timestamp on the first record | `{ "kind": "mtime", "glob": …, "pick": "min" }` — label `weak` |
-| `updatedAt` | a native timestamp on the last record | `{ "kind": "mtime", "glob": …, "pick": "max" }` — label `weak` |
-| `workspace` | a recorded working-directory field | `{ "kind": "scanAbsolutePaths", "parentOf": true, "requireMarker": ".git" }` **only if** no cwd is recorded anywhere — label `weak` |
+| `id` | a native session/thread id field (may appear on bookkeeping records) | `{ "kind": "directoryName" }` / `{ "kind": "filename" }` when the id *is* the name |
+| `createdAt` | a native timestamp on **any sampled record** — a parseable timestamp on a sampled record *is* the native `createdAt`, even when it sits on a bookkeeping record; do not downgrade it to `mtime` | `{ "kind": "mtime", "glob": …, "pick": "min" }` — label `weak` |
+| `updatedAt` | a native timestamp on the last matching record | `{ "kind": "mtime", "glob": …, "pick": "max" }` — label `weak` |
+| `workspace` | a recorded working-directory field (`cwd`), which may first appear on the first conversational record, several lines in | `{ "kind": "scanAbsolutePaths", "parentOf": true, "requireMarker": ".git" }` — a **mandatory consideration whenever no native cwd appeared in the bounded window**, label `weak`; never a fallback you skip |
 | `title` | a native title field | `{ "kind": "record", "where": …, "index": 0, "path": …, "as": "first-user-message" }` |
 | `model` / `provider` | native model/provider fields | omit (`null`) — do not infer |
 
 `mtime` is not a timestamp: `createdAt`/`updatedAt` then reflect when files were written, not when
 the session ran. Say so in the report.
+
+**`workspace: null` is not a neutral value.** A candidate without a workspace binding is dropped
+during projection, so a manifest whose every session lacks a workspace verifies as
+`no_sessions` with zero detail unless diagnostics are inspected. If no native cwd appeared in the
+window, either bind the `scanAbsolutePaths` fallback or report the gap honestly — never silently
+emit `null` because the first line lacked a cwd.
 
 ### Step 3 — Determine the execution-status signal
 
@@ -312,6 +350,34 @@ It writes nothing, calls no network, reads no credential, and launches no Agent.
 session reader by declaration, not a reader that returned nothing. A manifest emitted by
 this skill integrates session discovery, so a `none` verdict on it means the declared
 session wiring is wrong or absent. The full contract is `docs/agent-verify.md`.
+
+When the transcript discovery ran, the `--json` document additionally carries an **optional
+`diagnostics`** block — debugging evidence that never changes the verdict:
+
+```json
+{
+  "diagnostics": {
+    "roots": [{ "root": "{home}/projects", "expanded": "<resolved path>", "exists": true }],
+    "entriesExamined": 3,
+    "skippedLayout": 0,
+    "matchedFiles": 3,
+    "candidateCount": 3,
+    "projectedCount": 0,
+    "dropped": [
+      { "path": "<transcript file>", "reason": "missing_workspace", "missing": ["missing_workspace"] }
+    ]
+  }
+}
+```
+
+- `matchedFiles` is the number of files the declared glob matched; `candidateCount` is the number
+  with records that reached projection; `projectedCount` is the number of sessions published.
+- `dropped[].reason` is observed only: `no_transcript_match`, `no_records`,
+  `missing_native_session_id`, `missing_workspace`, `missing_created_at`, `missing_updated_at`,
+  `duplicate_session`, or `missing_required_evidence` (with the full `missing[]` list). No cause is
+  ever guessed: when `matchedFiles` is 0, the empty-projection cause is genuinely undetermined.
+- This block is the first place to look when a `no_sessions` verdict is surprising. The human
+  output renders the same counts and drop reasons.
 
 **Required output of this skill:** run `margin agent verify` on the emitted manifest and record the
 verdict and its evidence in the report. `verified` means "the declared surfaces observe correctly" —
@@ -456,9 +522,11 @@ The `status` vocabulary is the load-bearing part of the report, and it is delibe
 | Situation | Required output |
 |---|---|
 | Session store is opaque (SQLite/encrypted/remote) | `sessions.kind: "none"`, reason `opaque_store`, a `requests[]` entry |
+| Native fields appear only after bookkeeping records (beyond line 1) | run the full bounded sampling window (Step 1) before declaring a field absent; never conclude from one line |
 | No native id, only a filename | `id: { "kind": "filename" }`, claim status `weak` |
-| No native timestamps | `mtime` extractor, claim status `weak`; report must say timestamps are file-write times |
-| No native workspace field | `scanAbsolutePaths` (+ `requireMarker` if a project marker exists), claim status `weak` |
+| No native timestamps in the window | `mtime` extractor, claim status `weak`; report must say timestamps are file-write times |
+| No native workspace field in the window | `scanAbsolutePaths` (+ `requireMarker` if a project marker exists), claim status `weak` — do not emit `workspace: null` without recording the gap |
+| A `no_sessions` verdict was surprising | inspect `diagnostics` (`matchedFiles`/`projectedCount`/`dropped[]`) before changing anything; it reports observed blockers, never a guess |
 | No terminal status marker | `executionStatus.kind: "none"` → `capabilities.executionStatus: false` |
 | Status marker exists but no error value observed | map only observed values; `error` stays unmapped → `unknown` |
 | Quota only via a credentialed endpoint | `resources.kind: "none"`, `capabilities.quota: false`, `requests[]` with provenance |
