@@ -39,9 +39,23 @@ export const MAX_SAMPLE = 50;
 
 // The explicit probe state. `passed`/`failed` are a real declaration that ran; `not_declared` means
 // the descriptor never asked for a structural check; `unavailable` means there was no home to probe;
-// `rejected` means the home itself was refused as unsafe before a probe could run. No boolean is
-// ever rendered as "probe passed".
-export const PROBE_STATES = Object.freeze(['passed', 'failed', 'not_declared', 'unavailable', 'rejected']);
+// `rejected` means the home itself was refused as unsafe before a probe could run; `not_applicable`
+// means the descriptor declares no session source (`sessions.kind: "none"`), so a session probe has
+// nothing to check. No boolean is ever rendered as "probe passed".
+export const PROBE_STATES = Object.freeze(['passed', 'failed', 'not_declared', 'unavailable', 'rejected', 'not_applicable']);
+
+// The closed vocabulary of machine-readable reason codes behind each verdict. The four verdicts are
+// the coarse automation signal; the reason code is the stable, typed detail that keeps distinct
+// sentences from sharing a verdict — in particular "no session source is declared" (the descriptor
+// offers nothing to read) versus "the reader returned zero sessions" (a source exists and ran).
+//   verified      → null (the observation itself is the reason)
+//   no_sessions   → 'reader_returned_empty'
+//   unavailable   → one of the unavailable codes below
+//   rejected      → the terminal refusal code (see REFUSAL AUTHORITIES in docs/agent-verify.md)
+export const REASON_CODES = Object.freeze({
+  no_sessions: Object.freeze(['reader_returned_empty']),
+  unavailable: Object.freeze(['session_source_not_declared', 'no_home_found', 'source_disabled', 'source_unavailable', 'source_read_failed', 'installation_read_failed']),
+});
 
 const VERDICT_EXIT_CODES = Object.freeze({ verified: 0, no_sessions: 2, unavailable: 3, rejected: 4 });
 
@@ -81,6 +95,9 @@ function baseResult({ input = null, generatedAt = new Date().toISOString(), desc
       specVersion: Number.isFinite(descriptor?.specVersion) ? descriptor.specVersion : null,
     },
     verdict: 'rejected',
+    // Stable, machine-readable detail behind `verdict` (see REASON_CODES). Null only for verified.
+    // Rejected verdicts carry the terminal refusal code here as well as in `refusals[]`.
+    reasonCode: null,
     scope: 'the verified input, read through its own declaration against this machine',
     stages: [],
     refusals: [],
@@ -94,6 +111,7 @@ function baseResult({ input = null, generatedAt = new Date().toISOString(), desc
 export function verifyManifestError({ input = null, message, generatedAt = new Date().toISOString() } = {}) {
   const result = baseResult({ input, generatedAt });
   result.stages.push({ stage: 'load', status: 'failed', errors: [message ?? 'unable to parse descriptor'] });
+  result.reasonCode = 'invalid_descriptor';
   return result;
 }
 
@@ -115,6 +133,9 @@ function classifyValidationError(message) {
 }
 
 function probeStateOf(descriptor, { home, exists, unsafe, profile, env }) {
+  // No session source is declared: a probe over session files is meaningless even when the
+  // descriptor carries a structural `probe` for the home itself.
+  if (descriptor.sessions.kind === 'none') return { state: 'not_applicable', reason: null };
   const declared = Boolean(descriptor.probe?.anyOf?.length);
   if (!declared) return { state: 'not_declared', reason: null };
   if (unsafe) return { state: 'rejected', reason: 'Home resolves to the filesystem or profile root, not an Agent home' };
@@ -152,6 +173,15 @@ function deriveCapabilities(descriptor, { sessions, sourceReachable }) {
   for (const name of AGENT_CAPABILITIES) {
     const declared = descriptor.capabilities[name] === true;
     const entry = { name, declared, wiring: wiringFor(name, descriptor), status: 'unsupported', origin: null, evidence: [] };
+    // `sessions.kind: "none"` means the descriptor declares no session source at all. That is not a
+    // gap in the sample and not an unreachable source — there is no reader by declaration — so the
+    // capability is unsupported regardless of the declared flag, which a hand-authored descriptor
+    // may still carry.
+    if (name === 'sessions' && descriptor.sessions.kind === 'none') {
+      entry.origin = 'session_source_not_declared';
+      table.push(entry);
+      continue;
+    }
     if (!declared) {
       entry.origin = name === 'attentionStatus' ? 'no_reader'
         : name === 'sessions' ? 'declared_false'
@@ -249,6 +279,7 @@ export function formatVerifyResult(result) {
   lines.push(`verify  ${input.type ?? '?'}  (${input.label ?? '?'})  specVersion ${input.specVersion ?? '?'}`);
   lines.push(`input   ${input.path ?? '(stdin)'}  sha256 ${input.sha256 ? String(input.sha256).slice(0, 8) : '-'}  (${INSTALLATION_LABEL[result.installation?.state] ?? 'not reached'})`);
   lines.push(`verdict ${result.verdict}`);
+  if (result.reasonCode) lines.push(`reason  ${result.reasonCode}`);
   lines.push('');
   for (const stage of result.stages ?? []) {
     const detail = stageDetail(stage, result);
@@ -274,6 +305,12 @@ export function formatVerifyResult(result) {
     lines.push('diagnosis  the home exists and the probe passed, but the reader published nothing.');
     lines.push('           This is consistent with "no sessions yet" and with "every candidate was"');
     lines.push('           dropped; verify cannot distinguish them (no drop reasons are produced).');
+  }
+  if (result.reasonCode === 'session_source_not_declared') {
+    lines.push('');
+    lines.push('diagnosis  the descriptor declares no session source (sessions.kind is "none").');
+    lines.push('           There is no session reader by declaration — this is not "no sessions"');
+    lines.push('           and not a missing home; there is no session surface for verify to observe.');
   }
   if (result.evidenceSources?.length) {
     lines.push('');
@@ -311,6 +348,7 @@ export async function verifyAgentDescriptor({
     stage('descriptor', 'failed', validation.errors);
     result.refusals = validation.errors.map(classifyValidationError);
     result.verdict = 'rejected';
+    result.reasonCode = result.refusals[0]?.code ?? 'invalid_descriptor';
     return result;
   }
   const normalized = normalizeDescriptor(descriptor);
@@ -325,6 +363,7 @@ export async function verifyAgentDescriptor({
     stage('descriptor', 'failed', [error?.message ?? 'unable to read the installation state']);
     result.notes.push({ code: error?.code ?? 'installation_read_failed', message: error?.message ?? 'unable to read the installation state' });
     result.verdict = 'unavailable';
+    result.reasonCode = error?.code ?? 'installation_read_failed';
     return result;
   }
   if (!install.ok) {
@@ -337,6 +376,7 @@ export async function verifyAgentDescriptor({
       authority: 'install.builtin_guard',
     });
     result.verdict = 'rejected';
+    result.reasonCode = install.error?.code ?? 'invalid_descriptor';
     return result;
   }
 
@@ -345,6 +385,7 @@ export async function verifyAgentDescriptor({
     stage('descriptor', 'failed', problems);
     result.refusals.push({ code: 'descriptor_adapter_missing', path: 'sessions.kind', declared: normalized.sessions.kind, reason: problems.join('; '), authority: 'compose.wiring' });
     result.verdict = 'rejected';
+    result.reasonCode = 'descriptor_adapter_missing';
     return result;
   }
   stage('descriptor', 'passed');
@@ -378,6 +419,32 @@ export async function verifyAgentDescriptor({
     : null;
   result.installation = installation;
   stage('installation', 'passed');
+
+  // ---- S2.5: declared session source? ------------------------------------------------------
+  // `sessions.kind: "none"` means the descriptor itself declares that this Agent exposes no session
+  // source. That sentence must never be rendered as `no_sessions` ("the reader ran and published
+  // nothing"): no reader exists, by declaration, whether or not a home is present on this machine.
+  // It is an availability boundary on the declared surface, not a descriptor fault, so it is not a
+  // rejection and no home is walked on its behalf.
+  if (normalized.sessions.kind === 'none') {
+    if (input?.sha256) result.evidenceSources.push({ kind: 'manifest', path: input.path ?? null, sha256: input.sha256 });
+    result.evidenceSources.push({ kind: 'registry', path: registryPath(options) });
+    result.source = {
+      origin: null,
+      path: null,
+      unsafe: false,
+      validate: { valid: false, reason: 'No session source is declared for this descriptor (sessions.kind is "none")' },
+      probe: { state: 'not_applicable', reason: null },
+      candidates: [],
+    };
+    result.notes.push({ code: 'session_source_not_declared', message: 'The descriptor declares no session source (sessions.kind is "none"); there is no session surface for verify to read' });
+    stage('source', 'skipped', ['session_source_not_declared']);
+    stage('projection', 'skipped');
+    result.verdict = 'unavailable';
+    result.reasonCode = 'session_source_not_declared';
+    result.capabilities = deriveCapabilities(normalized, { sessions: { observed: 0, sample: [] }, sourceReachable: false });
+    return result;
+  }
 
   // ---- S3: source availability (fresh, independent of the dry-run) --------------------------
   const resolution = resolveAgentHome(normalized, { env, homedir, profile });
@@ -422,15 +489,15 @@ export async function verifyAgentDescriptor({
   const disabledSource = Boolean(typeRecord) && !registeredSource;
   let sourceFailure = null;
   if (chosenUnsafe) {
-    sourceFailure = { verdict: 'rejected', refusal: { code: 'unsafe_integration_root', path: 'source.path', declared: chosenPath, reason: 'The resolved home is the filesystem or profile root, not an Agent home', authority: 'readers.containment' } };
+    sourceFailure = { verdict: 'rejected', reasonCode: 'unsafe_integration_root', refusal: { code: 'unsafe_integration_root', path: 'source.path', declared: chosenPath, reason: 'The resolved home is the filesystem or profile root, not an Agent home', authority: 'readers.containment' } };
   } else if (!nonEmpty(explicitPath) && disabledSource) {
-    sourceFailure = { verdict: 'unavailable', note: { code: 'source_disabled', message: `A ${normalized.type} source is registered but disabled or removed` } };
+    sourceFailure = { verdict: 'unavailable', reasonCode: 'source_disabled', note: { code: 'source_disabled', message: `A ${normalized.type} source is registered but disabled or removed` } };
   } else if (!chosenPath) {
-    sourceFailure = { verdict: 'unavailable', note: { code: 'no_home_found', message: 'No Agent home was resolved on this machine' } };
+    sourceFailure = { verdict: 'unavailable', reasonCode: 'no_home_found', note: { code: 'no_home_found', message: 'No Agent home was resolved on this machine' } };
   } else if (!chosenValidation.valid) {
-    sourceFailure = { verdict: 'unavailable', note: { code: 'source_unavailable', message: chosenValidation.reason ?? 'The Agent home is not readable' } };
+    sourceFailure = { verdict: 'unavailable', reasonCode: 'source_unavailable', note: { code: 'source_unavailable', message: chosenValidation.reason ?? 'The Agent home is not readable' } };
   } else if (probe.state === 'failed') {
-    sourceFailure = { verdict: 'rejected', refusal: { code: 'probe_mismatch', path: 'probe', declared: true, reason: probe.reason ?? 'The declared probe did not match the resolved home', authority: 'readers.probe' } };
+    sourceFailure = { verdict: 'rejected', reasonCode: 'probe_mismatch', refusal: { code: 'probe_mismatch', path: 'probe', declared: true, reason: probe.reason ?? 'The declared probe did not match the resolved home', authority: 'readers.probe' } };
   }
 
   if (sourceFailure) {
@@ -438,6 +505,7 @@ export async function verifyAgentDescriptor({
     stage('source', sourceFailure.verdict === 'rejected' ? 'failed' : 'skipped', errors);
     stage('projection', 'skipped');
     result.verdict = sourceFailure.verdict;
+    result.reasonCode = sourceFailure.reasonCode;
     if (sourceFailure.refusal) result.refusals.push(sourceFailure.refusal);
     if (sourceFailure.note) result.notes.push(sourceFailure.note);
     result.capabilities = deriveCapabilities(normalized, { sessions: { observed: 0, sample: [] }, sourceReachable: false });
@@ -454,6 +522,7 @@ export async function verifyAgentDescriptor({
     stage('projection', 'failed', [error?.message ?? 'unable to compose a reader']);
     result.refusals.push({ code: error?.code ?? 'descriptor_composition_failed', path: 'sessions.kind', declared: normalized.sessions.kind, reason: error?.message ?? 'unable to compose a reader', authority: 'compose.wiring' });
     result.verdict = 'rejected';
+    result.reasonCode = error?.code ?? 'descriptor_composition_failed';
     result.capabilities = deriveCapabilities(normalized, { sessions: { observed: 0, sample: [] }, sourceReachable: true });
     return result;
   }
@@ -479,9 +548,11 @@ export async function verifyAgentDescriptor({
       // ordinary read failure.
       result.refusals.push({ code: 'session_root_outside_home', path: 'sessions.roots', declared: normalized.sessions.roots, reason: envelope.error?.message ?? 'A session root resolved outside its home', authority: 'readers.containment' });
       result.verdict = 'rejected';
+      result.reasonCode = 'session_root_outside_home';
     } else {
       result.notes.push({ code, message: envelope.error?.message ?? 'The Agent source could not be read' });
       result.verdict = 'unavailable';
+      result.reasonCode = code;
     }
     result.capabilities = deriveCapabilities(normalized, { sessions: { observed: 0, sample: [] }, sourceReachable: result.verdict === 'rejected' });
     return result;
@@ -535,12 +606,15 @@ export async function verifyAgentDescriptor({
     stage('projection', 'failed', invariantFailures.map((failure) => `${failure.nativeSessionId ?? 'unknown'}: ${failure.invariant}`));
     result.refusals.push({ code: 'invariant_failure', path: 'sessions', declared: observed, reason: `published session(s) failed projection invariants: ${invariantFailures.map((failure) => failure.invariant).join(', ')}`, authority: 'verify.invariants' });
     result.verdict = 'rejected';
+    result.reasonCode = 'invariant_failure';
   } else if (observed >= 1) {
     stage('projection', 'passed');
     result.verdict = 'verified';
+    result.reasonCode = null;
   } else {
     stage('projection', 'passed');
     result.verdict = 'no_sessions';
+    result.reasonCode = 'reader_returned_empty';
   }
 
   result.capabilities = deriveCapabilities(normalized, { sessions: result.sessions, sourceReachable: true });

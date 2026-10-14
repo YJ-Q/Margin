@@ -17,6 +17,7 @@ import { installAgentDescriptor } from '../src/agents/agentInstall.js';
 import { readAgentSourceRegistry } from '../src/agents/sourceRegistry.js';
 import {
   PROBE_STATES,
+  REASON_CODES,
   RESULT_VERSION,
   formatVerifyResult,
   verifyAgentDescriptor,
@@ -82,6 +83,19 @@ function listTree(root) {
   return out;
 }
 
+// A legal descriptor that declares NO session source: sessions.kind is "none". Built from Nova so
+// everything except the session surface stays realistic, including home candidates and a probe.
+function noneSessionDescriptor() {
+  const source = readNovaDescriptor();
+  return {
+    ...source,
+    type: 'novatwo',
+    capabilities: { sessions: false, handoff: false, apiUsage: false, quota: false, executionStatus: false, attentionStatus: false },
+    sessions: { kind: 'none' },
+    executionStatus: { kind: 'none' },
+  };
+}
+
 // -------------------------------------------------------------------------------------------
 // Positive case — verified, native evidence preserved.
 // -------------------------------------------------------------------------------------------
@@ -95,6 +109,7 @@ test('verify — a valid descriptor with a real session is verified and preserve
 
   assert.equal(result.resultVersion, RESULT_VERSION);
   assert.equal(result.verdict, 'verified');
+  assert.equal(result.reasonCode, null, 'verified carries no reason code');
   assert.equal(result.installation.state, 'not_installed');
   assert.equal(result.source.origin, 'resolved');
   assert.equal(result.source.path, path.resolve(fixture.home));
@@ -156,6 +171,7 @@ test('verify — a clean-probing home with no publishable session returns no_ses
   const result = await verifyAgentDescriptor({ descriptor: readNovaDescriptor(), env: { ...env, NOVA_HOME: fixture.home } });
 
   assert.equal(result.verdict, 'no_sessions');
+  assert.equal(result.reasonCode, 'reader_returned_empty', 'an empty reader is no_sessions with its own reason code');
   assert.equal(result.source.probe.state, 'passed', 'the probe sees the events.jsonl even though no session is publishable');
   assert.equal(result.sessions.observed, 0);
   assert.equal(verifyExitCode(result.verdict), 2);
@@ -166,6 +182,7 @@ test('verify — an absent home returns unavailable and an explicit unavailable 
   const result = await verifyAgentDescriptor({ descriptor: readNovaDescriptor(), env });
 
   assert.equal(result.verdict, 'unavailable');
+  assert.equal(result.reasonCode, 'no_home_found');
   assert.equal(result.source.origin, null);
   assert.equal(result.source.path, null);
   assert.equal(result.source.probe.state, 'unavailable');
@@ -181,6 +198,7 @@ test('verify — a statically unsafe root is rejected at validation', async (t) 
   const result = await verifyAgentDescriptor({ descriptor, env });
 
   assert.equal(result.verdict, 'rejected');
+  assert.equal(result.reasonCode, 'invalid_descriptor');
   assert.equal(result.stages.find((stage) => stage.stage === 'descriptor').status, 'failed');
   assert.equal(result.refusals[0].authority, 'spec.root_containment');
   assert.equal(verifyExitCode(result.verdict), 4);
@@ -197,9 +215,56 @@ test('verify — an unsafe root at read time is rejected, never unavailable', as
   const result = await verifyAgentDescriptor({ descriptor, env: { ...env, NOVA_HOME: fixture.home } });
 
   assert.equal(result.verdict, 'rejected');
+  assert.equal(result.reasonCode, 'session_root_outside_home');
   assert.equal(result.source.probe.state, 'passed', 'the read-time escape is not a source failure');
   assert.equal(result.refusals.some((refusal) => refusal.code === 'session_root_outside_home' && refusal.authority === 'readers.containment'), true);
   assert.notEqual(result.verdict, 'unavailable');
+});
+
+// -------------------------------------------------------------------------------------------
+// Case A — no session provider declared (sessions.kind none). Must NOT be no_sessions.
+// -------------------------------------------------------------------------------------------
+
+test('verify — sessions.kind none is unavailable/session_source_not_declared, never no_sessions', async (t) => {
+  const env = profile(t);
+  const result = await verifyAgentDescriptor({ descriptor: noneSessionDescriptor(), env });
+
+  assert.equal(result.verdict, 'unavailable');
+  assert.notEqual(result.verdict, 'no_sessions', '"no reader declared" is not "reader returned zero"');
+  assert.equal(result.reasonCode, 'session_source_not_declared');
+  assert.equal(result.source.probe.state, 'not_applicable');
+  assert.equal(result.source.validate.valid, false);
+  assert.equal(result.source.path, null, 'no home is resolved or walked for a source-less declaration');
+  assert.equal(result.source.candidates.length, 0);
+  assert.equal(result.stages.find((stage) => stage.stage === 'source').status, 'skipped');
+  assert.equal(result.stages.find((stage) => stage.stage === 'projection').status, 'skipped');
+  assert.equal(result.notes.some((note) => note.code === 'session_source_not_declared'), true);
+  assert.equal(result.refusals.length, 0, 'declaring no session source is not a descriptor fault');
+  assert.equal(verifyExitCode(result.verdict), 3);
+
+  const sessions = result.capabilities.find((entry) => entry.name === 'sessions');
+  assert.equal(sessions.status, 'unsupported');
+  assert.equal(sessions.origin, 'session_source_not_declared');
+  assert.equal(sessions.declared, false);
+});
+
+test('verify — sessions.kind none stays not_declared even when a real home is present', async (t) => {
+  const env = profile(t);
+  const fixture = writeNovaHome(env.USERPROFILE);
+  // A matching home exists on disk; the classification is about the declaration, not the machine.
+  const result = await verifyAgentDescriptor({ descriptor: noneSessionDescriptor(), env: { ...env, NOVA_HOME: fixture.home } });
+
+  assert.equal(result.verdict, 'unavailable');
+  assert.equal(result.reasonCode, 'session_source_not_declared');
+  assert.equal(result.source.probe.state, 'not_applicable');
+  assert.equal(result.source.path, null);
+});
+
+test('verify — reason code vocabulary is closed and stays aligned with verdicts', () => {
+  assert.deepEqual(REASON_CODES.no_sessions, ['reader_returned_empty']);
+  for (const code of REASON_CODES.unavailable) assert.match(code, /^[a-z_]+$/);
+  assert.ok(REASON_CODES.unavailable.includes('session_source_not_declared'));
+  assert.ok(PROBE_STATES.includes('not_applicable'));
 });
 
 // -------------------------------------------------------------------------------------------
@@ -280,7 +345,7 @@ test('verify — the result document schema is stable', async (t) => {
   const result = await verifyAgentDescriptor({ descriptor: readNovaDescriptor(), env: { ...env, NOVA_HOME: fixture.home }, input: { kind: 'file', path: 'x.json', sha256: 'b'.repeat(64) } });
 
   assert.deepEqual(Object.keys(result).sort(), [
-    'capabilities', 'evidenceSources', 'generatedAt', 'input', 'installation', 'notes', 'refusals',
+    'capabilities', 'evidenceSources', 'generatedAt', 'input', 'installation', 'notes', 'reasonCode', 'refusals',
     'resultVersion', 'scope', 'sessions', 'source', 'stages', 'tool', 'verdict',
   ].sort());
   assert.deepEqual(Object.keys(result.input).sort(), ['kind', 'label', 'path', 'sha256', 'specVersion', 'type'].sort());
@@ -300,6 +365,7 @@ test('verify — the result document schema is stable', async (t) => {
 test('verify — a parse failure still emits a rejected document with a failed load stage', () => {
   const result = verifyManifestError({ input: { kind: 'file', path: 'broken.json', sha256: null }, message: 'Unexpected token' });
   assert.equal(result.verdict, 'rejected');
+  assert.equal(result.reasonCode, 'invalid_descriptor');
   assert.equal(result.stages[0].stage, 'load');
   assert.equal(result.stages[0].status, 'failed');
   assert.equal('sessions' in result, false);
@@ -319,6 +385,21 @@ test('regression — built-in Codex/Claude/Pi descriptors stay valid and composa
   }
   // Verifying a built-in descriptor is refused by the builtin guard, because Margin ships its reader.
   assert.equal(validateDescriptor(readNovaDescriptor()).ok, true, validateDescriptor(readNovaDescriptor()).errors.join('; '));
+});
+
+test('regression — Codex/Claude/Pi remain builtin-guarded under verify; Nova still observes', async (t) => {
+  const env = profile(t);
+  for (const raw of builtinDescriptors) {
+    const result = await verifyAgentDescriptor({ descriptor: raw, env });
+    assert.equal(result.verdict, 'rejected', `${raw.type} stays a builtin-guarded type`);
+    assert.equal(result.reasonCode, 'builtin_type', `${raw.type} names the guard in reasonCode`);
+    assert.equal(result.refusals.some((refusal) => refusal.authority === 'install.builtin_guard'), true);
+  }
+  // The registered-plugin path (Nova) is the supported verify surface and must stay green.
+  const fixture = writeNovaHome(env.USERPROFILE);
+  const nova = await verifyAgentDescriptor({ descriptor: readNovaDescriptor(), env: { ...env, NOVA_HOME: fixture.home } });
+  assert.equal(nova.verdict, 'verified');
+  assert.equal(nova.reasonCode, null);
 });
 
 // -------------------------------------------------------------------------------------------
@@ -364,10 +445,24 @@ test('CLI — human and JSON output, and the exit-code contract', async (t) => {
   assert.equal(await runAgentSourceCli(['verify', novaDescriptorPath, '--sample', '0'], { env, stdout: sink(), stderr: sink() }), 1);
   assert.equal(await runAgentSourceCli(['verify', novaDescriptorPath, '--nope'], { env, stdout: sink(), stderr: sink() }), 1);
 
-  // --help states the read-only guarantee and exits 0.
+  // --help states the read-only guarantee and the non-guarantees, and exits 0.
   const help = sink();
   assert.equal(await runAgentSourceCli(['verify', '--help'], { env, stdout: help, stderr: sink() }), 0);
-  assert.match(help.text(), /No writes anywhere/);
+  assert.match(help.text(), /no writes anywhere/i);
+  assert.match(help.text(), /no credential copying/i);
+  assert.match(help.text(), /Does not guarantee/i);
+  assert.match(help.text(), /session_source_not_declared/);
+  assert.match(help.text(), /docs\/agent-verify\.md/);
+
+  // sessions.kind none → unavailable (3) with the dedicated reason code, never no_sessions (2)
+  const nonePath = path.join(env.USERPROFILE, 'none.json');
+  fs.writeFileSync(nonePath, JSON.stringify(noneSessionDescriptor()));
+  const noneOut = sink();
+  assert.equal(await runAgentSourceCli(['verify', nonePath, '--json'], { env, stdout: noneOut, stderr: sink() }), 3);
+  const noneParsed = JSON.parse(noneOut.text());
+  assert.equal(noneParsed.verdict, 'unavailable');
+  assert.equal(noneParsed.reasonCode, 'session_source_not_declared');
+  assert.equal(noneParsed.source.probe.state, 'not_applicable');
 
   // unparseable JSON → rejected (4) with a failed load stage and no typed blocks
   const brokenPath = path.join(env.USERPROFILE, 'broken.json');

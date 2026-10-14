@@ -298,14 +298,20 @@ invariant-clean session:
 margin agent verify <out>/margin-agent.json [--path <home>] [--json] [--sample <n>]
 ```
 
-It writes nothing, calls no network, reads no credential, and launches no Agent. Verdicts:
+It writes nothing, calls no network, reads no credential, and launches no Agent. Verdicts
+(the `--json` document adds a stable `reasonCode` with the typed detail):
 
 | Verdict | Exit | Meaning |
 |---|---|---|
 | `verified` | 0 | validation + composition + probe passed and ≥ 1 invariant-clean session projected |
-| `no_sessions` | 2 | structurally valid, zero sessions projected |
-| `unavailable` | 3 | no home resolved / source not readable on this machine |
-| `rejected` | 4 | validation, composition, or a projection invariant failed |
+| `no_sessions` | 2 | a session reader exists, ran, and projected zero sessions (`reader_returned_empty`) |
+| `unavailable` | 3 | the session surface cannot be observed on this machine — including a descriptor that declares **no session source** (`sessions.kind` is `none`, `session_source_not_declared`), no home found, source disabled, or read failure |
+| `rejected` | 4 | validation, composition, safety, or a projection invariant failed (reasonCode names the refusal) |
+
+`unavailable` with `session_source_not_declared` is **not** `no_sessions`: there is no
+session reader by declaration, not a reader that returned nothing. A manifest emitted by
+this skill integrates session discovery, so a `none` verdict on it means the declared
+session wiring is wrong or absent. The full contract is `docs/agent-verify.md`.
 
 **Required output of this skill:** run `margin agent verify` on the emitted manifest and record the
 verdict and its evidence in the report. `verified` means "the declared surfaces observe correctly" —
