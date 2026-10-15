@@ -33,7 +33,7 @@ Confirmed = 句子描述的事实。Inferred = 解释/意图。Uncertain = 未�
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\04\session-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl
+- 快照：<isolated-workspace>\04\session-01a07639-d0ef-7452-a987-af0de51b29e3.jsonl
 - SHA-256：a79da02da100ee86ca5d7c5b2e4834865f8f6bda6b881d225354a112b36be408
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

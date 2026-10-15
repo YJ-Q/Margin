@@ -239,7 +239,7 @@ Handoff 生成时，不应只相信历史 Session。
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\09\session-01a070e6-3bd9-7591-aa4e-31b364badda1.jsonl
+- 快照：<isolated-workspace>\09\session-01a070e6-3bd9-7591-aa4e-31b364badda1.jsonl
 - SHA-256：a4ea79acaab9fe222bf899d1ed90fcceeca9441140953050ada3804d6354ee89
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

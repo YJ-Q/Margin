@@ -182,7 +182,7 @@ Usage 与 Session/Handoff 保持解耦。
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\05\session-01a07786-adf5-77a3-91ba-e4a75ceda7e7.jsonl
+- 快照：<isolated-workspace>\05\session-01a07786-adf5-77a3-91ba-e4a75ceda7e7.jsonl
 - SHA-256：0787744584fe6f29bc428a725d387d582eaa7297679d4d41ceb23754a24d9408
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

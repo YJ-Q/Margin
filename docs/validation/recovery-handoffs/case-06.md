@@ -614,7 +614,7 @@ Before → After
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\06\session-01a07490-65fb-7643-9a8e-d1d7d69643be.jsonl
+- 快照：<isolated-workspace>\06\session-01a07490-65fb-7643-9a8e-d1d7d69643be.jsonl
 - SHA-256：6e18dec92f65d5c36c0cc0cbbcf090688059e98ff34791907a34ea14e2cdd690
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

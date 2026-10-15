@@ -186,7 +186,7 @@ margin agent remove <id>
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\01\session-01a077ec-bd2c-78a1-8581-c7440c9bda66.jsonl
+- 快照：<isolated-workspace>\01\session-01a077ec-bd2c-78a1-8581-c7440c9bda66.jsonl
 - SHA-256：e365d348363b592e9cdfe8507cd55978c69daf62412b11c1d13c056306a6c26a
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

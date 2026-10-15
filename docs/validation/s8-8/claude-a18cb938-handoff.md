@@ -30,7 +30,7 @@ Confirmed = 句子描述的事实。Inferred = 解释/意图。Uncertain = 未�
 
 - **Inferred · Historical** Implementation complete. Here's the full report.
 
-- **Inferred · Historical** Terminal assistant report (excerpt): Implementation complete. Here's the full report. ## 4. Tests `test/marginCli.test.js` (12 tests) — all pass. Coverage mapped to your list: (1) grouping/order, (2) session ordering + id tie-break, (3) correct session id selection, (4) empty-session + invalid-input, (5) real `generateHandoff` → `.margin/HANDOFF.md`, (6) overwrite, (7) resume summary from the projection, (8) non-Git `workspaceRoot`, (9) `bin/ ## 5. Real Git Workspace validation `git:<repo>` (28 sessions) → latest session "Product semantics" → generated 5151-byte HANDOFF with `目标`/`Progress`/`当前状态`/`测试`/`接手建议`/`Evidence Pointers` sections. ## 6. Real non-Git validation Two real non-Git workspaces validated via the real pipeline: `cwd:.../documents/codex/.../z` and `cwd:d:/documents/论文协作` — both grouped correctly, `workspaceRoot` fell back to `cwd`, and full handoffs generated. ## 7. margin command validation Bundled runtime node (`node.exe bin/margin.js`) runs the entry; empty home → `No resumable Codex sessions found.` exit 1. `node bin/margin.js` (system node) same. ## 10. Verdict **PASS — Margin CLI V1 complete.**
+- **Inferred · Historical** Terminal assistant report (excerpt): Implementation complete. Here's the full report. ## 4. Tests `test/marginCli.test.js` (12 tests) — all pass. Coverage mapped to your list: (1) grouping/order, (2) session ordering + id tie-break, (3) correct session id selection, (4) empty-session + invalid-input, (5) real `generateHandoff` → `.margin/HANDOFF.md`, (6) overwrite, (7) resume summary from the projection, (8) non-Git `workspaceRoot`, (9) `bin/ ## 5. Real Git Workspace validation `git:<repo>` (28 sessions) → latest session "Product semantics" → generated 5151-byte HANDOFF with `目标`/`Progress`/`当前状态`/`测试`/`接手建议`/`Evidence Pointers` sections. ## 6. Real non-Git validation Two real non-Git workspaces validated via the real pipeline: `cwd:.../documents/codex/.../z` and `cwd:<workspace>` — both grouped correctly, `workspaceRoot` fell back to `cwd`, and full handoffs generated. ## 7. margin command validation Bundled runtime node (`node.exe bin/margin.js`) runs the entry; empty home → `No resumable Codex sessions found.` exit 1. `node bin/margin.js` (system node) same. ## 10. Verdict **PASS — Margin CLI V1 complete.**
 
 ## Historical Pending / Blockers
 
@@ -111,7 +111,7 @@ Confirmed = 句子描述的事实。Inferred = 解释/意图。Uncertain = 未�
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\s88-final-9JgIyW\handoff-output\web-sessions\session-8c49f644a243a3490c009f5b9d585027286e1436d27e529540130c97a5e6fc35.jsonl
+- 快照：<isolated-workspace>\handoff-output\web-sessions\session-8c49f644a243a3490c009f5b9d585027286e1436d27e529540130c97a5e6fc35.jsonl
 - SHA-256：bc4c747f410efee2bd734be2b34a262c0e6cbaa4d56e01ed481dce74c132de20
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

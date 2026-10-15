@@ -179,7 +179,7 @@ Electron 只是现有 Margin Surface 的桌面宿主。
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\10\session-01a07564-99fa-72e0-b086-4a21e5011211.jsonl
+- 快照：<isolated-workspace>\10\session-01a07564-99fa-72e0-b086-4a21e5011211.jsonl
 - SHA-256：e67c3558ccfaf9199c5590612dbde28938d38f7448a2af614bff9bf93a69080b
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

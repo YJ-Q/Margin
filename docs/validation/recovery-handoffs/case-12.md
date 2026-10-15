@@ -278,7 +278,7 @@ PARTIAL — \<specific blocker>
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\12\session-01a07770-d875-7b51-bd03-e154fe30c66c.jsonl
+- 快照：<isolated-workspace>\12\session-01a07770-d875-7b51-bd03-e154fe30c66c.jsonl
 - SHA-256：f289ddbdd0146cd09c5c2f63ceebba74392a52ec4295b1eb7c572b45af162fb7
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

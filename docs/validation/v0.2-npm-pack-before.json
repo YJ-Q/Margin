@@ -1,0 +1,3696 @@
+[
+  {
+    "id": "margin@0.1.0",
+    "name": "margin",
+    "version": "0.1.0",
+    "size": 1672714,
+    "unpackedSize": 6931010,
+    "shasum": "ae4dbb2bfcc052c98f60d185094433db20df0fcd",
+    "integrity": "sha512-/kqTnmfmmR46+27bdjlQ93AKvJJ508EIDRpG1NbYW181oQO8r8zqgS3HUH7zSm5/Ddz4hM8P/ARnbXaPNhAJPQ==",
+    "filename": "margin-0.1.0.tgz",
+    "files": [
+      {
+        "path": ".claude/settings.local.json",
+        "size": 5854,
+        "mode": 420
+      },
+      {
+        "path": ".dockerignore",
+        "size": 459,
+        "mode": 420
+      },
+      {
+        "path": ".env.example",
+        "size": 1104,
+        "mode": 420
+      },
+      {
+        "path": ".gitattributes",
+        "size": 41,
+        "mode": 420
+      },
+      {
+        "path": "CHANGELOG.md",
+        "size": 11114,
+        "mode": 420
+      },
+      {
+        "path": "CONTRIBUTING.md",
+        "size": 563,
+        "mode": 420
+      },
+      {
+        "path": "Dockerfile",
+        "size": 549,
+        "mode": 420
+      },
+      {
+        "path": "LICENSE",
+        "size": 1097,
+        "mode": 420
+      },
+      {
+        "path": "Margin_Phase0_PoC_Plan.md",
+        "size": 9227,
+        "mode": 420
+      },
+      {
+        "path": "README.md",
+        "size": 7166,
+        "mode": 420
+      },
+      {
+        "path": "agent-integration-refinement-report.md",
+        "size": 5471,
+        "mode": 420
+      },
+      {
+        "path": "bin/margin.js",
+        "size": 2157,
+        "mode": 420
+      },
+      {
+        "path": "data/.gitkeep",
+        "size": 1,
+        "mode": 420
+      },
+      {
+        "path": "docker-compose.yml",
+        "size": 966,
+        "mode": 420
+      },
+      {
+        "path": "docs/agent-verify.md",
+        "size": 17264,
+        "mode": 420
+      },
+      {
+        "path": "docs/API_CONTRACT.md",
+        "size": 12753,
+        "mode": 420
+      },
+      {
+        "path": "docs/API_CONTRACTS.md",
+        "size": 6230,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/2026-09-05-coding-continuity-refactor-analysis.md",
+        "size": 13946,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/2026-09-26-architecture-inventory-and-consolidation-plan.md",
+        "size": 22885,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/2026-09-26-follow-up-execution-plan.md",
+        "size": 3329,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/adr/001-workstream-run-state-model.md",
+        "size": 1055,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/adr/002-transport-neutral-application-contract.md",
+        "size": 6133,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/adr/003-surface-and-state-ownership.md",
+        "size": 12029,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/contribution_boundary.md",
+        "size": 1671,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/integration_decision.md",
+        "size": 2392,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/interface-registry.md",
+        "size": 10840,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/phase_1_persistent_core.md",
+        "size": 3834,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/pi_version_and_license.md",
+        "size": 1482,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/runtime_candidates_research.md",
+        "size": 5692,
+        "mode": 420
+      },
+      {
+        "path": "docs/architecture/v1_minimum_incremental_architecture.md",
+        "size": 2538,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/current_margin_status.md",
+        "size": 2063,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/legacy_data_disposition.md",
+        "size": 2477,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/legacy_retirement_plan.md",
+        "size": 7916,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/phase_0_repository_audit_v1.md",
+        "size": 11917,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/phase_1_acceptance_report.md",
+        "size": 4437,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/pi_stage_0_live_verification.md",
+        "size": 1593,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/stage_1_freeze_report.md",
+        "size": 2713,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/stage_2_core_report.md",
+        "size": 2030,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/stage_3_continuity_mvp_report.md",
+        "size": 3115,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/terminal_continuity_pilot_report.md",
+        "size": 5712,
+        "mode": 420
+      },
+      {
+        "path": "docs/audit/terminal_first_cleanup_report.md",
+        "size": 2571,
+        "mode": 420
+      },
+      {
+        "path": "docs/BACKEND_STATUS.md",
+        "size": 2098,
+        "mode": 420
+      },
+      {
+        "path": "docs/BACKUP_AND_EXPORT.md",
+        "size": 1980,
+        "mode": 420
+      },
+      {
+        "path": "docs/DESIGN_PRINCIPLES.md",
+        "size": 2003,
+        "mode": 420
+      },
+      {
+        "path": "docs/evaluation/stage_1_protocol.md",
+        "size": 2921,
+        "mode": 420
+      },
+      {
+        "path": "docs/FUNCTIONAL_ACCEPTANCE.md",
+        "size": 5568,
+        "mode": 420
+      },
+      {
+        "path": "docs/margin_daily_use_optimization_plan.md",
+        "size": 89173,
+        "mode": 420
+      },
+      {
+        "path": "docs/MARGIN_NAMING_COMPATIBILITY.md",
+        "size": 2044,
+        "mode": 420
+      },
+      {
+        "path": "docs/MEMORY_LAYERS.md",
+        "size": 5153,
+        "mode": 420
+      },
+      {
+        "path": "docs/RELEASE_CHECKLIST.md",
+        "size": 1280,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/agent-capability-matrix.md",
+        "size": 31731,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/agent-manifest-schema.md",
+        "size": 28476,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/agent-self-integration-real-trial.md",
+        "size": 35457,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/agent-self-integration-tier1-revalidation.md",
+        "size": 23360,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/agent-self-integration-tier1-trial.md",
+        "size": 23015,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/agent-self-integration-validation.md",
+        "size": 17310,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/agent-verify-design.md",
+        "size": 51573,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/integration-security-boundary.md",
+        "size": 23096,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/margin-agent-integration-skill.md",
+        "size": 25837,
+        "mode": 420
+      },
+      {
+        "path": "docs/research/s10.1b-decision.md",
+        "size": 16305,
+        "mode": 420
+      },
+      {
+        "path": "docs/roadmap/v0.2-readiness.md",
+        "size": 63210,
+        "mode": 420
+      },
+      {
+        "path": "docs/roadmap/v0.2-scope-proposal.md",
+        "size": 28987,
+        "mode": 420
+      },
+      {
+        "path": "docs/S8.7-claude-handoff-r1.md",
+        "size": 19727,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-07-29-margin-naming-migration.md",
+        "size": 29936,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-07-29-margin-recruiter-delivery.md",
+        "size": 55704,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-07-30-margin-project-understanding-manual.md",
+        "size": 30333,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-20-margin-pi-stage-0-audit-spike.md",
+        "size": 23282,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-20-margin-stage-1-frozen-evaluation.md",
+        "size": 16208,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-20-margin-stage-2-core-schema-tools.md",
+        "size": 9450,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-20-margin-stage-3-continuity-mvp.md",
+        "size": 16097,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-23-margin-v1-phase-1-7-roadmap.md",
+        "size": 21631,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-23-memory-routing-and-hybrid-recall.md",
+        "size": 10533,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-23-phase-2a-application-contract-implementation.md",
+        "size": 29038,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-23-terminal-continuity-pilot.md",
+        "size": 9710,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-23-terminal-first-workspace-cleanup.md",
+        "size": 5970,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-24-phase2.5-multi-workstream-continuity.md",
+        "size": 48782,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-24-phase2a-main-integration.md",
+        "size": 8139,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/plans/2026-08-24-phase2b-web-workbench.md",
+        "size": 23039,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-07-29-margin-naming-migration-design.md",
+        "size": 10526,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-07-29-margin-recruiter-delivery-design.md",
+        "size": 15986,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-07-30-margin-project-understanding-manual-design.md",
+        "size": 10112,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-20-margin-pi-continuity-agent-design.md",
+        "size": 23247,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-20-margin-stage-1-mvp-scenarios-design.md",
+        "size": 8299,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-20-margin-stage-2-core-schema-tools-design.md",
+        "size": 13519,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-20-margin-stage-3-pi-adapter-context-planner-design.md",
+        "size": 6964,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-23-memory-routing-and-chinese-recall-design.md",
+        "size": 4437,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-23-mvp-closure-and-runtime-selection-design.md",
+        "size": 4334,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-23-phase-2a-application-contract-design.md",
+        "size": 23212,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-23-terminal-continuity-pilot-design.md",
+        "size": 5621,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-23-terminal-first-workspace-cleanup-design.md",
+        "size": 2528,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-24-phase2.5-multi-workstream-continuity-design.md",
+        "size": 24333,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-24-phase2a-main-integration-design.md",
+        "size": 3036,
+        "mode": 420
+      },
+      {
+        "path": "docs/superpowers/specs/2026-08-24-phase2b-web-workbench-design.md",
+        "size": 14927,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/_scoring/grading-view.txt",
+        "size": 161494,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-01-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-01-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-01-A.json",
+        "size": 30198,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-01-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-01-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-01-B.json",
+        "size": 38961,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-02-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-02-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-02-A.json",
+        "size": 9578,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-02-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-02-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-02-B.json",
+        "size": 13426,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-03-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-03-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-03-A.json",
+        "size": 43724,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-03-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-03-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-03-B.json",
+        "size": 29779,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-04-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-04-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-04-A.json",
+        "size": 43343,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-04-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-04-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-04-B.json",
+        "size": 32134,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-05-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-05-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-05-A.json",
+        "size": 31839,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-05-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-05-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-05-B.json",
+        "size": 30827,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-06-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-06-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-06-A.json",
+        "size": 30477,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-06-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-06-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-06-B.json",
+        "size": 32222,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-07-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-07-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-07-A.json",
+        "size": 38938,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-07-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-07-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-07-B.json",
+        "size": 47345,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-08-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-08-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-08-A.json",
+        "size": 29012,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-08-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-08-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-08-B.json",
+        "size": 49356,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-09-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-09-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-09-A.json",
+        "size": 42138,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-09-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-09-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-09-B.json",
+        "size": 31880,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-10-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-10-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-10-A.json",
+        "size": 37354,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-10-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-10-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-10-B.json",
+        "size": 55089,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-11-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-11-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-11-A.json",
+        "size": 32775,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-11-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-11-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-11-B.json",
+        "size": 47915,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-12-A.cert.json",
+        "size": 627,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-12-A.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-12-A.json",
+        "size": 40021,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-12-B.cert.json",
+        "size": 581,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-12-B.cfg.json",
+        "size": 347,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/formal/case-12-B.json",
+        "size": 32233,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/freeze-config.json",
+        "size": 7203,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/freeze-manifest.json",
+        "size": 7160,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/preflight/case-01-A.cert.json",
+        "size": 636,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/preflight/case-01-A.cfg.json",
+        "size": 356,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/preflight/case-01-A.json",
+        "size": 41153,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/preflight/case-01-B.cert.json",
+        "size": 590,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/preflight/case-01-B.cfg.json",
+        "size": 356,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/preflight/case-01-B.json",
+        "size": 20075,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-r7-runs/run-ledger.json",
+        "size": 17221,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/_harness/controller.mjs",
+        "size": 19906,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/_harness/diag-launch.mjs",
+        "size": 2041,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/_harness/lib/pi-loader.mjs",
+        "size": 766,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/_harness/lib/sandbox-tools.mjs",
+        "size": 13159,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/_harness/worker.mjs",
+        "size": 6479,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/_scoring/extract-grading.json",
+        "size": 207804,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/_scoring/grading-view.txt",
+        "size": 165118,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal-run-ledger.json",
+        "size": 16710,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-01-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-01-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-01-A.json",
+        "size": 35843,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-01-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-01-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-01-B.json",
+        "size": 28741,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-02-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-02-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-02-A.json",
+        "size": 31686,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-02-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-02-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-02-B.json",
+        "size": 36530,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-03-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-03-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-03-A.json",
+        "size": 37712,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-03-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-03-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-03-B.json",
+        "size": 31244,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-04-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-04-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-04-A.json",
+        "size": 27336,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-04-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-04-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-04-B.json",
+        "size": 37484,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-05-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-05-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-05-A.json",
+        "size": 39548,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-05-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-05-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-05-B.json",
+        "size": 31104,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-06-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-06-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-06-A.json",
+        "size": 28127,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-06-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-06-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-06-B.json",
+        "size": 53073,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-07-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-07-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-07-A.json",
+        "size": 43914,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-07-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-07-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-07-B.json",
+        "size": 52828,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-08-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-08-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-08-A.json",
+        "size": 36474,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-08-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-08-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-08-B.json",
+        "size": 26768,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-09-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-09-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-09-A.json",
+        "size": 32234,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-09-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-09-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-09-B.json",
+        "size": 24998,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-10-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-10-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-10-A.json",
+        "size": 61717,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-10-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-10-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-10-B.json",
+        "size": 28990,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-11-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-11-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-11-A.json",
+        "size": 46128,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-11-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-11-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-11-B.json",
+        "size": 33713,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-12-A.cert.json",
+        "size": 620,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-12-A.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-12-A.json",
+        "size": 57052,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-12-B.cert.json",
+        "size": 574,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-12-B.cfg.json",
+        "size": 340,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/formal/case-12-B.json",
+        "size": 32487,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/freeze-manifest.json",
+        "size": 8309,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/harness-freeze.json",
+        "size": 7512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/post-run-freeze.json",
+        "size": 1471,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/preflight/case-01-A.cert.json",
+        "size": 629,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/preflight/case-01-A.cfg.json",
+        "size": 349,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/preflight/case-01-A.json",
+        "size": 34190,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/preflight/case-01-B.cert.json",
+        "size": 583,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/preflight/case-01-B.cfg.json",
+        "size": 349,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-ab-deepseek-runs/preflight/case-01-B.json",
+        "size": 27974,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/_scoring/r7-grading-view.txt",
+        "size": 38922,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-02-B.cert.json",
+        "size": 565,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-02-B.cfg.json",
+        "size": 331,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-02-B.json",
+        "size": 50767,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-04-B.cert.json",
+        "size": 565,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-04-B.cfg.json",
+        "size": 331,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-04-B.json",
+        "size": 36069,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-05-B.cert.json",
+        "size": 565,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-05-B.cfg.json",
+        "size": 331,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-05-B.json",
+        "size": 30937,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-08-B.cert.json",
+        "size": 565,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-08-B.cfg.json",
+        "size": 331,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-08-B.json",
+        "size": 33986,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-11-B.cert.json",
+        "size": 565,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-11-B.cfg.json",
+        "size": 331,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/case-11-B.json",
+        "size": 32672,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/r7-freeze.json",
+        "size": 1852,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/continuation-targeted-r7-runs/r7-run-ledger.json",
+        "size": 3447,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_continuation_ab_deepseek_r7.json",
+        "size": 23922,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_continuation_ab_deepseek_r7.md",
+        "size": 8315,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_continuation_ab_deepseek.json",
+        "size": 32931,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_continuation_ab_deepseek.md",
+        "size": 10695,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_continuation_targeted_r7.json",
+        "size": 9826,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_continuation_targeted_r7.md",
+        "size": 2876,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_handoff_compression_benchmark_postfix.json",
+        "size": 8136,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_handoff_compression_benchmark_postfix.md",
+        "size": 1454,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_handoff_compression_benchmark.json",
+        "size": 5523,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_handoff_compression_benchmark.md",
+        "size": 3693,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_handoff_size_results.csv",
+        "size": 3,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_poc_review_conclusion.md",
+        "size": 14235,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_recovery_benchmark_rerun.json",
+        "size": 2148,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_recovery_benchmark_rerun.md",
+        "size": 2669,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_recovery_benchmark.json",
+        "size": 7527,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/margin_recovery_benchmark.md",
+        "size": 7117,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/phase_2a_acceptance_report.md",
+        "size": 10976,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/phase_2a_main_integration_report.md",
+        "size": 9615,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/phase_2b_acceptance_report.md",
+        "size": 6434,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-benchmark-ground-truth.json",
+        "size": 10392,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2-r6-CONSOLIDATION.md",
+        "size": 3389,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/case-02.md",
+        "size": 6875,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/case-04.md",
+        "size": 5592,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/case-05.md",
+        "size": 6883,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/case-08.md",
+        "size": 6608,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/case-11.md",
+        "size": 7007,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/manifest.json",
+        "size": 4310,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/session-***.jsonl.capture.json",
+        "size": 514,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r2/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/case-02.md",
+        "size": 6828,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/case-04.md",
+        "size": 5081,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/case-05.md",
+        "size": 6744,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/case-08.md",
+        "size": 6350,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/case-11.md",
+        "size": 6696,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/manifest.json",
+        "size": 4322,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/session-***.jsonl.capture.json",
+        "size": 514,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r3/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/case-02.md",
+        "size": 6783,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/case-04.md",
+        "size": 5081,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/case-05.md",
+        "size": 6755,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/case-08.md",
+        "size": 6350,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/case-11.md",
+        "size": 6696,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/manifest.json",
+        "size": 4322,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/session-***.jsonl.capture.json",
+        "size": 514,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r4/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/case-02.md",
+        "size": 6872,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/case-04.md",
+        "size": 5081,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/case-05.md",
+        "size": 6755,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/case-08.md",
+        "size": 6350,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/case-11.md",
+        "size": 6696,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/manifest.json",
+        "size": 4323,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/session-***.jsonl.capture.json",
+        "size": 514,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r5/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/case-02.md",
+        "size": 6929,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/case-04.md",
+        "size": 5513,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/case-05.md",
+        "size": 6755,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/case-08.md",
+        "size": 6232,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/case-11.md",
+        "size": 6540,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/manifest.json",
+        "size": 4325,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/session-***.jsonl.capture.json",
+        "size": 514,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r6/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/case-02.md",
+        "size": 6929,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/case-04.md",
+        "size": 5513,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/case-05.md",
+        "size": 6755,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/case-08.md",
+        "size": 6490,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/case-11.md",
+        "size": 6540,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/manifest.json",
+        "size": 4325,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/session-***.jsonl.capture.json",
+        "size": 514,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix-r7/session-***.jsonl.capture.json",
+        "size": 515,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-01.md",
+        "size": 7130,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-02.md",
+        "size": 5079,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-03.md",
+        "size": 4201,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-04.md",
+        "size": 3956,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-05.md",
+        "size": 5238,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-06.md",
+        "size": 11691,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-07.md",
+        "size": 23707,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-08.md",
+        "size": 5416,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-09.md",
+        "size": 12940,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-10.md",
+        "size": 14247,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-11.md",
+        "size": 5418,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/case-12.md",
+        "size": 11400,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 511,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 511,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-postfix/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-01.md",
+        "size": 7966,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-02.md",
+        "size": 6926,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-03.md",
+        "size": 6419,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-04.md",
+        "size": 5510,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-05.md",
+        "size": 6752,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-06.md",
+        "size": 12205,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-07.md",
+        "size": 24560,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-08.md",
+        "size": 6487,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-09.md",
+        "size": 14297,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-10.md",
+        "size": 15232,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-11.md",
+        "size": 6537,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/case-12.md",
+        "size": 12392,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/manifest.json",
+        "size": 8475,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 511,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 511,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs-r7-full/session-***.jsonl.capture.json",
+        "size": 512,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-01.md",
+        "size": 4757,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-02.md",
+        "size": 4901,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-03.md",
+        "size": 3721,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-04.md",
+        "size": 2560,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-05.md",
+        "size": 4843,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-06.md",
+        "size": 11364,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-07.md",
+        "size": 20887,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-08.md",
+        "size": 3956,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-09.md",
+        "size": 11496,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-10.md",
+        "size": 4770,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-11.md",
+        "size": 4115,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/case-12.md",
+        "size": 9180,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/recovery-handoffs/manifest.json",
+        "size": 3502,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/s8-8/claude-a18cb938-handoff.md",
+        "size": 9014,
+        "mode": 420
+      },
+      {
+        "path": "docs/validation/v2_resource_bar_daily_use_baseline.md",
+        "size": 1458,
+        "mode": 420
+      },
+      {
+        "path": "electron/main.js",
+        "size": 10562,
+        "mode": 420
+      },
+      {
+        "path": "electron/preload.cjs",
+        "size": 506,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/cp-casual-chat-005.json",
+        "size": 1854,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/cp-decision-override-002.json",
+        "size": 1804,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/cp-project-switch-003.json",
+        "size": 1855,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/cp-resume-version-001.json",
+        "size": 1819,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/cp-tool-confirmation-004.json",
+        "size": 1913,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/lr-new-session-001.json",
+        "size": 2067,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/lr-no-memory-004.json",
+        "size": 1812,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/lr-project-switch-003.json",
+        "size": 1853,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/lr-sensitive-note-005.json",
+        "size": 1886,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/fixtures/lr-stale-source-002.json",
+        "size": 1800,
+        "mode": 420
+      },
+      {
+        "path": "evaluation/stage1/manifest.json",
+        "size": 1744,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase0-continues/git-before.json",
+        "size": 4060,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase0-continues/package-lock.json",
+        "size": 17581,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase0-continues/package.json",
+        "size": 314,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase0-continues/README.md",
+        "size": 14847,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase0-continues/run-baseline.mjs",
+        "size": 15713,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase0-continues/verify-baseline.mjs",
+        "size": 6152,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/distiller.mjs",
+        "size": 15498,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/distiller.test.mjs",
+        "size": 9741,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/evaluation.md",
+        "size": 4888,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/evidence.mjs",
+        "size": 16376,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/git-before.json",
+        "size": 7067,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/package-lock.json",
+        "size": 1663,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/package.json",
+        "size": 288,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/README.md",
+        "size": 8172,
+        "mode": 420
+      },
+      {
+        "path": "experiments/phase1-distiller/run-distiller.mjs",
+        "size": 6022,
+        "mode": 420
+      },
+      {
+        "path": "forge.config.cjs",
+        "size": 3016,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 3231,
+        "mode": 420
+      },
+      {
+        "path": "plugins/doubao/agent.json",
+        "size": 4098,
+        "mode": 420
+      },
+      {
+        "path": "plugins/doubao/README.md",
+        "size": 4928,
+        "mode": 420
+      },
+      {
+        "path": "plugins/nova/agent.json",
+        "size": 4553,
+        "mode": 420
+      },
+      {
+        "path": "plugins/nova/README.md",
+        "size": 3751,
+        "mode": 420
+      },
+      {
+        "path": "run-echo-local.cmd",
+        "size": 415,
+        "mode": 420
+      },
+      {
+        "path": "run-margin-local.cmd",
+        "size": 300,
+        "mode": 420
+      },
+      {
+        "path": "scripts/audit-pi-baseline.js",
+        "size": 2455,
+        "mode": 420
+      },
+      {
+        "path": "scripts/bootstrap-pi-runtime.ps1",
+        "size": 2930,
+        "mode": 420
+      },
+      {
+        "path": "scripts/capture-r2-resource-bar.cjs",
+        "size": 1802,
+        "mode": 420
+      },
+      {
+        "path": "scripts/capture-r32-electron.cjs",
+        "size": 2549,
+        "mode": 420
+      },
+      {
+        "path": "scripts/capture-r33-electron.cjs",
+        "size": 2683,
+        "mode": 420
+      },
+      {
+        "path": "scripts/deploy.sh",
+        "size": 724,
+        "mode": 420
+      },
+      {
+        "path": "scripts/export-legacy-data.js",
+        "size": 1820,
+        "mode": 420
+      },
+      {
+        "path": "scripts/generate-handoff.js",
+        "size": 2662,
+        "mode": 420
+      },
+      {
+        "path": "scripts/generate-postfix-handoff-benchmark.js",
+        "size": 4822,
+        "mode": 420
+      },
+      {
+        "path": "scripts/inventory-legacy-data.js",
+        "size": 2053,
+        "mode": 420
+      },
+      {
+        "path": "scripts/run-feishu-surface.js",
+        "size": 12523,
+        "mode": 420
+      },
+      {
+        "path": "scripts/run-legacy-api.js",
+        "size": 519,
+        "mode": 420
+      },
+      {
+        "path": "scripts/run-margin-surface.js",
+        "size": 1773,
+        "mode": 420
+      },
+      {
+        "path": "scripts/run-phase2b-live-e2e.js",
+        "size": 11706,
+        "mode": 420
+      },
+      {
+        "path": "scripts/run-pi-continuity-smoke.js",
+        "size": 1118,
+        "mode": 420
+      },
+      {
+        "path": "scripts/run-pi-sdk-spike.js",
+        "size": 11766,
+        "mode": 420
+      },
+      {
+        "path": "scripts/run-terminal-pilot.js",
+        "size": 5560,
+        "mode": 420
+      },
+      {
+        "path": "scripts/run-web-workbench.js",
+        "size": 1707,
+        "mode": 420
+      },
+      {
+        "path": "scripts/schedule-setup.ps1",
+        "size": 2562,
+        "mode": 420
+      },
+      {
+        "path": "scripts/setup-feishu-folders.js",
+        "size": 2030,
+        "mode": 420
+      },
+      {
+        "path": "scripts/validate-stage1-fixtures.js",
+        "size": 4564,
+        "mode": 420
+      },
+      {
+        "path": "scripts/verify-pi-stage-0.ps1",
+        "size": 3076,
+        "mode": 420
+      },
+      {
+        "path": "scripts/verify-validation-manifests.js",
+        "size": 3172,
+        "mode": 420
+      },
+      {
+        "path": "skills/margin-agent-integration/manifest.schema.json",
+        "size": 13379,
+        "mode": 420
+      },
+      {
+        "path": "skills/margin-agent-integration/report.schema.json",
+        "size": 5110,
+        "mode": 420
+      },
+      {
+        "path": "skills/margin-agent-integration/SKILL.md",
+        "size": 30154,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/adapters.js",
+        "size": 10016,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/agentInstall.js",
+        "size": 7994,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/agentVerify.js",
+        "size": 34122,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/claude/claudeArchiveState.js",
+        "size": 7655,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/claude/claudeEvidence.js",
+        "size": 13141,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/claude/claudeHandoff.js",
+        "size": 1291,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/claude/claudeSessionSource.js",
+        "size": 1297,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/codex/codexTurnStatus.js",
+        "size": 2675,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/descriptor/builtin.js",
+        "size": 4512,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/descriptor/compose.js",
+        "size": 9880,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/descriptor/load.js",
+        "size": 6675,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/descriptor/readers.js",
+        "size": 25289,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/descriptor/spec.js",
+        "size": 25881,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/executionStatus.js",
+        "size": 4736,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/externalSessionDiscovery.js",
+        "size": 9431,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/pi/piEvidence.js",
+        "size": 10675,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/pi/piHandoff.js",
+        "size": 1247,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/pi/piSessionSource.js",
+        "size": 1295,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/sessionTitle.js",
+        "size": 1289,
+        "mode": 420
+      },
+      {
+        "path": "src/agents/sourceRegistry.js",
+        "size": 14347,
+        "mode": 420
+      },
+      {
+        "path": "src/application/artifactService.js",
+        "size": 761,
+        "mode": 420
+      },
+      {
+        "path": "src/application/checkpointService.js",
+        "size": 1078,
+        "mode": 420
+      },
+      {
+        "path": "src/application/continuityService.js",
+        "size": 339,
+        "mode": 420
+      },
+      {
+        "path": "src/application/interactionService.js",
+        "size": 7471,
+        "mode": 420
+      },
+      {
+        "path": "src/application/marginApplicationContract.js",
+        "size": 18952,
+        "mode": 420
+      },
+      {
+        "path": "src/application/memoryService.js",
+        "size": 977,
+        "mode": 420
+      },
+      {
+        "path": "src/application/needsOwnerService.js",
+        "size": 2839,
+        "mode": 420
+      },
+      {
+        "path": "src/application/resumeBriefService.js",
+        "size": 3694,
+        "mode": 420
+      },
+      {
+        "path": "src/application/runService.js",
+        "size": 4705,
+        "mode": 420
+      },
+      {
+        "path": "src/application/v1ToolSet.js",
+        "size": 1302,
+        "mode": 420
+      },
+      {
+        "path": "src/application/workstreamService.js",
+        "size": 3399,
+        "mode": 420
+      },
+      {
+        "path": "src/application/workstreamSwitchService.js",
+        "size": 1861,
+        "mode": 420
+      },
+      {
+        "path": "src/cli/agentSourceCli.js",
+        "size": 13114,
+        "mode": 420
+      },
+      {
+        "path": "src/cli/margin/index.js",
+        "size": 382,
+        "mode": 420
+      },
+      {
+        "path": "src/cli/margin/prompt.js",
+        "size": 1292,
+        "mode": 420
+      },
+      {
+        "path": "src/cli/margin/render.js",
+        "size": 1902,
+        "mode": 420
+      },
+      {
+        "path": "src/cli/margin/runCostCli.js",
+        "size": 7948,
+        "mode": 420
+      },
+      {
+        "path": "src/cli/margin/runMarginCli.js",
+        "size": 3900,
+        "mode": 420
+      },
+      {
+        "path": "src/cli/margin/selection.js",
+        "size": 3198,
+        "mode": 420
+      },
+      {
+        "path": "src/cli/runBridgeCli.js",
+        "size": 6309,
+        "mode": 420
+      },
+      {
+        "path": "src/continuity/contextPlanner.js",
+        "size": 2360,
+        "mode": 420
+      },
+      {
+        "path": "src/continuity/continuityHarness.js",
+        "size": 6625,
+        "mode": 420
+      },
+      {
+        "path": "src/continuity/memoryWriteRouter.js",
+        "size": 1010,
+        "mode": 420
+      },
+      {
+        "path": "src/contracts/contractSurface.js",
+        "size": 2080,
+        "mode": 420
+      },
+      {
+        "path": "src/contracts/contractTypes.js",
+        "size": 3003,
+        "mode": 420
+      },
+      {
+        "path": "src/contracts/dtoMappers.js",
+        "size": 12251,
+        "mode": 420
+      },
+      {
+        "path": "src/contracts/eventEnvelope.js",
+        "size": 7375,
+        "mode": 420
+      },
+      {
+        "path": "src/contracts/validation.js",
+        "size": 20987,
+        "mode": 420
+      },
+      {
+        "path": "src/core/contracts.js",
+        "size": 1457,
+        "mode": 420
+      },
+      {
+        "path": "src/core/createMarginCore.js",
+        "size": 4965,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/createMarginSurface.js",
+        "size": 4909,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/createRunBindingReader.js",
+        "size": 1923,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/distiller.js",
+        "size": 29253,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/evidence.js",
+        "size": 12979,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/exec.js",
+        "size": 8289,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/handoff.js",
+        "size": 5527,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/handoffArtifact.js",
+        "size": 1944,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/httpAdapter.js",
+        "size": 30589,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/index.js",
+        "size": 2170,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/recoveryJson.js",
+        "size": 14511,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/repo-truth.js",
+        "size": 6681,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/resume-summary.js",
+        "size": 3252,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/save.js",
+        "size": 1059,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/session-source.js",
+        "size": 29895,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/smartSelect.js",
+        "size": 4369,
+        "mode": 420
+      },
+      {
+        "path": "src/core/handoff/workspace-overview.js",
+        "size": 2592,
+        "mode": 420
+      },
+      {
+        "path": "src/core/marginCoreStore.js",
+        "size": 17601,
+        "mode": 420
+      },
+      {
+        "path": "src/core/memoryRetrieval.js",
+        "size": 2762,
+        "mode": 420
+      },
+      {
+        "path": "src/core/migrations/001-margin-core.js",
+        "size": 5408,
+        "mode": 420
+      },
+      {
+        "path": "src/core/migrations/002-memory-embeddings.js",
+        "size": 540,
+        "mode": 420
+      },
+      {
+        "path": "src/core/migrations/003-persistent-work.js",
+        "size": 3329,
+        "mode": 420
+      },
+      {
+        "path": "src/core/migrations/004-application-contract.js",
+        "size": 1611,
+        "mode": 420
+      },
+      {
+        "path": "src/core/migrations/005-legacy-workstream-title.js",
+        "size": 446,
+        "mode": 420
+      },
+      {
+        "path": "src/core/migrations/006-memory-lifecycle.js",
+        "size": 423,
+        "mode": 420
+      },
+      {
+        "path": "src/core/migrations/007-run-session-binding.js",
+        "size": 1202,
+        "mode": 420
+      },
+      {
+        "path": "src/core/permissions.js",
+        "size": 779,
+        "mode": 420
+      },
+      {
+        "path": "src/core/persistentWorkRepository.js",
+        "size": 45461,
+        "mode": 420
+      },
+      {
+        "path": "src/core/tools/actionTool.js",
+        "size": 7664,
+        "mode": 420
+      },
+      {
+        "path": "src/core/tools/memoryTools.js",
+        "size": 7897,
+        "mode": 420
+      },
+      {
+        "path": "src/core/tools/stateTool.js",
+        "size": 8520,
+        "mode": 420
+      },
+      {
+        "path": "src/domain/run.js",
+        "size": 787,
+        "mode": 420
+      },
+      {
+        "path": "src/domain/workstream.js",
+        "size": 1150,
+        "mode": 420
+      },
+      {
+        "path": "src/evaluation/stage1Fixture.js",
+        "size": 5189,
+        "mode": 420
+      },
+      {
+        "path": "src/http/createWebHttpAdapter.js",
+        "size": 11246,
+        "mode": 420
+      },
+      {
+        "path": "src/http/httpErrors.js",
+        "size": 4748,
+        "mode": 420
+      },
+      {
+        "path": "src/http/webCapabilities.js",
+        "size": 1811,
+        "mode": 420
+      },
+      {
+        "path": "src/http/webGateway.js",
+        "size": 2802,
+        "mode": 420
+      },
+      {
+        "path": "src/pilot/terminalCommands.js",
+        "size": 2136,
+        "mode": 420
+      },
+      {
+        "path": "src/pilot/terminalPilotController.js",
+        "size": 17089,
+        "mode": 420
+      },
+      {
+        "path": "src/resources/agentResourceService.js",
+        "size": 4363,
+        "mode": 420
+      },
+      {
+        "path": "src/resources/claudeOpenCodeGoBinding.js",
+        "size": 8122,
+        "mode": 420
+      },
+      {
+        "path": "src/resources/codexLiveResource.js",
+        "size": 12502,
+        "mode": 420
+      },
+      {
+        "path": "src/resources/codexQuotaSource.js",
+        "size": 1899,
+        "mode": 420
+      },
+      {
+        "path": "src/resources/normalizeAgentResource.js",
+        "size": 2947,
+        "mode": 420
+      },
+      {
+        "path": "src/resources/opencodeGoQuota.js",
+        "size": 7800,
+        "mode": 420
+      },
+      {
+        "path": "src/resources/piApiUsage.js",
+        "size": 8444,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/claude/claudeAgentLoop.js",
+        "size": 8897,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/pi/marginPiAdapter.js",
+        "size": 9044,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/pi/piAudit.js",
+        "size": 1247,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/pi/piBaseline.js",
+        "size": 1178,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/pi/piContinuitySmoke.js",
+        "size": 16402,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/pi/piSpikeTool.js",
+        "size": 1324,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/pi/piTerminalPilotRuntime.js",
+        "size": 5626,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/pi/piWebRuntimeCoordinator.js",
+        "size": 7722,
+        "mode": 420
+      },
+      {
+        "path": "src/server.js",
+        "size": 533,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaceHealth.js",
+        "size": 1121,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/commandHandler.js",
+        "size": 6452,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/feishuClient.js",
+        "size": 7924,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/feishuDocClient.js",
+        "size": 4593,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/feishuWebhookHandler.js",
+        "size": 3322,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/httpAdapter.js",
+        "size": 1983,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/interviewHandler.js",
+        "size": 6538,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/jobStore.js",
+        "size": 6570,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/jobTools.js",
+        "size": 6136,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/llmClient.js",
+        "size": 4995,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/monitor.js",
+        "size": 4333,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/morningBrief.js",
+        "size": 6801,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/newsFetcher.js",
+        "size": 7712,
+        "mode": 420
+      },
+      {
+        "path": "src/surfaces/feishu/resumeBitableTools.js",
+        "size": 7246,
+        "mode": 420
+      },
+      {
+        "path": "src/telemetry/codexUsageIngest.js",
+        "size": 11386,
+        "mode": 420
+      },
+      {
+        "path": "src/telemetry/codexUsageRecord.js",
+        "size": 5025,
+        "mode": 420
+      },
+      {
+        "path": "src/telemetry/costLedger.js",
+        "size": 4886,
+        "mode": 420
+      },
+      {
+        "path": "src/telemetry/marginTelemetryService.js",
+        "size": 2859,
+        "mode": 420
+      },
+      {
+        "path": "src/telemetry/paths.js",
+        "size": 853,
+        "mode": 420
+      },
+      {
+        "path": "src/telemetry/priceTable.js",
+        "size": 5248,
+        "mode": 420
+      },
+      {
+        "path": "src/web/createWebWorkbench.js",
+        "size": 9914,
+        "mode": 420
+      },
+      {
+        "path": "test/activityTrace.test.js",
+        "size": 5116,
+        "mode": 420
+      },
+      {
+        "path": "test/agentDescriptor.test.js",
+        "size": 19496,
+        "mode": 420
+      },
+      {
+        "path": "test/agentDescriptorHardening.test.js",
+        "size": 10603,
+        "mode": 420
+      },
+      {
+        "path": "test/agentResourceQuota.test.js",
+        "size": 5720,
+        "mode": 420
+      },
+      {
+        "path": "test/agentSelfIntegration.test.js",
+        "size": 20192,
+        "mode": 420
+      },
+      {
+        "path": "test/agentSourceRegistry.test.js",
+        "size": 6397,
+        "mode": 420
+      },
+      {
+        "path": "test/agentSourceRemoval.test.js",
+        "size": 13535,
+        "mode": 420
+      },
+      {
+        "path": "test/agentVerify.test.js",
+        "size": 28210,
+        "mode": 420
+      },
+      {
+        "path": "test/agentVerifyDiagnostics.test.js",
+        "size": 16569,
+        "mode": 420
+      },
+      {
+        "path": "test/apiOnlyRuntime.test.js",
+        "size": 2179,
+        "mode": 420
+      },
+      {
+        "path": "test/applicationContractCommands.test.js",
+        "size": 34540,
+        "mode": 420
+      },
+      {
+        "path": "test/applicationContractEvents.test.js",
+        "size": 18389,
+        "mode": 420
+      },
+      {
+        "path": "test/applicationContractQueries.test.js",
+        "size": 7340,
+        "mode": 420
+      },
+      {
+        "path": "test/applicationContractValidation.test.js",
+        "size": 13032,
+        "mode": 420
+      },
+      {
+        "path": "test/claudeHandoffEvidence.test.js",
+        "size": 17100,
+        "mode": 420
+      },
+      {
+        "path": "test/claudeOpenCodeGoBinding.test.js",
+        "size": 8410,
+        "mode": 420
+      },
+      {
+        "path": "test/codexSourceNormalization.test.js",
+        "size": 14229,
+        "mode": 420
+      },
+      {
+        "path": "test/codexTurnStatus.test.js",
+        "size": 5168,
+        "mode": 420
+      },
+      {
+        "path": "test/contextPlanner.test.js",
+        "size": 11332,
+        "mode": 420
+      },
+      {
+        "path": "test/continuityHarness.test.js",
+        "size": 6711,
+        "mode": 420
+      },
+      {
+        "path": "test/contractVersion.test.js",
+        "size": 3885,
+        "mode": 420
+      },
+      {
+        "path": "test/electronHost.test.js",
+        "size": 6757,
+        "mode": 420
+      },
+      {
+        "path": "test/executionStatusDescriptor.test.js",
+        "size": 9027,
+        "mode": 420
+      },
+      {
+        "path": "test/executionStatusReaders.test.js",
+        "size": 2899,
+        "mode": 420
+      },
+      {
+        "path": "test/externalAgentSessionDiscovery.test.js",
+        "size": 18507,
+        "mode": 420
+      },
+      {
+        "path": "test/feishuHttpAdapter.test.js",
+        "size": 3006,
+        "mode": 420
+      },
+      {
+        "path": "test/forgeConfig.test.js",
+        "size": 4946,
+        "mode": 420
+      },
+      {
+        "path": "test/handoff.test.js",
+        "size": 32623,
+        "mode": 420
+      },
+      {
+        "path": "test/helpers/marginCoreTestDb.js",
+        "size": 626,
+        "mode": 420
+      },
+      {
+        "path": "test/interactionService.test.js",
+        "size": 9469,
+        "mode": 420
+      },
+      {
+        "path": "test/interfaceRegistry.test.js",
+        "size": 2272,
+        "mode": 420
+      },
+      {
+        "path": "test/legacyDataInventory.test.js",
+        "size": 1577,
+        "mode": 420
+      },
+      {
+        "path": "test/legacyRetirement.test.js",
+        "size": 6546,
+        "mode": 420
+      },
+      {
+        "path": "test/marginAgentSkill.test.js",
+        "size": 17106,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCli.test.js",
+        "size": 8553,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCoreActionTool.test.js",
+        "size": 5868,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCoreComposition.test.js",
+        "size": 987,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCoreContracts.test.js",
+        "size": 2305,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCoreMemoryTools.test.js",
+        "size": 10930,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCoreRepository.test.js",
+        "size": 3402,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCoreSchema.test.js",
+        "size": 3829,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCoreStateTool.test.js",
+        "size": 4629,
+        "mode": 420
+      },
+      {
+        "path": "test/marginCostTelemetry.test.js",
+        "size": 12571,
+        "mode": 420
+      },
+      {
+        "path": "test/marginDiscoveryParity.test.js",
+        "size": 1075,
+        "mode": 420
+      },
+      {
+        "path": "test/marginPiAdapter.test.js",
+        "size": 13956,
+        "mode": 420
+      },
+      {
+        "path": "test/marginR3Board.test.js",
+        "size": 26438,
+        "mode": 420
+      },
+      {
+        "path": "test/marginRecentSessionsList.test.js",
+        "size": 2092,
+        "mode": 420
+      },
+      {
+        "path": "test/marginResourceLiveSync.test.js",
+        "size": 6597,
+        "mode": 420
+      },
+      {
+        "path": "test/marginResourceRevision.test.js",
+        "size": 10105,
+        "mode": 420
+      },
+      {
+        "path": "test/marginS85CResourceReliability.test.js",
+        "size": 20864,
+        "mode": 420
+      },
+      {
+        "path": "test/marginS85DResourceBar.test.js",
+        "size": 12936,
+        "mode": 420
+      },
+      {
+        "path": "test/marginS85Reliability.test.js",
+        "size": 9430,
+        "mode": 420
+      },
+      {
+        "path": "test/marginSessionDetail.test.js",
+        "size": 7200,
+        "mode": 420
+      },
+      {
+        "path": "test/marginSessionRevision.test.js",
+        "size": 6531,
+        "mode": 420
+      },
+      {
+        "path": "test/marginSessionTruth.test.js",
+        "size": 12578,
+        "mode": 420
+      },
+      {
+        "path": "test/marginSurfaceHttpAdapter.test.js",
+        "size": 18935,
+        "mode": 420
+      },
+      {
+        "path": "test/marginWorkspaceOverview.test.js",
+        "size": 2712,
+        "mode": 420
+      },
+      {
+        "path": "test/marginWorkspaceSessions.test.js",
+        "size": 4231,
+        "mode": 420
+      },
+      {
+        "path": "test/memoryLifecycle.test.js",
+        "size": 8523,
+        "mode": 420
+      },
+      {
+        "path": "test/memoryRetrieval.test.js",
+        "size": 2471,
+        "mode": 420
+      },
+      {
+        "path": "test/memoryWriteRouter.test.js",
+        "size": 1403,
+        "mode": 420
+      },
+      {
+        "path": "test/opencodeGoQuota.test.js",
+        "size": 10130,
+        "mode": 420
+      },
+      {
+        "path": "test/persistentCoreMigrations.test.js",
+        "size": 11282,
+        "mode": 420
+      },
+      {
+        "path": "test/persistentWorkServices.test.js",
+        "size": 8421,
+        "mode": 420
+      },
+      {
+        "path": "test/phase2aContractE2E.test.js",
+        "size": 10643,
+        "mode": 420
+      },
+      {
+        "path": "test/phase2aPersistence.test.js",
+        "size": 13804,
+        "mode": 420
+      },
+      {
+        "path": "test/phase2bLiveEvidence.test.js",
+        "size": 2511,
+        "mode": 420
+      },
+      {
+        "path": "test/piApiUsage.test.js",
+        "size": 3584,
+        "mode": 420
+      },
+      {
+        "path": "test/piAudit.test.js",
+        "size": 1952,
+        "mode": 420
+      },
+      {
+        "path": "test/piAuditDocs.test.js",
+        "size": 1698,
+        "mode": 420
+      },
+      {
+        "path": "test/piBaseline.test.js",
+        "size": 1198,
+        "mode": 420
+      },
+      {
+        "path": "test/piContinuitySmoke.test.js",
+        "size": 11000,
+        "mode": 420
+      },
+      {
+        "path": "test/piHandoffEvidence.test.js",
+        "size": 13018,
+        "mode": 420
+      },
+      {
+        "path": "test/piRuntimeBootstrap.test.js",
+        "size": 1326,
+        "mode": 420
+      },
+      {
+        "path": "test/piSdkSpike.test.js",
+        "size": 3958,
+        "mode": 420
+      },
+      {
+        "path": "test/piSpikeTool.test.js",
+        "size": 1864,
+        "mode": 420
+      },
+      {
+        "path": "test/piStage0Verification.test.js",
+        "size": 1669,
+        "mode": 420
+      },
+      {
+        "path": "test/piTerminalPilotRuntime.test.js",
+        "size": 6982,
+        "mode": 420
+      },
+      {
+        "path": "test/piWebRuntimeCoordinator.test.js",
+        "size": 13910,
+        "mode": 420
+      },
+      {
+        "path": "test/recoveryJson.test.js",
+        "size": 10810,
+        "mode": 420
+      },
+      {
+        "path": "test/repositoryPrivacy.test.js",
+        "size": 6157,
+        "mode": 420
+      },
+      {
+        "path": "test/resumeBriefService.test.js",
+        "size": 5744,
+        "mode": 420
+      },
+      {
+        "path": "test/resumeSummary.test.js",
+        "size": 4285,
+        "mode": 420
+      },
+      {
+        "path": "test/runControl.test.js",
+        "size": 6645,
+        "mode": 420
+      },
+      {
+        "path": "test/runDomain.test.js",
+        "size": 979,
+        "mode": 420
+      },
+      {
+        "path": "test/runSessionBridge.test.js",
+        "size": 15942,
+        "mode": 420
+      },
+      {
+        "path": "test/smartSelect.test.js",
+        "size": 5219,
+        "mode": 420
+      },
+      {
+        "path": "test/stage1Documentation.test.js",
+        "size": 1540,
+        "mode": 420
+      },
+      {
+        "path": "test/stage1Fixture.test.js",
+        "size": 3992,
+        "mode": 420
+      },
+      {
+        "path": "test/stage1FrozenSet.test.js",
+        "size": 3042,
+        "mode": 420
+      },
+      {
+        "path": "test/stage1ValidationCli.test.js",
+        "size": 4820,
+        "mode": 420
+      },
+      {
+        "path": "test/stage2Documentation.test.js",
+        "size": 1102,
+        "mode": 420
+      },
+      {
+        "path": "test/stage3Documentation.test.js",
+        "size": 3918,
+        "mode": 420
+      },
+      {
+        "path": "test/terminalApplicationContract.test.js",
+        "size": 9681,
+        "mode": 420
+      },
+      {
+        "path": "test/terminalCommands.test.js",
+        "size": 2378,
+        "mode": 420
+      },
+      {
+        "path": "test/terminalPersistentRestart.test.js",
+        "size": 7610,
+        "mode": 420
+      },
+      {
+        "path": "test/terminalPilotCli.test.js",
+        "size": 3085,
+        "mode": 420
+      },
+      {
+        "path": "test/terminalPilotController.test.js",
+        "size": 14950,
+        "mode": 420
+      },
+      {
+        "path": "test/validationManifests.test.js",
+        "size": 397,
+        "mode": 420
+      },
+      {
+        "path": "test/webGateway.test.js",
+        "size": 6183,
+        "mode": 420
+      },
+      {
+        "path": "test/webHttpAdapter.test.js",
+        "size": 23323,
+        "mode": 420
+      },
+      {
+        "path": "test/webInteractionHttp.test.js",
+        "size": 5438,
+        "mode": 420
+      },
+      {
+        "path": "test/webWorkbenchComposition.test.js",
+        "size": 14046,
+        "mode": 420
+      },
+      {
+        "path": "test/workstreamDomain.test.js",
+        "size": 695,
+        "mode": 420
+      },
+      {
+        "path": "test/workstreamSwitchService.test.js",
+        "size": 4070,
+        "mode": 420
+      },
+      {
+        "path": "web/margin.html",
+        "size": 300,
+        "mode": 420
+      },
+      {
+        "path": "web/src/margin/icons.js",
+        "size": 2312,
+        "mode": 420
+      },
+      {
+        "path": "web/src/margin/main.jsx",
+        "size": 226,
+        "mode": 420
+      },
+      {
+        "path": "web/src/margin/margin.css",
+        "size": 7727,
+        "mode": 420
+      },
+      {
+        "path": "web/src/margin/marginApiClient.js",
+        "size": 2639,
+        "mode": 420
+      },
+      {
+        "path": "web/src/margin/MarginApp.js",
+        "size": 14623,
+        "mode": 420
+      },
+      {
+        "path": "web/src/margin/RecentSessionsList.js",
+        "size": 5947,
+        "mode": 420
+      },
+      {
+        "path": "web/src/margin/SessionBoard.js",
+        "size": 23875,
+        "mode": 420
+      },
+      {
+        "path": "web/src/margin/SessionDetail.js",
+        "size": 6024,
+        "mode": 420
+      },
+      {
+        "path": "web/vite.config.js",
+        "size": 359,
+        "mode": 420
+      }
+    ],
+    "entryCount": 736,
+    "bundled": []
+  }
+]

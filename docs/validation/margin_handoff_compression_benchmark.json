@@ -1,11 +1,12 @@
 {
+  "redaction": {"appliedAt":"2026-10-15","note":"All existing byte statistics and integrity observations are historical frozen-run measurements, not measurements of current public files. Current public derivative sizes, hashes and reductions: docs/validation/v0.2-privacy-redaction.json. Native source hashes and semantic outcomes unchanged."},
   "schema_version": 2,
   "status": "complete",
   "measurement": {
     "unit": "filesystem bytes",
     "method": "PowerShell Get-Item .Length; SHA-256 via Get-FileHash",
     "formula": "reductionPct = 100 * (1 - handoffBytes / sourceBytes)",
-    "staging_root": "C:\\Temp\\margin-recovery-handoff-staging-20260907"
+    "staging_root": "<isolated-workspace>"
   },
   "integrity": {
     "valid_cases": "12/12",

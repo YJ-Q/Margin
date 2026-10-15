@@ -148,7 +148,7 @@ Hover 某条 Session：
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\11\session-01a076e8-fe17-7430-b1c4-b32715a65fe8.jsonl
+- 快照：<isolated-workspace>\11\session-01a076e8-fe17-7430-b1c4-b32715a65fe8.jsonl
 - SHA-256：63cdb8e06094ba0e4ee944988fe30a13a1303f8dd04c5c61b386de6bdda96ef3
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

@@ -33,7 +33,7 @@ function isSyntheticUnixUser(segment) {
 // The captured segment must look like an account name. Without that, the guard flags its own redaction
 // helpers (`electron/main.js` rewrites `/Users/<name>` for user-facing output) and any regex source
 // text that happens to contain `Users` — noise that gets a guard switched off.
-const WINDOWS_HOME = /C:[\\/]Users[\\/]([A-Za-z0-9._-]{1,64})/gi;
+const WINDOWS_HOME = /[A-Z]:[\\/]Users[\\/]([\p{L}\p{N}._-]{1,64})/giu;
 const UNIX_HOME = /\/(?:Users|home)\/([A-Za-z0-9._-]{1,64})/g;
 
 function scanText(text) {
@@ -46,11 +46,16 @@ function scanText(text) {
     if (!isSyntheticUnixUser(match[1])) found.push(`personal Unix home path: ${match[0]}`);
   }
 
-  if (/(?:[A-Z]:[\\/]Code[\\/]margin)(?:[\\/]|$)/i.test(text)) {
+  if (/(?:[A-Z]:[\\/]Code[\\/]margin)(?=[\\/\s'"`.,;:)\]}]|$)/i.test(text)) {
     found.push('machine-specific repository path: D:/Code/margin');
   }
-  if (/(?:[A-Z]:[\\/]Echo)(?:[\\/]|$)/i.test(text)) {
+  if (/(?:[A-Z]:[\\/]Echo)(?=[\\/\s'"`.,;:)\]}]|$)/i.test(text)) {
     found.push('machine-specific legacy repository path: D:/Echo');
+  }
+
+  if (/[A-Z]:[\\/](?:Temp|tmp|Windows[\\/]Temp)[\\/][^\s'"`<>]+/i.test(text)
+      || /(?<![\w/:])\/(?:private\/)?(?:tmp|var\/folders)\/[^\s'"`<>]+/.test(text)) {
+    found.push('machine-specific temporary path');
   }
 
   return found;
@@ -60,7 +65,14 @@ function privacyViolations(relativePath, content) {
   const isTestFixture = relativePath.replaceAll('\\', '/').startsWith('test/');
   // Decode JSON string escapes so `C:\\Users\\x` is also seen as `C:\Users\x`.
   const decoded = content.replaceAll('\\\\', '\\').replaceAll('\\/', '/');
-  const found = [...scanText(content), ...(decoded === content ? [] : scanText(decoded))];
+  // These two design documents contain proposed, deterministic example roots, not captured paths.
+  // Keep the exception at the literal level so any other local path in either document still fails.
+  const examples = {
+    'docs/research/agent-verify-design.md': /D:[\\/]tmp[\\/]nova-home/gi,
+    'docs/superpowers/plans/2026-07-29-margin-recruiter-delivery.md': /C:[\\/]Temp[\\/]margin-recruiter-(?:http-server\.pid|delivery(?:\.zip)?|deploy(?:-status)?\.json)/gi,
+  };
+  const reviewed = examples[relativePath] ? decoded.replace(examples[relativePath], '<example-workspace>') : decoded;
+  const found = scanText(reviewed);
 
   // Test fixtures intentionally use stable fake workspace paths. Public docs and
   // production material must use repository-relative paths or placeholders.
@@ -93,6 +105,20 @@ test('the privacy guard detects both raw and JSON-escaped home paths', () => {
   // The repository-path rule still exempts test fixtures only.
   assert.deepEqual(privacyViolations('test/fixture.js', 'D:\\\\Code\\\\margin\\\\x'), []);
   assert.deepEqual(privacyViolations('docs/example.md', 'D:\\\\Code\\\\margin\\\\x'), ['machine-specific repository path: D:/Code/margin']);
+});
+
+test('the privacy guard detects temporary roots and quote-delimited repository roots', () => {
+  for (const value of ['C:\\Temp\\capture-abc\\file.jsonl', 'D:/tmp/capture-abc', '/tmp/capture-abc', '/private/var/folders/abc/file']) {
+    assert.deepEqual(privacyViolations('docs/capture.md', value), ['machine-specific temporary path']);
+    assert.deepEqual(privacyViolations('docs/capture.json', JSON.stringify({ path: value })), ['machine-specific temporary path']);
+  }
+  for (const value of ["cwd: 'D:\\\\Code\\\\margin'", '"D:/Code/margin"', '`D:/Code/margin`']) {
+    assert.deepEqual(privacyViolations('docs/example.md', value), ['machine-specific repository path: D:/Code/margin']);
+  }
+  assert.deepEqual(privacyViolations('docs/example.md', '<repo> and <isolated-workspace>/capture.jsonl'), []);
+  assert.deepEqual(privacyViolations('package-lock.json', 'https://registry.npmjs.org/tmp/-/tmp-0.0.33.tgz'), []);
+  assert.deepEqual(privacyViolations('docs/research/agent-verify-design.md', 'D:/tmp/nova-home/sessions'), []);
+  assert.deepEqual(privacyViolations('docs/research/agent-verify-design.md', 'D:/tmp/private-capture'), ['machine-specific temporary path']);
 });
 
 test('tracked tree contains no personal absolute paths or tracked private evidence paths', () => {

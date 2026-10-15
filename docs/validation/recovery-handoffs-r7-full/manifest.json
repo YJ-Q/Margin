@@ -2,7 +2,7 @@
   "redaction": {
     "appliedAt": "2026-09-26",
     "scope": "machine paths in handoff outputs",
-    "note": "Handoff outputs were redacted before entering version control: home and repository paths were replaced with placeholders, and the hashes below attest the redacted artifacts. Source session inputs were not modified and are not tracked."
+    "note": "Handoff outputs were redacted before entering version control: home and repository paths were replaced with placeholders, and the hashes below attest the redacted artifacts. Source session inputs were not modified and are not tracked. 2026-10-15: remaining temporary roots redacted in public derivatives; current hashes/sizes refer to redacted files. Historical measurements and pre-slice hashes are retained in docs/validation/v0.2-privacy-redaction.json. Native source inputs/hashes and semantic outcomes are unchanged."
   },
   "schema_version": 1,
   "status": "complete",
@@ -77,9 +77,9 @@
       "sourceBytes": 2763251,
       "sourceSha256": "6e18dec92f65d5c36c0cc0cbbcf090688059e98ff34791907a34ea14e2cdd690",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-06.md",
-      "handoffBytes": 12205,
-      "handoffSha256": "17df889c88b1f9132b40622b34d5b2aad4a703c82690a3a416517dfb38317824",
-      "reductionPct": 99.55831012094087
+      "handoffBytes": 11628,
+      "handoffSha256": "41ec0217ba9c666f20fd71c2bbf779f7727864ec465d9ac99e0556424ca7ac2a",
+      "reductionPct": 99.57919132210574
     },
     {
       "case": "case-07",
@@ -88,9 +88,9 @@
       "sourceBytes": 1222548,
       "sourceSha256": "e708e99eb83d59f8f321b45e40a6edc0c2a9579ff221b856640fd3ae3e1ae690",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-07.md",
-      "handoffBytes": 24560,
-      "handoffSha256": "c5c4696d3344e818a6e5203ea790b6d873f9df137dcac9b931ffe34c8da7c944",
-      "reductionPct": 97.99108092279404
+      "handoffBytes": 23324,
+      "handoffSha256": "d2d27ce310ffd4a649dffb5e210d4ffaac83bd9298b7a5cb048da50e52239843",
+      "reductionPct": 98.09218124768925
     },
     {
       "case": "case-08",
@@ -121,9 +121,9 @@
       "sourceBytes": 2336054,
       "sourceSha256": "e67c3558ccfaf9199c5590612dbde28938d38f7448a2af614bff9bf93a69080b",
       "handoff": "docs/validation/recovery-handoffs-r7-full/case-10.md",
-      "handoffBytes": 15232,
-      "handoffSha256": "dd6c2e8d9ba977567b43a46775549f7a30619daf0fbed873f2e6cc2affa70c1d",
-      "reductionPct": 99.34796027831548
+      "handoffBytes": 15168,
+      "handoffSha256": "431a3d30f375fbc7392143b19b005066143d9a5817a5b16866b409a2dfaa501c",
+      "reductionPct": 99.35069994101163
     },
     {
       "case": "case-11",
@@ -154,14 +154,14 @@
       "mean": 2063724.4166666667
     },
     "handoffBytes": {
-      "median": 7486,
-      "mean": 10486
+      "median": 7446,
+      "mean": 10283.833333333334
     },
     "reductionPct": {
-      "median": 99.43591292051983,
-      "mean": 99.35817918358458,
-      "min": 97.98846343865435,
-      "max": 99.82960855515452
+      "median": 99.4388737102171,
+      "mean": 99.3711683191458,
+      "min": 98.09218124768925,
+      "max": 99.83156496930417
     }
   }
 }

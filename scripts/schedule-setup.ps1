@@ -3,7 +3,7 @@
 # After setup, tasks can be managed via Task Scheduler GUI or by re-running this script.
 
 $NodeExe   = "C:\Program Files\nodejs\node.exe"
-$WorkDir   = "D:\Echo"
+$WorkDir   = Split-Path -Parent $PSScriptRoot
 $ScriptArg = "scripts/run-feishu-surface.js"
 $BriefUrl  = "http://127.0.0.1:3200/feishu/send-brief"
 

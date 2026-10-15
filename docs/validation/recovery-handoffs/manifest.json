@@ -2,7 +2,7 @@
   "redaction": {
     "appliedAt": "2026-09-26",
     "scope": "machine paths in handoff outputs",
-    "note": "Handoff outputs were redacted before entering version control: home and repository paths were replaced with placeholders, and the hashes below attest the redacted artifacts. Source session inputs were not modified and are not tracked."
+    "note": "Handoff outputs were redacted before entering version control: home and repository paths were replaced with placeholders, and the hashes below attest the redacted artifacts. Source session inputs were not modified and are not tracked. 2026-10-15: remaining temporary roots redacted in public derivatives; current hashes/sizes refer to redacted files. Historical measurements and pre-slice hashes are retained in docs/validation/v0.2-privacy-redaction.json. Native source inputs/hashes and semantic outcomes are unchanged."
   },
   "schema_version": 1,
   "frozen_at": "2026-09-07T10:52:00+08:00",
@@ -13,73 +13,73 @@
       "case_id": "case-01",
       "session_id": "01a077ec-bd2c-78a1-8581-c7440c9bda66",
       "path": "docs/validation/recovery-handoffs/case-01.md",
-      "sha256": "945103DB75381F8020D0BFAAD11D5763B33B38C3675633EB7486F956A576BDEF"
+      "sha256": "02DD1BBAB2B20FC85B7352E604366D582ADC449F667747963EA2996112E625FA"
     },
     {
       "case_id": "case-02",
       "session_id": "01a074ec-9f30-7c62-bb5f-257091ef242a",
       "path": "docs/validation/recovery-handoffs/case-02.md",
-      "sha256": "B58566474D459371FD60EDE238A6D78E54F6A03C43E7F51B6AFBAFFA16E18D64"
+      "sha256": "1C50088992FAC1425C765B23262E985AD1452642FFD5FE3D8200B97F0830F50B"
     },
     {
       "case_id": "case-03",
       "session_id": "01a0755d-e84a-7980-afaa-f98246f9436c",
       "path": "docs/validation/recovery-handoffs/case-03.md",
-      "sha256": "E8875803EA0528C3863CDEF796C05E76C526C0BEEA198A33CFF44E14BB0AE47C"
+      "sha256": "10963ED4DCD34B9C395CA0A46465CCC9FC211D8B57F633847D290F8CB0C5A59E"
     },
     {
       "case_id": "case-04",
       "session_id": "01a07639-d0ef-7452-a987-af0de51b29e3",
       "path": "docs/validation/recovery-handoffs/case-04.md",
-      "sha256": "EEDD31535E539D595AE8DA51953DABADC355A2073A335C257DC016837979B395"
+      "sha256": "A32DBA210AE5F44D566E0790B947ED0D45AC9351071BFB21C509A088658FF307"
     },
     {
       "case_id": "case-05",
       "session_id": "01a07786-adf5-77a3-91ba-e4a75ceda7e7",
       "path": "docs/validation/recovery-handoffs/case-05.md",
-      "sha256": "3FC198EC4052B4C5751C87BEF16A9755E86BC9685FD1F93454C363C95DF1E79A"
+      "sha256": "5701C4A5E586DE8140659DC23218B548B7BC3E4AD332B19241C67F91A5BDDBA4"
     },
     {
       "case_id": "case-06",
       "session_id": "01a07490-65fb-7643-9a8e-d1d7d69643be",
       "path": "docs/validation/recovery-handoffs/case-06.md",
-      "sha256": "684AA33764F96208C32EC021A53CB173112DA896D0C4B3456145AE625A068549"
+      "sha256": "B95CB4C1BDE82BBBEB6488A391D88942C33ECBE8C24B94C8D8EB5A17733F654A"
     },
     {
       "case_id": "case-07",
       "session_id": "01a074d4-f3b2-76e1-8411-9f93be0a91a2",
       "path": "docs/validation/recovery-handoffs/case-07.md",
-      "sha256": "BD4D9EEFBD98AB8727A2FFA6E09B5334F0694C9D701DFAEBB35AB2B94AB72789"
+      "sha256": "E29F055397CFF9D6A5EF63BC0D74B6A81A655A700D73750670AF407F58DA0DDF"
     },
     {
       "case_id": "case-08",
       "session_id": "01a0763e-bfe9-77f1-b669-900b837d2754",
       "path": "docs/validation/recovery-handoffs/case-08.md",
-      "sha256": "0514AC0ED5FAE9F7850596015A4CFD298B52005351397197537A44AAF26E1DE4"
+      "sha256": "14789C1FE2684BE6727736691A7433A2B272DDFD431DA5803458039640CFA439"
     },
     {
       "case_id": "case-09",
       "session_id": "01a070e6-3bd9-7591-aa4e-31b364badda1",
       "path": "docs/validation/recovery-handoffs/case-09.md",
-      "sha256": "0C43EF341D23B6FF0D05E92495E0DD0274B4DC22D7C5F0EEDDE2C66A35BCD70D"
+      "sha256": "C7DF72B64559410BE8501EB602C83EBCAFDBFB6D559B325324CA03E5D6887954"
     },
     {
       "case_id": "case-10",
       "session_id": "01a07564-99fa-72e0-b086-4a21e5011211",
       "path": "docs/validation/recovery-handoffs/case-10.md",
-      "sha256": "74CE207DFCEA4DF3B4637DED38D00E0F140C424ADDCEFA068059D72C568D276D"
+      "sha256": "9C0264B1DD11C397F214AD72B7F88FAF41E32BD0F66206E46F36A49099E39756"
     },
     {
       "case_id": "case-11",
       "session_id": "01a076e8-fe17-7430-b1c4-b32715a65fe8",
       "path": "docs/validation/recovery-handoffs/case-11.md",
-      "sha256": "77A4D14C71CEF612FEE4AEA18864CBD5028E4BB785157A6C2542B98364B57E22"
+      "sha256": "EA6F0939ACAF0B15A4FF59C6AE233AD1A535662364FF49F7833765CE7C209A5D"
     },
     {
       "case_id": "case-12",
       "session_id": "01a07770-d875-7b51-bd03-e154fe30c66c",
       "path": "docs/validation/recovery-handoffs/case-12.md",
-      "sha256": "BD4B262DD74B83E503633DF7F48716532F0CB939EFD6D65CAB5F3C3CF9C56F1B"
+      "sha256": "004B270124A37CD78179DA2D942DE74C3A9F954A76FB8FA20889D95F736AD6D2"
     }
   ]
 }

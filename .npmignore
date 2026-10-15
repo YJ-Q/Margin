@@ -1,0 +1,69 @@
+node_modules/
+.env
+data/*.json
+data/*.sqlite
+data/*.sqlite-*
+data/**/*.json
+data/**/*.sqlite
+data/**/*.sqlite-*
+data/**/*.log
+data/exports/
+data/backups/
+!data/.gitkeep
+npm-debug.log*
+huashu-design/
+design-references/
+.worktrees/
+.superpowers/sdd/
+.runtime/
+data/pi-spike/
+web/dist/
+out*/
+electron-*.log
+handoff-output/
+.margin/
+
+# Local UI/session captures; public validation summaries remain tracked.
+docs/validation/r2-resource-bar/
+docs/validation/r3-electron-window.png
+docs/validation/r3.2/
+docs/validation/r3.3/
+
+# Generated implementation report retained outside Git for local reference.
+task-8-report.md
+
+# Phase 0/1 experiments: the reproducible SOURCE and conclusions are tracked; the RAW EVIDENCE is
+# not. Each experiment's own .gitignore designates its trackable files (scripts, package.json,
+# package-lock.json, git-before.json, README.md / evaluation.md) and ignores output/ + node_modules/.
+# The raw evidence under output/ contains captured agent sessions, absolute machine paths in the
+# recorded git state, and measured outputs whose values are the point — redacting them would rewrite
+# the freeze-manifest measurements, so it stays local (also resilient to `git clean -fd`, which never
+# touches ignored files). Keeping the source/conclusions in Git means an explicit `git clean -fdx`
+# cannot lose the reproducible code and the written conclusions.
+experiments/*/output/
+experiments/*/node_modules/
+
+# Validation evidence tree. The reports, capture manifests and freeze manifests are tracked; the raw
+# agent session transcripts are not. Those are 29 files / ~59 MB, duplicated across experiment rounds,
+# and they are the attested INPUTS of the freeze manifests — redacting them would invalidate those
+# hashes, so they stay local and their hashes stay original.
+#
+# Everything tracked here was redacted on 2026-09-26: home and repository paths were replaced with
+# placeholders. Each manifest records that pass, so the hashes it carries attest the committed
+# artifacts rather than the originals.
+docs/validation/**/*.jsonl
+
+# The earlier blanket exclusion of docs/validation/ is gone: the tree has been redacted, so it is
+# tracked. The accepted baseline reports under docs/validation/*.md were always tracked.
+
+# Local-only evidence must never enter the npm distribution.
+/.claude/
+/docs/validation/
+/agent-integration-refinement-report.md
+/docs/research/agent-self-integration-real-trial.md
+/docs/research/agent-self-integration-tier1-trial.md
+/docs/research/agent-self-integration-tier1-revalidation.md
+/docs/roadmap/v0.2-scope-proposal.md
+
+# The production Board needs the existing build output.
+!/web/dist/

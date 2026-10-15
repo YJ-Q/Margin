@@ -213,7 +213,7 @@ Electron 只是现有 Margin Surface 的桌面宿主。
 
 - **Confirmed** 命令进程失败：Start-Sleep -Seconds 30; Get-Process -Id 10100,29052,31228 -ErrorAction SilentlyContinue | Select-Object Id,ProcessName,CPU,StartTime; Get-ChildItem out -Force -ErrorAction Sile...；exit_code=1
 
-- **Confirmed** 命令进程失败：npm run electron:package；Error: ENOENT: no such file or directory, rename 'C:\Temp\electron-packager\tmp-72yIEn\electron.exe' -> 'C:\Temp\electron-packager\tmp-72yIEn\margin.exe'
+- **Confirmed** 命令进程失败：npm run electron:package；Error: ENOENT: no such file or directory, rename '<packager-workspace>\electron.exe' -> '<packager-workspace>\margin.exe'
 
 - **Confirmed** 命令进程失败：Get-Process -Id 16772 -ErrorAction SilentlyContinue | Select-Object Id,CPU,StartTime; Get-ChildItem out -Force -ErrorAction SilentlyContinue | Select-Object Name,Length,LastWrit...；exit_code=1
 
@@ -229,9 +229,9 @@ Electron 只是现有 Margin Surface 的桌面宿主。
 
 - **Confirmed** 命令进程失败：Start-Sleep -Seconds 25; Get-Content electron-make-final.log -Tail 18; Get-Content electron-make-final.err.log -Tail 10; Get-ChildItem 'out-electron-release\make' -Recurse -File...；exit_code=1
 
-- **Confirmed** 命令进程失败：Start-Sleep -Seconds 25; Get-Content electron-make-short.log -Tail 20; Get-Content electron-make-short.err.log -Tail 12; Get-ChildItem 'out2\make' -Recurse -File -ErrorAction Si...；Error: C:\Temp\electron-packager\tmp-6LEtpA\resources\app\out-electron-release\margin-win32-x64\resources\app.asar: file size can not be larger than 4.2GB
+- **Confirmed** 命令进程失败：Start-Sleep -Seconds 25; Get-Content electron-make-short.log -Tail 20; Get-Content electron-make-short.err.log -Tail 12; Get-ChildItem 'out2\make' -Recurse -File -ErrorAction Si...；Error: <packager-workspace>\resources\app\out-electron-release\margin-win32-x64\resources\app.asar: file size can not be larger than 4.2GB
 
-- **Confirmed** 命令进程失败：Start-Sleep -Seconds 25; Get-Content electron-make-clean.log -Tail 22; Get-Content electron-make-clean.err.log -Tail 12; Get-ChildItem 'out2\make' -Recurse -File -ErrorAction Si...；Error: C:\Temp\electron-packager\tmp-R1W4VY\resources\app\out-electron-release\margin-win32-x64\resources\app.asar: file size can not be larger than 4.2GB
+- **Confirmed** 命令进程失败：Start-Sleep -Seconds 25; Get-Content electron-make-clean.log -Tail 22; Get-Content electron-make-clean.err.log -Tail 12; Get-ChildItem 'out2\make' -Recurse -File -ErrorAction Si...；Error: <packager-workspace>\resources\app\out-electron-release\margin-win32-x64\resources\app.asar: file size can not be larger than 4.2GB
 
 - **Confirmed** 命令进程失败：where.exe python 2>$null; where.exe py 2>$null; Get-ChildItem 'C:\Users\<user>\AppData\Local\Programs\Python' -Recurse -Filter python.exe -ErrorAction SilentlyContinue | Select-Obj...；exit_code=1
 

@@ -1275,7 +1275,7 @@ Select → generate → Copy/Save 仍然工作。
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\07\session-01a074d4-f3b2-76e1-8411-9f93be0a91a2.jsonl
+- 快照：<isolated-workspace>\07\session-01a074d4-f3b2-76e1-8411-9f93be0a91a2.jsonl
 - SHA-256：e708e99eb83d59f8f321b45e40a6edc0c2a9579ff221b856640fd3ae3e1ae690
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。

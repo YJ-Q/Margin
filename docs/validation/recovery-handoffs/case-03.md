@@ -121,7 +121,7 @@ V2 不重新设计产品逻辑，只把现有体验变成轻量桌面浮窗，�
 
 ## Evidence Pointers
 
-- 快照：C:\Temp\margin-recovery-handoff-staging-20260907\03\session-01a0755d-e84a-7980-afaa-f98246f9436c.jsonl
+- 快照：<isolated-workspace>\03\session-01a0755d-e84a-7980-afaa-f98246f9436c.jsonl
 - SHA-256：9c0511185b1d49a1b1894f14ff8219fd6864256534e4b10bba94834f3edb9b5d
 - Workspace：<repo>
 - call:L<n>/op<m> 指向 evidence 的 operations；file:* / repo:git 指向 repo-truth。
