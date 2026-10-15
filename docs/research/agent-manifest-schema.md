@@ -1,5 +1,10 @@
 # Manifest Schema v0.1
 
+Historical proposal, not the shipped schema. The public schemas live beside the
+[shipped Skill](../../skills/margin-agent-integration/SKILL.md); runtime acceptance is
+defined by the existing descriptor validator and [agent verify](../agent-verify.md).
+Proposed fields in this document remain deferred.
+
 Status: **Research only.** No code in this slice. Nothing here is implemented; the "current" columns
 describe what exists today at commit `1c822e5`, and every proposal is marked **[proposed]**.
 Related: `agent-capability-matrix.md`, `margin-agent-integration-skill.md`,

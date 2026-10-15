@@ -131,7 +131,7 @@ Owner context：**Core**（经 `createMarginCore`）。端口 `FEISHU_PORT`（�
 | 命令 | 说明 |
 |---|---|
 | `margin` | 交互式 handoff 流程 |
-| `margin agent list\|detect\|add\|remove\|enable\|install\|uninstall` | Agent Source 与插件生命周期 |
+| `margin agent list\|detect\|add\|remove\|enable\|install\|uninstall\|verify` | Agent Source 与插件生命周期；`verify` 为只读公开契约，见 [agent-verify.md](../agent-verify.md) |
 | `margin run bind\|unbind\|resolve` | Session ↔ Run bridge（作为持有 Core 的宿主，经 host-authority 路径） |
 | `margin cost status\|report\|ingest` | 用量账本 |
 

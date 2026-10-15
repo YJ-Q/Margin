@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$comment": "Closed JSON Schema for the Margin Agent Integration Report (margin-agent.report.json), the evidence artifact emitted alongside the manifest by skills/margin-agent-integration/SKILL.md. The report is NOT input to Margin's runtime; it is what a human (or a later margin agent verify) reads to decide whether to trust the manifest. Per-claim status vocabulary: observed | weak | unverified | refused. $comment-prefixed keys are reserved at every level and always ignored.",
+  "$comment": "Closed JSON Schema for the Margin Agent Integration Report (margin-agent.report.json), the evidence artifact emitted alongside the manifest by skills/margin-agent-integration/SKILL.md. The report is for human review and is NOT input to Margin's runtime or margin agent verify. Per-claim status vocabulary: observed | weak | unverified | refused. $comment-prefixed keys are reserved at every level and always ignored.",
   "title": "Margin Agent Integration Report",
-  "description": "Per-claim evidence for a Margin Agent manifest. Declaration is not evidence: every claim carries the observation that produced it, every refused capability is declared unsupported with a reason, and redaction{} proves no credential value was copied or exposed.",
+  "description": "Per-claim evidence for a Margin Agent manifest. Every claim records its stated observation and every refused capability records a reason. redaction{} records self-reported redaction work; schema validation cannot prove the absence of credentials or private content. Independent review and manifest verification remain required.",
   "type": "object",
   "required": ["reportVersion", "manifest", "agent", "claims", "requests", "unverified", "redaction"],
   "properties": {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$comment": "Closed JSON Schema for the Margin Agent Manifest (Agent Descriptor). Mirrors src/agents/descriptor/spec.js validateDescriptor exactly: same top-level key set (DESCRIPTOR_TOP_LEVEL_KEYS), same capability vocabulary (DESCRIPTOR_CAPABILITIES), same closed kind enums, same extractor catalogue, same cross-field wiring rules. A manifest that passes this schema passes validateDescriptor. $comment-prefixed keys are reserved at every level and always ignored, exactly as in the spec.",
+  "$comment": "Structural JSON Schema for the Margin Agent Manifest (Agent Descriptor). Drift checks cover the top-level key set (DESCRIPTOR_TOP_LEVEL_KEYS), capability vocabulary (DESCRIPTOR_CAPABILITIES), closed kind enums, extractor catalogue, and tested cross-field rules. src/agents/descriptor/spec.js validateDescriptor remains authoritative for semantic validation, including non-whitespace strings; passing this schema alone does not guarantee runtime acceptance. Run margin agent verify as required by the skill. $comment-prefixed keys are reserved at every level and ignored.",
   "title": "Margin Agent Manifest (Agent Descriptor)",
   "description": "The declarative, data-only descriptor a self-integrating Agent emits. Current contract only: specVersion 1, 19 closed top-level keys, 7 capability flags. No generatedBy, no runtime, no agent key, no new capability flag.",
   "type": "object",

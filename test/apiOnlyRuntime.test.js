@@ -18,10 +18,19 @@ test('package defaults to the Margin Surface while exposing the Electron host se
   assert.match(legacyServerSource, /legacy_api_archived/);
 });
 
-test('README describes the Phase 2B Web Workbench, canonical Core, and explicit alternate surfaces', async () => {
+test('README describes the Margin Board, frozen V0.2 scope, canonical Core, and explicit alternate surfaces', async () => {
   const readme = await readFile(new URL('../README.md', import.meta.url), 'utf8');
 
-  assert.match(readme, /Phase 2B Web Workbench/i);
+  assert.match(readme, /default local surface is the React Margin Board/);
+  assert.match(readme, /Trust before reach/);
+  assert.match(readme, /Tier 1 Self-Integration supports only session\s+sources expressible by the existing declarative reader catalogue/);
+  assert.match(readme, /Integration Skill\]\(skills\/margin-agent-integration\/SKILL\.md\)/);
+  assert.match(readme, /agent verify\]\(docs\/agent-verify\.md\) checks observed\s+session evidence before separate, user-confirmed installation/);
+  assert.match(readme, /does not establish complete session coverage or resource\/runtime\/handoff support/);
+  assert.match(readme, /Opaque\/private storage requires a native reader/);
+  assert.match(readme, /margin_surface_assets_missing/);
+  assert.match(readme, /http:\/\/127\.0\.0\.1:3100/);
+  assert.match(readme, /API-only Application Gateway/);
   assert.match(readme, /npm run build/);
   assert.match(readme, /npm start/);
   assert.match(readme, /npm run dev/);

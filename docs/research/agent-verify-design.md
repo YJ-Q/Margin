@@ -1,5 +1,8 @@
 # `margin agent verify` — Design
 
+Historical design, not the current public contract. Use [agent-verify.md](../agent-verify.md)
+for the shipped verdicts, reason codes, exit codes, and optional diagnostics.
+
 Status: **Research / design only.** No code, no CLI command, no descriptor change, no new Agent support
 in this slice. This document specifies the primitive; it does not implement it.
 Version: `package.json` `0.1.0` (v0.1.0 Beta), commit `a3dafb4`, plus the untracked S10.2A artifacts.

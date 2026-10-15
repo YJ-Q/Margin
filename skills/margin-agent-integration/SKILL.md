@@ -15,6 +15,10 @@ environment and emits two files:
 <out>/margin-agent.report.json   the report       — the evidence for every claim in the manifest
 ```
 
+The schemas check structure; `validateDescriptor` and `margin agent verify` remain authoritative
+for semantic acceptance and observed sessions. A schema-valid report, including `redaction{}`,
+is self-reported evidence for review, not a privacy attestation.
+
 Both files are **data**. Nothing this skill produces is executed by Margin, and nothing in this skill
 writes outside the scratch output directory `<out>`. Installation is a separate, user-confirmed step
 (`margin agent install <manifest> --dry-run` first) that this skill never performs.
@@ -380,7 +384,7 @@ When the transcript discovery ran, the `--json` document additionally carries an
   output renders the same counts and drop reasons.
 
 **Required output of this skill:** run `margin agent verify` on the emitted manifest and record the
-verdict and its evidence in the report. `verified` means "the declared surfaces observe correctly" —
+verdict and its evidence in the report. `verified` means "at least one invariant-clean session was observed" —
 never "this Agent is fully supported". A manifest that has not been verified has no business being
 presented as ready.
 

@@ -4,23 +4,26 @@ Margin is a memory-driven personal AI companion built around Workstreams, Runs,
 durable state, and safe continuation. Its visual and product language is paper,
 ink, margin notes, and returning to the live line of unfinished work.
 
-## Current Status: Phase 2B Web Workbench
+### Current Status: Margin Board; V0.2 scope under audit
 
-The default local surface is a desktop-first React Workbench backed by the
-persistent Margin Core. It supports:
+The default local surface is the React Margin Board: external Agent sessions,
+source management, evidence-backed status, and handoff where an existing adapter
+supports it. The Board reads Runtime facts; Core writes remain behind the
+Application Contract. Session-to-Run links use the existing bridge.
 
-- creating, selecting, and refreshing Workstreams;
-- creating and controlling Runs;
-- resolving NeedsOwner items;
-- viewing Artifact metadata and cursor-derived Activity;
-- a minimal Pi-backed interaction while a Run is running;
-- browser and server restart without browser-owned domain state.
+The Core database is `data/terminal-pilot/margin-core.sqlite`. The Terminal pilot
+and the API-only Application Gateway remain alternate surfaces; the former
+Workbench UI has been removed.
 
-The authoritative V1 database for both Web and Terminal surfaces is
-`data/terminal-pilot/margin-core.sqlite`. The Web adapter reaches it only
-through the trusted Application Gateway (`execute`, `query`, and `events`). It
-does not import the legacy application, routes, or legacy memory store, and it
-does not create a second SQLite database or browser shadow state.
+V0.2's thesis is "Trust before reach." Tier 1 Self-Integration supports only session
+sources expressible by the existing declarative reader catalogue. The shipped
+[Integration Skill](skills/margin-agent-integration/SKILL.md) v0.1.1 emits data-only
+manifest/report artifacts; [agent verify](docs/agent-verify.md) checks observed
+session evidence before separate, user-confirmed installation. A verified sample
+does not establish complete session coverage or resource/runtime/handoff support.
+Opaque/private storage requires a native reader; OpenCode/SQLite and grouped-root
+support are deferred. See the [V0.2 readiness audit](docs/roadmap/v0.2-readiness.md)
+for the frozen scope, evidence limits, and release blockers.
 
 The legacy Echo dataset is retired: it is not migrated, merged, or
 double-written, and the local frozen `data/echo.sqlite` copy was physically
@@ -36,7 +39,7 @@ npm install
 Copy-Item .env.example .env
 ```
 
-Build the browser application, then start the production Workbench:
+Build the browser application, then start the production Board:
 
 ```powershell
 npm run build
@@ -44,9 +47,9 @@ npm start
 ```
 
 `npm start` only serves an already-built `web/dist`; it never runs a hidden
-build. Production startup fails with `web_assets_missing` and tells you to run
+build. Production startup fails with `margin_surface_assets_missing` and tells you to run
 the build when the assets are absent. The default address is
-`http://127.0.0.1:3000`.
+`http://127.0.0.1:3100`.
 
 For development, run the HTTP adapter with Vite middleware:
 
@@ -54,13 +57,13 @@ For development, run the HTTP adapter with Vite middleware:
 npm run dev
 ```
 
-`run-margin-local.cmd` starts the same Web Workbench with the pinned local Node
+`run-margin-local.cmd` starts the same Margin Board with the pinned local Node
 22 runtime.
 
-## Pi Web Interaction
+### Pi interaction through the alternate Application Gateway
 
-The Web Workbench uses the same safe Pi provider defaults as the Terminal
-pilot:
+The API-only Application Gateway (`npm run legacy:workbench`, port 3000) uses
+the same safe Pi provider defaults as the Terminal pilot:
 
 ```dotenv
 MARGIN_PI_PROVIDER=yapi
@@ -73,7 +76,7 @@ YAPI_API_KEY=
 
 The credential value stays process-local and is never written to reports or
 normal startup output. When provider configuration is missing or invalid, the
-Workbench remains available and interactions return the stable
+Gateway remains available and interactions return the stable
 `runtime_unavailable` code. The browser never calls Pi directly.
 
 Pi is pinned to `@earendil-works/pi-coding-agent` `0.84.2`. Its built-in file,
@@ -102,13 +105,13 @@ message and exits without starting a server:
 npm run legacy:api
 ```
 
-`run-echo-local.cmd` reports the same archived status. The historical API
-source remains in the repository for review, but neither launcher starts a
-server or opens a database.
+`run-echo-local.cmd` reports the same archived status. The historical API source
+has been removed; neither launcher starts a server or opens a database.
 
 ## Web Transport
 
-The isolated Web host exposes:
+The alternate Application Gateway exposes the following routes; these are not
+the default Board's routes:
 
 | Method | Path | Purpose |
 |---|---|---|
@@ -123,14 +126,19 @@ and runtime boundaries. Browser input cannot supply trusted host context.
 Responses exclude credentials, stacks, Pi internals, session material, hidden
 reasoning, and Chain-of-Thought.
 
+The default Board exposes session, source, resource-status and handoff routes.
+See the [interface registry](docs/architecture/interface-registry.md) for both
+surfaces and their ownership boundaries.
+
 ## Environment
 
-Core Web settings:
+Board and alternate Gateway settings:
 
 ```dotenv
 PORT=3000
 NODE_ENV=development
-MARGIN_WEB_HOST=127.0.0.1
+MARGIN_SURFACE_HOST=127.0.0.1
+MARGIN_SURFACE_PORT=3100
 MARGIN_CORE_DB_PATH=./data/terminal-pilot/margin-core.sqlite
 MARGIN_LOG_LEVEL=info
 ```
@@ -138,9 +146,8 @@ MARGIN_LOG_LEVEL=info
 The default bind address is loopback. Remote exposure, authentication, and
 multi-user authorization are outside this phase.
 
-Settings such as `MARGIN_LLM_PROVIDER` and `MARGIN_DB_PATH` belong only to the
-explicit deprecated API. `ECHO_LOG_LEVEL`, `ECHO_LLM_PROVIDER`, and
-`ECHO_DB_PATH` remain temporary compatibility inputs for that legacy surface.
+Legacy settings such as `MARGIN_LLM_PROVIDER`, `MARGIN_DB_PATH`, and `ECHO_*`
+do not re-enable the archived API.
 
 ## Verification
 

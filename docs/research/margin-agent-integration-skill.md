@@ -1,5 +1,9 @@
 # Margin Agent Self-Integration Skill
 
+Historical design at the commit below, not the current public contract. Use the
+[shipped Skill](../../skills/margin-agent-integration/SKILL.md), its adjacent JSON schemas,
+and [agent verify](../agent-verify.md); proposed fields here are not accepted.
+
 Status: **Research only.** No code in this slice. Nothing described here is implemented.
 Depends on: `agent-capability-matrix.md` (what the three current integrations actually expose),
 `agent-manifest-schema.md` (the artifact the skill emits).
